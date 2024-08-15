@@ -2,6 +2,10 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
+import HomeSvg from '@/assets/icons/bottomTab/home.svg';
+import FriendsSvg from '@/assets/icons/bottomTab/friends.svg';
+import GoodsSvg from '@/assets/icons/bottomTab/goods.svg';
+import SettingsSvg from '@/assets/icons/bottomTab/settings.svg';
 
 const BottomTab = ({state}) => {
   const navigation = useNavigation();
@@ -12,37 +16,33 @@ const BottomTab = ({state}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => moveTab('Home')}>
-        {/* <HomeSvg
-          width={36}
-          height={36}
-          color={state.index === 0 ? '#555' : '#ddd'}
-        /> */}
-        <Text>Home</Text>
+      <TouchableOpacity onPress={() => moveTab('Home')} activeOpacity={0.8}>
+        <HomeSvg
+          width={24}
+          height={24}
+          color={state.index === 0 ? '#555' : '#bbb'}
+        />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => moveTab('Search')}>
-        {/* <SearchSvg
-          width={36}
-          height={36}
-          color={state.index === 1 ? '#555' : '#ddd'}
-        /> */}
-        <Text>Friends</Text>
+      <TouchableOpacity onPress={() => moveTab('Friends')} activeOpacity={0.8}>
+        <FriendsSvg
+          width={24}
+          height={24}
+          color={state.index === 1 ? '#555' : '#bbb'}
+        />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => moveTab('Plus')}>
-        {/* <PlusSvg
-          width={36}
-          height={36}
-          color={state.index === 2 ? '#555' : '#ddd'}
-        /> */}
-        <Text>Goods</Text>
+      <TouchableOpacity onPress={() => moveTab('Goods')} activeOpacity={0.8}>
+        <GoodsSvg
+          width={24}
+          height={24}
+          color={state.index === 2 ? '#555' : '#bbb'}
+        />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => moveTab('Play')}>
-        {/* <PlaySvg
-          width={36}
-          height={36}
-          color={state.index === 3 ? '#555' : '#ddd'}
-        /> */}
-        <Text>Settings</Text>
+      <TouchableOpacity onPress={() => moveTab('Settings')} activeOpacity={0.8}>
+        <SettingsSvg
+          width={24}
+          height={24}
+          color={state.index === 3 ? '#555' : '#bbb'}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -53,10 +53,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    paddingTop: 12,
-    paddingBottom: 16,
-    borderTopWidth: 0.5,
-    borderColor: '#ddd',
+    gap: 40,
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderTopWidth: 1,
+    borderColor: '#efefef',
     backgroundColor: '#fff',
   },
 });
