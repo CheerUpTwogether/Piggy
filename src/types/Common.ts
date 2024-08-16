@@ -16,9 +16,20 @@ export interface ToggleProps {
   loading?: boolean;
 }
 
+export interface ToastStore {
+  toasts: ToastProps[];
+  addToast: (toast: Omit<ToastProps, 'id'>) => void;
+  removeToast: (id: number) => void;
+}
 export interface ToastProps {
-  success: boolean;
+  id: number;
+  success?: boolean;
   text: string;
   multiText?: string;
   duration?: number;
+}
+
+export interface ToastItemProps extends ToastProps {
+  onRemove: (id: number) => void;
+  index: number;
 }
