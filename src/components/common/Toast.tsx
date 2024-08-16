@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   textWrapper: {gap: 2},
-  text: {color: '#FFF'},
+  text: {color: '#FFF', fontFamily: 'NotoSansKR-Medium', fontWeight: '400'},
 });
 
 export default Toast;
