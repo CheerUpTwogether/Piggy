@@ -1,17 +1,39 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Animated} from 'react-native';
-import {ToastProps} from '@/types/Common';
+import useToastStore from '@/store/store';
+import {ToastItemProps} from '@/types/Common';
 
 import SuccessIcon from '@/assets/icons/success.svg';
 import WarningIcon from '@/assets/icons/warning.svg';
 
-const Toast: React.FC<ToastProps> = ({
-  success,
+const Toast = () => {
+  const {toasts, removeToast} = useToastStore();
+
+  return (
+    <View style={styles.container}>
+      {toasts.map((toast, index) => (
+        <ToastItem
+          key={toast.id}
+          id={toast.id}
+          success={toast.success}
+          text={toast.text}
+          multiText={toast.multiText}
+          onRemove={removeToast}
+          index={index}
+        />
+      ))}
+    </View>
+  );
+};
+
+const ToastItem: React.FC<ToastItemProps> = ({
+  id,
+  success = true,
   text,
   multiText,
-  duration = 3000,
+  onRemove,
+  index,
 }) => {
-  const [visible, setVisible] = useState(true);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(-50)).current;
 
@@ -41,27 +63,25 @@ const Toast: React.FC<ToastProps> = ({
           duration: 500,
           useNativeDriver: true,
         }),
-      ]).start(() => setVisible(false));
-    }, duration);
+      ]).start(() => onRemove(id));
+    }, 3000);
 
     return () => clearTimeout(timer);
-  }, [fadeAnim, translateY, duration]);
-
-  if (!visible) return null;
+  }, [fadeAnim, translateY, id, onRemove]);
 
   return (
     <Animated.View
       style={[
-        styles.container,
-        {opacity: fadeAnim, transform: [{translateY}]},
+        styles.toast,
+        {opacity: fadeAnim, transform: [{translateY}], marginTop: index * 62},
       ]}>
-      <View style={[styles.wrapper, {height: multiText ? 60 : 40}]}>
+      <View style={styles.wrapper}>
         {success ? (
           <SuccessIcon width={16} height={16} color={'#04BF8A'} />
         ) : (
           <WarningIcon width={16} height={16} color={'#FEE583'} />
         )}
-        <View>
+        <View style={styles.textWrapper}>
           <Text style={styles.text}>{text}</Text>
           {multiText && <Text style={styles.text}>{multiText}</Text>}
         </View>
@@ -76,9 +96,17 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    zIndex: 9999,
+    marginTop: 20,
+  },
+  toast: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
     zIndex: 9999,
   },
   wrapper: {
@@ -91,7 +119,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     gap: 8,
   },
-  text: {color: '#FFF'},
+  textWrapper: {gap: 2},
+  text: {color: '#FFF', fontFamily: 'NotoSansKR-Medium', fontWeight: '400'},
 });
 
 export default Toast;
