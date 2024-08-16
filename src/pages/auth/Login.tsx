@@ -1,10 +1,17 @@
-import React from 'react';
-import {Text, View} from 'react-native';
+import ToggleButton from 'components/common/ToggleButton';
+import React, {useState} from 'react';
+import {View} from 'react-native';
 
 const Login = () => {
+  const [isOn, setIsOn] = useState(true);
+
+  const handleToggle = () => {
+    setIsOn(!isOn);
+  };
+
   return (
     <View>
-      <Text>Login</Text>
+      <ToggleButton initialState={isOn} onToggle={handleToggle} />
     </View>
   );
 };
