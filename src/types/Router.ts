@@ -1,14 +1,14 @@
-export type RootBottomParamList = {
+export type RootBottomTabParamList = {
   Home: undefined;
   Friends: undefined;
-  Goods: undefined | string;
-  Settings: undefined | string;
+  Goods: undefined;
+  Settings: undefined;
 };
 
 export type RootStackParamList = {
   Login: undefined;
   Splash: undefined;
   BottomTab: {
-    screen: keyof RootBottomParamList;
+    screen: keyof RootBottomTabParamList;
   };
 };
