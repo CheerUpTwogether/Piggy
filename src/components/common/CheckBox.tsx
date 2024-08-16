@@ -1,19 +1,12 @@
 import React, {useRef} from 'react';
 import {Animated, TouchableOpacity, View} from 'react-native';
+import {CheckBoxProps} from 'types/Common';
 
 /*
-interface TopBarProps {
   isChecked : 상태 값
   setIsChecked : 상태 변경 함수
   activeColor : 활성화 시 컬러
-}
 */
-
-interface CheckBoxProps {
-  isChecked: boolean;
-  setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
-  activeColor?: string;
-}
 
 const CheckBox: React.FC<CheckBoxProps> = ({
   isChecked,
@@ -43,7 +36,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
 
   return (
     <TouchableOpacity
-      activeOpacity={1}
+      activeOpacity={0.8}
       onPress={onCheck}
       style={{
         width: 28,
