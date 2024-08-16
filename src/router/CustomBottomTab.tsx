@@ -1,43 +1,51 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
+import {RootBottomTabParamList} from 'types/Router';
+
 import HomeSvg from '@/assets/icons/bottomTab/home.svg';
 import FriendsSvg from '@/assets/icons/bottomTab/friends.svg';
 import GoodsSvg from '@/assets/icons/bottomTab/goods.svg';
 import SettingsSvg from '@/assets/icons/bottomTab/settings.svg';
 
-const BottomTab = ({state}) => {
-  const navigation = useNavigation();
-  // 탭 클릭 이벤트
-  const moveTab = name => {
-    navigation.navigate(name);
-  };
+const BottomTab: React.FC<BottomTabBarProps> = ({state}) => {
+  const navigation =
+    useNavigation<StackNavigationProp<RootBottomTabParamList>>();
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => moveTab('Home')} activeOpacity={0.8}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Home')}
+        activeOpacity={0.8}>
         <HomeSvg
           width={24}
           height={24}
           color={state.index === 0 ? '#555' : '#bbb'}
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => moveTab('Friends')} activeOpacity={0.8}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Friends')}
+        activeOpacity={0.8}>
         <FriendsSvg
           width={24}
           height={24}
           color={state.index === 1 ? '#555' : '#bbb'}
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => moveTab('Goods')} activeOpacity={0.8}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Goods')}
+        activeOpacity={0.8}>
         <GoodsSvg
           width={24}
           height={24}
           color={state.index === 2 ? '#555' : '#bbb'}
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => moveTab('Settings')} activeOpacity={0.8}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Settings')}
+        activeOpacity={0.8}>
         <SettingsSvg
           width={24}
           height={24}
@@ -51,9 +59,10 @@ const BottomTab = ({state}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    //justifyContent: 'space-between',
+    justifyContent: 'space-around',
     paddingHorizontal: 24,
-    gap: 40,
+    gap: 20,
     paddingTop: 10,
     paddingBottom: 10,
     borderTopWidth: 1,
