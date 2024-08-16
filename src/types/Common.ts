@@ -15,3 +15,10 @@ export interface ToggleProps {
   onToggle: (newState: boolean) => void;
   loading?: boolean;
 }
+
+export interface ToastProps {
+  success: boolean;
+  text: string;
+  multiText?: string;
+  duration?: number;
+}
