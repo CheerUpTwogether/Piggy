@@ -3,7 +3,6 @@ import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import {MainHeaderProps} from '@/types/Router';
 
 import CustomBottomTab from '@/router/CustomBottomTab';
 import CustomTopTabMain from '@/router/CustomTopTabMain';
