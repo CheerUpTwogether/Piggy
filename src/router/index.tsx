@@ -70,7 +70,11 @@ const Router = () => {
       <Stack.Screen
         name="Splash"
         component={Splash}
-        options={{headerShown: false}}
+        options={{
+          header: StackHeader,
+          headerShown: false,
+          headerBackTitleVisible: true,
+        }}
       />
       <Stack.Screen
         name="Login"
