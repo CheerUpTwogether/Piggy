@@ -1,6 +1,7 @@
-import {createStackNavigator, StackHeaderProps} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import {
   BottomTabBarProps,
+  BottomTabHeaderProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 
@@ -18,8 +19,8 @@ const StackBottomTab = createBottomTabNavigator();
 
 const BottomTab = (props: BottomTabBarProps) => <CustomBottomTab {...props} />;
 
-const MainHeader = ({route}) => {
-  return <CustomTopTabMain route={route} />;
+const MainHeader = (props: BottomTabHeaderProps) => {
+  return <CustomTopTabMain {...props} />;
 };
 
 const Main = () => {
