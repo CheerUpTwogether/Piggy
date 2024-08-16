@@ -6,9 +6,9 @@ import {useNavigation} from '@react-navigation/native';
 import {RootBottomTabParamList} from 'types/Router';
 
 import HomeSvg from '@/assets/icons/bottomTab/home.svg';
-import FriendsSvg from '@/assets/icons/bottomTab/friends.svg';
-import GoodsSvg from '@/assets/icons/bottomTab/goods.svg';
-import SettingsSvg from '@/assets/icons/bottomTab/settings.svg';
+import FriendsSvg from '@/assets/icons/friend.svg';
+import GoodsSvg from '@/assets/icons/goods.svg';
+import SettingsSvg from '@/assets/icons/setting.svg';
 
 const BottomTab: React.FC<BottomTabBarProps> = ({state}) => {
   const navigation =
