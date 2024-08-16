@@ -18,7 +18,8 @@ const BottomTab: React.FC<BottomTabBarProps> = ({state}) => {
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => navigation.navigate('Home')}
-        activeOpacity={0.8}>
+        activeOpacity={0.8}
+        style={styles.iconButton}>
         <HomeSvg
           width={24}
           height={24}
@@ -27,7 +28,8 @@ const BottomTab: React.FC<BottomTabBarProps> = ({state}) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate('Friends')}
-        activeOpacity={0.8}>
+        activeOpacity={0.8}
+        style={styles.iconButton}>
         <FriendsSvg
           width={24}
           height={24}
@@ -36,7 +38,8 @@ const BottomTab: React.FC<BottomTabBarProps> = ({state}) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate('Goods')}
-        activeOpacity={0.8}>
+        activeOpacity={0.8}
+        style={styles.iconButton}>
         <GoodsSvg
           width={24}
           height={24}
@@ -45,7 +48,8 @@ const BottomTab: React.FC<BottomTabBarProps> = ({state}) => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => navigation.navigate('Settings')}
-        activeOpacity={0.8}>
+        activeOpacity={0.8}
+        style={styles.iconButton}>
         <SettingsSvg
           width={24}
           height={24}
@@ -61,13 +65,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     //justifyContent: 'space-between',
     justifyContent: 'space-around',
-    paddingHorizontal: 24,
-    gap: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingHorizontal: 12,
     borderTopWidth: 1,
     borderColor: '#efefef',
     backgroundColor: '#fff',
+  },
+  iconButton: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    padding: 20,
   },
 });
 
