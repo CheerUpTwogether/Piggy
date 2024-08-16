@@ -15,15 +15,13 @@ import Settings from '@/pages/settings/Settings';
 const StackTab = createStackNavigator();
 const StackBottomTab = createBottomTabNavigator();
 
-const BottomTabBar = (props: BottomTabBarProps) => (
-  <CustomBottomTab {...props} />
-);
+const BottomTab = (props: BottomTabBarProps) => <CustomBottomTab {...props} />;
 
-const BottomTab = () => {
+const Main = () => {
   return (
     <StackBottomTab.Navigator
       screenOptions={{headerShown: false}}
-      tabBar={BottomTabBar}>
+      tabBar={BottomTab}>
       <StackBottomTab.Screen name="Home" component={Home} />
       <StackBottomTab.Screen name="Friends" component={Friends} />
       <StackBottomTab.Screen name="Goods" component={Goods} />
@@ -35,7 +33,7 @@ const BottomTab = () => {
 const Router = () => {
   return (
     <StackTab.Navigator screenOptions={{headerShown: false}}>
-      <StackTab.Screen name="BottomTab" component={BottomTab} />
+      <StackTab.Screen name="Main" component={Main} />
       <StackTab.Screen name="Splash" component={Splash} />
       <StackTab.Screen name="Login" component={Login} />
     </StackTab.Navigator>
