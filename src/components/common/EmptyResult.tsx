@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   image: {width: 80, height: 80, marginBottom: 20},
-  text: {color: '#333'},
+  text: {color: '#333', fontFamily: 'NotoSansKR-Medium', fontWeight: '400'},
 });
 
 export default EmptyResult;
