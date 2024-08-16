@@ -1,5 +1,3 @@
-import {FC} from 'react';
-
 export interface CheckBoxProps {
   isChecked: boolean;
   setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,4 +37,9 @@ export interface SlideModalProps {
   component?: React.ReactElement;
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface EmptyProps {
+  reason: string;
+  solution: string;
 }

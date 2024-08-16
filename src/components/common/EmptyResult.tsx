@@ -1,12 +1,8 @@
 import React from 'react';
 import {Image, View, Text, StyleSheet} from 'react-native';
+import {EmptyProps} from '@/types/Common';
 
 const emptyImage = require('@/assets/images/emptyImage.jpg');
-
-interface EmptyProps {
-  reason: string;
-  solution: string;
-}
 
 const EmptyResult: React.FC<EmptyProps> = ({reason, solution}) => {
   return (
