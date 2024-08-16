@@ -4,9 +4,10 @@ import AlertSvg from '@/assets/icons/alert.svg';
 import SearchSvg from '@/assets/icons/search.svg';
 import GoodsBoxSvg from '@/assets/icons/goodsBox.svg';
 import SettingSvg from '@/assets/icons/setting.svg';
+import {BottomTabHeaderProps} from '@react-navigation/bottom-tabs';
 const topLogo = require('@/assets/icons/topLogo.png');
 
-const RightItems = ({name}) => {
+const RightItems = ({name}: {name: string}) => {
   switch (name) {
     case 'Friends':
       return (
@@ -17,8 +18,10 @@ const RightItems = ({name}) => {
     case 'Goods':
       return (
         <>
-          <Text style={styles.text}>500</Text>
-          <Text style={[styles.text, styles.colorRed]}>P</Text>
+          <TouchableOpacity style={[styles.directionRow, styles.icon]}>
+            <Text style={styles.text}>500</Text>
+            <Text style={[styles.text, styles.colorRed]}>P</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.icon}>
             <GoodsBoxSvg width={24} height={24} color={'#555555'} />
           </TouchableOpacity>
@@ -36,7 +39,8 @@ const RightItems = ({name}) => {
       return <></>;
   }
 };
-const CustomTopTabMain = ({route}) => {
+
+const CustomTopTabMain = ({route}: BottomTabHeaderProps) => {
   return (
     <View style={styles.container}>
       <Image source={topLogo} style={styles.logo} />
@@ -74,10 +78,15 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     color: '#333',
-    fontWeight: '500',
+    fontWeight: 'medium',
+    fontFamily: 'NotoSansKR-Medium',
+    lineHeight: 24,
   },
   colorRed: {
     color: '#ED423F',
+  },
+  directionRow: {
+    flexDirection: 'row',
   },
 });
 export default CustomTopTabMain;
