@@ -1,11 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {StyleSheet, TouchableOpacity, Animated} from 'react-native';
-
-interface ToggleProps {
-  initialState: boolean;
-  onToggle: (newState: boolean) => void;
-  loading?: boolean;
-}
+import {ToggleProps} from 'types/Common';
 
 const ToggleButton: React.FC<ToggleProps> = ({
   initialState,
