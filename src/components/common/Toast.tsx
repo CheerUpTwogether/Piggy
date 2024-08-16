@@ -3,8 +3,8 @@ import {View, Text, StyleSheet, Animated} from 'react-native';
 import useToastStore from '@/store/store';
 import {ToastItemProps} from '@/types/Common';
 
-import SuccessIcon from '@/assets/icons/success.svg';
-import WarningIcon from '@/assets/icons/warning.svg';
+import SuccessIconSvg from '@/assets/icons/success.svg';
+import WarningIconSvg from '@/assets/icons/warning.svg';
 
 const Toast = () => {
   const {toasts, removeToast} = useToastStore();
@@ -77,9 +77,9 @@ const ToastItem: React.FC<ToastItemProps> = ({
       ]}>
       <View style={styles.wrapper}>
         {success ? (
-          <SuccessIcon width={16} height={16} color={'#04BF8A'} />
+          <SuccessIconSvg width={16} height={16} color={'#04BF8A'} />
         ) : (
-          <WarningIcon width={16} height={16} color={'#FEE583'} />
+          <WarningIconSvg width={16} height={16} color={'#FEE583'} />
         )}
         <View style={styles.textWrapper}>
           <Text style={styles.text}>{text}</Text>
