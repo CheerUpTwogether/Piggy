@@ -71,3 +71,19 @@ export interface ButtonCoupleProps {
   disableRight?: boolean;
   style?: object;
 }
+
+export interface ModalProps {
+  title: string;
+  isOpen: boolean;
+  text: string;
+  onPress?: ((event: GestureResponderEvent) => void) & (() => void);
+  content?: string;
+  onPressCancel?: ((event: GestureResponderEvent) => void) & (() => void);
+  textCancel?: string;
+  disable?: boolean;
+}
+export interface ModalStore {
+  modal: ModalProps;
+  openModal: (modal: Omit<ModalProps, 'isOpen'>) => void;
+  closeModal: () => void;
+}
