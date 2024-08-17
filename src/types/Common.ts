@@ -43,3 +43,8 @@ export interface EmptyProps {
   reason: string;
   solution: string;
 }
+
+export interface LeftItemProps {
+  name: string;
+  headerLeftLabelVisible: boolean;
+}
