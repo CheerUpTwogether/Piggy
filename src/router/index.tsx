@@ -6,7 +6,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 
-import CustomBottomTab from '@/router/CustomBottomTab';
+import CustomBottomTab from '@/components/frame/CustomBottomTab';
 import CustomTopTabMain from '@/router/CustomTopTabMain';
 import Splash from 'pages/Splash';
 import Login from '@/pages/auth/Login';
@@ -17,7 +17,7 @@ import Settings from '@/pages/settings/Settings';
 import CustomTopTabStack from '@/router/CustomTopTabStack';
 
 const Stack = createStackNavigator();
-const StackBottomTab = createBottomTabNavigator();
+const BottomStack = createBottomTabNavigator();
 
 const BottomTab = (props: BottomTabBarProps) => <CustomBottomTab {...props} />;
 
@@ -31,36 +31,36 @@ const StackHeader = (props: StackHeaderProps) => (
 
 const Main = () => {
   return (
-    <StackBottomTab.Navigator tabBar={BottomTab}>
-      <StackBottomTab.Screen
+    <BottomStack.Navigator tabBar={BottomTab}>
+      <BottomStack.Screen
         name="Home"
         component={Home}
         options={{
           header: MainHeader,
         }}
       />
-      <StackBottomTab.Screen
+      <BottomStack.Screen
         name="Friends"
         component={Friends}
         options={{
           header: MainHeader,
         }}
       />
-      <StackBottomTab.Screen
+      <BottomStack.Screen
         name="Goods"
         component={Goods}
         options={{
           header: MainHeader,
         }}
       />
-      <StackBottomTab.Screen
+      <BottomStack.Screen
         name="Settings"
         component={Settings}
         options={{
           header: MainHeader,
         }}
       />
-    </StackBottomTab.Navigator>
+    </BottomStack.Navigator>
   );
 };
 
@@ -72,8 +72,8 @@ const Router = () => {
         component={Splash}
         options={{
           header: StackHeader,
-          headerShown: false,
-          headerBackTitleVisible: true,
+          headerShown: true,
+          headerBackTitleVisible: false,
         }}
       />
       <Stack.Screen
