@@ -40,7 +40,4 @@ export const useModalStore = create<ModalStore>(set => ({
         content: '',
       },
     })),
-  test: () => {
-    console.log('test');
-  },
 }));
