@@ -50,8 +50,9 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Inter.ttf</string>
-		<string>NotoSansKR.ttf</string>
 		<string>NotoSansKR-Medium.ttf</string>
+		<string>NotoSansKR-Bold.ttf</string>
+		<string>NotoSansKR-Regular.ttf</string>
 	</array>
 </dict>
 </plist>
