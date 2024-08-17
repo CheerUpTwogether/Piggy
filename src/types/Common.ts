@@ -58,5 +58,16 @@ export interface ButtonProps {
   size?: 'full' | 'lg' | 'md' | 'sm';
   disable?: boolean;
   icon?: React.ReactNode;
-  style?: object | object[];
+  style?: object;
+}
+
+export interface ButtonCoupleProps {
+  onPressLeft: ((event: GestureResponderEvent) => void) & (() => void);
+  onPressRight: ((event: GestureResponderEvent) => void) & (() => void);
+  textLeft: string;
+  textRight: string;
+  theme?: 'primary' | 'sub' | 'outline';
+  disableLeft?: boolean;
+  disableRight?: boolean;
+  style?: object;
 }
