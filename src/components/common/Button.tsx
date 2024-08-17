@@ -19,7 +19,7 @@ const Button = ({
     : null;
 
   return (
-    <View style={[style, styles.conatiner]}>
+    <View style={style}>
       <TouchableOpacity
         style={[
           styles.btn,
@@ -41,7 +41,6 @@ const Button = ({
 };
 
 const styles = StyleSheet.create({
-  conatiner: {},
   btn: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -50,7 +49,6 @@ const styles = StyleSheet.create({
   },
   fullBtn: {
     height: 48,
-    width: '100%',
   },
   lgBtn: {
     width: 160,
