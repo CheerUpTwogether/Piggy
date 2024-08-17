@@ -14,7 +14,11 @@ const ModalDefault = () => {
     <View style={styles.container}>
       <View style={styles.wrapper}>
         <Text style={styles.title}>{modal.title}</Text>
-        <Text style={styles.content}>{modal.content}</Text>
+        {modal.content ? (
+          <Text style={styles.content}>{modal.content}</Text>
+        ) : (
+          <View style={{paddingBottom: 12}} />
+        )}
         {modal.textCancel ? (
           <ButtonCouple
             onPressRight={modal.onPress || closeModal}
