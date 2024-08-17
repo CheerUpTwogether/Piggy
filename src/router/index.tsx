@@ -6,7 +6,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 
-import CustomBottomTab from '@/components/frame/CustomBottomTab';
+import BottomTab from '@/components/frame/BottomTab';
 import CustomTopTabMain from '@/router/CustomTopTabMain';
 import Splash from 'pages/Splash';
 import Login from '@/pages/auth/Login';
@@ -19,7 +19,7 @@ import CustomTopTabStack from '@/router/CustomTopTabStack';
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 
-const BottomTab = (props: BottomTabBarProps) => <CustomBottomTab {...props} />;
+const TabBar = (props: BottomTabBarProps) => <BottomTab {...props} />;
 
 const MainHeader = (props: BottomTabHeaderProps) => (
   <CustomTopTabMain {...props} />
@@ -31,7 +31,7 @@ const StackHeader = (props: StackHeaderProps) => (
 
 const Main = () => {
   return (
-    <BottomStack.Navigator tabBar={BottomTab}>
+    <BottomStack.Navigator tabBar={TabBar}>
       <BottomStack.Screen
         name="Home"
         component={Home}
