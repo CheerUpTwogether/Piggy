@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Animated} from 'react-native';
-import useToastStore from '@/store/store';
+import {useToastStore} from '@/store/store';
 import {ToastItemProps} from '@/types/Common';
 
 import SuccessIconSvg from '@/assets/icons/success.svg';

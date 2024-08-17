@@ -1,7 +1,8 @@
-import create from 'zustand';
-import {ToastStore} from '@/types/Common';
+import {create} from 'zustand';
+import {ModalStore, ToastStore} from '@/types/Common';
+import {ModalProps} from 'react-native';
 
-const useToastStore = create<ToastStore>(set => ({
+export const useToastStore = create<ToastStore>(set => ({
   toasts: [],
   addToast: newToast =>
     set(state => {
@@ -15,4 +16,31 @@ const useToastStore = create<ToastStore>(set => ({
     })),
 }));
 
-export default useToastStore;
+export const useModalStore = create<ModalStore>(set => ({
+  modal: {
+    text: '',
+    title: '',
+    isOpen: false,
+    content: '',
+  },
+  openModal: (modal: Omit<ModalProps, 'isOpen'>) =>
+    set(state => ({
+      modal: {
+        ...state.modal,
+        ...modal,
+        isOpen: true, // isOpen을 명시적으로 true로 설정
+      },
+    })),
+  closeModal: () =>
+    set(() => ({
+      modal: {
+        text: '',
+        title: '',
+        isOpen: false,
+        content: '',
+      },
+    })),
+  test: () => {
+    console.log('test');
+  },
+}));
