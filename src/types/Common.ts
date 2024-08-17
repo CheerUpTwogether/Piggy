@@ -1,3 +1,5 @@
+import {GestureResponderEvent} from 'react-native';
+
 export interface CheckBoxProps {
   isChecked: boolean;
   setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,4 +49,14 @@ export interface EmptyProps {
 export interface LeftItemProps {
   name: string;
   headerLeftLabelVisible: boolean;
+}
+
+export interface ButtonProps {
+  text: string;
+  onPress: ((event: GestureResponderEvent) => void) & (() => void);
+  theme?: 'primary' | 'sub' | 'outline';
+  size?: 'full' | 'lg' | 'md' | 'sm';
+  disable?: boolean;
+  icon?: React.ReactNode;
+  style?: object | object[];
 }
