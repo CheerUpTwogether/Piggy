@@ -41,18 +41,16 @@ const Button = ({
 };
 
 const styles = StyleSheet.create({
-  conatiner: {
-    flex: 1,
-  },
+  conatiner: {},
   btn: {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 100,
     flexDirection: 'row',
-    gap: 4,
   },
   fullBtn: {
     height: 48,
+    width: '100%',
   },
   lgBtn: {
     width: 160,
@@ -63,7 +61,6 @@ const styles = StyleSheet.create({
     height: 40,
   },
   smBtn: {
-    //height: 32,
     justifyContent: 'center',
     paddingVertical: 8,
     //paddingHorizontal: 12,
