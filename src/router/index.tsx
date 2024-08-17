@@ -7,27 +7,22 @@ import {
 } from '@react-navigation/bottom-tabs';
 
 import BottomTab from '@/components/frame/BottomTab';
-import CustomTopTabMain from '@/router/CustomTopTabMain';
+import TopTab from '@/components/frame/TopTab';
 import Splash from 'pages/Splash';
 import Login from '@/pages/auth/Login';
 import Home from '@/pages/home/Home';
 import Friends from '@/pages/friends/Friends';
 import Goods from '@/pages/goods/Goods';
 import Settings from '@/pages/settings/Settings';
-import CustomTopTabStack from '@/router/CustomTopTabStack';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 
 const TabBar = (props: BottomTabBarProps) => <BottomTab {...props} />;
 
-const MainHeader = (props: BottomTabHeaderProps) => (
-  <CustomTopTabMain {...props} />
-);
+const MainHeader = (props: BottomTabHeaderProps) => <TopTab {...props} />;
 
-const StackHeader = (props: StackHeaderProps) => (
-  <CustomTopTabStack {...props} />
-);
+const StackHeader = (props: StackHeaderProps) => <TopTab {...props} />;
 
 const Main = () => {
   return (
@@ -73,7 +68,7 @@ const Router = () => {
         options={{
           header: StackHeader,
           headerShown: true,
-          headerBackTitleVisible: false,
+          headerLeftLabelVisible: true,
         }}
       />
       <Stack.Screen
