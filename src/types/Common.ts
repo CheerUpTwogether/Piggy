@@ -35,7 +35,7 @@ export interface ToastItemProps extends ToastProps {
   index: number;
 }
 
-export interface SlideModalProps {
+export interface BottomSheetProps {
   component?: React.ReactElement;
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -86,4 +86,12 @@ export interface ModalStore {
   modal: ModalProps;
   openModal: (modal: Omit<ModalProps, 'isOpen'>) => void;
   closeModal: () => void;
+}
+
+export interface SideSlideModalProps {
+  title?: string;
+  isShow: boolean;
+  setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
+  component?: React.ReactElement;
+  size?: number;
 }
