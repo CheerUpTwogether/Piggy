@@ -1,4 +1,4 @@
-import {SlideModalProps} from '@/types/Common';
+import {BottomSheetProps} from '@/types/Common';
 import {useEffect, useRef} from 'react';
 import {
   Animated,
@@ -12,7 +12,7 @@ import {
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
-const SlideModal: React.FC<SlideModalProps> = ({
+const BottomSheet: React.FC<BottomSheetProps> = ({
   component,
   isShow,
   setIsShow,
@@ -134,4 +134,4 @@ const styles = StyleSheet.create({
   bottomSheetContentsWrapper: {height: '100%', backgroundColor: '#FFF'},
 });
 
-export default SlideModal;
+export default BottomSheet;
