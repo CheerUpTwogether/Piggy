@@ -1,44 +1,89 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
+import {createStackNavigator, StackHeaderProps} from '@react-navigation/stack';
 import {
   BottomTabBarProps,
+  BottomTabHeaderProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 
+import BottomTab from '@/components/frame/BottomTab';
+import TopTab from '@/components/frame/TopTab';
 import Splash from 'pages/Splash';
 import Login from '@/pages/auth/Login';
-import CustomBottomTab from '@/router/CustomBottomTab';
 import Home from '@/pages/home/Home';
 import Friends from '@/pages/friends/Friends';
 import Goods from '@/pages/goods/Goods';
 import Settings from '@/pages/settings/Settings';
 
-const StackTab = createStackNavigator();
-const StackBottomTab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+const BottomStack = createBottomTabNavigator();
 
-const BottomTabBar = (props: BottomTabBarProps) => (
-  <CustomBottomTab {...props} />
-);
+const TabBar = (props: BottomTabBarProps) => <BottomTab {...props} />;
 
-const BottomTab = () => {
+const MainHeader = (props: BottomTabHeaderProps) => <TopTab {...props} />;
+
+const StackHeader = (props: StackHeaderProps) => <TopTab {...props} />;
+
+const Main = () => {
   return (
-    <StackBottomTab.Navigator
-      screenOptions={{headerShown: false}}
-      tabBar={BottomTabBar}>
-      <StackBottomTab.Screen name="Home" component={Home} />
-      <StackBottomTab.Screen name="Friends" component={Friends} />
-      <StackBottomTab.Screen name="Goods" component={Goods} />
-      <StackBottomTab.Screen name="Settings" component={Settings} />
-    </StackBottomTab.Navigator>
+    <BottomStack.Navigator tabBar={TabBar}>
+      <BottomStack.Screen
+        name="Home"
+        component={Home}
+        options={{
+          header: MainHeader,
+        }}
+      />
+      <BottomStack.Screen
+        name="Friends"
+        component={Friends}
+        options={{
+          header: MainHeader,
+        }}
+      />
+      <BottomStack.Screen
+        name="Goods"
+        component={Goods}
+        options={{
+          header: MainHeader,
+        }}
+      />
+      <BottomStack.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          header: MainHeader,
+        }}
+      />
+    </BottomStack.Navigator>
   );
 };
 
 const Router = () => {
   return (
-    <StackTab.Navigator screenOptions={{headerShown: false}}>
-      <StackTab.Screen name="BottomTab" component={BottomTab} />
-      <StackTab.Screen name="Splash" component={Splash} />
-      <StackTab.Screen name="Login" component={Login} />
-    </StackTab.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Splash"
+        component={Splash}
+        options={{
+          header: StackHeader,
+          headerShown: true,
+          headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Main"
+        component={Main}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Stack.Navigator>
   );
 };
 

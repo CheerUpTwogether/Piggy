@@ -1,3 +1,8 @@
+import {
+  StackNavigationOptions,
+  StackNavigationProp,
+} from '@react-navigation/stack';
+
 export type RootBottomTabParamList = {
   Home: undefined;
   Friends: undefined;
@@ -11,4 +16,9 @@ export type RootStackParamList = {
   BottomTab: {
     screen: keyof RootBottomTabParamList;
   };
+};
+
+export type MainHeaderProps = {
+  options: StackNavigationOptions;
+  navigation: StackNavigationProp<RootStackParamList>;
 };

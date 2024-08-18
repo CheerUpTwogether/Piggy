@@ -1,11 +1,11 @@
 import React from 'react';
-import {View} from 'react-native';
-import {Text} from 'react-native-svg';
+import {View, Text} from 'react-native';
+import {commonStyle} from '@/styles/common';
 
 const Home = () => {
   return (
-    <View>
-      <Text>Home</Text>
+    <View style={commonStyle.container}>
+      <Text>home</Text>
     </View>
   );
 };
