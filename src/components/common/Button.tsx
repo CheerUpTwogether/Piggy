@@ -9,7 +9,7 @@ const Button = ({
   size = 'full',
   theme = 'primary',
   disable = false,
-  icon,
+  icon: Icon,
   style = {},
 }: ButtonProps) => {
   const btnDisable = disable
@@ -17,6 +17,22 @@ const Button = ({
       ? styles.outlineDisable
       : styles.disable
     : null;
+
+  const iconColor = () => {
+    if (disable) {
+      if (theme === 'outline') {
+        return '#aaa';
+      }
+      return '#fff';
+    }
+
+    if (theme === 'outline') {
+      return '#ED423F';
+    } else if (theme === 'sub') {
+      return '#777';
+    }
+    return '#fff';
+  };
 
   return (
     <View style={style}>
@@ -29,8 +45,17 @@ const Button = ({
         ]}
         onPress={onPress}
         disabled={disable}
-        activeOpacity={0.8}>
-        {icon}
+        activeOpacity={theme === 'primary' ? 0.8 : 0.6}>
+        {Icon ? (
+          <Icon
+            color={iconColor()}
+            width={18}
+            height={18}
+            style={{marginRight: 4}}
+          />
+        ) : (
+          <></>
+        )}
         <Text
           style={[styles[`${theme}Text`], styles[`${size}Text`], btnDisable]}>
           {text}
@@ -60,9 +85,7 @@ const styles = StyleSheet.create({
   },
   smBtn: {
     justifyContent: 'center',
-    paddingVertical: 8,
-    //paddingHorizontal: 12,
-    width: 80,
+    width: 76,
   },
   primaryBtn: {
     backgroundColor: '#ED423F',

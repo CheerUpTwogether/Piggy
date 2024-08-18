@@ -59,7 +59,7 @@ export interface ButtonProps {
   theme?: 'primary' | 'sub' | 'outline';
   size?: 'full' | 'lg' | 'md' | 'sm';
   disable?: boolean;
-  icon?: React.ReactNode;
+  icon?: React.FC<SvgProps>;
   style?: object;
 }
 
