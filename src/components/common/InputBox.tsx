@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {InputBoxProps} from 'types/Common';
@@ -83,6 +84,9 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+    height: '100%',
+    paddingVertical: Platform.OS === 'android' ? 0 : 10,
+    textAlignVertical: 'center',
   },
   cancelWrapper: {},
   cancelText: {color: '#ED423F', fontFamily: 'NotoSansKR-Medium'},
