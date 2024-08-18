@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Animated, TouchableOpacity, View} from 'react-native';
+import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
 import {CheckBoxProps} from 'types/Common';
 
 /*
@@ -38,29 +38,19 @@ const CheckBox: React.FC<CheckBoxProps> = ({
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={onCheck}
-      style={{
-        width: 28,
-        height: 28,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+      style={styles.checkBoxContainer}>
       <Animated.View
         style={{
-          width: 24,
-          height: 24,
-          borderRadius: 6,
-          justifyContent: 'center',
-          alignItems: 'center',
+          ...styles.checkBoxWrapper,
           borderColor: borderAnimatedValue.interpolate({
             inputRange: [0, 1],
             outputRange: ['#333333', activeColor],
           }),
-          borderWidth: 2,
         }}>
         <Animated.Text
           style={{
+            ...styles.checkBoxIcon,
             color: activeColor,
-            fontWeight: 'bold',
             opacity: checkAnimatedValue,
           }}>
           ✓
@@ -69,5 +59,25 @@ const CheckBox: React.FC<CheckBoxProps> = ({
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  checkBoxContainer: {
+    width: 28,
+    height: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkBoxWrapper: {
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+  },
+  checkBoxIcon: {
+    fontWeight: 'bold',
+  },
+});
 
 export default CheckBox;
