@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const FlatItemsFriends: React.FC<{images: string[]}> = ({images}) => {
   const mainImage = images.length > 0 ? images[0] : '';
@@ -9,26 +10,49 @@ const FlatItemsFriends: React.FC<{images: string[]}> = ({images}) => {
   return (
     <View style={styles.container}>
       <View style={styles.mainProfileContainer}>
-        <Image source={{uri: mainImage}} style={styles.mainProfile} />
+        {mainImage ? (
+          <Image source={{uri: mainImage}} style={styles.mainProfile} />
+        ) : (
+          <View style={styles.mainBasicProfile}>
+            <BasicProfileSvg width={40} height={40} />
+          </View>
+        )}
       </View>
 
       <View style={styles.additionalProfiles}>
-        {additionalImages.map((image, index) => (
-          <Image
-            key={index}
-            source={{uri: image}}
-            style={[
-              additionalImages.length === 1
-                ? styles.additionalProfileOne
-                : styles.additionalProfile,
-              index !== 0 && styles.additionalProfileOffset,
-            ]}
-          />
-        ))}
+        {additionalImages.map((image, index) =>
+          image ? (
+            <Image
+              key={index}
+              source={{uri: image}}
+              style={[
+                additionalImages.length === 1
+                  ? styles.additionalProfileOne
+                  : styles.additionalProfile,
+                index !== 0 && styles.additionalProfileOffset,
+              ]}
+            />
+          ) : (
+            <View
+              key={index}
+              style={[
+                additionalImages.length === 1
+                  ? styles.additionalProfileOne
+                  : styles.additionalProfile,
+                index !== 0 && styles.additionalProfileOffset,
+                styles.additionalProfileSvgContainer,
+              ]}>
+              <BasicProfileSvg
+                width={additionalImages.length === 1 ? 30 : 20}
+                height={additionalImages.length === 1 ? 30 : 20}
+              />
+            </View>
+          ),
+        )}
 
         {moreCount > 0 && (
           <View style={styles.moreContainer}>
-            <Text style={styles.moreText}>+{moreCount}</Text>
+            <Text style={styles.moreNumber}>+{moreCount}</Text>
           </View>
         )}
       </View>
@@ -47,16 +71,26 @@ const styles = StyleSheet.create({
   mainProfileContainer: {
     width: 60,
     height: 60,
-    borderRadius: 35,
+    borderRadius: 30,
     overflow: 'hidden',
     borderColor: '#C4C4C4',
     borderWidth: 1,
     zIndex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
   },
   mainProfile: {
     width: '100%',
     height: '100%',
-    borderRadius: 35,
+  },
+  mainBasicProfile: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+    overflow: 'hidden',
   },
   additionalProfiles: {
     position: 'absolute',
@@ -72,11 +106,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     position: 'relative',
     zIndex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
   },
   additionalProfileOne: {
     width: 40,
     height: 40,
-    borderRadius: 35,
+    borderRadius: 20,
     position: 'relative',
     zIndex: 1,
     left: 25,
@@ -87,6 +124,11 @@ const styles = StyleSheet.create({
   additionalProfileOffset: {
     marginLeft: -10,
     zIndex: 1,
+  },
+  additionalProfileSvgContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
   },
   moreContainer: {
     width: 30,
@@ -100,7 +142,7 @@ const styles = StyleSheet.create({
     marginLeft: -10,
     zIndex: 1,
   },
-  moreText: {
+  moreNumber: {
     color: '#333',
     fontSize: 12,
   },
