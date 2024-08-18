@@ -7,6 +7,15 @@ const FlatItemsFriends: React.FC<{images: string[]}> = ({images}) => {
   const additionalImages = images.slice(1, 3);
   const moreCount = images.length > 3 ? images.length - 3 : 0;
 
+  const getAdditionalProfileStyle = (index: number) => {
+    return [
+      additionalImages.length === 1
+        ? styles.additionalProfileOne
+        : styles.additionalProfile,
+      index !== 0 && styles.additionalProfileOffset,
+    ];
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.mainProfileContainer}>
@@ -25,21 +34,13 @@ const FlatItemsFriends: React.FC<{images: string[]}> = ({images}) => {
             <Image
               key={index}
               source={{uri: image}}
-              style={[
-                additionalImages.length === 1
-                  ? styles.additionalProfileOne
-                  : styles.additionalProfile,
-                index !== 0 && styles.additionalProfileOffset,
-              ]}
+              style={getAdditionalProfileStyle(index)}
             />
           ) : (
             <View
               key={index}
               style={[
-                additionalImages.length === 1
-                  ? styles.additionalProfileOne
-                  : styles.additionalProfile,
-                index !== 0 && styles.additionalProfileOffset,
+                ...getAdditionalProfileStyle(index),
                 styles.additionalProfileSvgContainer,
               ]}>
               <BasicProfileSvg
