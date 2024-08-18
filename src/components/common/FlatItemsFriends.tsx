@@ -16,6 +16,8 @@ const FlatItemsFriends: React.FC<{images: string[]}> = ({images}) => {
     ];
   };
 
+  const size = additionalImages.length === 1 ? 30 : 20;
+
   return (
     <View style={styles.container}>
       <View style={styles.mainProfileContainer}>
@@ -43,10 +45,7 @@ const FlatItemsFriends: React.FC<{images: string[]}> = ({images}) => {
                 ...getAdditionalProfileStyle(index),
                 styles.additionalProfileSvgContainer,
               ]}>
-              <BasicProfileSvg
-                width={additionalImages.length === 1 ? 30 : 20}
-                height={additionalImages.length === 1 ? 30 : 20}
-              />
+              <BasicProfileSvg width={size} height={size} />
             </View>
           ),
         )}
