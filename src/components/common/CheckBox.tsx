@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
 import {CheckBoxProps} from 'types/Common';
 
 /*
@@ -38,10 +38,10 @@ const CheckBox: React.FC<CheckBoxProps> = ({
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={onCheck}
-      style={styles.CheckBoxContainer}>
+      style={styles.checkBoxContainer}>
       <Animated.View
         style={{
-          ...styles.CheckBoxWrapper,
+          ...styles.checkBoxWrapper,
           borderColor: borderAnimatedValue.interpolate({
             inputRange: [0, 1],
             outputRange: ['#333333', activeColor],
@@ -49,7 +49,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
         }}>
         <Animated.Text
           style={{
-            ...styles.CheckBoxIcon,
+            ...styles.checkBoxIcon,
             color: activeColor,
             opacity: checkAnimatedValue,
           }}>
@@ -61,13 +61,13 @@ const CheckBox: React.FC<CheckBoxProps> = ({
 };
 
 const styles = StyleSheet.create({
-  CheckBoxContainer: {
+  checkBoxContainer: {
     width: 28,
     height: 28,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  CheckBoxWrapper: {
+  checkBoxWrapper: {
     width: 24,
     height: 24,
     borderRadius: 6,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
   },
-  CheckBoxIcon: {
+  checkBoxIcon: {
     fontWeight: 'bold',
   },
 });
