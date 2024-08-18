@@ -1,4 +1,5 @@
 import {GestureResponderEvent} from 'react-native';
+import {SvgProps} from 'react-native-svg';
 
 export interface CheckBoxProps {
   isChecked: boolean;
@@ -86,4 +87,12 @@ export interface ModalStore {
   modal: ModalProps;
   openModal: (modal: Omit<ModalProps, 'isOpen'>) => void;
   closeModal: () => void;
+}
+
+export interface InputBoxProps {
+  value: string;
+  setValue: (text: string) => void;
+  placeholder: string;
+  isLarge?: boolean;
+  icon: React.FC<SvgProps>;
 }
