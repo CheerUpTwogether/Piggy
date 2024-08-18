@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {InputBoxProps} from 'types/Common';
 
 const InputBox: React.FC<InputBoxProps> = ({
@@ -17,12 +16,8 @@ const InputBox: React.FC<InputBoxProps> = ({
   isLarge = true,
   icon: Icon,
 }) => {
-  const navigate = useNavigation();
-
   const handleCancel = () => {
-    if (value === '') {
-      navigate.goBack();
-    } else {
+    if (value !== '') {
       setValue('');
     }
   };
@@ -64,7 +59,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 20,
   },
   container: {
     height: 48,
@@ -88,7 +82,7 @@ const styles = StyleSheet.create({
     paddingVertical: Platform.OS === 'android' ? 0 : 10,
     textAlignVertical: 'center',
   },
-  cancelWrapper: {},
+  cancelWrapper: {paddingHorizontal: 10},
   cancelText: {color: '#ED423F', fontFamily: 'NotoSansKR-Medium'},
 });
 
