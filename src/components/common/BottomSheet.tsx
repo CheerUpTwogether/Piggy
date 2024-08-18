@@ -16,6 +16,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   component,
   isShow,
   setIsShow,
+  size,
 }) => {
   // Modal 종료 애니메이션 및 상태 변경(false)
   const closeModal = () => {
@@ -36,7 +37,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   }, [isShow]);
 
   // 모달 움직일 높이
-  const panY = useRef(new Animated.Value(screenHeight * 0.7)).current;
+  const panY = useRef(new Animated.Value(screenHeight * size)).current;
 
   //  기존 모달에서 늘리는 것을 방지
   const translateY = panY.interpolate({
@@ -53,7 +54,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
 
   // 모달 종료 애니메이션 함수
   const closeBottomSheet = Animated.timing(panY, {
-    toValue: screenHeight * 0.7,
+    toValue: screenHeight * size,
     duration: 100,
     useNativeDriver: true,
   });
@@ -90,6 +91,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
         <Animated.View
           style={{
             ...styles.bottomSheetWrapper,
+            height: screenHeight * size,
             transform: [{translateY: translateY}],
           }}
           {...panResponder.panHandlers}>
@@ -112,7 +114,6 @@ const styles = StyleSheet.create({
 
   bottomSheetWrapper: {
     width: screenWidth,
-    height: screenHeight * 0.7,
     borderTopStartRadius: 20,
     borderTopEndRadius: 20,
   },

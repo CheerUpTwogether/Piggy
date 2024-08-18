@@ -40,6 +40,7 @@ export interface BottomSheetProps {
   component?: React.ReactElement;
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
+  size: number;
 }
 
 export interface EmptyProps {
