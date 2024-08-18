@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Animated, TouchableOpacity, View} from 'react-native';
+import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
 import {RadioButtonProps} from 'types/Common';
 
 /*
@@ -37,20 +37,10 @@ const RadioButton: React.FC<RadioButtonProps> = ({
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={onCheck}
-      style={{
-        width: 24,
-        height: 24,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+      style={styles.radioContainer}>
       <Animated.View
         style={{
-          width: 20,
-          height: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: 18,
-          borderWidth: 2,
+          ...styles.radioWrapper,
           borderColor: checkAnimatedValue.interpolate({
             inputRange: [0, 1],
             outputRange: ['#AAA', activeColor],
@@ -62,15 +52,35 @@ const RadioButton: React.FC<RadioButtonProps> = ({
         }}>
         <Animated.View
           style={{
-            width: 10,
-            height: 10,
-            borderRadius: 8,
-            backgroundColor: '#FFF',
+            ...styles.radioIcon,
             opacity: checkAnimatedValue,
           }}></Animated.View>
       </Animated.View>
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  radioContainer: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  radioWrapper: {
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 18,
+    borderWidth: 2,
+  },
+  radioIcon: {
+    width: 10,
+    height: 10,
+    borderRadius: 8,
+    backgroundColor: '#FFF',
+  },
+});
 
 export default RadioButton;
