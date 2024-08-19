@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Text,
   View,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import {Swipeable} from 'react-native-gesture-handler';
 import {commonStyle} from '@/styles/common';
 import EmptyResult from '@/components/common/EmptyResult';
 import {dummy_friends_data, dummy_profile} from '@/mock/Friends/dummy';
@@ -14,6 +15,50 @@ import {dummy_friends_data, dummy_profile} from '@/mock/Friends/dummy';
 import MoreSvg from '@/assets/icons/more.svg';
 
 const Friends = () => {
+  const [openSwipeableIndex, setOpenSwipeableIndex] = useState<number | null>(
+    null,
+  );
+  const swipeableRefs = useRef<(Swipeable | null)[]>([]);
+
+  // 우측 슬라이더
+  const renderDeleteSlider = () => {
+    return (
+      <TouchableOpacity
+        style={styles.deleteButton}
+        activeOpacity={0.8}
+        onPress={() => console.log('TODO: 삭제 확인 모달 & 삭제 구현')}>
+        <Text style={commonStyle.REGULAR_FF_12}>삭제</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const handleMorePress = (index: number) => {
+    // 이전에 열린 Swipeable을 닫음
+    if (openSwipeableIndex !== null && openSwipeableIndex !== index) {
+      swipeableRefs.current[openSwipeableIndex]?.close();
+    }
+
+    // 현재 Swipeable을 열고 상태 업데이트
+    swipeableRefs.current[index]?.openRight();
+    setOpenSwipeableIndex(index);
+  };
+
+  const handleSwipeableOpen = (index: number) => {
+    // 이전에 열린 Swipeable을 닫음
+    if (openSwipeableIndex !== null && openSwipeableIndex !== index) {
+      swipeableRefs.current[openSwipeableIndex]?.close();
+    }
+
+    // 현재 Swipeable을 열고 상태 업데이트
+    setOpenSwipeableIndex(index);
+  };
+
+  const handleSwipeableClose = (index: number) => {
+    if (openSwipeableIndex === index) {
+      setOpenSwipeableIndex(null);
+    }
+  };
+
   return (
     <ScrollView style={commonStyle.CONTAINER}>
       <View style={{marginBottom: 30}}>
@@ -42,24 +87,32 @@ const Friends = () => {
               />
             </View>
           ) : (
-            <View>
-              {dummy_friends_data.map(item => (
-                <View key={item.id} style={styles.friendContainer}>
-                  <View style={styles.friendWrapper}>
-                    <Image
-                      source={{uri: item.profile_image_path}}
-                      style={styles.friendProfile}
-                    />
-                    <Text style={commonStyle.MEDIUM_33_16}>
-                      {item.nick_name}
-                    </Text>
+            <View style={{marginTop: 10}}>
+              {dummy_friends_data.map((item, index) => (
+                <Swipeable
+                  key={item.id}
+                  ref={ref => (swipeableRefs.current[index] = ref)}
+                  renderRightActions={renderDeleteSlider}
+                  onSwipeableOpen={() => handleSwipeableOpen(index)}
+                  onSwipeableClose={() => handleSwipeableClose(index)}>
+                  <View style={styles.friendContainer}>
+                    <View style={styles.friendWrapper}>
+                      <Image
+                        source={{uri: item.profile_image_path}}
+                        style={styles.friendProfile}
+                      />
+                      <Text style={commonStyle.MEDIUM_33_16}>
+                        {item.nick_name}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={styles.moreButton}
+                      onPress={() => handleMorePress(index)}>
+                      <MoreSvg width={20} height={20} />
+                    </TouchableOpacity>
                   </View>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={styles.moreButton}>
-                    <MoreSvg width={20} height={20} />
-                  </TouchableOpacity>
-                </View>
+                </Swipeable>
               ))}
             </View>
           )}
@@ -92,7 +145,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
+    paddingVertical: 10,
   },
   friendWrapper: {
     flexDirection: 'row',
@@ -105,11 +158,17 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   moreButton: {
-    paddingRight: 8,
-    width: 40,
-    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
+    width: 40,
+    height: 40,
+  },
+  deleteButton: {
+    backgroundColor: '#ED423F',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 80,
+    height: '100%',
   },
   emptyWrapper: {marginTop: 60},
 });
