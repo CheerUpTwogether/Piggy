@@ -49,10 +49,10 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Inter.ttf</string>
-		<string>NotoSansKR-Medium.ttf</string>
-		<string>NotoSansKR-Bold.ttf</string>
-		<string>NotoSansKR-Regular.ttf</string>
+		<string>Pretendard-Bold.otf</string>
+		<string>Pretendard-Medium.otf</string>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
 	</array>
 </dict>
 </plist>
