@@ -1,0 +1,83 @@
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import DeleteButtonSvg from '../../assets/icons/delete.svg';
+import {commonStyle} from '../../styles/common.ts';
+
+// KeyPad 기본 컴포넌트 -> export default
+const KeyPad = ({onPress}) => {
+  const buttons = [
+    ['1', '2', '3'],
+    ['4', '5', '6'],
+    ['7', '8', '9'],
+    ['00', '0', 'deleteButton'],
+  ];
+
+  return (
+    <View style={styles.container}>
+      {buttons.map((row, rowIndex) => (
+        <View key={rowIndex} style={styles.row}>
+          {row.map((item, buttonIndex) => (
+            <TouchableOpacity
+              key={buttonIndex}
+              style={styles.button}
+              onPress={() => onPress(item)}
+              activeOpacity={0.8}>
+              {item === 'deleteButton' ? (
+                <DeleteButtonSvg
+                  width={20}
+                  height={20}
+                  stroke="#333"
+                  strokeWidth={0.4}
+                />
+              ) : (
+                <Text style={commonStyle.MEDIUM_33_20}>{item}</Text>
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
+      ))}
+    </View>
+  );
+};
+
+// 값 받는 용도의 커스텀 훅
+export const useKeyPad = () => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handlePress = item => {
+    if (item === 'deleteButton') {
+      setInputValue(prev => prev.slice(0, -1));
+    } else {
+      setInputValue(prev => prev + item);
+    }
+  };
+
+  return {
+    inputValue,
+    handlePress,
+  };
+};
+
+const styles = StyleSheet.create({
+  container: {
+    height: 250,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  button: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 8,
+    marginBottom: 8,
+    marginLeft: 26,
+    marginRight: 26,
+  },
+});
+
+export default KeyPad;
