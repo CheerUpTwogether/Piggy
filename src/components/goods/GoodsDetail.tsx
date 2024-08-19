@@ -4,16 +4,6 @@ import {commonStyle} from '@/styles/common';
 import {useRoute} from '@react-navigation/native';
 import Button from '../common/Button';
 
-interface GoodsDetailProps {
-  id: string;
-  provider: string;
-  title: string;
-  sub_title: string;
-  price: number;
-  expire_date: string;
-  goods_url: string;
-}
-
 const GoodsDetail = () => {
   const route = useRoute();
   const {id, provider, title, sub_title, price, expire_date, goods_url} =
