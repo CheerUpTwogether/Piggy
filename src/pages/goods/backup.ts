@@ -1,8 +1,6 @@
-import {dummyGoodsItemData} from '@/mook/goods/goods';
-import {dummyGoodsItem} from '@/mook/goods/types';
-import {commonStyle} from '@/styles/common';
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
+  Animated,
   FlatList,
   Image,
   SafeAreaView,
@@ -11,18 +9,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {dummyGoodsItemData} from '@/mook/goods/goods';
+import {dummyGoodsItem} from '@/mook/goods/types';
+import {commonStyle} from '@/styles/common';
 
 const Goods = () => {
   const categories = ['전체', '패스트푸드', '카페', '스낵'];
   const [selectedCategory, setSelectedCategory] = useState('전체');
-
-  const navigation = useNavigation();
-
-  const gotoDetail = (item: dummyGoodsItem) => {
-    console.log(item);
-    navigation.replace('GoodsDetail', {...item});
-  };
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const renderHotItem = ({item}: {item: dummyGoodsItem}) => (
     <TouchableOpacity activeOpacity={0.8} style={styles.hotItemWrapper}>
@@ -31,14 +25,9 @@ const Goods = () => {
   );
 
   const renderItem = ({item}: {item: dummyGoodsItem}) => (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      style={{marginVertical: 9, gap: 10}}
-      onPress={() => {
-        gotoDetail(item);
-      }}>
+    <TouchableOpacity activeOpacity={0.8} style={{marginVertical: 9, gap: 10}}>
       <View style={styles.itemWrapper}>
-        <Text style={commonStyle.MEDIUM_FF_12}>추천 상품</Text>
+        <Text style={{...commonStyle.MEDIUM_FF_12}}>추천 상품</Text>
       </View>
       <Image
         source={{uri: 'https://picsum.photos/120/120'}}
@@ -60,15 +49,29 @@ const Goods = () => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
-      <Image
-        source={{
-          uri: 'https://loremflickr.com/320/80/cat​',
-        }}
-        style={styles.bannerImg}
-      />
-      <Text style={styles.hotTitle}>이런 상품은 어떠신가요? 🔥</Text>
+      <Animated.View
+        style={[
+          styles.bannerContainer,
+          {
+            transform: [
+              {
+                translateY: scrollY.interpolate({
+                  inputRange: [0, 100],
+                  outputRange: [0, -80],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+          },
+        ]}>
+        <Image
+          source={{
+            uri: 'https://loremflickr.com/320/80/cat​',
+          }}
+          style={styles.bannerImg}
+        />
+        <Text style={styles.hotTitle}>이런 상품은 어떠신가요? 🔥</Text>
 
-      <View style={{marginHorizontal: 16}}>
         <FlatList
           data={dummyGoodsItemData}
           horizontal={true}
@@ -76,13 +79,13 @@ const Goods = () => {
           keyExtractor={item => item.id}
           renderItem={renderHotItem}
           showsHorizontalScrollIndicator={false}
+          style={styles.hotList}
         />
-      </View>
+      </Animated.View>
 
       <View style={styles.categoryContainer}>
         {categories.map(category => (
           <TouchableOpacity
-            activeOpacity={0.8}
             key={category}
             onPress={() => setSelectedCategory(category)}>
             <Text
@@ -98,20 +101,26 @@ const Goods = () => {
 
       <View style={{height: 1, backgroundColor: '#DDD'}} />
 
-      <View style={styles.itemContainer}>
-        <FlatList
-          data={dummyGoodsItemData}
-          bounces={false}
-          keyExtractor={item => item.id}
-          renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
+      <Animated.FlatList
+        data={dummyGoodsItemData}
+        bounces={false}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: false},
+        )}
+        style={styles.itemContainer}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  bannerContainer: {
+    width: '100%',
+  },
   bannerImg: {
     width: '100%',
     height: 80,
@@ -121,6 +130,9 @@ const styles = StyleSheet.create({
     marginLeft: 24,
     marginTop: 14,
     marginBottom: 16,
+  },
+  hotList: {
+    marginHorizontal: 16,
   },
   hotItemWrapper: {
     width: 120,
@@ -139,7 +151,7 @@ const styles = StyleSheet.create({
     height: 40,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 6,
     marginVertical: 12,
     paddingVertical: 1,
     marginHorizontal: 24,

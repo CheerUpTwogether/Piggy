@@ -51,6 +51,7 @@ const RightItems = ({name}: {name: string}) => {
         </View>
       );
     case 'Goods':
+    case 'GoodsDetail':
       return (
         <View style={styles.iconContainer}>
           <TouchableOpacity style={[styles.directionRow, styles.icon]}>

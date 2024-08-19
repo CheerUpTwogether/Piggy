@@ -14,7 +14,7 @@ import Home from '@/pages/home/Home';
 import Friends from '@/pages/friends/Friends';
 import Goods from '@/pages/goods/Goods';
 import Settings from '@/pages/settings/Settings';
-
+import GoodsDetail from '@/components/goods/GoodsDetail';
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 
@@ -81,6 +81,14 @@ const Router = () => {
         component={Main}
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="GoodsDetail"
+        component={GoodsDetail}
+        options={{
+          header: StackHeader,
+          headerLeftLabelVisible: true,
         }}
       />
     </Stack.Navigator>
