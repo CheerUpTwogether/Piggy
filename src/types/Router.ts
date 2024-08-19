@@ -13,7 +13,7 @@ export type RootBottomTabParamList = {
 export type RootStackParamList = {
   Login: undefined;
   Splash: undefined;
-  BottomTab: {
+  Main: {
     screen: keyof RootBottomTabParamList;
   };
 };

@@ -18,11 +18,9 @@ import Settings from '@/pages/settings/Settings';
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 
-const TabBar = (props: BottomTabBarProps) => <BottomTab {...props} />;
-
 const MainHeader = (props: BottomTabHeaderProps) => <TopTab {...props} />;
-
 const StackHeader = (props: StackHeaderProps) => <TopTab {...props} />;
+const TabBar = (props: BottomTabBarProps) => <BottomTab {...props} />;
 
 const Main = () => {
   return (
