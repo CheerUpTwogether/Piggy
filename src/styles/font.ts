@@ -6,8 +6,8 @@ export const Bold: TextStyle = {
 };
 
 export const Medium: TextStyle = {
-  fontFamily: 'Pretendard-Medium',
-  fontWeight: 'medium',
+  fontFamily: 'Pretendard-SemiBold',
+  fontWeight: 'semibold',
 };
 
 export const Regular: TextStyle = {
