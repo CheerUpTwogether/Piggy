@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">piggy</string>
+    <string name="kakao_app_key">a04f4ceb26fa7e9829ba64f029fd4e79</string>
 </resources>
