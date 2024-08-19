@@ -7,7 +7,6 @@ import {LeftItemProps} from '@/types/Common';
 import AlertSvg from '@/assets/icons/alert.svg';
 import SearchSvg from '@/assets/icons/search.svg';
 import GoodsBoxSvg from '@/assets/icons/goodsBox.svg';
-import SettingSvg from '@/assets/icons/setting.svg';
 import BackSvg from '@/assets/icons/leftArrow.svg';
 import EditSvg from '@/assets/icons/edit.svg';
 
