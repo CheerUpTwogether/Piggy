@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
-import {RadioButtonProps} from 'types/Common';
+import {SelectProps} from 'types/Common';
 
 /*
   isChecked : 상태 값
@@ -8,7 +8,7 @@ import {RadioButtonProps} from 'types/Common';
   activeColor : 활성화 시 컬러
 */
 
-const RadioButton: React.FC<RadioButtonProps> = ({
+const RadioButton: React.FC<SelectProps> = ({
   isChecked,
   setIsChecked,
   activeColor = '#ED423F',

@@ -1,13 +1,7 @@
 import {GestureResponderEvent} from 'react-native';
 import {SvgProps} from 'react-native-svg';
 
-export interface CheckBoxProps {
-  isChecked: boolean;
-  setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
-  activeColor?: string;
-}
-
-export interface RadioButtonProps {
+export interface SelectProps {
   isChecked: boolean;
   setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
   activeColor?: string;

@@ -1,6 +1,6 @@
+import {SelectProps} from '@/types/Common';
 import React, {useRef} from 'react';
 import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
-import {CheckBoxProps} from 'types/Common';
 
 /*
   isChecked : 상태 값
@@ -8,7 +8,7 @@ import {CheckBoxProps} from 'types/Common';
   activeColor : 활성화 시 컬러
 */
 
-const CheckBox: React.FC<CheckBoxProps> = ({
+const CheckBox: React.FC<SelectProps> = ({
   isChecked,
   setIsChecked,
   activeColor = '#ED423F',
