@@ -1,17 +1,17 @@
 import {TextStyle} from 'react-native';
 
 export const Bold: TextStyle = {
-  fontFamily: 'NotoSansKR-Bold',
+  fontFamily: 'Pretendard-Bold',
   fontWeight: 'bold',
 };
 
 export const Medium: TextStyle = {
-  fontFamily: 'NotoSansKR-Medium',
+  fontFamily: 'Pretendard-Medium',
   fontWeight: 'medium',
 };
 
 export const Regular: TextStyle = {
-  fontFamily: 'NotoSansKR-Regular',
+  fontFamily: 'Pretendard-Regular',
   fontWeight: 'regular',
 };
 
