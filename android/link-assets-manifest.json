@@ -16,6 +16,26 @@
     {
       "path": "src/assets/fonts/NotoSansKR-Regular.ttf",
       "sha1": "83d3c03dc1fc16f2a5b8bbf929d4cc21a078282c"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-Bold.woff2",
+      "sha1": "de4e806d477fda120d0575f2e4d7b3112c32ee7f"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-Medium.woff2",
+      "sha1": "8c6e2cd9a8bc5d27a4e7e59ee43aa7b59aa6eccf"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-Regular.woff2",
+      "sha1": "8de80777699618108c51ffdcfe12e816e3035c57"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-SemiBold.woff2",
+      "sha1": "cb44b1f9f55d1f1bdc35febcc349ebf53b43ed66"
+    },
+    {
+      "path": "src/assets/fonts/PretendardVariable.woff2",
+      "sha1": "2c1029bc9d8a62ba0388faf0aa19cddbd996e7e4"
     }
   ]
 }
