@@ -4,6 +4,7 @@ import Router from 'router/index';
 import {NavigationContainer} from '@react-navigation/native';
 import ModalDefault from '@/components/common/ModalDefault';
 import Toast from '@/components/common/Toast';
+import 'react-native-url-polyfill/auto';
 
 const App = () => {
   return (
