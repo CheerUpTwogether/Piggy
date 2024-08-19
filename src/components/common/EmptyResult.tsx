@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   textWrapper: {marginTop: 30},
   text: {
-    color: '#333',
+    color: '#999',
     fontFamily: 'NotoSansKR-Regular',
     lineHeight: 24,
     textAlign: 'center',
