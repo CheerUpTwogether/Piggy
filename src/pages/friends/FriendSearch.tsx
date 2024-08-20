@@ -69,10 +69,14 @@ const FriendSearch = () => {
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         ListEmptyComponent={
-          <EmptyResult
-            reason="검색 결과가 없어요."
-            solution="올바른 닉네임을 검색해보세요"
-          />
+          keyword === '' ? (
+            <View />
+          ) : (
+            <EmptyResult
+              reason="검색 결과가 없어요."
+              solution="올바른 닉네임을 검색해보세요."
+            />
+          )
         }
       />
     </View>
