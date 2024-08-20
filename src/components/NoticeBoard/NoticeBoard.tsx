@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {FlatList, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {dummyNoticeItemData} from '@/mock/NoticeBoard/NoticeBoard';
 import {dummyNoticeItem} from '@/mock/NoticeBoard/types';
@@ -15,12 +15,7 @@ const NoticeBoard = () => {
 
   const renderNoticeItem = ({item}: {item: dummyNoticeItem}) => (
     <TouchableOpacity
-      style={{
-        gap: 4,
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderColor: '#EFEFEF',
-      }}
+      style={styles.renderContainer}
       onPress={() => gotoNoticeBoardDetail(item)}>
       <Text style={commonStyle.REGULAR_33_16}>{item.title}</Text>
       <Text
@@ -43,5 +38,14 @@ const NoticeBoard = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  renderContainer: {
+    gap: 4,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: '#EFEFEF',
+  },
+});
 
 export default NoticeBoard;
