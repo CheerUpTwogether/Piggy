@@ -6,56 +6,79 @@ import {
   Image,
   StyleSheet,
   ScrollView,
+  Animated,
+  PanResponder,
 } from 'react-native';
-import {Swipeable} from 'react-native-gesture-handler';
 import {commonStyle} from '@/styles/common';
 import EmptyResult from '@/components/common/EmptyResult';
 import {dummy_friends_data, dummy_profile} from '@/mock/Friends/dummy';
-
 import MoreSvg from '@/assets/icons/more.svg';
 
+const SWIPE_STANDARD = -100; // 슬라이드 시 삭제 버튼 나오는 기준
+
 const Friends = () => {
-  const [openSwipeableIndex, setOpenSwipeableIndex] = useState<number | null>(
-    null,
-  );
-  const swipeableRefs = useRef<(Swipeable | null)[]>([]);
+  const [openRowIndex, setOpenRowIndex] = useState<number | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const positions = useRef(
+    dummy_friends_data.map(() => new Animated.Value(0)),
+  ).current;
 
-  // 우측 슬라이더
-  const renderDeleteSlider = () => {
-    return (
-      <TouchableOpacity
-        style={styles.deleteButton}
-        activeOpacity={0.8}
-        onPress={() => console.log('TODO: 삭제 확인 모달 & 삭제 구현')}>
-        <Text style={commonStyle.REGULAR_FF_12}>삭제</Text>
-      </TouchableOpacity>
-    );
+  // 애니메이션을 통해 행을 열기 || 닫는 함수
+  const toggleRowAnimation = (index: number, toValue: number) => {
+    return new Promise<void>(resolve => {
+      Animated.timing(positions[index], {
+        toValue,
+        duration: 100,
+        useNativeDriver: true,
+      }).start(() => {
+        setOpenRowIndex(toValue === 0 ? null : index);
+        setIsAnimating(false);
+        resolve();
+      });
+    });
   };
 
-  const handleMorePress = (index: number) => {
-    // 이전에 열린 Swipeable을 닫음
-    if (openSwipeableIndex !== null && openSwipeableIndex !== index) {
-      swipeableRefs.current[openSwipeableIndex]?.close();
+  // 행의 삭제 열기, 닫기를 공통으로 처리 함수
+  const handleRowToggle = async (index: number) => {
+    if (isAnimating) {
+      return;
     }
+    setIsAnimating(true);
 
-    // 현재 Swipeable을 열고 상태 업데이트
-    swipeableRefs.current[index]?.openRight();
-    setOpenSwipeableIndex(index);
-  };
-
-  const handleSwipeableOpen = (index: number) => {
-    // 이전에 열린 Swipeable을 닫음
-    if (openSwipeableIndex !== null && openSwipeableIndex !== index) {
-      swipeableRefs.current[openSwipeableIndex]?.close();
+    if (openRowIndex === index) {
+      await toggleRowAnimation(index, 0); // 현재 열려 있는 행 닫기
+    } else {
+      if (openRowIndex !== null && openRowIndex !== index) {
+        await toggleRowAnimation(openRowIndex, 0); // 이전에 열려 있던 행 닫기
+      }
+      await toggleRowAnimation(index, SWIPE_STANDARD); // 현재 행 열기
     }
-
-    // 현재 Swipeable을 열고 상태 업데이트
-    setOpenSwipeableIndex(index);
+    setIsAnimating(false);
   };
 
-  const handleSwipeableClose = (index: number) => {
-    if (openSwipeableIndex === index) {
-      setOpenSwipeableIndex(null);
+  // PanResponder 생성 함수
+  const createPanResponder = (index: number) => {
+    return PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (e, gestureState) => {
+        if (gestureState.dx < 0) {
+          positions[index].setValue(gestureState.dx);
+        }
+      },
+      onPanResponderRelease: async (e, gestureState) => {
+        if (gestureState.dx < SWIPE_STANDARD / 2) {
+          await handleRowToggle(index);
+        } else {
+          await toggleRowAnimation(index, 0); // 현재 행 닫기
+        }
+      },
+    });
+  };
+
+  // More 버튼이 눌렸을 때의 동작
+  const handleMorePress = async (index: number) => {
+    if (!isAnimating) {
+      await handleRowToggle(index);
     }
   };
 
@@ -89,13 +112,15 @@ const Friends = () => {
           ) : (
             <View style={{marginTop: 10}}>
               {dummy_friends_data.map((item, index) => (
-                <Swipeable
-                  key={item.id}
-                  ref={ref => (swipeableRefs.current[index] = ref)}
-                  renderRightActions={renderDeleteSlider}
-                  onSwipeableOpen={() => handleSwipeableOpen(index)}
-                  onSwipeableClose={() => handleSwipeableClose(index)}>
-                  <View style={styles.friendContainer}>
+                <View key={item.id} style={styles.swipeContainer}>
+                  <Animated.View
+                    style={[
+                      styles.friendContainer,
+                      {
+                        transform: [{translateX: positions[index]}],
+                      },
+                    ]}
+                    {...createPanResponder(index).panHandlers}>
                     <View style={styles.friendWrapper}>
                       <Image
                         source={{uri: item.profile_image_path}}
@@ -105,14 +130,57 @@ const Friends = () => {
                         {item.nick_name}
                       </Text>
                     </View>
+                    <Animated.View
+                      style={[
+                        styles.moreButton,
+                        {
+                          transform: [
+                            {
+                              translateX: positions[index].interpolate({
+                                inputRange: [SWIPE_STANDARD, 0],
+                                outputRange: [30, 0],
+                                extrapolate: 'clamp',
+                              }),
+                            },
+                          ],
+                        },
+                      ]}>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => handleMorePress(index)}>
+                        <MoreSvg
+                          width={20}
+                          height={20}
+                          stroke={'#555'}
+                          strokeWidth={0.1}
+                        />
+                      </TouchableOpacity>
+                    </Animated.View>
+                  </Animated.View>
+                  <Animated.View
+                    style={[
+                      styles.deleteButton,
+                      {
+                        transform: [
+                          {
+                            translateX: positions[index].interpolate({
+                              inputRange: [SWIPE_STANDARD, 0],
+                              outputRange: [0, 60],
+                              extrapolate: 'clamp',
+                            }),
+                          },
+                        ],
+                      },
+                    ]}>
                     <TouchableOpacity
                       activeOpacity={0.8}
-                      style={styles.moreButton}
-                      onPress={() => handleMorePress(index)}>
-                      <MoreSvg width={20} height={20} />
+                      onPress={() =>
+                        console.log('TODO: 삭제 확인 모달 & 삭제 구현')
+                      }>
+                      <Text style={commonStyle.REGULAR_FF_12}>삭제</Text>
                     </TouchableOpacity>
-                  </View>
-                </Swipeable>
+                  </Animated.View>
+                </View>
               ))}
             </View>
           )}
@@ -123,6 +191,10 @@ const Friends = () => {
 };
 
 const styles = StyleSheet.create({
+  swipeContainer: {
+    position: 'relative',
+    overflow: 'hidden',
+  },
   profileWrapper: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -146,6 +218,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
+    backgroundColor: '#fff',
+    zIndex: 1,
   },
   friendWrapper: {
     flexDirection: 'row',
@@ -167,8 +241,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#ED423F',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 80,
+    width: 60,
     height: '100%',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: 0,
   },
   emptyWrapper: {marginTop: 60},
 });
