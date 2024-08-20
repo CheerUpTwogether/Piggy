@@ -91,3 +91,6 @@ ios/Pods/
 *.xcworkspace/
 *.xcuserdatad/
 *.xcscheme
+
+# env
+.env
