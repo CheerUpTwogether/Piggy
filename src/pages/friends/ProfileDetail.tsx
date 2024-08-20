@@ -191,14 +191,12 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
 const styles = StyleSheet.create({
   profile: {
     width: '100%',
-    // height: 380,
     height: '72%',
   },
   emptyProfileWrapper: {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    // height: 380,
     height: '72%',
     backgroundColor: '#EFEFEF',
   },
@@ -253,7 +251,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 380,
+    height: '72%',
     marginHorizontal: 16,
     backgroundColor: '#FFF',
     borderTopWidth: 0.5,
