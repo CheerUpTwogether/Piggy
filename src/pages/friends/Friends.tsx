@@ -148,12 +148,7 @@ const Friends = () => {
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => handleMorePress(index)}>
-                        <MoreSvg
-                          width={20}
-                          height={20}
-                          stroke={'#555'}
-                          strokeWidth={0.1}
-                        />
+                        <MoreSvg width={20} height={20} color={'#555'} />
                       </TouchableOpacity>
                     </Animated.View>
                   </Animated.View>
