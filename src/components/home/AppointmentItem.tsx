@@ -6,6 +6,7 @@ import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
 import {AppointmentProps} from '@/mock/Home/type';
+import Button from '../common/Button';
 
 const AppointmentItem = ({item}: {item: AppointmentProps}) => {
   const titleFontColor = item.isCanceled
@@ -40,11 +41,16 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
 
         {/* 모임 정보 */}
         <View style={styles.contentContainer}>
-          <Text style={contentFontColor}>{item.location}</Text>
-          <Text style={contentFontColor}>
-            {item.date}
-            {item.time}
-          </Text>
+          <View>
+            <Text style={contentFontColor}>{item.location}</Text>
+            <Text style={contentFontColor}>{`${item.date} ${item.time}`}</Text>
+          </View>
+
+          {item.appointment_id === 1 && (
+            <Text style={[styles.timer, commonStyle.REGULAR_PRIMARY_14]}>
+              09:59
+            </Text>
+          )}
         </View>
 
         {/* 취소 도장 */}
@@ -86,11 +92,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     textAlign: 'right',
   },
-  contentContainer: {},
+  contentContainer: {
+    flexDirection: 'row',
+  },
   cancelStapmp: {
     position: 'absolute',
     top: 16,
-    left: 60,
+    right: 120,
     width: 100,
     height: 40,
     borderRadius: 10,
@@ -99,6 +107,18 @@ const styles = StyleSheet.create({
     transform: [{rotate: '-20deg'}],
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  timer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 4,
+    borderRadius: 100,
+    borderColor: color_primary,
+    borderWidth: 1,
+    textAlign: 'center',
+    height: 24,
+    width: 64,
+    textAlignVertical: 'center',
   },
 });
 
