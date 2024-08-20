@@ -7,13 +7,13 @@ import {
   Animated,
   PanResponder,
 } from 'react-native';
-import {commonStyle, color_ef} from '@/styles/common';
+import {commonStyle, color_ef, color_primary} from '@/styles/common';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import {appointments} from '@/mock/Home/Home';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
-
+import PulsSvg from '@/assets/icons/plus.svg';
 const Home = () => {
   const [sort, setSort] = useState('next');
   const [activeIndex, setActiveIndex] = useState<number | null>(null); // 현재 활성화된 슬라이드의 인덱스
@@ -111,6 +111,14 @@ const Home = () => {
           />
         </View>
       )}
+
+      {/* 약속 추가 버튼 */}
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.plusBtn}
+        onPress={() => {}}>
+        <PulsSvg color="#FFF" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -139,6 +147,17 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  plusBtn: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
+    width: 48,
+    height: 48,
+    backgroundColor: color_primary,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
