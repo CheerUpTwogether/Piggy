@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {commonStyle} from '@/styles/common';
 import EmptyResult from '@/components/common/EmptyResult';
-import {dummy_friends_data, dummy_profile} from '@/mock/Friends/dummy';
+import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
 import MoreSvg from '@/assets/icons/more.svg';
 
 const SWIPE_STANDARD = -100; // 슬라이드 시 삭제 버튼 나오는 기준
