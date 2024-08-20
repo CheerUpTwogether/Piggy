@@ -28,12 +28,7 @@ const AppointmentDetail = () => {
         <Text style={[commonStyle.BOLD_33_20, styles.subject]}>
           {item.subject}
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-          }}>
+        <View style={styles.contentWrapper}>
           <View>
             <View style={styles.infoSentence}>
               <LocationSvg
@@ -92,6 +87,11 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 16,
     //paddingBottom: 20,
+  },
+  contentWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
   },
   mr4: {
     marginRight: 4,
