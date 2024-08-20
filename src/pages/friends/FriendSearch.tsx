@@ -10,6 +10,8 @@ import {
 import {commonStyle} from '@/styles/common';
 import InputBox from '@/components/common/InputBox';
 import {dummy_friends_data} from '@/mock/Friends/Friends';
+import useDebounce from '@/hooks/useDebounce';
+import {Friend} from '@/mock/Friends/type';
 
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
@@ -17,8 +19,9 @@ import EmptyResult from '@/components/common/EmptyResult';
 
 const FriendSearch = () => {
   const [keyword, setKeyword] = useState('');
+  const debouncedKeyword = useDebounce(keyword, 500);
 
-  const filterFriend = keyword
+  const filterFriend = debouncedKeyword
     ? dummy_friends_data
         .filter(friend =>
           friend.nick_name.toLowerCase().includes(keyword.toLowerCase()),
@@ -34,7 +37,8 @@ const FriendSearch = () => {
   const nonFriends = filterFriend.filter(friend => !friend.friend);
 
   const sortedData = [...friends, ...nonFriends];
-  const renderItem = ({item}) => (
+
+  const renderItem = ({item}: {item: Friend}) => (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.friendContainer}
