@@ -1,15 +1,20 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
 import {commonStyle} from '@/styles/common';
 
-import LogoSvg from '@/assets/icons/logo.svg';
 import KakaoSvg from '@/assets/icons/kakao.svg';
+const logo = require('@/assets/icons/logo.png');
 
 const Login = () => {
   return (
     <View style={commonStyle.container}>
       <View style={style.wrapper}>
-        <LogoSvg style={{marginLeft: 40}} width={160} height={60} />
+        <Image
+          source={logo}
+          style={{marginLeft: 40, width: 160, height: 62}}
+          width={160}
+          height={60}
+        />
         <View style={style.explain}>
           <Text style={style.startText}>시작하기</Text>
           <Text style={style.simpleText}>
