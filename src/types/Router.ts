@@ -16,6 +16,7 @@ export type RootStackParamList = {
   Main: {
     screen: keyof RootBottomTabParamList;
   };
+  FriendSearch: undefined;
 };
 
 export type MainHeaderProps = {
