@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -21,7 +21,7 @@ import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const {height: screenHeight} = Dimensions.get('window');
 
-const gradeList = [
+const GRADE_LIST = [
   {
     id: 1,
     grade: '약속 베이비',
@@ -55,16 +55,10 @@ const determineGrade = (
 ) => {
   const completionRate = (completedAppointments / totalAppointments) * 100;
 
-  switch (true) {
-    case totalAppointments < 5:
-      return {grade: '약속 베이비', gradeColor: '#333'};
-    case completionRate < 33.3:
-      return {grade: '프로 약속 탈주러', gradeColor: '#ED423F'};
-    case completionRate < 66.6:
-      return {grade: '약속 수행러', gradeColor: '#FEE500'};
-    default:
-      return {grade: '프로 약속 이행러', gradeColor: '#04BF8A'};
-  }
+  if (totalAppointments < 5) return GRADE_LIST[0];
+  if (completionRate < 33.3) return GRADE_LIST[1];
+  if (completionRate < 66.6) return GRADE_LIST[2];
+  return GRADE_LIST[3];
 };
 
 const ProfileDetail: React.FC<ProfileDetailProps> = ({
@@ -83,15 +77,15 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
     completedAppointments,
   );
 
-  useEffect(() => {
+  const toggleGradeList = () => {
     Animated.timing(slideAnim, {
-      toValue: gradeListShow ? 0 : screenHeight,
+      toValue: gradeListShow ? screenHeight : 0,
       duration: 300,
       useNativeDriver: true,
-    }).start();
-  }, [gradeListShow, slideAnim]);
+    }).start(() => setGradeListShow(!gradeListShow));
+  };
 
-  const iconShow = () => {
+  const getActionIcons = () => {
     if (uuid === '1000') {
       return (
         <TouchableOpacity
@@ -100,34 +94,28 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
           <EditSvg style={styles.rightIcon} />
         </TouchableOpacity>
       );
-    } else if (friend) {
-      return (
-        <View style={{flexDirection: 'row', gap: 8}}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => console.log('TODO: 선물하기')}>
-            <GiftSvg style={styles.rightIcon} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => console.log('TODO: 친구 삭제')}>
-            <TrashSvg style={styles.rightIcon} />
-          </TouchableOpacity>
-        </View>
-      );
-    } else {
-      return (
+    }
+
+    return friend ? (
+      <View style={styles.iconRow}>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => console.log('TODO: 친구 추가')}>
-          <AddFriendSvg style={styles.rightIcon} />
+          onPress={() => console.log('TODO: 선물하기')}>
+          <GiftSvg style={styles.rightIcon} />
         </TouchableOpacity>
-      );
-    }
-  };
-
-  const handleGradeToggle = () => {
-    setGradeListShow(!gradeListShow);
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => console.log('TODO: 친구 삭제')}>
+          <TrashSvg style={styles.rightIcon} />
+        </TouchableOpacity>
+      </View>
+    ) : (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => console.log('TODO: 친구 추가')}>
+        <AddFriendSvg style={styles.rightIcon} />
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -144,17 +132,14 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
         <View style={styles.introduceWrapper}>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={handleGradeToggle}
+            onPress={toggleGradeList}
             style={
               gradeListShow ? styles.uTurnIconWrapper : styles.gradeWrapper
             }>
             {gradeListShow ? (
               <UTurnSvg style={styles.uTurnIcon} />
             ) : (
-              <GradeSvg
-                style={styles.gradeStyle}
-                color={gradeColor as string}
-              />
+              <GradeSvg style={styles.gradeStyle} color={gradeColor} />
             )}
           </TouchableOpacity>
           <View style={styles.nickNameWrapper}>
@@ -162,7 +147,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
             <Text style={commonStyle.MEDIUM_99_14}>{grade}</Text>
           </View>
         </View>
-        {iconShow()}
+        {getActionIcons()}
       </View>
 
       <Animated.View
@@ -171,14 +156,14 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
           {transform: [{translateX: slideAnim}]},
         ]}>
         <View>
-          {gradeList.map(item => (
-            <View key={item.id} style={styles.explainWrapper}>
+          {GRADE_LIST.map(({id, grade, explain, gradeColor}) => (
+            <View key={id} style={styles.explainWrapper}>
               <View style={styles.gradeWrapper}>
-                <GradeSvg style={styles.gradeStyle} color={item.gradeColor} />
+                <GradeSvg style={styles.gradeStyle} color={gradeColor} />
               </View>
-              <View style={{gap: 4}}>
-                <Text style={commonStyle.MEDIUM_33_18}>{item.grade}</Text>
-                <Text style={commonStyle.REGULAR_99_16}>{item.explain}</Text>
+              <View style={styles.explainTextWrapper}>
+                <Text style={commonStyle.MEDIUM_33_18}>{grade}</Text>
+                <Text style={commonStyle.REGULAR_99_16}>{explain}</Text>
               </View>
             </View>
           ))}
@@ -261,16 +246,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  gradeListContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   explainWrapper: {
     flexDirection: 'row',
     marginBottom: 12,
     alignItems: 'center',
     gap: 14,
+  },
+  iconRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  explainTextWrapper: {
+    gap: 4,
   },
 });
 
