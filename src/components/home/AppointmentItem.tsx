@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {commonStyle, color_primary, color_ef} from '@/styles/common';
 import FlatItemsFriends from '../common/FlatItemsFriends';
@@ -17,16 +17,7 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
 
   return (
     <TouchableOpacity style={styles.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-          width: '100%',
-          flex: 1,
-          justifyContent: 'center',
-          alignContent: 'center',
-          alignItems: 'center',
-          alignSelf: 'center',
-        }}>
+      <View style={styles.contentContainer}>
         {/* 참석자 프로필 */}
         <View>
           <FlatItemsFriends images={item.friends.map(el => el.url)} />
@@ -50,7 +41,7 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
           </View>
 
           {/* 모임 정보 */}
-          <View style={styles.contentContainer}>
+          <View style={styles.flexRow}>
             <View>
               <Text style={contentFontColor}>{item.location}</Text>
               <Text
@@ -99,6 +90,15 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignSelf: 'center',
   },
+  contentContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
   wrapper: {
     paddingRight: 12,
     flex: 1,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     textAlign: 'right',
   },
-  contentContainer: {
+  flexRow: {
     flexDirection: 'row',
   },
   cancelStapmp: {
