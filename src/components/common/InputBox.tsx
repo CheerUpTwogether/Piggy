@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 16,
   },
   container: {
     height: 48,
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   mediumContainer: {
-    width: '100%',
+    width: '90%',
   },
   input: {
     flex: 1,
