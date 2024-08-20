@@ -10,8 +10,8 @@ export const dummy_friends_data: Friend[] = [
   {
     id: 1,
     profile_image_path: 'https://i.pravatar.cc/250?u=mail@ashallendesign.co.uk',
-    nick_name: 'Zi존 강현',
-    friend: true,
+    nick_name: 'Zi존_강현',
+    friend: false,
   },
   {
     id: 2,
