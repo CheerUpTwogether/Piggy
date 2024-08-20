@@ -5,23 +5,9 @@ import {commonStyle} from '@/styles/common';
 import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
+import {AppointmentProps} from '@/mock/Home/type';
 
-const AppointmentItem = ({
-  item,
-}: {
-  item: {
-    appointment_id: number;
-    subject: string;
-    location: string;
-    date: string;
-    time: string;
-    penalty: number;
-    friends: {
-      uid: number;
-      url: string;
-    }[];
-  };
-}) => {
+const AppointmentItem = ({item}: {item: AppointmentProps}) => {
   return (
     <TouchableOpacity style={styles.container}>
       <View>
@@ -32,9 +18,12 @@ const AppointmentItem = ({
         <View style={styles.subject}>
           <Text style={commonStyle.MEDIUM_33_16}>{item.subject}</Text>
           <View style={styles.svgContainer}>
-            <TouchableOpacity style={styles.svgBtn}>
-              <PinSvg color="#777" style={styles.svg} />
-            </TouchableOpacity>
+            {item.isFixed && (
+              <TouchableOpacity style={styles.svgBtn}>
+                <PinSvg color="#777" style={styles.svg} />
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity style={styles.svgBtn}>
               <MoreSvg color="#777" style={styles.svg} />
             </TouchableOpacity>
