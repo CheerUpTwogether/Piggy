@@ -1,5 +1,13 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  Animated,
+  PanResponder,
+} from 'react-native';
 import {commonStyle, color_primary, color_ef} from '@/styles/common';
 import Button from '@/components/common/Button';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -10,15 +18,58 @@ import EmptyResult from '@/components/common/EmptyResult';
 
 const Home = () => {
   const [sort, setSort] = useState('next');
+  const [activeIndex, setActiveIndex] = useState<number | null>(null); // 현재 활성화된 슬라이드의 인덱스
   const tabText = (value: string) => {
     if (value === sort) {
       return commonStyle.MEDIUM_PRIMARY_16;
     }
     return commonStyle.REGULAR_77_16;
   };
+  const animations = useRef(
+    appointments.map(() => new Animated.ValueXY({x: 0, y: 0})),
+  ).current;
+
+  const resetOthers = (index: number) => {
+    animations.forEach((anim, i) => {
+      if (i !== index) {
+        Animated.spring(anim.x, {
+          toValue: 0,
+          useNativeDriver: false,
+        }).start();
+      }
+    });
+  };
+
+  const panResponders = animations.map((anim, index) =>
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        setActiveIndex(index);
+        resetOthers(index);
+      },
+      onPanResponderMove: Animated.event([null, {dx: anim.x}], {
+        useNativeDriver: false,
+      }),
+      onPanResponderRelease: (evt, gestureState) => {
+        if (gestureState.dx < -100) {
+          Animated.spring(anim.x, {
+            toValue: -200,
+            useNativeDriver: false,
+          }).start();
+        } else {
+          Animated.spring(anim.x, {
+            toValue: 0,
+            useNativeDriver: false,
+          }).start(() => {
+            setActiveIndex(null);
+          });
+        }
+      },
+    }),
+  );
 
   return (
-    <View style={commonStyle.CONTAINER}>
+    <SafeAreaView style={commonStyle.CONTAINER}>
       {/* 사용자 프로필 */}
       <View style={styles.myInfoBox}>
         <View style={styles.flexRow}>
@@ -70,12 +121,19 @@ const Home = () => {
       </View>
 
       {/* 약속 리스트 */}
-
       {appointments.length ? (
-        <FlatList
+        <Animated.FlatList
           data={appointments}
           keyExtractor={item => String(item.appointment_id)}
-          renderItem={AppointmentItem}
+          renderItem={({item, index}) => (
+            <View style={{height: 100}}>
+              <Animated.View
+                style={[{transform: animations[index].getTranslateTransform()}]}
+                {...panResponders[index].panHandlers}>
+                <AppointmentItem item={item} />
+              </Animated.View>
+            </View>
+          )}
           style={{marginHorizontal: -16}}
         />
       ) : (
@@ -86,7 +144,7 @@ const Home = () => {
           />
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -123,6 +181,18 @@ const styles = StyleSheet.create({
   tabBtn: {
     paddingVertical: 8,
     paddingHorizontal: 4,
+  },
+  deleteButton: {
+    width: 100,
+    height: 50,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 
