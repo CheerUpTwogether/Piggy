@@ -44,20 +44,32 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   const iconShow = () => {
     if (uuid === '1000') {
       return (
-        <TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => console.log('TODO: 내 정보 수정')}>
           <EditSvg style={styles.rightIcon} />
         </TouchableOpacity>
       );
     } else if (friend) {
       return (
-        <TouchableOpacity style={{flexDirection: 'row', gap: 8}}>
-          <GiftSvg style={styles.rightIcon} />
-          <TrashSvg style={styles.rightIcon} />
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row', gap: 8}}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => console.log('TODO: 선물하기')}>
+            <GiftSvg style={styles.rightIcon} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => console.log('TODO: 친구 삭제')}>
+            <TrashSvg style={styles.rightIcon} />
+          </TouchableOpacity>
+        </View>
       );
     } else {
       return (
-        <TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => console.log('TODO: 친구 추가')}>
           <AddFriendSvg style={styles.rightIcon} />
         </TouchableOpacity>
       );
