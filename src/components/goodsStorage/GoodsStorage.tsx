@@ -20,7 +20,7 @@ const GoodsStorage = () => {
   const navigation = useNavigation();
 
   const gotoDetail = (item: dummyGoodsStorageItem) => {
-    navigation.replace('GoodsStorageDetail', {...item});
+    navigation.navigate('GoodsStorageDetail', {...item});
   };
 
   const Header = () => (

@@ -20,7 +20,7 @@ const Goods = () => {
   const navigation = useNavigation();
 
   const gotoDetail = (item: dummyGoodsItem) => {
-    navigation.replace('GoodsDetail', {...item});
+    navigation.navigate('GoodsDetail', {...item});
   };
 
   const renderHotItem = ({item}: {item: dummyGoodsItem}) => (
