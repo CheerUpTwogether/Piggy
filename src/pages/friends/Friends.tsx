@@ -12,13 +12,28 @@ import {
 import {commonStyle} from '@/styles/common';
 import EmptyResult from '@/components/common/EmptyResult';
 import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
+import BottomSheet from '@/components/common/BottomSheet';
+import ProfileDetail from './ProfileDetail';
 import MoreSvg from '@/assets/icons/more.svg';
+import {Friend, ProfileDetailProps} from '@/mock/Friends/type';
 
 const SWIPE_STANDARD = -100; // 슬라이드 시 삭제 버튼 나오는 기준
 
 const Friends = () => {
   const [openRowIndex, setOpenRowIndex] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isShow, setIsShow] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<ProfileDetailProps | Friend>(
+    {
+      uuid: '',
+      nick_name: '',
+      totalAppointments: 0,
+      completedAppointments: 0,
+      profileImagePath: '',
+      friend: false,
+    },
+  );
+
   const positions = useRef(
     dummy_friends_data.map(() => new Animated.Value(0)),
   ).current;
@@ -82,10 +97,30 @@ const Friends = () => {
     }
   };
 
+  // 프로필 모달
+  const handleProfilePress = async user => {
+    // 현재 열려 있는 슬라이더가 있다면 닫기
+    if (openRowIndex !== null) {
+      await toggleRowAnimation(openRowIndex, 0);
+    }
+    setIsShow(true);
+    setSelectedUser({
+      uuid: user.uuid,
+      nick_name: user.nick_name,
+      totalAppointments: user.totalAppointments,
+      completedAppointments: user.completed_appointments,
+      profileImagePath: user.profile_image_path,
+      friend: user.friend,
+    });
+  };
+
   return (
     <ScrollView style={commonStyle.CONTAINER}>
       <View style={{marginBottom: 30}}>
-        <TouchableOpacity style={styles.profileWrapper} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={styles.profileWrapper}
+          activeOpacity={0.8}
+          onPress={() => handleProfilePress(dummy_profile)}>
           <Image
             source={{uri: dummy_profile.profile_image_path}}
             style={styles.profile}
@@ -112,7 +147,7 @@ const Friends = () => {
           ) : (
             <View style={{marginTop: 10}}>
               {dummy_friends_data.map((item, index) => (
-                <View key={item.id} style={styles.swipeContainer}>
+                <View key={item.uuid} style={styles.swipeContainer}>
                   <Animated.View
                     style={[
                       styles.friendContainer,
@@ -121,7 +156,10 @@ const Friends = () => {
                       },
                     ]}
                     {...createPanResponder(index).panHandlers}>
-                    <View style={styles.friendWrapper}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => handleProfilePress(item)}
+                      style={styles.friendWrapper}>
                       <Image
                         source={{uri: item.profile_image_path}}
                         style={styles.friendProfile}
@@ -129,7 +167,7 @@ const Friends = () => {
                       <Text style={commonStyle.MEDIUM_33_16}>
                         {item.nick_name}
                       </Text>
-                    </View>
+                    </TouchableOpacity>
                     <Animated.View
                       style={[
                         styles.moreButton,
@@ -181,6 +219,24 @@ const Friends = () => {
           )}
         </View>
       </View>
+      {/* ProfileDetail 모달 */}
+      <BottomSheet
+        isShow={isShow}
+        setIsShow={setIsShow}
+        size={0.6}
+        component={
+          selectedUser && (
+            <ProfileDetail
+              uuid={selectedUser?.uuid.toString()}
+              nick_name={selectedUser?.nick_name}
+              totalAppointments={selectedUser.totalAppointments}
+              completedAppointments={selectedUser?.completedAppointments}
+              profileImagePath={selectedUser?.profileImagePath}
+              friend={selectedUser?.friend}
+            />
+          )
+        }
+      />
     </ScrollView>
   );
 };
@@ -220,6 +276,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
+    // backgroundColor: 'red',
+    width: '65%',
   },
   friendProfile: {
     width: 40,
