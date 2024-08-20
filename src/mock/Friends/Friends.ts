@@ -4,6 +4,7 @@ export const dummy_profile: User = {
   profile_image_path: 'https://i.pravatar.cc/250?u=mail@ashallendesign.co.uk',
   nick_name: '움파룸파',
   email: 'oompaLoompa@gmail.com',
+  piggy: 500,
 };
 
 export const dummy_friends_data: Friend[] = [
