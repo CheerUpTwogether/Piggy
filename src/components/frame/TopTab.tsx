@@ -2,8 +2,7 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {BottomTabHeaderProps} from '@react-navigation/bottom-tabs';
-import {StackHeaderProps} from '@react-navigation/stack';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {StackHeaderProps, StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {LeftItemProps} from '@/types/Common';
 
