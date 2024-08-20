@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {InputBoxProps} from 'types/Common';
 
 const InputBox: React.FC<InputBoxProps> = ({
@@ -15,10 +16,15 @@ const InputBox: React.FC<InputBoxProps> = ({
   placeholder,
   isLarge = true,
   icon: Icon,
+  goBack = false,
 }) => {
+  const navigation = useNavigation();
+
   const handleCancel = () => {
     if (value !== '') {
       setValue('');
+    } else if (goBack && value === '') {
+      navigation.goBack();
     }
   };
 

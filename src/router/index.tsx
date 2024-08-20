@@ -106,7 +106,14 @@ const Router = () => {
         component={GoodsDetail}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="FriendSearch" component={FriendSearch} />
+      <Stack.Screen
+        name="FriendSearch"
+        component={FriendSearch}
+        options={{
+          header: StackHeader,
+          headerLeftLabelVisible: true,
+        }}
+      />
     </Stack.Navigator>
   );
 };
