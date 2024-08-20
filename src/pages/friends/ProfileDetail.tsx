@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
   profile: {
     width: '100%',
     height: '72%',
+    resizeMode: 'cover',
   },
   emptyProfileWrapper: {
     justifyContent: 'center',

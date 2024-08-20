@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    marginHorizontal: 16,
   },
   container: {
     height: 48,
@@ -77,10 +78,10 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   largeContainer: {
-    width: '95%',
+    width: '100%',
   },
   mediumContainer: {
-    width: '90%',
+    width: '100%',
   },
   input: {
     flex: 1,
