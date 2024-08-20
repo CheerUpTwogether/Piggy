@@ -18,12 +18,14 @@ import GoodsStorage from '@/components/goodsStorage/GoodsStorage';
 import GoodsStorageDetail from '@/components/goodsStorage/GoodsStorageDetail';
 import GoodsDetail from '@/components/goods/GoodsDetail';
 import FriendSearch from '@/pages/friends/FriendSearch';
+import AppointmentDetail from '@/pages/home/AppointmentDetail';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 
-const MainHeader = (props: BottomTabHeaderProps) => <TopTab {...props} />;
-const StackHeader = (props: StackHeaderProps) => <TopTab {...props} />;
+const Header = (props: BottomTabHeaderProps | StackHeaderProps) => (
+  <TopTab {...props} />
+);
 const TabBar = (props: BottomTabBarProps) => <BottomTab {...props} />;
 
 const Main = () => {
@@ -33,28 +35,28 @@ const Main = () => {
         name="Home"
         component={Home}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Friends"
         component={Friends}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Goods"
         component={Goods}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Settings"
         component={Settings}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
     </BottomStack.Navigator>
@@ -82,10 +84,18 @@ const Router = () => {
         }}
       />
       <Stack.Screen
+        name="AppointmentDetail"
+        component={AppointmentDetail}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
         name="GoodsStorage"
         component={GoodsStorage}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -93,7 +103,7 @@ const Router = () => {
         name="GoodsStorageDetail"
         component={GoodsStorageDetail}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
