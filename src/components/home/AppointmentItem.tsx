@@ -6,9 +6,7 @@ import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
 
-const AppointmentItem = ({
-  item,
-}: {
+const AppointmentItem: React.FC<{
   item: {
     appointment_id: number;
     subject: string;
@@ -21,12 +19,10 @@ const AppointmentItem = ({
       url: string;
     }[];
   };
-}) => {
+}> = ({item}) => {
   return (
-    <View style={styles.container}>
-      <View>
-        <FlatItemsFriends images={item.friends.map(el => el.url)} />
-      </View>
+    <TouchableOpacity style={styles.container}>
+      <FlatItemsFriends images={item.friends.map(el => el.url)} />
 
       <View style={styles.wrapper}>
         <View style={styles.subject}>
@@ -41,13 +37,17 @@ const AppointmentItem = ({
           </View>
         </View>
 
-        <Text style={commonStyle.REGULAR_77_12}>{item.location}</Text>
-        <Text style={commonStyle.REGULAR_77_12}>
-          {item.date}
-          {item.time}
-        </Text>
+        <View style={styles.contentContainer}>
+          <View>
+            <Text style={commonStyle.REGULAR_77_14}>{item.location}</Text>
+            <Text style={commonStyle.REGULAR_77_14}>
+              {item.date}
+              {item.time}
+            </Text>
+          </View>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     height: 110,
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 8,
+    justifyContent: 'center',
   },
   wrapper: {
     paddingRight: 12,
@@ -66,13 +66,12 @@ const styles = StyleSheet.create({
   subject: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: 8,
   },
   svgContainer: {
     flexDirection: 'row',
   },
   svgBtn: {
-    padding: 4,
+    padding: 6,
   },
   svg: {
     width: 20,
@@ -81,6 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     textAlign: 'right',
   },
+  contentContainer: {},
 });
 
 export default AppointmentItem;
