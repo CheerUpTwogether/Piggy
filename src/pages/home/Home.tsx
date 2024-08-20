@@ -6,6 +6,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import {dummy_profile} from '@/mock/Friends/Friends';
 import {appointments} from '@/mock/Home/Home';
+import EmptyResult from '@/components/common/EmptyResult';
 
 const Home = () => {
   const [sort, setSort] = useState('next');
@@ -54,21 +55,37 @@ const Home = () => {
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
-        <TouchableOpacity style={styles.tabBtn} onPress={() => setSort('next')}>
+        <TouchableOpacity
+          style={styles.tabBtn}
+          onPress={() => setSort('next')}
+          activeOpacity={0.8}>
           <Text style={tabText('next')}>미래 약속</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tabBtn} onPress={() => setSort('prev')}>
+        <TouchableOpacity
+          style={styles.tabBtn}
+          onPress={() => setSort('prev')}
+          activeOpacity={0.8}>
           <Text style={tabText('prev')}>지난 약속</Text>
         </TouchableOpacity>
       </View>
 
       {/* 약속 리스트 */}
-      <FlatList
-        data={appointments}
-        keyExtractor={item => String(item.appointment_id)}
-        renderItem={AppointmentItem}
-        style={{marginHorizontal: -16}}
-      />
+
+      {appointments.length ? (
+        <FlatList
+          data={appointments}
+          keyExtractor={item => String(item.appointment_id)}
+          renderItem={AppointmentItem}
+          style={{marginHorizontal: -16}}
+        />
+      ) : (
+        <View style={{flex: 1, paddingTop: 40}}>
+          <EmptyResult
+            reason={'아직 약속이 없어요'}
+            solution={'친구들과의 약속을 등록해보세요!'}
+          />
+        </View>
+      )}
     </View>
   );
 };
