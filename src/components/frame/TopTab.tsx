@@ -7,8 +7,8 @@ import {LeftItemProps} from '@/types/Common';
 import AlertSvg from '@/assets/icons/alert.svg';
 import SearchSvg from '@/assets/icons/search.svg';
 import GoodsBoxSvg from '@/assets/icons/goodsBox.svg';
-import SettingSvg from '@/assets/icons/setting.svg';
 import BackSvg from '@/assets/icons/leftArrow.svg';
+import EditSvg from '@/assets/icons/edit.svg';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
@@ -51,6 +51,7 @@ const RightItems = ({name}: {name: string}) => {
         </View>
       );
     case 'Goods':
+    case 'GoodsDetail':
       return (
         <View style={styles.iconContainer}>
           <TouchableOpacity style={[styles.directionRow, styles.icon]}>
@@ -67,7 +68,7 @@ const RightItems = ({name}: {name: string}) => {
       return (
         <View style={styles.iconContainer}>
           <TouchableOpacity style={styles.icon}>
-            <SettingSvg width={24} height={24} color={'#555555'} />
+            <EditSvg width={24} height={24} color={'#555555'} />
           </TouchableOpacity>
           <Alarm />
         </View>
