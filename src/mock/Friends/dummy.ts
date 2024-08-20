@@ -1,4 +1,4 @@
-import {User, Friend} from '@/types/Friends';
+import {User, Friend} from '@/mock/Friends/type';
 
 export const dummy_profile: User = {
   profile_image_path: 'https://i.pravatar.cc/250?u=mail@ashallendesign.co.uk',
