@@ -3,9 +3,9 @@ import {Bold, Regular, Medium} from '@/styles/font';
 
 export const color_primary = '#ED423F';
 export const color_sub = '#04BF8A';
-export const color_ff = '#ffffff';
-export const color_ef = '#efefef';
-export const color_aa = '#aaaaaa';
+export const color_ff = '#FFFFFF';
+export const color_ef = '#EFEFEF';
+export const color_aa = '#AAAAAA';
 export const color_99 = '#999999';
 export const color_77 = '#777777';
 export const color_33 = '#333333';
