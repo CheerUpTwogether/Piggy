@@ -73,7 +73,7 @@ const FriendSearch = () => {
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         ListEmptyComponent={
-          keyword === '' ? (
+          !keyword ? (
             <View />
           ) : (
             <EmptyResult
