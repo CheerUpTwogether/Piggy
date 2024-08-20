@@ -15,32 +15,29 @@ import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
 import BottomSheet from '@/components/common/BottomSheet';
 import ProfileDetail from './ProfileDetail';
 import MoreSvg from '@/assets/icons/more.svg';
-import {Friend, ProfileDetailProps} from '@/mock/Friends/type';
-
+import {Friend, User} from '@/mock/Friends/type';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
-const SWIPE_STANDARD = -100; // 슬라이드 시 삭제 버튼 나오는 기준
+const SWIPE_STANDARD = -100;
 
 const Friends = () => {
   const [openRowIndex, setOpenRowIndex] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isShow, setIsShow] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<ProfileDetailProps | Friend>(
-    {
-      uuid: '',
-      nick_name: '',
-      totalAppointments: 0,
-      completedAppointments: 0,
-      profileImagePath: '',
-      friend: false,
-    },
-  );
+  const [selectedUser, setSelectedUser] = useState<Friend | User>({
+    uuid: '',
+    nick_name: '',
+    total_appointments: 0,
+    completed_appointments: 0,
+    profile_image_path: '',
+    friend: false,
+  });
 
   const positions = useRef(
     dummy_friends_data.map(() => new Animated.Value(0)),
   ).current;
 
-  // 애니메이션을 통해 행을 열기 || 닫는 함수
+  // 행 열기/닫기 애니메이션 처리 함수
   const toggleRowAnimation = (index: number, toValue: number) => {
     return new Promise<void>(resolve => {
       Animated.timing(positions[index], {
@@ -55,22 +52,18 @@ const Friends = () => {
     });
   };
 
-  // 행의 삭제 열기, 닫기를 공통으로 처리 함수
+  // 특정 행을 열거나 닫는 함수
   const handleRowToggle = async (index: number) => {
-    if (isAnimating) {
-      return;
-    }
-    setIsAnimating(true);
+    if (isAnimating) setIsAnimating(true);
 
     if (openRowIndex === index) {
-      await toggleRowAnimation(index, 0); // 현재 열려 있는 행 닫기
+      await toggleRowAnimation(index, 0); // 현재 열린 행 닫기
     } else {
-      if (openRowIndex !== null && openRowIndex !== index) {
-        await toggleRowAnimation(openRowIndex, 0); // 이전에 열려 있던 행 닫기
+      if (openRowIndex !== null) {
+        await toggleRowAnimation(openRowIndex, 0); // 이전에 열린 행 닫기
       }
-      await toggleRowAnimation(index, SWIPE_STANDARD); // 현재 행 열기
+      await toggleRowAnimation(index, SWIPE_STANDARD); // 새로운 행 열기
     }
-    setIsAnimating(false);
   };
 
   // PanResponder 생성 함수
@@ -92,16 +85,15 @@ const Friends = () => {
     });
   };
 
-  // More 버튼이 눌렸을 때의 동작
+  // More 버튼 클릭 처리
   const handleMorePress = async (index: number) => {
     if (!isAnimating) {
       await handleRowToggle(index);
     }
   };
 
-  // 프로필 모달
-  const handleProfilePress = async user => {
-    // 현재 열려 있는 슬라이더가 있다면 닫기
+  // 프로필 클릭 처리
+  const handleProfilePress = async (user: Friend) => {
     if (openRowIndex !== null) {
       await toggleRowAnimation(openRowIndex, 0);
     }
@@ -109,16 +101,16 @@ const Friends = () => {
     setSelectedUser({
       uuid: user.uuid,
       nick_name: user.nick_name,
-      totalAppointments: user.totalAppointments,
-      completedAppointments: user.completed_appointments,
-      profileImagePath: user.profile_image_path,
+      total_appointments: user.total_appointments,
+      completed_appointments: user.completed_appointments,
+      profile_image_path: user.profile_image_path,
       friend: user.friend,
     });
   };
 
   return (
     <ScrollView style={commonStyle.CONTAINER}>
-      <View style={{marginBottom: 30}}>
+      <View style={styles.profileSection}>
         <TouchableOpacity
           style={styles.profileWrapper}
           activeOpacity={0.8}
@@ -147,15 +139,13 @@ const Friends = () => {
               />
             </View>
           ) : (
-            <View style={{marginTop: 10}}>
+            <View style={styles.friendList}>
               {dummy_friends_data.map((item, index) => (
                 <View key={item.uuid} style={styles.swipeContainer}>
                   <Animated.View
                     style={[
                       styles.friendContainer,
-                      {
-                        transform: [{translateX: positions[index]}],
-                      },
+                      {transform: [{translateX: positions[index]}]},
                     ]}
                     {...createPanResponder(index).panHandlers}>
                     <TouchableOpacity
@@ -176,7 +166,6 @@ const Friends = () => {
                           <BasicProfileSvg width={24} height={24} />
                         </View>
                       )}
-
                       <Text style={commonStyle.MEDIUM_33_16}>
                         {item.nick_name}
                       </Text>
@@ -240,12 +229,12 @@ const Friends = () => {
         component={
           selectedUser && (
             <ProfileDetail
-              uuid={selectedUser?.uuid.toString()}
-              nick_name={selectedUser?.nick_name}
-              totalAppointments={selectedUser.totalAppointments}
-              completedAppointments={selectedUser?.completedAppointments}
-              profileImagePath={selectedUser?.profileImagePath}
-              friend={selectedUser?.friend}
+              uuid={selectedUser.uuid}
+              nick_name={selectedUser.nick_name}
+              total_appointments={selectedUser.total_appointments ?? 0}
+              completed_appointments={selectedUser.completed_appointments ?? 0}
+              profile_image_path={selectedUser.profile_image_path}
+              friend={selectedUser.friend ?? false}
             />
           )
         }
@@ -255,6 +244,7 @@ const Friends = () => {
 };
 
 const styles = StyleSheet.create({
+  profileSection: {marginBottom: 30},
   swipeContainer: {
     position: 'relative',
     overflow: 'hidden',
@@ -274,9 +264,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   myData: {gap: 4},
-  friendListWrapper: {
-    marginTop: 20,
-  },
+  friendListWrapper: {marginTop: 20},
+  friendList: {marginTop: 10},
   friendContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -289,7 +278,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
-    // backgroundColor: 'red',
     width: '65%',
   },
   friendProfile: {

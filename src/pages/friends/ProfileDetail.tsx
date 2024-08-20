@@ -50,12 +50,12 @@ const GRADE_LIST = [
 
 // 등급 구하는 함수
 const determineGrade = (
-  totalAppointments: number,
-  completedAppointments: number,
+  total_appointments: number,
+  completed_appointments: number,
 ) => {
-  const completionRate = (completedAppointments / totalAppointments) * 100;
+  const completionRate = (completed_appointments / total_appointments) * 100;
 
-  if (totalAppointments < 5) return GRADE_LIST[0];
+  if (total_appointments < 5) return GRADE_LIST[0];
   if (completionRate < 33.3) return GRADE_LIST[1];
   if (completionRate < 66.6) return GRADE_LIST[2];
   return GRADE_LIST[3];
@@ -64,17 +64,17 @@ const determineGrade = (
 const ProfileDetail: React.FC<ProfileDetailProps> = ({
   uuid,
   nick_name,
-  totalAppointments,
-  completedAppointments,
-  profileImagePath,
+  total_appointments,
+  completed_appointments,
+  profile_image_path,
   friend,
 }) => {
   const [gradeListShow, setGradeListShow] = useState(false);
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
 
   const {grade, gradeColor} = determineGrade(
-    totalAppointments,
-    completedAppointments,
+    total_appointments,
+    completed_appointments,
   );
 
   const toggleGradeList = () => {
@@ -120,8 +120,8 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
 
   return (
     <View style={commonStyle.CONTAINER}>
-      {profileImagePath ? (
-        <Image source={{uri: profileImagePath}} style={styles.profile} />
+      {profile_image_path ? (
+        <Image source={{uri: profile_image_path}} style={styles.profile} />
       ) : (
         <View style={styles.emptyProfileWrapper}>
           <BasicProfileSvg width={220} height={220} />

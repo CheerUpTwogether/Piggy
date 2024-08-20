@@ -6,7 +6,7 @@ export const dummy_profile: User = {
   email: 'oompaLoompa@gmail.com',
   piggy: 500,
   uuid: '1000',
-  totalAppointments: 10,
+  total_appointments: 10,
   completed_appointments: 10,
 };
 
@@ -16,7 +16,7 @@ export const dummy_friends_data: Friend[] = [
     profile_image_path: '',
     nick_name: 'Zi존_강현',
     friend: false,
-    totalAppointments: 10,
+    total_appointments: 10,
     completed_appointments: 10,
   },
   {
@@ -25,7 +25,7 @@ export const dummy_friends_data: Friend[] = [
       'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
     nick_name: '진정준',
     friend: false,
-    totalAppointments: 10,
+    total_appointments: 10,
     completed_appointments: 7,
   },
   {
@@ -33,7 +33,7 @@ export const dummy_friends_data: Friend[] = [
     profile_image_path: 'https://i.pravatar.cc/250?u=mail@ashallendesign.co.uk',
     nick_name: '박상형',
     friend: true,
-    totalAppointments: 10,
+    total_appointments: 10,
     completed_appointments: 6,
   },
   {
@@ -42,7 +42,7 @@ export const dummy_friends_data: Friend[] = [
       'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
     nick_name: '우빛나',
     friend: true,
-    totalAppointments: 10,
+    total_appointments: 10,
     completed_appointments: 1,
   },
   {
@@ -50,7 +50,7 @@ export const dummy_friends_data: Friend[] = [
     profile_image_path: 'https://i.pravatar.cc/250?u=mail@ashallendesign.co.uk',
     nick_name: '박지원',
     friend: true,
-    totalAppointments: 10,
+    total_appointments: 10,
     completed_appointments: 4,
   },
   {
