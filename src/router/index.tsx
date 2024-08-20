@@ -17,6 +17,7 @@ import Settings from '@/pages/settings/Settings';
 import GoodsStorage from '@/components/goodsStorage/GoodsStorage';
 import GoodsStorageDetail from '@/components/goodsStorage/GoodsStorageDetail';
 import GoodsDetail from '@/components/goods/GoodsDetail';
+import FriendSearch from '@/pages/friends/FriendSearch';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -99,10 +100,12 @@ const Router = () => {
       <Stack.Screen
         name="GoodsDetail"
         component={GoodsDetail}
-        options={{
-          header: StackHeader,
-          headerLeftLabelVisible: true,
-        }}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="FriendSearch"
+        component={FriendSearch}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
