@@ -1,5 +1,3 @@
-import {dummyGoodsItemData} from '@/mook/goods/goods';
-import {dummyGoodsItem} from '@/mook/goods/types';
 import {commonStyle} from '@/styles/common';
 import React, {useState} from 'react';
 import {
@@ -12,6 +10,8 @@ import {
   View,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {dummyGoodsItem} from '@/mock/Goods/types';
+import {dummyGoodsItemData} from '@/mock/Goods/Goods';
 
 const Goods = () => {
   const categories = ['전체', '패스트푸드', '카페', '스낵'];

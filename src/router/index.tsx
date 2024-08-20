@@ -17,6 +17,9 @@ import Settings from '@/pages/settings/Settings';
 import GoodsStorage from '@/components/goodsStorage/GoodsStorage';
 import GoodsStorageDetail from '@/components/goodsStorage/GoodsStorageDetail';
 import GoodsDetail from '@/components/goods/GoodsDetail';
+import NoticeBoard from '@/components/NoticeBoard/NoticeBoard';
+import NoticeBoardDetail from '@/components/NoticeBoard/NoticeBoardDetail';
+import FAQBoard from '@/components/FAQBoard/FAQBoard';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -100,9 +103,33 @@ const Router = () => {
           headerLeftLabelVisible: true,
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="GoodsDetail"
         component={GoodsDetail}
+        options={{
+          header: StackHeader,
+          headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="FAQBoard"
+        component={FAQBoard}
+        options={{
+          header: StackHeader,
+          headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="NoticeBoard"
+        component={NoticeBoard}
+        options={{
+          header: StackHeader,
+          headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="NoticeBoardDetail"
+        component={NoticeBoardDetail}
         options={{
           header: StackHeader,
           headerLeftLabelVisible: true,
