@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     width: '95%',
   },
   mediumContainer: {
-    width: '85%',
+    width: '90%',
   },
   input: {
     flex: 1,
