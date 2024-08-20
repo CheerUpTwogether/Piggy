@@ -27,8 +27,11 @@ const GoodsStorage = () => {
   const Header = () => (
     <View style={styles.headerContainer}>
       <Text style={commonStyle.MEDIUM_33_16}>
-        총 <Text style={commonStyle.BOLD_33_18}>6</Text>개의 기프티콘을 가지고
-        있어요!
+        총{' '}
+        <Text style={commonStyle.BOLD_33_18}>
+          {dummyGoodsStorageItemData.length}
+        </Text>
+        개의 기프티콘을 가지고 있어요!
       </Text>
     </View>
   );
@@ -43,10 +46,7 @@ const GoodsStorage = () => {
       <View style={styles.expireDateWrapper}>
         <Text style={commonStyle.MEDIUM_FF_12}>D-29</Text>
       </View>
-      <Image
-        source={{uri: 'https://picsum.photos/156/156'}}
-        style={styles.itemImg}
-      />
+      <Image source={{uri: item.goods_url}} style={styles.itemImg} />
       <View style={{marginHorizontal: 10, gap: 2, width: screenWidth / 2 - 48}}>
         <Text style={commonStyle.MEDIUM_SUB_12} numberOfLines={1}>
           {item.provider}
