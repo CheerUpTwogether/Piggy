@@ -109,10 +109,7 @@ const Router = () => {
       <Stack.Screen
         name="FriendSearch"
         component={FriendSearch}
-        options={{
-          header: StackHeader,
-          headerLeftLabelVisible: true,
-        }}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
