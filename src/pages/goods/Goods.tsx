@@ -20,7 +20,6 @@ const Goods = () => {
   const navigation = useNavigation();
 
   const gotoDetail = (item: dummyGoodsItem) => {
-    console.log(item);
     navigation.replace('GoodsDetail', {...item});
   };
 
@@ -34,9 +33,7 @@ const Goods = () => {
     <TouchableOpacity
       activeOpacity={0.8}
       style={{marginVertical: 9, gap: 10}}
-      onPress={() => {
-        gotoDetail(item);
-      }}>
+      onPress={() => gotoDetail(item)}>
       <View style={styles.itemWrapper}>
         <Text style={commonStyle.MEDIUM_FF_12}>추천 상품</Text>
       </View>
