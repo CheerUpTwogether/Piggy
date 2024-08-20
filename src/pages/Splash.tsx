@@ -1,14 +1,17 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '@/types/Router';
 const logo = require('@/assets/icons/logo.png');
 
 const Splash = () => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   useEffect(() => {
     // 2초(2000ms) 후에 'Login' 화면으로 이동하도록 설정
     const timeout = setTimeout(() => {
-      //navigation.navigate('Main');
+      navigation.replace('Main', {screen: 'Home'});
     }, 2000);
 
     // 컴포넌트가 언마운트될 때 타임아웃을 정리
