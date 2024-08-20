@@ -16,6 +16,7 @@ import EditSvg from '@/assets/icons/edit.svg';
 const topLogo = require('@/assets/icons/topLogo.png');
 
 const LeftItem = ({name, headerLeftLabelVisible}: LeftItemProps) => {
+  const navigation = useNavigation();
   const mainName = ['Home', 'Friends', 'Goods', 'Settings'];
 
   if (mainName.includes(name)) {
@@ -24,7 +25,9 @@ const LeftItem = ({name, headerLeftLabelVisible}: LeftItemProps) => {
 
   if (headerLeftLabelVisible) {
     return (
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.goBack()}>
         <BackSvg width={24} height={24} />
       </TouchableOpacity>
     );
