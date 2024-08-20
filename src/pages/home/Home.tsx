@@ -100,7 +100,7 @@ const Home = () => {
             size="sm"
           />
           <Button
-            text="사용내역"
+            text="충전하기"
             onPress={() => {}}
             theme="outline"
             size="sm"
