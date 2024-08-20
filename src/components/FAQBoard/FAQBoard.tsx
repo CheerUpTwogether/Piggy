@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import {splitStringByDot} from '@/utils/splitStringByDot';
 import {dummyFAQItem} from '@/mock/FAQBoard/types';
@@ -7,13 +7,7 @@ import {dummyFAQItemData} from '@/mock/FAQBoard/FAQBoard';
 
 const FAQBoard = () => {
   const renderFAQItem = ({item}: {item: dummyFAQItem}) => (
-    <View
-      style={{
-        gap: 4,
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderColor: '#EFEFEF',
-      }}>
+    <View style={styles.renderContainer}>
       <Text style={commonStyle.REGULAR_33_16}>Q. {item.title}</Text>
       <View style={{gap: 2}}>
         {splitStringByDot(item.content).map((item, index) => (
@@ -39,5 +33,13 @@ const FAQBoard = () => {
     </View>
   );
 };
+const styles = StyleSheet.create({
+  renderContainer: {
+    gap: 4,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: '#EFEFEF',
+  },
+});
 
 export default FAQBoard;
