@@ -17,6 +17,7 @@ import TrashSvg from '@/assets/icons/trash.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
 import EditSvg from '@/assets/icons/edit.svg';
 import UTurnSvg from '@/assets/icons/uTurn.svg';
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -131,9 +132,13 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
 
   return (
     <View style={commonStyle.CONTAINER}>
-      <View>
+      {profileImagePath ? (
         <Image source={{uri: profileImagePath}} style={styles.profile} />
-      </View>
+      ) : (
+        <View style={styles.emptyProfileWrapper}>
+          <BasicProfileSvg width={220} height={220} />
+        </View>
+      )}
 
       <View style={styles.introduceContainer}>
         <View style={styles.introduceWrapper}>
@@ -188,12 +193,23 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 380,
   },
+  emptyProfileWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 380,
+    backgroundColor: '#EFEFEF',
+  },
   introduceContainer: {
     marginTop: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingRight: 10,
+    position: 'absolute',
+    bottom: 70,
+    left: 20,
+    right: 20,
   },
   introduceWrapper: {
     flexDirection: 'row',

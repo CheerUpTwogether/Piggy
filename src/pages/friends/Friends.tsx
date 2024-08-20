@@ -17,6 +17,8 @@ import ProfileDetail from './ProfileDetail';
 import MoreSvg from '@/assets/icons/more.svg';
 import {Friend, ProfileDetailProps} from '@/mock/Friends/type';
 
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+
 const SWIPE_STANDARD = -100; // 슬라이드 시 삭제 버튼 나오는 기준
 
 const Friends = () => {
@@ -160,10 +162,21 @@ const Friends = () => {
                       activeOpacity={0.8}
                       onPress={() => handleProfilePress(item)}
                       style={styles.friendWrapper}>
-                      <Image
-                        source={{uri: item.profile_image_path}}
-                        style={styles.friendProfile}
-                      />
+                      {item.profile_image_path ? (
+                        <Image
+                          source={{uri: item.profile_image_path}}
+                          style={styles.friendProfile}
+                        />
+                      ) : (
+                        <View
+                          style={[
+                            styles.friendEmptyProfile,
+                            styles.friendProfile,
+                          ]}>
+                          <BasicProfileSvg width={24} height={24} />
+                        </View>
+                      )}
+
                       <Text style={commonStyle.MEDIUM_33_16}>
                         {item.nick_name}
                       </Text>
@@ -283,6 +296,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 30,
+  },
+  friendEmptyProfile: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#DDD',
   },
   moreButton: {
     justifyContent: 'center',

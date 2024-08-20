@@ -13,7 +13,7 @@ export const dummy_profile: User = {
 export const dummy_friends_data: Friend[] = [
   {
     uuid: '1',
-    profile_image_path: 'https://i.pravatar.cc/250?u=mail@ashallendesign.co.uk',
+    profile_image_path: '',
     nick_name: 'Zi존_강현',
     friend: false,
     totalAppointments: 10,
