@@ -17,6 +17,7 @@ export type RootStackParamList = {
     screen: keyof RootBottomTabParamList;
   };
   FriendSearch: undefined;
+  PiggyCharge: undefined;
 };
 
 export type MainHeaderProps = {

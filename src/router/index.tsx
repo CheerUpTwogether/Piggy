@@ -18,12 +18,14 @@ import GoodsStorage from '@/components/goodsStorage/GoodsStorage';
 import GoodsStorageDetail from '@/components/goodsStorage/GoodsStorageDetail';
 import GoodsDetail from '@/components/goods/GoodsDetail';
 import FriendSearch from '@/pages/friends/FriendSearch';
+import PiggyCharge from '@/pages/piggy/PiggyCharge';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 
-const MainHeader = (props: BottomTabHeaderProps) => <TopTab {...props} />;
-const StackHeader = (props: StackHeaderProps) => <TopTab {...props} />;
+const Header = (props: BottomTabHeaderProps | StackHeaderProps) => (
+  <TopTab {...props} />
+);
 const TabBar = (props: BottomTabBarProps) => <BottomTab {...props} />;
 
 const Main = () => {
@@ -33,28 +35,28 @@ const Main = () => {
         name="Home"
         component={Home}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Friends"
         component={Friends}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Goods"
         component={Goods}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Settings"
         component={Settings}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
     </BottomStack.Navigator>
@@ -85,7 +87,7 @@ const Router = () => {
         name="GoodsStorage"
         component={GoodsStorage}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -93,7 +95,7 @@ const Router = () => {
         name="GoodsStorageDetail"
         component={GoodsStorageDetail}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -106,6 +108,15 @@ const Router = () => {
         name="FriendSearch"
         component={FriendSearch}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PiggyCharge"
+        component={PiggyCharge}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+          title: '피기충전',
+        }}
       />
     </Stack.Navigator>
   );

@@ -7,13 +7,14 @@ import {
   Animated,
   PanResponder,
 } from 'react-native';
+import AppointmentItem from '@/components/home/AppointmentItem';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import AppointmentItem from '@/components/home/AppointmentItem';
+import PulsSvg from '@/assets/icons/plus.svg';
 import {appointments} from '@/mock/Home/Home';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
-import PulsSvg from '@/assets/icons/plus.svg';
+
 const Home = () => {
   const [sort, setSort] = useState('next');
   const [activeIndex, setActiveIndex] = useState<number | null>(null); // 현재 활성화된 슬라이드의 인덱스
