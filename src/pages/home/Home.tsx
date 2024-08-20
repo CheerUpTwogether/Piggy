@@ -1,156 +1,129 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
-import {commonStyle, color_primary, color_ef} from '@/styles/common';
-import Button from '@/components/common/Button';
+import React, {useRef, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Animated,
+  PanResponder,
+} from 'react-native';
+import {commonStyle, color_ef, color_primary} from '@/styles/common';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import AppointmentItem from '@/components/home/AppointmentItem';
-
-const userInfo = {
-  nickname: '우다우다',
-  piggy: 500,
-};
-
-const appointments = [
-  {
-    appointment_id: 1,
-    subject: '강남역 리액트 스터디',
-    location: '서울 강남구 강남대로84길',
-    date: '2024년 8월 31일',
-    time: '18시 30분',
-    penalty: 10000,
-    isFixed: true,
-    friends: [
-      {
-        uid: 1,
-        url: 'https://i.pravatar.cc/250',
-      },
-      {
-        uid: 2,
-        url: 'https://i.pravatar.cc/250',
-      },
-      {
-        uid: 3,
-        url: 'https://i.pravatar.cc/250',
-      },
-    ],
-  },
-  {
-    appointment_id: 2,
-    subject: '또 늦어보지 왜?',
-    location: '서울 용산구 한강대로 405',
-    date: '2024년 9월 17일',
-    time: '07시 30분',
-    penalty: 50000,
-    isFixed: false,
-    friends: [
-      {
-        uid: 1,
-        url: 'https://i.pravatar.cc/250',
-      },
-      {
-        uid: 2,
-        url: 'https://i.pravatar.cc/250',
-      },
-      {
-        uid: 3,
-        url: 'https://i.pravatar.cc/250',
-      },
-      {
-        uid: 4,
-        url: 'https://i.pravatar.cc/250',
-      },
-      {
-        uid: 5,
-        url: 'https://i.pravatar.cc/250',
-      },
-    ],
-  },
-];
-
+import {appointments} from '@/mock/Home/Home';
+import EmptyResult from '@/components/common/EmptyResult';
+import Profile from '@/components/home/Profile';
+import PulsSvg from '@/assets/icons/plus.svg';
 const Home = () => {
   const [sort, setSort] = useState('next');
+  const [activeIndex, setActiveIndex] = useState<number | null>(null); // 현재 활성화된 슬라이드의 인덱스
   const tabText = (value: string) => {
     if (value === sort) {
       return commonStyle.MEDIUM_PRIMARY_16;
     }
     return commonStyle.REGULAR_77_16;
   };
+  const animations = useRef(
+    appointments.map(() => new Animated.ValueXY({x: 0, y: 0})),
+  ).current;
+
+  const resetOthers = (index: number) => {
+    animations.forEach((anim, i) => {
+      if (i !== index) {
+        Animated.spring(anim.x, {
+          toValue: 0,
+          useNativeDriver: false,
+        }).start();
+      }
+    });
+  };
+
+  const panResponders = animations.map((anim, index) =>
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        setActiveIndex(index);
+        resetOthers(index);
+      },
+      onPanResponderMove: Animated.event([null, {dx: anim.x}], {
+        useNativeDriver: false,
+      }),
+      onPanResponderRelease: (evt, gestureState) => {
+        if (gestureState.dx < -100) {
+          Animated.spring(anim.x, {
+            toValue: -200,
+            useNativeDriver: false,
+          }).start();
+        } else {
+          Animated.spring(anim.x, {
+            toValue: 0,
+            useNativeDriver: false,
+          }).start(() => {
+            setActiveIndex(null);
+          });
+        }
+      },
+    }),
+  );
 
   return (
-    <View style={commonStyle.CONTAINER}>
+    <SafeAreaView style={commonStyle.CONTAINER}>
       {/* 사용자 프로필 */}
-      <View style={styles.myInfoBox}>
-        <View style={styles.flexRow}>
-          <Image
-            source={{
-              uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
-            }}
-            style={styles.profileImg}
-          />
-          <View>
-            <Text style={commonStyle.REGULAR_FF_14}>{userInfo.nickname}</Text>
-            <Text style={commonStyle.MEDIUM_FF_20}>{userInfo.piggy} Piggy</Text>
-          </View>
-        </View>
-        <View style={styles.btnArea}>
-          <Button
-            text="사용내역"
-            onPress={() => {}}
-            theme="outline"
-            size="sm"
-          />
-          <Button
-            text="충전하기"
-            onPress={() => {}}
-            theme="outline"
-            size="sm"
-          />
-        </View>
-      </View>
+      <Profile />
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
-        <TouchableOpacity style={styles.tabBtn} onPress={() => setSort('next')}>
+        <TouchableOpacity
+          style={styles.tabBtn}
+          onPress={() => setSort('next')}
+          activeOpacity={0.8}>
           <Text style={tabText('next')}>미래 약속</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tabBtn} onPress={() => setSort('prev')}>
+        <TouchableOpacity
+          style={styles.tabBtn}
+          onPress={() => setSort('prev')}
+          activeOpacity={0.8}>
           <Text style={tabText('prev')}>지난 약속</Text>
         </TouchableOpacity>
       </View>
 
       {/* 약속 리스트 */}
-      <FlatList
-        data={appointments}
-        keyExtractor={item => String(item.appointment_id)}
-        renderItem={AppointmentItem}
-        style={{marginHorizontal: -16}}
-      />
-    </View>
+      {appointments.length ? (
+        <Animated.FlatList
+          data={appointments}
+          keyExtractor={item => String(item.appointment_id)}
+          renderItem={({item, index}) => (
+            <View style={{height: 100}}>
+              <Animated.View
+                style={[{transform: animations[index].getTranslateTransform()}]}
+                {...panResponders[index].panHandlers}>
+                <AppointmentItem item={item} />
+              </Animated.View>
+            </View>
+          )}
+          style={{marginHorizontal: -16}}
+        />
+      ) : (
+        <View style={{flex: 1, paddingTop: 40}}>
+          <EmptyResult
+            reason={'아직 약속이 없어요'}
+            solution={'친구들과의 약속을 등록해보세요!'}
+          />
+        </View>
+      )}
+
+      {/* 약속 추가 버튼 */}
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.plusBtn}
+        onPress={() => {}}>
+        <PulsSvg color="#FFF" />
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  myInfoBox: {
-    borderRadius: 10,
-    backgroundColor: color_primary,
-    height: 140,
-    padding: 16,
-  },
-  flexRow: {
-    flexDirection: 'row',
-  },
-  profileImg: {
-    width: 40,
-    height: 40,
-    borderRadius: 100,
-    marginRight: 8,
-  },
-  btnArea: {
-    flexDirection: 'row',
-    paddingTop: 28,
-    justifyContent: 'flex-end',
-    gap: 4,
-  },
   tab: {
     marginTop: 40,
     flexDirection: 'row',
@@ -162,6 +135,29 @@ const styles = StyleSheet.create({
   tabBtn: {
     paddingVertical: 8,
     paddingHorizontal: 4,
+  },
+  deleteButton: {
+    width: 100,
+    height: 50,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  plusBtn: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
+    width: 48,
+    height: 48,
+    backgroundColor: color_primary,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
