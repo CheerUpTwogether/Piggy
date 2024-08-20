@@ -8,6 +8,7 @@ import GiftSvg from '@/assets/icons/gift.svg';
 import TrashSvg from '@/assets/icons/trash.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
 import EditSvg from '@/assets/icons/edit.svg';
+import UTurnSvg from '@/assets/icons/uTurn.svg';
 
 // 등급 구하는 함수
 const determineGrade = (
