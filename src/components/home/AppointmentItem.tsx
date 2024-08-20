@@ -6,7 +6,9 @@ import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
 
-const AppointmentItem: React.FC<{
+const AppointmentItem = ({
+  item,
+}: {
   item: {
     appointment_id: number;
     subject: string;
@@ -19,10 +21,12 @@ const AppointmentItem: React.FC<{
       url: string;
     }[];
   };
-}> = ({item}) => {
+}) => {
   return (
     <TouchableOpacity style={styles.container}>
-      <FlatItemsFriends images={item.friends.map(el => el.url)} />
+      <View>
+        <FlatItemsFriends images={item.friends.map(el => el.url)} />
+      </View>
 
       <View style={styles.wrapper}>
         <View style={styles.subject}>
@@ -38,13 +42,11 @@ const AppointmentItem: React.FC<{
         </View>
 
         <View style={styles.contentContainer}>
-          <View>
-            <Text style={commonStyle.REGULAR_77_14}>{item.location}</Text>
-            <Text style={commonStyle.REGULAR_77_14}>
-              {item.date}
-              {item.time}
-            </Text>
-          </View>
+          <Text style={commonStyle.REGULAR_77_14}>{item.location}</Text>
+          <Text style={commonStyle.REGULAR_77_14}>
+            {item.date}
+            {item.time}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
