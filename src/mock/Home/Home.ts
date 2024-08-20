@@ -10,6 +10,8 @@ export const appointments: AppointmentProps[] = [
     penalty: 10000,
     isFixed: true,
     isCanceled: false,
+    latitude: 100,
+    longitude: 100,
     friends: [
       {
         uid: 1,
@@ -34,6 +36,8 @@ export const appointments: AppointmentProps[] = [
     penalty: 5000,
     isFixed: false,
     isCanceled: true,
+    latitude: 100,
+    longitude: 100,
     friends: [
       {
         uid: 1,
@@ -66,6 +70,8 @@ export const appointments: AppointmentProps[] = [
     penalty: 50000,
     isFixed: false,
     isCanceled: false,
+    latitude: 100,
+    longitude: 100,
     friends: [
       {
         uid: 1,
@@ -98,6 +104,8 @@ export const appointments: AppointmentProps[] = [
     penalty: 5000,
     isFixed: false,
     isCanceled: false,
+    latitude: 100,
+    longitude: 100,
     friends: [
       {
         uid: 1,
