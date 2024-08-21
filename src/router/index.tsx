@@ -24,8 +24,9 @@ import FriendSearch from '@/pages/friends/FriendSearch';
 import AppointmentDetail from '@/pages/home/AppointmentDetail';
 import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
+import PiggyUsage from '@/pages/piggy/PiggyUsage';
 import GiftFriend from '@/pages/gift/GiftFriend';
-import GiftAmount from '@/pages/gift/ GiftAmount';
+import GiftAmount from '@/pages/gift/GiftAmount';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -168,6 +169,14 @@ const Router = () => {
         }}
       />
       <Stack.Screen
+        name="PiggyUsage"
+        component={PiggyUsage}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,          
+        }}
+      />
+      <Stack.Screen    
         name="GiftFriend"
         component={GiftFriend}
         options={{

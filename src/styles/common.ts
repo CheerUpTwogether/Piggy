@@ -131,6 +131,8 @@ export const commonStyle = StyleSheet.create({
   REGULAR_77_16: {...Regular, color: color_77, fontSize: 16},
   REGULAR_77_14: {...Regular, color: color_77, fontSize: 14},
   REGULAR_77_12: {...Regular, color: color_77, fontSize: 12},
+  BOLD_33_24: {...Bold, color: color_33, fontSize: 24},
+  BOLD_33_22: {...Bold, color: color_33, fontSize: 22},
   BOLD_33_20: {...Bold, color: color_33, fontSize: 20},
   BOLD_33_18: {...Bold, color: color_33, fontSize: 18},
   BOLD_33_16: {...Bold, color: color_33, fontSize: 16},

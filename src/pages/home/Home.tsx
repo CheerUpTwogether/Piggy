@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import AppointmentItem from '@/components/home/AppointmentItem';
 import {appointments} from '@/mock/Home/Home';
+import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
 import PulsSvg from '@/assets/icons/plus.svg';

@@ -26,6 +26,7 @@ export type RootStackParamList = {
     profile_image_path: string;
   };
   AppointmentDetail: AppointmentProps;
+  PiggyUsage: undefined;
   Friends: undefined;
 };
 
