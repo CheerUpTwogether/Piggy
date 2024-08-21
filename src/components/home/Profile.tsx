@@ -3,8 +3,12 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import Button from '../common/Button';
 import {dummy_profile} from '@/mock/Friends/Friends';
 import {color_primary, commonStyle} from '@/styles/common';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '@/types/Router';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 const Profile = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   return (
     <View style={styles.myInfoBox}>
       <View style={styles.flexRow}>
@@ -24,7 +28,12 @@ const Profile = () => {
         </View>
       </View>
       <View style={styles.btnArea}>
-        <Button text="사용내역" onPress={() => {}} theme="outline" size="sm" />
+        <Button
+          text="사용내역"
+          onPress={() => navigation.navigate('PiggyUsage')}
+          theme="outline"
+          size="sm"
+        />
         <Button text="충전하기" onPress={() => {}} theme="outline" size="sm" />
       </View>
     </View>

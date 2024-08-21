@@ -24,6 +24,7 @@ import FriendSearch from '@/pages/friends/FriendSearch';
 import AppointmentDetail from '@/pages/home/AppointmentDetail';
 import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
+import PiggyUsage from '@/pages/piggy/PiggyUsage';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -160,6 +161,14 @@ const Router = () => {
       <Stack.Screen
         name="HelpDesk"
         component={HelpDesk}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="PiggyUsage"
+        component={PiggyUsage}
         options={{
           header: Header,
           headerLeftLabelVisible: true,

@@ -19,6 +19,7 @@ export type RootStackParamList = {
   };
   FriendSearch: undefined;
   AppointmentDetail: AppointmentProps;
+  PiggyUsage: undefined;
 };
 
 export type MainHeaderProps = {
