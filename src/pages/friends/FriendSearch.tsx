@@ -7,18 +7,38 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import {commonStyle} from '@/styles/common';
-import InputBox from '@/components/common/InputBox';
-import {dummy_friends_data} from '@/mock/Friends/Friends';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  FriendSearchRouteProp,
+  FriendSearchNavigationProp,
+} from '@/pages/friends/type';
 import useDebounce from '@/hooks/useDebounce';
+import InputBox from '@/components/common/InputBox';
+import BottomSheet from '@/components/common/BottomSheet';
+import ProfileDetail from './ProfileDetail';
+import {commonStyle} from '@/styles/common';
+import {dummy_friends_data} from '@/mock/Friends/Friends';
 import {Friend} from '@/mock/Friends/type';
 
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
 import EmptyResult from '@/components/common/EmptyResult';
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const FriendSearch = () => {
   const [keyword, setKeyword] = useState('');
+  const [isShow, setIsShow] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<Friend>({
+    uuid: '',
+    nick_name: '',
+    total_appointments: 0,
+    completed_appointments: 0,
+    profile_image_path: '',
+    friend: false,
+  });
+  const route = useRoute<FriendSearchRouteProp>();
+  const {previousScreen} = route.params;
+  const navigation = useNavigation<FriendSearchNavigationProp>();
   const debouncedKeyword = useDebounce(keyword, 500);
 
   const filterFriend = debouncedKeyword
@@ -38,16 +58,43 @@ const FriendSearch = () => {
 
   const sortedData = [...friends, ...nonFriends];
 
+  const handleProfilePress = (user: Friend) => {
+    if (previousScreen === 'Friends') {
+      setSelectedUser({
+        uuid: user.uuid,
+        nick_name: user.nick_name,
+        total_appointments: user.total_appointments,
+        completed_appointments: user.completed_appointments,
+        profile_image_path: user.profile_image_path,
+        friend: user.friend,
+      });
+      setIsShow(true);
+    } else {
+      navigation.navigate('GiftAmount', {
+        // TODO: 친구만 가능하게
+        uuid: user.uuid,
+        nick_name: user.nick_name,
+        profile_image_path: user.profile_image_path,
+      });
+    }
+  };
+
   const renderItem = ({item}: {item: Friend}) => (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.friendContainer}
-      onPress={() => console.log('TODO: 프로필 상세 모달')}>
+      onPress={() => handleProfilePress(item)}>
       <View style={styles.friendWrapper}>
-        <Image
-          source={{uri: item.profile_image_path}}
-          style={styles.friendProfile}
-        />
+        {item.profile_image_path ? (
+          <Image
+            source={{uri: item.profile_image_path}}
+            style={styles.friendProfile}
+          />
+        ) : (
+          <View style={[styles.friendEmptyProfile, styles.friendProfile]}>
+            <BasicProfileSvg width={24} height={24} />
+          </View>
+        )}
         <Text style={commonStyle.MEDIUM_33_14}>{item.nick_name}</Text>
       </View>
       {item.friend ? (
@@ -83,6 +130,23 @@ const FriendSearch = () => {
           )
         }
       />
+      <BottomSheet
+        isShow={isShow}
+        setIsShow={setIsShow}
+        size={0.6}
+        component={
+          selectedUser && (
+            <ProfileDetail
+              uuid={selectedUser.uuid}
+              nick_name={selectedUser.nick_name}
+              total_appointments={selectedUser.total_appointments ?? 0}
+              completed_appointments={selectedUser.completed_appointments ?? 0}
+              profile_image_path={selectedUser.profile_image_path}
+              friend={selectedUser.friend ?? false}
+            />
+          )
+        }
+      />
     </View>
   );
 };
@@ -106,6 +170,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 30,
+  },
+  friendEmptyProfile: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#DDD',
   },
 });
 
