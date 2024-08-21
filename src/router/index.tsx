@@ -24,6 +24,8 @@ import FriendSearch from '@/pages/friends/FriendSearch';
 import AppointmentDetail from '@/pages/home/AppointmentDetail';
 import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
+import ServiceAgreement from '@/components/userAgreement/ServiceAgreement';
+import PaymentAgreement from '@/components/userAgreement/PaymentAgreement';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -163,6 +165,20 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="ServiceAgreement"
+        component={ServiceAgreement}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="PaymentAgreement"
+        component={PaymentAgreement}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
