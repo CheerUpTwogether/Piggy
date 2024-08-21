@@ -37,9 +37,14 @@ const GiftAmount = () => {
           </Text>
 
           <View style={styles.amountWrapper}>
-            <Text style={[commonStyle.BOLD_33_20, styles.amount]}>
-              {inputValue ? inputValue : 0}
-            </Text>
+            {inputValue ? (
+              <Text style={[commonStyle.BOLD_33_20, styles.amount]}>
+                {inputValue}
+              </Text>
+            ) : (
+              <Text style={commonStyle.BOLD_33_20}>0</Text>
+            )}
+
             <Text style={commonStyle.MEDIUM_PRIMARY_20}>Piggy</Text>
           </View>
         </View>
@@ -54,6 +59,7 @@ const GiftAmount = () => {
         onPress={handleSubmit}
         theme={'primary'}
         style={styles.button}
+        disable={inputValue ? false : true}
       />
     </View>
   );
