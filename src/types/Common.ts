@@ -95,7 +95,7 @@ export interface InputBoxProps {
   placeholder: string;
   isLarge?: boolean;
   icon: React.FC<SvgProps>;
-  goBack: boolean;
+  goBack?: boolean;
 }
 
 export interface SideSlideModalProps {
