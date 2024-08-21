@@ -31,24 +31,19 @@ const AppointmentDetail = () => {
         <View style={styles.contentWrapper}>
           <View>
             <View style={styles.infoSentence}>
-              <LocationSvg
-                width={16}
-                height={16}
-                color="#777"
-                style={styles.mr8}
-              />
+              <LocationSvg color="#777" style={styles.svg} />
               <Text style={commonStyle.REGULAR_33_16}>{item.location}</Text>
             </View>
             <View style={styles.infoSentence}>
-              <DateSvg width={16} height={16} color="#777" style={styles.mr8} />
+              <DateSvg color="#777" style={styles.svg} />
               <Text style={commonStyle.REGULAR_33_16}>{item.date}</Text>
             </View>
             <View style={styles.infoSentence}>
-              <TimeSvg width={16} height={16} color="#777" style={styles.mr8} />
+              <TimeSvg color="#777" style={styles.svg} />
               <Text style={commonStyle.REGULAR_33_16}>{item.time}</Text>
             </View>
             <View style={styles.infoSentence}>
-              <CoinSvg width={16} height={16} color="#777" style={styles.mr8} />
+              <CoinSvg color="#777" style={styles.svg} />
               <Text style={[commonStyle.BOLD_33_16, styles.mr4]}>
                 {item.penalty}
               </Text>
@@ -96,7 +91,9 @@ const styles = StyleSheet.create({
   mr4: {
     marginRight: 4,
   },
-  mr8: {
+  svg: {
+    width: 16,
+    height: 16,
     marginRight: 8,
   },
   infoSentence: {
