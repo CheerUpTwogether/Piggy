@@ -71,7 +71,7 @@ const FriendSearch = () => {
       <FlatList
         data={sortedData}
         renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.uuid.toString()}
         ListEmptyComponent={
           !keyword ? (
             <View />

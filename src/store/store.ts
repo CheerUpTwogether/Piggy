@@ -1,6 +1,12 @@
 import {create} from 'zustand';
-import {ModalStore, ToastStore} from '@/types/Common';
+import {ModalStore, ToastStore, UserStore} from '@/types/Common';
 import {ModalProps} from 'react-native';
+
+export const useUserStore = create<UserStore>(set => ({
+  userData: [],
+  gotoProfile: () => {},
+  setGotoProfile: func => set(() => ({gotoProfile: func})),
+}));
 
 export const useToastStore = create<ToastStore>(set => ({
   toasts: [],

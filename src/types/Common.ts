@@ -19,11 +19,18 @@ export interface ToggleProps {
   loading?: boolean;
 }
 
+export interface UserStore {
+  userData: any[];
+  gotoProfile: () => void;
+  setGotoProfile: (func: () => void) => void;
+}
+
 export interface ToastStore {
   toasts: ToastProps[];
   addToast: (toast: Omit<ToastProps, 'id'>) => void;
   removeToast: (id: number) => void;
 }
+
 export interface ToastProps {
   id: number;
   success?: boolean;

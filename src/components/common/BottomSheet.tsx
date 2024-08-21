@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 4,
     backgroundColor: '#AAA',
+    borderRadius: 5,
   },
   bottomSheetContentsWrapper: {height: '100%', backgroundColor: '#FFF'},
 });
