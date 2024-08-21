@@ -1,13 +1,17 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '@/types/Router';
+import {AppointmentProps} from '@/mock/Home/type';
 import {commonStyle, color_primary, color_ef} from '@/styles/common';
 import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
-import {AppointmentProps} from '@/mock/Home/type';
 
 const AppointmentItem = ({item}: {item: AppointmentProps}) => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const titleFontColor = item.isCanceled
     ? commonStyle.MEDIUM_AA_18
     : commonStyle.MEDIUM_33_18;
@@ -16,7 +20,9 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
     : commonStyle.REGULAR_77_14;
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigation.navigate('AppointmentDetail', {...item})}>
       <View style={styles.contentContainer}>
         {/* 참석자 프로필 */}
         <View>

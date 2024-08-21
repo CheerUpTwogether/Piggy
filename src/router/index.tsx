@@ -21,45 +21,47 @@ import NoticeBoard from '@/components/NoticeBoard/NoticeBoard';
 import NoticeBoardDetail from '@/components/NoticeBoard/NoticeBoardDetail';
 import FAQBoard from '@/components/FAQBoard/FAQBoard';
 import FriendSearch from '@/pages/friends/FriendSearch';
+import AppointmentDetail from '@/pages/home/AppointmentDetail';
 import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 
-const MainHeader = (props: BottomTabHeaderProps) => <TopTab {...props} />;
-const StackHeader = (props: StackHeaderProps) => <TopTab {...props} />;
-const TabBar = (props: BottomTabBarProps) => <BottomTab {...props} />;
+const Header = (props: BottomTabHeaderProps | StackHeaderProps) => (
+  <TopTab {...props} />
+);
+const Footer = (props: BottomTabBarProps) => <BottomTab {...props} />;
 
 const Main = () => {
   return (
-    <BottomStack.Navigator tabBar={TabBar}>
+    <BottomStack.Navigator tabBar={Footer}>
       <BottomStack.Screen
         name="Home"
         component={Home}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Friends"
         component={Friends}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Goods"
         component={Goods}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Settings"
         component={Settings}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
     </BottomStack.Navigator>
@@ -87,10 +89,18 @@ const Router = () => {
         }}
       />
       <Stack.Screen
+        name="AppointmentDetail"
+        component={AppointmentDetail}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
         name="GoodsStorage"
         component={GoodsStorage}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -98,7 +108,7 @@ const Router = () => {
         name="GoodsStorageDetail"
         component={GoodsStorageDetail}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -106,7 +116,7 @@ const Router = () => {
         name="GoodsDetail"
         component={GoodsDetail}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -119,7 +129,7 @@ const Router = () => {
         name="FAQBoard"
         component={FAQBoard}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -127,7 +137,7 @@ const Router = () => {
         name="NoticeBoard"
         component={NoticeBoard}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -135,7 +145,7 @@ const Router = () => {
         name="NoticeBoardDetail"
         component={NoticeBoardDetail}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -143,7 +153,7 @@ const Router = () => {
         name="EditProfile"
         component={EditProfile}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -151,7 +161,7 @@ const Router = () => {
         name="HelpDesk"
         component={HelpDesk}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
