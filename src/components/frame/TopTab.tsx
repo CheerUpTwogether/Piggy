@@ -5,13 +5,14 @@ import {BottomTabHeaderProps} from '@react-navigation/bottom-tabs';
 import {StackHeaderProps, StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {LeftItemProps} from '@/types/Common';
+import {useUserStore} from '@/store/store';
 
 import AlertSvg from '@/assets/icons/alert.svg';
 import SearchSvg from '@/assets/icons/search.svg';
 import GoodsBoxSvg from '@/assets/icons/goodsBox.svg';
 import BackSvg from '@/assets/icons/leftArrow.svg';
 import EditSvg from '@/assets/icons/edit.svg';
-import {useUserStore} from '@/store/store';
+import GiftSvg from '@/assets/icons/gift.svg';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
@@ -28,7 +29,7 @@ const LeftItem = ({name, headerLeftLabelVisible}: LeftItemProps) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.goBack()}>
-        <BackSvg width={24} height={24} />
+        <BackSvg style={styles.svg} />
       </TouchableOpacity>
     );
   }
@@ -42,7 +43,7 @@ const Title = ({title}: {title: string}) => {
 
 const Alarm = () => (
   <TouchableOpacity style={styles.icon}>
-    <AlertSvg width={24} height={24} />
+    <AlertSvg style={styles.svg} />
   </TouchableOpacity>
 );
 
@@ -52,13 +53,28 @@ const RightItems = ({name}: {name: string}) => {
   const {gotoProfile} = useUserStore();
 
   switch (name) {
+    case 'Home':
+      return (
+        <View style={styles.iconContainer}>
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => navigation.navigate('GiftFriend')}>
+            <GiftSvg style={styles.svg} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.icon}>
+            <GoodsBoxSvg style={styles.svg} />
+          </TouchableOpacity>
+
+          <Alarm />
+        </View>
+      );
     case 'Friends':
       return (
         <View style={styles.iconContainer}>
           <TouchableOpacity
             style={styles.icon}
             onPress={() => navigation.navigate('FriendSearch')}>
-            <SearchSvg width={24} height={24} color={'#555555'} />
+            <SearchSvg style={styles.svg} />
           </TouchableOpacity>
           <Alarm />
         </View>
@@ -72,7 +88,7 @@ const RightItems = ({name}: {name: string}) => {
             <Text style={[styles.text, styles.colorRed]}>P</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.icon}>
-            <GoodsBoxSvg width={24} height={24} color={'#555555'} />
+            <GoodsBoxSvg style={styles.svg} />
           </TouchableOpacity>
           <Alarm />
         </View>
@@ -81,7 +97,7 @@ const RightItems = ({name}: {name: string}) => {
       return (
         <View style={styles.iconContainer}>
           <TouchableOpacity style={styles.icon} onPress={gotoProfile}>
-            <EditSvg width={24} height={24} color={'#555555'} />
+            <EditSvg style={styles.svg} />
           </TouchableOpacity>
           <Alarm />
         </View>
@@ -151,6 +167,11 @@ const styles = StyleSheet.create({
   button: {
     padding: 8,
     margin: -8,
+  },
+  svg: {
+    width: 24,
+    height: 24,
+    color: '#555',
   },
 });
 export default TopTab;

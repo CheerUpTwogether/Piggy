@@ -18,6 +18,7 @@ export type RootStackParamList = {
     screen: keyof RootBottomTabParamList;
   };
   FriendSearch: undefined;
+  GiftFriend: undefined;
   AppointmentDetail: AppointmentProps;
 };
 
