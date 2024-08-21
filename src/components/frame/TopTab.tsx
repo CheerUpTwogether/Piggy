@@ -11,6 +11,7 @@ import SearchSvg from '@/assets/icons/search.svg';
 import GoodsBoxSvg from '@/assets/icons/goodsBox.svg';
 import BackSvg from '@/assets/icons/leftArrow.svg';
 import EditSvg from '@/assets/icons/edit.svg';
+import {useUserStore} from '@/store/store';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
@@ -48,6 +49,7 @@ const Alarm = () => (
 type NavigationProp = StackNavigationProp<RootStackParamList, 'FriendSearch'>;
 const RightItems = ({name}: {name: string}) => {
   const navigation = useNavigation<NavigationProp>();
+  const {gotoProfile} = useUserStore();
 
   switch (name) {
     case 'Friends':
@@ -78,7 +80,7 @@ const RightItems = ({name}: {name: string}) => {
     case 'Settings':
       return (
         <View style={styles.iconContainer}>
-          <TouchableOpacity style={styles.icon}>
+          <TouchableOpacity style={styles.icon} onPress={gotoProfile}>
             <EditSvg width={24} height={24} color={'#555555'} />
           </TouchableOpacity>
           <Alarm />

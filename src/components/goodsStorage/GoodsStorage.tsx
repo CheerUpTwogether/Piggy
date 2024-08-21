@@ -11,8 +11,8 @@ import {
   View,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {dummyGoodsStorageItem} from '@/mook/goodsStorage/types';
-import {dummyGoodsStorageItemData} from '@/mook/goodsStorage/goodsStorage';
+import {dummyGoodsStorageItem} from '@/mock/GoodsStorage/types';
+import {dummyGoodsStorageItemData} from '@/mock/GoodsStorage/GoodsStorage';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
 
@@ -20,8 +20,7 @@ const GoodsStorage = () => {
   const navigation = useNavigation();
 
   const gotoDetail = (item: dummyGoodsStorageItem) => {
-    console.log(item);
-    navigation.replace('GoodsStorageDetail', {...item});
+    navigation.navigate('GoodsStorageDetail', {...item});
   };
 
   const Header = () => (

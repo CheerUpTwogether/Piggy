@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   largeContainer: {
-    width: '95%',
+    width: '100%',
   },
   mediumContainer: {
     width: '90%',
