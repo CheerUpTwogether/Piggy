@@ -26,6 +26,7 @@ import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
 import ServiceAgreement from '@/components/userAgreement/ServiceAgreement';
 import PaymentAgreement from '@/components/userAgreement/PaymentAgreement';
+import LoginDetail from '@/pages/auth/LoginDetail';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -177,6 +178,13 @@ const Router = () => {
       <Stack.Screen
         name="PaymentAgreement"
         component={PaymentAgreement}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="LoginDetail"
+        component={LoginDetail}
         options={{
           headerShown: false,
         }}

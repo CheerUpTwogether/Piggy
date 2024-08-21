@@ -1,4 +1,4 @@
-import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {dummyAgreementItem} from '@/mock/UserAgreement/type';
 import {dummyPaymentAgreementData} from '@/mock/UserAgreement/UserAgreement';
 import {commonStyle} from '@/styles/common';
@@ -7,21 +7,17 @@ import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import Button from '../common/Button';
 import {RootStackParamList} from '@/types/Router';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
+import {useUserStore} from '@/store/store';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
 const PaymentAgreement = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'PaymentAgreement'>>();
-  const {isAgreeProps} = route.params;
-  const [isAgree, setIsAgree] = useState(false);
-
-  useEffect(() => {
-    if (isAgreeProps) {
-      setIsAgree(isAgreeProps);
-    }
-  }, []);
+  const {userData, setIsAgree} = useUserStore();
+  const [isPaymentAgree, setIsPaymentAgree] = useState(
+    userData?.isAgree.payment || false,
+  );
 
   const renderServiceAgreementItem = ({item}: {item: dummyAgreementItem}) => {
     const sentenceArray = splitStringByDot(item.content);
@@ -49,11 +45,39 @@ const PaymentAgreement = () => {
   };
 
   const renderAgreementButton = () => {
-    return (
-      <View style={{marginVertical: 20}}>
-        {!isAgree && (
-          <Button text="동의하기" onPress={() => navigation.replace('Login')} />
-        )}
+    return isPaymentAgree ? (
+      <View style={{marginVertical: 20, gap: 20}}>
+        <Button disable text="동의함" onPress={() => console.log('비활성화')} />
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Button
+            text="철회"
+            size="lg"
+            theme="outline"
+            onPress={() => {
+              setIsAgree('payment');
+              navigation.replace('LoginDetail');
+            }}
+          />
+          <Button
+            text="뒤로가기"
+            size="lg"
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+      </View>
+    ) : (
+      <View style={{marginVertical: 20, gap: 20}}>
+        <Button
+          text="동의하기"
+          onPress={() => {
+            setIsAgree('payment');
+            navigation.replace('LoginDetail');
+          }}
+        />
+        <Button
+          text="뒤로가기"
+          onPress={() => navigation.replace('LoginDetail')}
+        />
       </View>
     );
   };
@@ -68,7 +92,7 @@ const PaymentAgreement = () => {
         <FlatList
           data={dummyPaymentAgreementData}
           renderItem={renderServiceAgreementItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => String(item.id)}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={renderAgreementButton}
         />

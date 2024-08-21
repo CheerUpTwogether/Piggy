@@ -19,8 +19,9 @@ export type RootStackParamList = {
   };
   FriendSearch: undefined;
   AppointmentDetail: AppointmentProps;
-  PaymentAgreement: {isAgreeProps: boolean};
-  ServiceAgreement: {isAgreeProps: boolean};
+  ServiceAgreement: undefined;
+  PaymentAgreement: undefined;
+  LoginDetail: undefined;
 };
 
 export type MainHeaderProps = {

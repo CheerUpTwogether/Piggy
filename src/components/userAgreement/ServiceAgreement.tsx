@@ -1,4 +1,4 @@
-import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {dummyAgreementItem} from '@/mock/UserAgreement/type';
 import {dummyServiceAgreementData} from '@/mock/UserAgreement/UserAgreement';
 import {commonStyle} from '@/styles/common';
@@ -7,22 +7,17 @@ import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import Button from '../common/Button';
 import {RootStackParamList} from '@/types/Router';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
+import {useUserStore} from '@/store/store';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
 const ServiceAgreement = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'ServiceAgreement'>>();
-  const {isAgreeProps} = route.params;
-  const [isAgree, setIsAgree] = useState(false);
-
-  useEffect(() => {
-    if (isAgreeProps) {
-      setIsAgree(isAgreeProps);
-    }
-  }, []);
-
+  const {userData, setIsAgree} = useUserStore();
+  const [isServiceAgree, setIsServiceAgree] = useState(
+    userData?.isAgree.service || false,
+  );
   const renderServiceAgreementItem = ({item}: {item: dummyAgreementItem}) => {
     const sentenceArray = splitStringByDot(item.content);
     return (
@@ -49,11 +44,39 @@ const ServiceAgreement = () => {
   };
 
   const renderAgreementButton = () => {
-    return (
-      <View style={{marginVertical: 20}}>
-        {!isAgree && (
-          <Button text="동의하기" onPress={() => navigation.replace('Login')} />
-        )}
+    return isServiceAgree ? (
+      <View style={{marginVertical: 20, gap: 20}}>
+        <Button disable text="동의함" onPress={() => console.log('비활성화')} />
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Button
+            text="철회"
+            size="lg"
+            theme="outline"
+            onPress={() => {
+              setIsAgree('service');
+              navigation.replace('LoginDetail');
+            }}
+          />
+          <Button
+            text="뒤로가기"
+            size="lg"
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+      </View>
+    ) : (
+      <View style={{marginVertical: 20, gap: 20}}>
+        <Button
+          text="동의하기"
+          onPress={() => {
+            setIsAgree('service');
+            navigation.replace('LoginDetail');
+          }}
+        />
+        <Button
+          text="뒤로가기"
+          onPress={() => navigation.replace('LoginDetail')}
+        />
       </View>
     );
   };
@@ -68,7 +91,7 @@ const ServiceAgreement = () => {
         <FlatList
           data={dummyServiceAgreementData}
           renderItem={renderServiceAgreementItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={renderAgreementButton}
         />
