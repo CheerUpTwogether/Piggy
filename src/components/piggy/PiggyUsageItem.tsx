@@ -25,7 +25,7 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
         <View
           style={{
             ...styles.imgArea,
-            borderColor: item?.type === 'gift' ? color_ef : color_primary,
+            borderColor: color_ef,
           }}>
           {item?.type !== 'gift' ? (
             <Image

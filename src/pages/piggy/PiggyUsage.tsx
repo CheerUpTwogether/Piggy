@@ -1,12 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {commonStyle} from '@/styles/common';
+import {color_ef, commonStyle} from '@/styles/common';
 import {piggyUsageHistories} from '@/mock/Piggy/Piggy';
+import DropDownPicker from 'react-native-dropdown-picker';
 import ButtonCouple from '@/components/common/ButtonCouple';
 import PiggyUsageItem from '@/components/piggy/PiggyUsageItem';
 
 const PiggyUsage = () => {
+  const options = [
+    {label: '전체', value: 'total'},
+    {label: '입금', value: 'input'},
+    {label: '출금', value: 'output'},
+  ];
+  const [value, setValue] = useState(options[0].value);
+  const [items, setItems] = useState(options);
+  const [open, setOpen] = useState(false);
   return (
     <View style={commonStyle.CONTAINER}>
       <Text
@@ -18,8 +27,8 @@ const PiggyUsage = () => {
       </Text>
 
       <View style={styles.piggyContainer}>
-        <Text style={commonStyle.BOLD_PRIMARY_20}>50000</Text>
-        <Text style={commonStyle.BOLD_33_20}>Piggy</Text>
+        <Text style={commonStyle.MEDIUM_33_20}>50000</Text>
+        <Text style={commonStyle.MEDIUM_PRIMARY_20}>Piggy</Text>
       </View>
 
       <ButtonCouple
@@ -28,6 +37,21 @@ const PiggyUsage = () => {
         textLeft={'충전하기'}
         textRight={'선물하기'}
         theme="outline"
+      />
+
+      <DropDownPicker
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+        style={{...styles.dropdown, ...commonStyle.BOLD_33_16}}
+        containerStyle={styles.dropdownContainer}
+        showTickIcon={false}
+        dropDownContainerStyle={{
+          borderColor: color_ef,
+        }}
       />
 
       <FlatList
@@ -45,7 +69,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 4,
     paddingTop: 4,
-    marginBottom: 24,
+    marginBottom: 32,
+  },
+  dropdown: {
+    borderWidth: 0,
+    maxWidth: 80,
+    marginTop: 8,
+  },
+  dropdownContainer: {
+    backgroundColor: '#ffffff',
+    zIndex: 10,
+    maxWidth: 80,
+    borderColor: color_ef,
   },
 });
 export default PiggyUsage;
