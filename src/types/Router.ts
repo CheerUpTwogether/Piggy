@@ -1,4 +1,5 @@
 import {AppointmentProps} from '@/mock/Home/type';
+import {FriendSearchParams} from '@/pages/friends/type';
 import {
   StackNavigationOptions,
   StackNavigationProp,
@@ -17,8 +18,15 @@ export type RootStackParamList = {
   Main: {
     screen: keyof RootBottomTabParamList;
   };
-  FriendSearch: undefined;
+  FriendSearch: FriendSearchParams;
+  GiftFriend: undefined;
+  GiftAmount: {
+    uuid: string;
+    nick_name: string;
+    profile_image_path: string;
+  };
   AppointmentDetail: AppointmentProps;
+  Friends: undefined;
 };
 
 export type MainHeaderProps = {

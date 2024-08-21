@@ -24,6 +24,8 @@ import FriendSearch from '@/pages/friends/FriendSearch';
 import AppointmentDetail from '@/pages/home/AppointmentDetail';
 import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
+import GiftFriend from '@/pages/gift/GiftFriend';
+import GiftAmount from '@/pages/gift/ GiftAmount';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -163,6 +165,24 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="GiftFriend"
+        component={GiftFriend}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+          title: '선물하기',
+        }}
+      />
+      <Stack.Screen
+        name="GiftAmount"
+        component={GiftAmount}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+          title: '피기 선물',
         }}
       />
     </Stack.Navigator>
