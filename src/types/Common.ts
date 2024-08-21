@@ -109,6 +109,7 @@ export interface SideSlideModalProps {
   title?: string;
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
-  component?: React.ReactElement;
+  //component?: React.ReactElement;
+  children?: React.ReactElement;
   size?: number;
 }
