@@ -9,11 +9,10 @@ import {
   Dimensions,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '@/types/Router';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {commonStyle} from '@/styles/common';
 import {ProfileDetailProps} from '@/mock/Friends/type';
 import {gradeList, determineGrade} from '@/utils/grade';
+import {ProfileDetailNavigationProp} from './type';
 
 import GradeSvg from '@/assets/icons/grade.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
@@ -24,11 +23,6 @@ import UTurnSvg from '@/assets/icons/uTurn.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const {height: screenHeight} = Dimensions.get('window');
-
-type ProfileDetailNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'GiftAmount'
->;
 
 const ProfileDetail: React.FC<ProfileDetailProps> = ({
   uuid,

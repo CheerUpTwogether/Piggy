@@ -2,15 +2,12 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '@/types/Router';
+import {GiftNavigationProp} from './type';
 
 import SearchFriend from '@/assets/icons/searchFriend.svg';
 
-type NavigationProp = StackNavigationProp<RootStackParamList, 'FriendSearch'>;
-
 const GiftFriend = () => {
-  const navigation = useNavigation<NavigationProp>();
+  const navigation = useNavigation<GiftNavigationProp>();
 
   const handleMoveToFriendSearch = () => {
     navigation.navigate('FriendSearch', {previousScreen: 'GiftFriend'});

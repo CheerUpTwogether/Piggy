@@ -1,12 +1,10 @@
 import React from 'react';
 import {Text, View, Image, StyleSheet} from 'react-native';
-import {useRoute, RouteProp} from '@react-navigation/native';
-import {RootStackParamList} from '@/types/Router';
+import {useRoute} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
+import {GiftAmountRouteProp} from './type';
 import KeyPad, {useKeyPad} from '@/components/common/Keypad';
 import Button from '@/components/common/Button';
-
-type GiftAmountRouteProp = RouteProp<RootStackParamList, 'GiftAmount'>;
 
 const GiftAmount = () => {
   const route = useRoute<GiftAmountRouteProp>();

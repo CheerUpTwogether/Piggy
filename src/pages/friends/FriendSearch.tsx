@@ -7,9 +7,11 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '@/types/Router';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  FriendSearchRouteProp,
+  FriendSearchNavigationProp,
+} from '@/pages/friends/type';
 import useDebounce from '@/hooks/useDebounce';
 import InputBox from '@/components/common/InputBox';
 import BottomSheet from '@/components/common/BottomSheet';
@@ -22,12 +24,6 @@ import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
 import EmptyResult from '@/components/common/EmptyResult';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
-
-type FriendSearchRouteProp = RouteProp<RootStackParamList, 'FriendSearch'>;
-type FriendSearchNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'FriendSearch'
->;
 
 const FriendSearch = () => {
   const [keyword, setKeyword] = useState('');
