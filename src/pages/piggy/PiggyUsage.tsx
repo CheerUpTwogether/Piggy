@@ -6,6 +6,7 @@ import {piggyUsageHistories} from '@/mock/Piggy/Piggy';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ButtonCouple from '@/components/common/ButtonCouple';
 import PiggyUsageItem from '@/components/piggy/PiggyUsageItem';
+import EmptyResult from '@/components/common/EmptyResult';
 
 const PiggyUsage = () => {
   const options = [
@@ -54,11 +55,18 @@ const PiggyUsage = () => {
         }}
       />
 
-      <FlatList
-        data={piggyUsageHistories}
-        keyExtractor={item => String(item.usage_history_id)}
-        renderItem={PiggyUsageItem}
-      />
+      {piggyUsageHistories.length ? (
+        <FlatList
+          data={piggyUsageHistories}
+          keyExtractor={item => String(item.usage_history_id)}
+          renderItem={PiggyUsageItem}
+        />
+      ) : (
+        <EmptyResult
+          reason={'아직 피기 사용내역이 없어요'}
+          solution={'피기를 충전하고 약속을 잡아볼까요?'}
+        />
+      )}
     </View>
   );
 };
