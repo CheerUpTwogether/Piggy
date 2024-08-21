@@ -12,18 +12,32 @@ import {
 import {commonStyle} from '@/styles/common';
 import EmptyResult from '@/components/common/EmptyResult';
 import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
+import BottomSheet from '@/components/common/BottomSheet';
+import ProfileDetail from './ProfileDetail';
 import MoreSvg from '@/assets/icons/more.svg';
+import {Friend, User} from '@/mock/Friends/type';
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
-const SWIPE_STANDARD = -100; // 슬라이드 시 삭제 버튼 나오는 기준
+const SWIPE_STANDARD = -100;
 
 const Friends = () => {
   const [openRowIndex, setOpenRowIndex] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isShow, setIsShow] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<Friend | User>({
+    uuid: '',
+    nick_name: '',
+    total_appointments: 0,
+    completed_appointments: 0,
+    profile_image_path: '',
+    friend: false,
+  });
+
   const positions = useRef(
     dummy_friends_data.map(() => new Animated.Value(0)),
   ).current;
 
-  // 애니메이션을 통해 행을 열기 || 닫는 함수
+  // 행 열기/닫기 애니메이션 처리 함수
   const toggleRowAnimation = (index: number, toValue: number) => {
     return new Promise<void>(resolve => {
       Animated.timing(positions[index], {
@@ -38,22 +52,18 @@ const Friends = () => {
     });
   };
 
-  // 행의 삭제 열기, 닫기를 공통으로 처리 함수
+  // 특정 행을 열거나 닫는 함수
   const handleRowToggle = async (index: number) => {
-    if (isAnimating) {
-      return;
-    }
-    setIsAnimating(true);
+    if (isAnimating) setIsAnimating(true);
 
     if (openRowIndex === index) {
-      await toggleRowAnimation(index, 0); // 현재 열려 있는 행 닫기
+      await toggleRowAnimation(index, 0); // 현재 열린 행 닫기
     } else {
-      if (openRowIndex !== null && openRowIndex !== index) {
-        await toggleRowAnimation(openRowIndex, 0); // 이전에 열려 있던 행 닫기
+      if (openRowIndex !== null) {
+        await toggleRowAnimation(openRowIndex, 0); // 이전에 열린 행 닫기
       }
-      await toggleRowAnimation(index, SWIPE_STANDARD); // 현재 행 열기
+      await toggleRowAnimation(index, SWIPE_STANDARD); // 새로운 행 열기
     }
-    setIsAnimating(false);
   };
 
   // PanResponder 생성 함수
@@ -75,17 +85,36 @@ const Friends = () => {
     });
   };
 
-  // More 버튼이 눌렸을 때의 동작
+  // More 버튼 클릭 처리
   const handleMorePress = async (index: number) => {
     if (!isAnimating) {
       await handleRowToggle(index);
     }
   };
 
+  // 프로필 클릭 처리
+  const handleProfilePress = async (user: Friend) => {
+    if (openRowIndex !== null) {
+      await toggleRowAnimation(openRowIndex, 0);
+    }
+    setIsShow(true);
+    setSelectedUser({
+      uuid: user.uuid,
+      nick_name: user.nick_name,
+      total_appointments: user.total_appointments,
+      completed_appointments: user.completed_appointments,
+      profile_image_path: user.profile_image_path,
+      friend: user.friend,
+    });
+  };
+
   return (
     <ScrollView style={commonStyle.CONTAINER}>
-      <View style={{marginBottom: 30}}>
-        <TouchableOpacity style={styles.profileWrapper} activeOpacity={0.8}>
+      <View style={styles.profileSection}>
+        <TouchableOpacity
+          style={styles.profileWrapper}
+          activeOpacity={0.8}
+          onPress={() => handleProfilePress(dummy_profile)}>
           <Image
             source={{uri: dummy_profile.profile_image_path}}
             style={styles.profile}
@@ -110,26 +139,37 @@ const Friends = () => {
               />
             </View>
           ) : (
-            <View style={{marginTop: 10}}>
+            <View style={styles.friendList}>
               {dummy_friends_data.map((item, index) => (
-                <View key={item.id} style={styles.swipeContainer}>
+                <View key={item.uuid} style={styles.swipeContainer}>
                   <Animated.View
                     style={[
                       styles.friendContainer,
-                      {
-                        transform: [{translateX: positions[index]}],
-                      },
+                      {transform: [{translateX: positions[index]}]},
                     ]}
                     {...createPanResponder(index).panHandlers}>
-                    <View style={styles.friendWrapper}>
-                      <Image
-                        source={{uri: item.profile_image_path}}
-                        style={styles.friendProfile}
-                      />
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => handleProfilePress(item)}
+                      style={styles.friendWrapper}>
+                      {item.profile_image_path ? (
+                        <Image
+                          source={{uri: item.profile_image_path}}
+                          style={styles.friendProfile}
+                        />
+                      ) : (
+                        <View
+                          style={[
+                            styles.friendEmptyProfile,
+                            styles.friendProfile,
+                          ]}>
+                          <BasicProfileSvg width={24} height={24} />
+                        </View>
+                      )}
                       <Text style={commonStyle.MEDIUM_33_16}>
                         {item.nick_name}
                       </Text>
-                    </View>
+                    </TouchableOpacity>
                     <Animated.View
                       style={[
                         styles.moreButton,
@@ -148,12 +188,7 @@ const Friends = () => {
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => handleMorePress(index)}>
-                        <MoreSvg
-                          width={20}
-                          height={20}
-                          stroke={'#555'}
-                          strokeWidth={0.1}
-                        />
+                        <MoreSvg width={20} height={20} color={'#555'} />
                       </TouchableOpacity>
                     </Animated.View>
                   </Animated.View>
@@ -186,11 +221,30 @@ const Friends = () => {
           )}
         </View>
       </View>
+      {/* ProfileDetail 모달 */}
+      <BottomSheet
+        isShow={isShow}
+        setIsShow={setIsShow}
+        size={0.6}
+        component={
+          selectedUser && (
+            <ProfileDetail
+              uuid={selectedUser.uuid}
+              nick_name={selectedUser.nick_name}
+              total_appointments={selectedUser.total_appointments ?? 0}
+              completed_appointments={selectedUser.completed_appointments ?? 0}
+              profile_image_path={selectedUser.profile_image_path}
+              friend={selectedUser.friend ?? false}
+            />
+          )
+        }
+      />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  profileSection: {marginBottom: 30},
   swipeContainer: {
     position: 'relative',
     overflow: 'hidden',
@@ -210,9 +264,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   myData: {gap: 4},
-  friendListWrapper: {
-    marginTop: 20,
-  },
+  friendListWrapper: {marginTop: 20},
+  friendList: {marginTop: 10},
   friendContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -225,11 +278,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
+    width: '65%',
   },
   friendProfile: {
     width: 40,
     height: 40,
     borderRadius: 30,
+  },
+  friendEmptyProfile: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#DDD',
   },
   moreButton: {
     justifyContent: 'center',

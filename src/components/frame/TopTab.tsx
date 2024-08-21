@@ -1,7 +1,9 @@
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {BottomTabHeaderProps} from '@react-navigation/bottom-tabs';
-import {StackHeaderProps} from '@react-navigation/stack';
+import {StackHeaderProps, StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '@/types/Router';
 import {LeftItemProps} from '@/types/Common';
 
 import AlertSvg from '@/assets/icons/alert.svg';
@@ -13,14 +15,18 @@ import EditSvg from '@/assets/icons/edit.svg';
 const topLogo = require('@/assets/icons/topLogo.png');
 
 const LeftItem = ({name, headerLeftLabelVisible}: LeftItemProps) => {
+  const navigation = useNavigation();
   const mainName = ['Home', 'Friends', 'Goods', 'Settings'];
+
   if (mainName.includes(name)) {
     return <Image source={topLogo} style={styles.logo} />;
   }
 
   if (headerLeftLabelVisible) {
     return (
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.goBack()}>
         <BackSvg width={24} height={24} />
       </TouchableOpacity>
     );
@@ -39,12 +45,17 @@ const Alarm = () => (
   </TouchableOpacity>
 );
 
+type NavigationProp = StackNavigationProp<RootStackParamList, 'FriendSearch'>;
 const RightItems = ({name}: {name: string}) => {
+  const navigation = useNavigation<NavigationProp>();
+
   switch (name) {
     case 'Friends':
       return (
         <View style={styles.iconContainer}>
-          <TouchableOpacity style={styles.icon}>
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => navigation.navigate('FriendSearch')}>
             <SearchSvg width={24} height={24} color={'#555555'} />
           </TouchableOpacity>
           <Alarm />
