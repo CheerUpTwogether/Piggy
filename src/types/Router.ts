@@ -20,6 +20,10 @@ export type RootStackParamList = {
   };
   FriendSearch: FriendSearchParams;
   GiftFriend: undefined;
+  GiftAmount: {
+    uuid: string;
+    nick_name: string;
+  };
   AppointmentDetail: AppointmentProps;
   Friends: undefined;
 };

@@ -8,6 +8,9 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '@/types/Router';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {commonStyle} from '@/styles/common';
 import {ProfileDetailProps} from '@/mock/Friends/type';
 
@@ -67,6 +70,11 @@ const determineGrade = (
   }
 };
 
+type ProfileDetailNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'GiftAmount'
+>;
+
 const ProfileDetail: React.FC<ProfileDetailProps> = ({
   uuid,
   nick_name,
@@ -77,6 +85,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
 }) => {
   const [gradeListShow, setGradeListShow] = useState(false);
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
+  const navigation = useNavigation<ProfileDetailNavigationProp>();
 
   const {grade, gradeColor} = determineGrade(
     total_appointments,
@@ -90,6 +99,13 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
       useNativeDriver: true,
     }).start();
   }, [gradeListShow, slideAnim]);
+
+  const handleMoveToGift = (uuid: string, nick_name: string) => {
+    navigation.navigate('GiftAmount', {
+      uuid: uuid,
+      nick_name: nick_name,
+    });
+  };
 
   const iconShow = () => {
     if (uuid === '1000') {
@@ -105,7 +121,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
         <View style={{flexDirection: 'row', gap: 8}}>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => console.log('TODO: 선물하기')}>
+            onPress={() => handleMoveToGift(uuid, nick_name)}>
             <GiftSvg style={styles.rightIcon} />
           </TouchableOpacity>
           <TouchableOpacity

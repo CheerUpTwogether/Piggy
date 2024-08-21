@@ -7,8 +7,8 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import {useRoute, RouteProp} from '@react-navigation/native';
-// import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import useDebounce from '@/hooks/useDebounce';
 import InputBox from '@/components/common/InputBox';
@@ -24,6 +24,10 @@ import EmptyResult from '@/components/common/EmptyResult';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 type FriendSearchRouteProp = RouteProp<RootStackParamList, 'FriendSearch'>;
+type FriendSearchNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'FriendSearch'
+>;
 
 const FriendSearch = () => {
   const [keyword, setKeyword] = useState('');
@@ -38,7 +42,7 @@ const FriendSearch = () => {
   });
   const route = useRoute<FriendSearchRouteProp>();
   const {previousScreen} = route.params;
-  // const navigation = useNavigation();
+  const navigation = useNavigation<FriendSearchNavigationProp>();
   const debouncedKeyword = useDebounce(keyword, 500);
 
   const filterFriend = debouncedKeyword
@@ -70,7 +74,10 @@ const FriendSearch = () => {
       });
       setIsShow(true);
     } else {
-      console.log('TODO: 선물 페이지 이동');
+      navigation.navigate('GiftAmount', {
+        uuid: user.uuid,
+        nick_name: user.nick_name,
+      });
     }
   };
 
