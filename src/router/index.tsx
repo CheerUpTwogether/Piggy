@@ -182,7 +182,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
-          title: '선물하기',
+          title: '피기 선물',
         }}
       />
     </Stack.Navigator>

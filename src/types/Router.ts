@@ -23,6 +23,7 @@ export type RootStackParamList = {
   GiftAmount: {
     uuid: string;
     nick_name: string;
+    profile_image_path: string;
   };
   AppointmentDetail: AppointmentProps;
   Friends: undefined;

@@ -75,8 +75,10 @@ const FriendSearch = () => {
       setIsShow(true);
     } else {
       navigation.navigate('GiftAmount', {
+        // TODO: 친구만 가능하게
         uuid: user.uuid,
         nick_name: user.nick_name,
+        profile_image_path: user.profile_image_path,
       });
     }
   };

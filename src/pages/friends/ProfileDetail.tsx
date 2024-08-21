@@ -100,10 +100,15 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
     }).start();
   }, [gradeListShow, slideAnim]);
 
-  const handleMoveToGift = (uuid: string, nick_name: string) => {
+  const handleMoveToGift = (
+    uuid: string,
+    nick_name: string,
+    profile_image_path: string,
+  ) => {
     navigation.navigate('GiftAmount', {
       uuid: uuid,
       nick_name: nick_name,
+      profile_image_path: profile_image_path,
     });
   };
 
@@ -121,7 +126,9 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
         <View style={{flexDirection: 'row', gap: 8}}>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => handleMoveToGift(uuid, nick_name)}>
+            onPress={() =>
+              handleMoveToGift(uuid, nick_name, profile_image_path)
+            }>
             <GiftSvg style={styles.rightIcon} />
           </TouchableOpacity>
           <TouchableOpacity
