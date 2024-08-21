@@ -14,7 +14,7 @@ const GiftAmount = () => {
   const {inputValue, handlePress} = useKeyPad();
 
   const handleSubmit = () => {
-    console.log('TODO: 선물하기');
+    console.log('TODO: 선물하기', uuid);
   };
 
   return (
