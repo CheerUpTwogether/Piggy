@@ -6,6 +6,7 @@ import {StackHeaderProps, StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {LeftItemProps} from '@/types/Common';
 import {useUserStore} from '@/store/store';
+import {commonStyle} from '@/styles/common';
 
 import AlertSvg from '@/assets/icons/alert.svg';
 import SearchSvg from '@/assets/icons/search.svg';
@@ -29,7 +30,7 @@ const LeftItem = ({name, headerLeftLabelVisible}: LeftItemProps) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.goBack()}>
-        <BackSvg style={styles.svg} />
+        <BackSvg width={32} height={32} color={'#555'} />
       </TouchableOpacity>
     );
   }
@@ -38,7 +39,11 @@ const LeftItem = ({name, headerLeftLabelVisible}: LeftItemProps) => {
 };
 
 const Title = ({title}: {title: string}) => {
-  return !title ? <View /> : <Text style={styles.title}>{title}</Text>;
+  return !title ? (
+    <View />
+  ) : (
+    <Text style={commonStyle.MEDIUM_33_18}>{title}</Text>
+  );
 };
 
 const Alarm = () => (
@@ -145,7 +150,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 8,
-    color: '#555555',
+    color: '#555',
   },
   text: {
     fontSize: 16,
@@ -159,11 +164,6 @@ const styles = StyleSheet.create({
   },
   directionRow: {
     flexDirection: 'row',
-  },
-  title: {
-    color: '#333333',
-    fontSize: 16,
-    fontFamily: 'NotoSansKR-Medium',
   },
   empty: {
     width: 48,
