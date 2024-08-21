@@ -18,7 +18,9 @@ const AppointmentDetail = () => {
   const route = useRoute();
   const [isShow, setIsShow] = useState(false);
   const item = route.params as AppointmentProps;
-
+  const textColor = item.isCanceled
+    ? commonStyle.REGULAR_AA_16
+    : commonStyle.REGULAR_33_16;
   return (
     <View style={commonStyle.CONTAINER}>
       <Image
@@ -36,26 +38,40 @@ const AppointmentDetail = () => {
           <View>
             <View style={styles.infoSentence}>
               <LocationSvg color="#777" style={styles.svg} />
-              <Text style={commonStyle.REGULAR_33_16}>{item.location}</Text>
+              <Text style={textColor}>{item.location}</Text>
             </View>
             <View style={styles.infoSentence}>
               <DateSvg color="#777" style={styles.svg} />
-              <Text style={commonStyle.REGULAR_33_16}>{item.date}</Text>
+              <Text style={textColor}>{item.date}</Text>
             </View>
             <View style={styles.infoSentence}>
               <TimeSvg color="#777" style={styles.svg} />
-              <Text style={commonStyle.REGULAR_33_16}>{item.time}</Text>
+              <Text style={textColor}>{item.time}</Text>
             </View>
             <View style={styles.infoSentence}>
               <CoinSvg color="#777" style={styles.svg} />
-              <Text style={[commonStyle.BOLD_33_16, styles.mr4]}>
+              <Text
+                style={[
+                  item.isCanceled
+                    ? commonStyle.BOLD_AA_16
+                    : commonStyle.BOLD_33_16,
+                  styles.mr4,
+                ]}>
                 {item.penalty}
               </Text>
-              <Text style={commonStyle.BOLD_PRIMARY_16}>PIGGY</Text>
+              <Text
+                style={
+                  item.isCanceled
+                    ? commonStyle.BOLD_AA_16
+                    : commonStyle.BOLD_PRIMARY_16
+                }>
+                PIGGY
+              </Text>
             </View>
           </View>
           <View style={styles.friends}>
             <TouchableOpacity
+              activeOpacity={0.8}
               onPress={() => {
                 setIsShow(true);
               }}>
