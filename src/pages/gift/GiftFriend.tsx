@@ -11,8 +11,9 @@ type NavigationProp = StackNavigationProp<RootStackParamList, 'FriendSearch'>;
 
 const GiftFriend = () => {
   const navigation = useNavigation<NavigationProp>();
+
   const handleMoveToFriendSearch = () => {
-    navigation.navigate('FriendSearch');
+    navigation.navigate('FriendSearch', {previousScreen: 'GiftFriend'});
   };
 
   return (

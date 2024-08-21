@@ -73,7 +73,11 @@ const RightItems = ({name}: {name: string}) => {
         <View style={styles.iconContainer}>
           <TouchableOpacity
             style={styles.icon}
-            onPress={() => navigation.navigate('FriendSearch')}>
+            onPress={() =>
+              navigation.navigate('FriendSearch', {
+                previousScreen: 'Friends',
+              })
+            }>
             <SearchSvg style={styles.svg} />
           </TouchableOpacity>
           <Alarm />

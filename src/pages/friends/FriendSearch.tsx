@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -7,9 +7,11 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
+import {useRoute, RouteProp} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
 import InputBox from '@/components/common/InputBox';
 import {dummy_friends_data} from '@/mock/Friends/Friends';
+import {RootStackParamList} from '@/types/Router';
 import useDebounce from '@/hooks/useDebounce';
 import {Friend} from '@/mock/Friends/type';
 
@@ -17,9 +19,21 @@ import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
 import EmptyResult from '@/components/common/EmptyResult';
 
+type FriendSearchRouteProp = RouteProp<RootStackParamList, 'FriendSearch'>;
+
 const FriendSearch = () => {
   const [keyword, setKeyword] = useState('');
+  const route = useRoute<FriendSearchRouteProp>();
+  const {previousScreen} = route.params;
   const debouncedKeyword = useDebounce(keyword, 500);
+
+  useEffect(() => {
+    if (previousScreen === 'GiftFriend') {
+      console.log('GiftFriend');
+    } else if (previousScreen === 'Friends') {
+      console.log('Friends');
+    }
+  }, [previousScreen]);
 
   const filterFriend = debouncedKeyword
     ? dummy_friends_data
