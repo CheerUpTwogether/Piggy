@@ -31,11 +31,11 @@ const BottomStack = createBottomTabNavigator();
 const Header = (props: BottomTabHeaderProps | StackHeaderProps) => (
   <TopTab {...props} />
 );
-const TabBar = (props: BottomTabBarProps) => <BottomTab {...props} />;
+const Footer = (props: BottomTabBarProps) => <BottomTab {...props} />;
 
 const Main = () => {
   return (
-    <BottomStack.Navigator tabBar={TabBar}>
+    <BottomStack.Navigator tabBar={Footer}>
       <BottomStack.Screen
         name="Home"
         component={Home}
@@ -116,7 +116,7 @@ const Router = () => {
         name="GoodsDetail"
         component={GoodsDetail}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -129,7 +129,7 @@ const Router = () => {
         name="FAQBoard"
         component={FAQBoard}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -137,7 +137,7 @@ const Router = () => {
         name="NoticeBoard"
         component={NoticeBoard}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -145,7 +145,7 @@ const Router = () => {
         name="NoticeBoardDetail"
         component={NoticeBoardDetail}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -153,7 +153,7 @@ const Router = () => {
         name="EditProfile"
         component={EditProfile}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -161,7 +161,7 @@ const Router = () => {
         name="HelpDesk"
         component={HelpDesk}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
