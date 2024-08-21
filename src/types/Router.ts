@@ -1,3 +1,4 @@
+import {AppointmentProps} from '@/mock/Home/type';
 import {
   StackNavigationOptions,
   StackNavigationProp,
@@ -17,6 +18,7 @@ export type RootStackParamList = {
     screen: keyof RootBottomTabParamList;
   };
   FriendSearch: undefined;
+  AppointmentDetail: AppointmentProps;
 };
 
 export type MainHeaderProps = {
