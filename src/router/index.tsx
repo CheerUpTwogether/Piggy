@@ -17,6 +17,9 @@ import Settings from '@/pages/settings/Settings';
 import GoodsStorage from '@/components/goodsStorage/GoodsStorage';
 import GoodsStorageDetail from '@/components/goodsStorage/GoodsStorageDetail';
 import GoodsDetail from '@/components/goods/GoodsDetail';
+import NoticeBoard from '@/components/NoticeBoard/NoticeBoard';
+import NoticeBoardDetail from '@/components/NoticeBoard/NoticeBoardDetail';
+import FAQBoard from '@/components/FAQBoard/FAQBoard';
 import FriendSearch from '@/pages/friends/FriendSearch';
 import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
@@ -111,6 +114,30 @@ const Router = () => {
         name="FriendSearch"
         component={FriendSearch}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="FAQBoard"
+        component={FAQBoard}
+        options={{
+          header: StackHeader,
+          headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="NoticeBoard"
+        component={NoticeBoard}
+        options={{
+          header: StackHeader,
+          headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="NoticeBoardDetail"
+        component={NoticeBoardDetail}
+        options={{
+          header: StackHeader,
+          headerLeftLabelVisible: true,
+        }}
       />
       <Stack.Screen
         name="EditProfile"
