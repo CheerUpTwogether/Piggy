@@ -25,39 +25,40 @@ import FriendSearch from '@/pages/friends/FriendSearch';
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
 
-const MainHeader = (props: BottomTabHeaderProps) => <TopTab {...props} />;
-const StackHeader = (props: StackHeaderProps) => <TopTab {...props} />;
-const TabBar = (props: BottomTabBarProps) => <BottomTab {...props} />;
+const Header = (props: StackHeaderProps | BottomTabHeaderProps) => (
+  <TopTab {...props} />
+);
+const Footer = (props: BottomTabBarProps) => <BottomTab {...props} />;
 
 const Main = () => {
   return (
-    <BottomStack.Navigator tabBar={TabBar}>
+    <BottomStack.Navigator tabBar={Footer}>
       <BottomStack.Screen
         name="Home"
         component={Home}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Friends"
         component={Friends}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Goods"
         component={Goods}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
       <BottomStack.Screen
         name="Settings"
         component={Settings}
         options={{
-          header: MainHeader,
+          header: Header,
         }}
       />
     </BottomStack.Navigator>
@@ -88,7 +89,7 @@ const Router = () => {
         name="GoodsStorage"
         component={GoodsStorage}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -96,7 +97,7 @@ const Router = () => {
         name="GoodsStorageDetail"
         component={GoodsStorageDetail}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -114,7 +115,7 @@ const Router = () => {
         name="FAQBoard"
         component={FAQBoard}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -122,7 +123,7 @@ const Router = () => {
         name="NoticeBoard"
         component={NoticeBoard}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
@@ -130,7 +131,7 @@ const Router = () => {
         name="NoticeBoardDetail"
         component={NoticeBoardDetail}
         options={{
-          header: StackHeader,
+          header: Header,
           headerLeftLabelVisible: true,
         }}
       />
