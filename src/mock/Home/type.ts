@@ -11,6 +11,9 @@ export interface AppointmentProps {
   longitude: number;
   friends: {
     uid: number;
+    nick_name: string;
     url: string;
+    isJoin?: boolean;
+    isProof?: boolean;
   }[];
 }

@@ -1,18 +1,42 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import {AppointmentProps} from '@/mock/Home/type';
 import {useRoute} from '@react-navigation/native';
-import {commonStyle} from '@/styles/common';
+import {color_ef, commonStyle} from '@/styles/common';
+import FlatItemsFriends from '@/components/common/FlatItemsFriends';
+import Button from '@/components/common/Button';
+import SideSlideModal from '@/components/common/SideSlideModal';
+import ProfileSvg from '@/assets/icons/basicProfile.svg';
 import LocationSvg from '@/assets/icons/location.svg';
 import DateSvg from '@/assets/icons/calendar.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
-import FlatItemsFriends from '@/components/common/FlatItemsFriends';
-import Button from '@/components/common/Button';
+
+const Friends = ({item}) => {
+  return (
+    <View
+      style={{flexDirection: 'row', alignItems: 'center', padding: 8, gap: 8}}>
+      {item?.url ? (
+        <Image
+          source={{uri: item.url}}
+          width={48}
+          height={48}
+          style={{borderRadius: 100, borderColor: color_ef, borderWidth: 1}}
+        />
+      ) : (
+        <View style={styles.profile}>
+          <ProfileSvg width={28} height={28} />
+        </View>
+      )}
+      <Text style={commonStyle.MEDIUM_33_16}>{item.nick_name}</Text>
+    </View>
+  );
+};
 
 const AppointmentDetail = () => {
   const route = useRoute();
-
+  const [isShow, setIsShow] = useState(false);
   const item = route.params as AppointmentProps;
 
   return (
@@ -51,7 +75,12 @@ const AppointmentDetail = () => {
             </View>
           </View>
           <View style={styles.friends}>
-            <FlatItemsFriends images={item.friends.map(el => el.url)} />
+            <TouchableOpacity
+              onPress={() => {
+                setIsShow(true);
+              }}>
+              <FlatItemsFriends images={item.friends.map(el => el.url)} />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -65,6 +94,14 @@ const AppointmentDetail = () => {
         />
         <Button onPress={() => {}} text={'경로찾기'} theme="outline" />
       </View>
+
+      <SideSlideModal isShow={isShow} setIsShow={setIsShow}>
+        <FlatList
+          data={item.friends}
+          keyExtractor={item => String(item.uid)}
+          renderItem={Friends}
+        />
+      </SideSlideModal>
     </View>
   );
 };
@@ -81,7 +118,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 16,
-    //paddingBottom: 20,
   },
   contentWrapper: {
     flexDirection: 'row',
@@ -95,6 +131,15 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     marginRight: 8,
+  },
+  profile: {
+    width: 48,
+    height: 48,
+    borderRadius: 100,
+    borderColor: '#EFEFEF',
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   infoSentence: {
     flexDirection: 'row',
