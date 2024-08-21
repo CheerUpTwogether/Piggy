@@ -7,4 +7,5 @@ export interface PiggyUsageHistoryProps {
   time?: string;
   nick_name?: string;
   appointment_title?: string;
+  image_url?: string;
 }

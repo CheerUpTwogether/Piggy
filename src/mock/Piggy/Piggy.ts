@@ -17,6 +17,7 @@ export const piggyUsageHistories: PiggyUsageHistoryProps[] = [
     amount: 200000,
     date: '2024년 8월 01일',
     time: '14시 21분',
+    image_url: 'https://picsum.photos/300/680',
   },
   {
     usage_history_id: 3,
