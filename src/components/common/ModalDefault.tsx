@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, Modal} from 'react-native';
 import {useModalStore} from '@/store/store';
 import Button from './Button';
 import ButtonCouple from './ButtonCouple';
+import {commonStyle} from '@/styles/common';
 
 const ModalDefault = () => {
   const {modal, closeModal} = useModalStore();
@@ -11,9 +12,13 @@ const ModalDefault = () => {
     <Modal animationType="slide" visible={modal.isOpen} transparent={true}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
-          <Text style={styles.title}>{modal.title}</Text>
+          <Text style={{...commonStyle.BOLD_33_18, paddingBottom: 12}}>
+            {modal.title}
+          </Text>
           {modal.content ? (
-            <Text style={styles.content}>{modal.content}</Text>
+            <Text style={{...commonStyle.REGULAR_77_14, paddingBottom: 28}}>
+              {modal.content}
+            </Text>
           ) : (
             <View style={{paddingBottom: 12}} />
           )}
@@ -48,19 +53,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     margin: 28,
     padding: 20,
-  },
-  title: {
-    fontFamily: 'NotoSansKR-Bold',
-    fontWeight: 'bold',
-    color: '#333',
-    fontSize: 18,
-    paddingBottom: 12,
-  },
-  content: {
-    fontSize: 14,
-    color: '#777777',
-    fontFamily: 'NotoSansKR-Regular',
-    paddingBottom: 28,
   },
 });
 

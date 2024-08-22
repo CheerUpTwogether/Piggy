@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
+import {commonStyle} from '@/styles/common';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const FlatItemsFriends: React.FC<{images: string[]}> = ({images}) => {
@@ -52,7 +53,7 @@ const FlatItemsFriends: React.FC<{images: string[]}> = ({images}) => {
 
         {moreCount > 0 && (
           <View style={styles.moreContainer}>
-            <Text style={styles.moreNumber}>+{moreCount}</Text>
+            <Text style={commonStyle.MEDIUM_33_12}>+{moreCount}</Text>
           </View>
         )}
       </View>
@@ -141,10 +142,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     marginLeft: -10,
     zIndex: 1,
-  },
-  moreNumber: {
-    color: '#333',
-    fontSize: 12,
   },
 });
 
