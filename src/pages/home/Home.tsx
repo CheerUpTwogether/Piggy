@@ -19,16 +19,14 @@ import {RootStackParamList} from '@/types/Router';
 import {useNavigation} from '@react-navigation/native';
 
 const Home = () => {
+  const categories = [
+    {label: '미래 약속', value: 'next'},
+    {label: '지난 약속', value: 'prev'},
+  ];
   const [sort, setSort] = useState('next');
   const [activeIndex, setActiveIndex] = useState<number | null>(null); // 현재 활성화된 슬라이드의 인덱스
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const tabText = (value: string) => {
-    if (value === sort) {
-      return commonStyle.MEDIUM_PRIMARY_16;
-    }
-    return commonStyle.REGULAR_77_16;
-  };
   const animations = useRef(
     appointments.map(() => new Animated.ValueXY({x: 0, y: 0})),
   ).current;
@@ -82,18 +80,21 @@ const Home = () => {
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
-        <TouchableOpacity
-          style={styles.tabBtn}
-          onPress={() => setSort('next')}
-          activeOpacity={0.8}>
-          <Text style={tabText('next')}>미래 약속</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tabBtn}
-          onPress={() => setSort('prev')}
-          activeOpacity={0.8}>
-          <Text style={tabText('prev')}>지난 약속</Text>
-        </TouchableOpacity>
+        {categories.map(el => (
+          <TouchableOpacity
+            style={styles.tabBtn}
+            onPress={() => setSort(el.value)}
+            activeOpacity={0.8}>
+            <Text
+              style={
+                sort === el.value
+                  ? commonStyle.MEDIUM_PRIMARY_18
+                  : commonStyle.MEDIUM_77_18
+              }>
+              {el.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
       {/* 약속 리스트 */}
