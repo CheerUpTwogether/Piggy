@@ -56,13 +56,40 @@ export const notices = [
     appointment_title: '또 늦어보지 왜?',
     date: '2024년 8월 15일 12:30',
   },
-
   {
-    type: 'piggy',
-    detail: 'getGift',
-    title: '피기선물받기',
+    type: 'getPiggyPanalty', // getPiggyPanalty: '약속 벌금이 들어왔어요',
+    appointment_id: 1,
+    appointment_title: '또 늦어보지 왜?',
+    date: '2024년 8월 15일 12:30',
+  },
+  {
+    type: 'getPiggyPanalty', // givePiggyPanalty: '약속 벌금이 나갔어요',
+    appointment_id: 1,
+    appointment_title: '또 늦어보지 왜?',
+    date: '2024년 8월 15일 12:30',
+  },
+  {
+    type: 'getPiggyGift', // getPiggyGift: '피기를 선물받았어요',
     uid: 2,
     nick_name: '홍길동',
     date: '2024년 8월 15일 12:30',
+    piggy: 10000,
+  },
+  {
+    type: 'givePiggyGift', // givePiggyGift: '피기를 선물했어요',
+    uid: 2,
+    nick_name: '홍길동',
+    date: '2024년 8월 15일 12:30',
+    piggy: 5000,
+  },
+  {
+    type: 'chargePiggy', // chargePiggy: '피기를 충전했어요',
+    date: '2024년 8월 15일 12:30',
+    piggy: 5000,
+  },
+  {
+    type: 'chargePiggy', // buyGoods: '상품을 구매했어요',
+    date: '2024년 8월 15일 12:30',
+    piggy: 5000,
   },
 ];

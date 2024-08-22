@@ -1,12 +1,14 @@
+import {commonStyle} from '@/styles/common';
 import React from 'react';
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
 const Alarm = () => {
   return (
-    <View>
+    <View style={commonStyle.CONTAINER}>
       <Text>Alarm</Text>
     </View>
   );
 };
 
+const styles = StyleSheet.create({});
 export default Alarm;
