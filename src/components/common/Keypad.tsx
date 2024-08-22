@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {useToastStore} from '@/store/store';
 import {commonStyle} from '../../styles/common.ts';
+import {KeyPadItemType, KeyPadProps} from '@/types/Common.ts';
 
 import DeleteButtonSvg from '../../assets/icons/delete.svg';
 
 // KeyPad 기본 컴포넌트 -> export default
-const KeyPad = ({onPress}) => {
-  const buttons = [
+const KeyPad: React.FC<KeyPadProps> = ({onPress}) => {
+  const buttons: KeyPadItemType[][] = [
     ['1', '2', '3'],
     ['4', '5', '6'],
     ['7', '8', '9'],
@@ -39,14 +41,41 @@ const KeyPad = ({onPress}) => {
 // 값 받는 용도의 커스텀 훅
 export const useKeyPad = () => {
   const [inputValue, setInputValue] = useState('');
+  const addToast = useToastStore(state => state.addToast);
 
-  const handlePress = item => {
+  const formatCurrency = (value: string) => {
+    // 숫자만 남기고 나머지 문자 제거
+    const numericValue = value.replace(/[^0-9]/g, '');
+
+    // 천 단위로 쉼표 삽입
+    return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  const handlePress = (item: KeyPadItemType) => {
     if (item === 'deleteButton') {
-      setInputValue(prev => prev.slice(0, -1));
+      setInputValue(prev => {
+        const newValue = prev.slice(0, -1);
+        return formatCurrency(newValue);
+      });
     } else if ((item === '0' || item === '00') && inputValue === '') {
       return;
     } else {
-      setInputValue(prev => prev + item);
+      setInputValue(prev => {
+        const newValue = prev + item;
+
+        // 숫자 형태로 변환하고 최대값 제한
+        const numericValue = parseInt(newValue.replace(/,/g, ''), 10);
+        if (numericValue > 100000) {
+          addToast({
+            success: false,
+            text: '피기 선물은 100,000피기를',
+            multiText: '초과할 수 없습니다.',
+          });
+          return prev; // 100,000원 초과 시 이전 값 유지
+        }
+
+        return formatCurrency(newValue);
+      });
     }
   };
 
