@@ -47,6 +47,10 @@ const Home = () => {
     });
   };
 
+  const handleMoveToAppointment = () => {
+    navigation.navigate('AppointmentForm');
+  };
+
   const panResponders = animations.map((anim, index) =>
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -125,7 +129,7 @@ const Home = () => {
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.plusBtn}
-        onPress={() => {}}>
+        onPress={handleMoveToAppointment}>
         <PulsSvg color="#FFF" />
       </TouchableOpacity>
     </SafeAreaView>

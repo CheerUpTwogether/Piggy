@@ -29,6 +29,7 @@ export type RootStackParamList = {
   PiggyUsage: undefined;
   Friends: undefined;
   PiggyShop: undefined;
+  AppointmentForm: undefined;
 };
 
 export type MainHeaderProps = {
