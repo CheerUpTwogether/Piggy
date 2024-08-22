@@ -1,3 +1,4 @@
+import {User} from '@/mock/Friends/type';
 import {AppointmentProps} from '@/mock/Home/type';
 import {
   StackNavigationOptions,
@@ -22,6 +23,10 @@ export type RootStackParamList = {
   ServiceAgreement: undefined;
   PaymentAgreement: undefined;
   LoginDetail: undefined;
+  EditProfile: User;
+  HelpDesk: undefined;
+  NoticeBoard: undefined;
+  FAQBoard: undefined;
 };
 
 export type MainHeaderProps = {

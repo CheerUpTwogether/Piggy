@@ -45,38 +45,27 @@ const PaymentAgreement = () => {
   };
 
   const renderAgreementButton = () => {
-    return isPaymentAgree ? (
+    return (
       <View style={{marginVertical: 20, gap: 20}}>
-        <Button disable text="동의함" onPress={() => console.log('비활성화')} />
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        {isPaymentAgree ? (
           <Button
-            text="철회"
-            size="lg"
-            theme="outline"
+            disable
+            text="동의함"
+            onPress={() => console.log('비활성화')}
+          />
+        ) : (
+          <Button
+            text="동의하기"
             onPress={() => {
               setIsAgree('payment');
               navigation.replace('LoginDetail');
             }}
           />
-          <Button
-            text="뒤로가기"
-            size="lg"
-            onPress={() => navigation.goBack()}
-          />
-        </View>
-      </View>
-    ) : (
-      <View style={{marginVertical: 20, gap: 20}}>
-        <Button
-          text="동의하기"
-          onPress={() => {
-            setIsAgree('payment');
-            navigation.replace('LoginDetail');
-          }}
-        />
+        )}
         <Button
           text="뒤로가기"
-          onPress={() => navigation.replace('LoginDetail')}
+          theme="outline"
+          onPress={() => navigation.goBack()}
         />
       </View>
     );
