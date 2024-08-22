@@ -26,7 +26,8 @@ import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
 import PiggyUsage from '@/pages/piggy/PiggyUsage';
 import GiftFriend from '@/pages/gift/GiftFriend';
-import GiftAmount from '@/pages/gift/GiftAmount';
+import GiftAmount from '@/pages/gift/ GiftAmount';
+import PiggyShop from '@/components/piggy/PiggyShop';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -192,6 +193,15 @@ const Router = () => {
           header: Header,
           headerLeftLabelVisible: true,
           title: '피기 선물',
+        }}
+      />
+      <Stack.Screen
+        name="PiggyShop"
+        component={PiggyShop}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+          title: '피기 상점',
         }}
       />
     </Stack.Navigator>

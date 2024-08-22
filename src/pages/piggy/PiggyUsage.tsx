@@ -7,8 +7,11 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import ButtonCouple from '@/components/common/ButtonCouple';
 import PiggyUsageItem from '@/components/piggy/PiggyUsageItem';
 import EmptyResult from '@/components/common/EmptyResult';
-
+import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '@/types/Router';
+import {StackNavigationProp} from '@react-navigation/stack';
 const PiggyUsage = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const options = [
     {label: '전체', value: 'total'},
     {label: '입금', value: 'input'},
@@ -33,7 +36,7 @@ const PiggyUsage = () => {
       </View>
 
       <ButtonCouple
-        onPressLeft={() => {}}
+        onPressLeft={() => navigation.navigate('PiggyShop')}
         onPressRight={() => {}}
         textLeft={'충전하기'}
         textRight={'선물하기'}
