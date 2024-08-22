@@ -1,0 +1,175 @@
+import React, {useEffect} from 'react';
+import {View, Text, Image, FlatList, StyleSheet} from 'react-native';
+import {commonStyle} from '@/styles/common';
+import {appointments} from '@/mock/Home/Home';
+
+import LocationSvg from '@/assets/icons/location.svg';
+import DateSvg from '@/assets/icons/calendar.svg';
+import TimeSvg from '@/assets/icons/clock.svg';
+import PeopleSvg from '@/assets/icons/people.svg';
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+import CoinSvg from '@/assets/icons/coin.svg';
+
+const AppointmentCheck = () => {
+  const appointment = appointments[0];
+
+  useEffect(() => {});
+
+  const renderItem = ({item}) => (
+    <View style={styles.friendWrapper}>
+      {item.url ? (
+        <Image source={{uri: item.url}} style={styles.profile} />
+      ) : (
+        <View style={styles.profileWrapper}>
+          <BasicProfileSvg width={22} height={22} color={'#999'} />
+        </View>
+      )}
+      <Text
+        style={[commonStyle.REGULAR_33_12, styles.nickName]}
+        numberOfLines={1}
+        ellipsizeMode="tail">
+        {item.nick_name}
+      </Text>
+    </View>
+  );
+
+  return (
+    <View>
+      <View style={styles.HeaderWrapper}>
+        <Text style={commonStyle.BOLD_33_18}>{appointment.subject}</Text>
+      </View>
+
+      <View style={styles.wrapper}>
+        <View style={styles.row}>
+          <View style={styles.rowTitle}>
+            <LocationSvg width={20} height={20} color={'#AAA'} />
+            <Text style={commonStyle.MEDIUM_33_16}>장소</Text>
+          </View>
+          <Text style={commonStyle.BOLD_33_16}>{appointment.location}</Text>
+        </View>
+        <View style={styles.row}>
+          <View style={styles.rowTitle}>
+            <DateSvg width={20} height={20} color={'#AAA'} />
+            <Text style={commonStyle.MEDIUM_33_16}>날짜</Text>
+          </View>
+          <Text style={commonStyle.BOLD_33_16}>{appointment.date}</Text>
+        </View>
+        <View style={styles.row}>
+          <View style={styles.rowTitle}>
+            <TimeSvg width={20} height={20} color={'#AAA'} />
+            <Text style={commonStyle.MEDIUM_33_16}>시간</Text>
+          </View>
+          <Text style={commonStyle.BOLD_PRIMARY_16}>{appointment.time}</Text>
+        </View>
+      </View>
+
+      <View style={styles.wrapper}>
+        <View style={styles.row}>
+          <View style={styles.rowTitle}>
+            <PeopleSvg width={20} height={20} color={'#333'} />
+            <Text style={commonStyle.BOLD_33_16}>함께하는 사람들</Text>
+          </View>
+        </View>
+        <FlatList
+          keyExtractor={item => item.uid.toString()}
+          renderItem={renderItem}
+          data={appointment.friends}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+
+      <View style={styles.lastWrapper}>
+        <View style={styles.row}>
+          <View style={styles.rowTitle}>
+            <CoinSvg width={20} height={20} color={'#333'} />
+            <Text style={commonStyle.BOLD_33_16}>벌금 사용</Text>
+          </View>
+        </View>
+        <View style={styles.penaltyRow}>
+          <Text style={commonStyle.REGULAR_33_16}>벌칙금</Text>
+          <View style={styles.penalty}>
+            <Text style={commonStyle.REGULAR_33_16}>
+              {appointment.penalty / appointment.friends.length}
+            </Text>
+            <Text style={commonStyle.REGULAR_PRIMARY_16}>Piggy</Text>
+          </View>
+        </View>
+        <View style={styles.penaltyRow}>
+          <Text style={commonStyle.REGULAR_33_16}>모집 인원</Text>
+          <View style={styles.penalty}>
+            <Text style={commonStyle.REGULAR_33_16}>
+              {appointment.friends.length}
+            </Text>
+            <Text style={commonStyle.REGULAR_33_16}>명</Text>
+          </View>
+        </View>
+        <View style={styles.totalWrapper}>
+          <Text style={commonStyle.MEDIUM_33_20}>총합</Text>
+          <Text style={commonStyle.MEDIUM_PRIMARY_20}>
+            {appointment.penalty} Piggy
+          </Text>
+        </View>
+        <Text style={[commonStyle.REGULAR_AA_14, {marginTop: 20}]}>
+          약속 시간까지 지정 장소에서 인증하지 않은 사람을 제외한 모두에게 같은
+          비율로 나눠드립니다.
+        </Text>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  HeaderWrapper: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#EFEFEF',
+    justifyContent: 'center',
+    paddingBottom: 24,
+  },
+  wrapper: {
+    paddingVertical: 36,
+    paddingHorizontal: 6,
+    gap: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EFEFEF',
+  },
+  lastWrapper: {paddingVertical: 36, paddingHorizontal: 6, gap: 20},
+  row: {flexDirection: 'row', alignItems: 'center', gap: 20},
+  rowTitle: {gap: 8, flexDirection: 'row', alignItems: 'center'},
+  svg: {width: 14, height: 14, color: '#AAA'},
+  friendWrapper: {
+    marginRight: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileWrapper: {
+    width: 40,
+    height: 40,
+    objectFit: 'cover',
+    borderColor: '#AAA',
+    borderWidth: 0.5,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profile: {
+    width: 40,
+    height: 40,
+    borderRadius: 30,
+  },
+  nickName: {
+    textAlign: 'center',
+    marginTop: 4,
+    width: 42,
+  },
+  penaltyRow: {flexDirection: 'row', gap: 20, alignItems: 'center'},
+  penalty: {flexDirection: 'row', gap: 4, alignItems: 'center'},
+  totalWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginRight: 60,
+  },
+});
+
+export default AppointmentCheck;
