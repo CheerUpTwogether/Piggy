@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {InputBoxProps} from 'types/Common';
+import {commonStyle} from '@/styles/common';
 
 const InputBox: React.FC<InputBoxProps> = ({
   value,
@@ -45,7 +46,7 @@ const InputBox: React.FC<InputBoxProps> = ({
           placeholder={placeholder}
           value={value}
           onChangeText={setValue}
-          style={styles.input}
+          style={[styles.input, commonStyle.MEDIUM_33_16]}
         />
       </View>
       {!isLarge && (
@@ -53,7 +54,7 @@ const InputBox: React.FC<InputBoxProps> = ({
           activeOpacity={0.8}
           style={styles.cancelWrapper}
           onPress={handleCancel}>
-          <Text style={styles.cancelText}>취소</Text>
+          <Text style={commonStyle.MEDIUM_PRIMARY_16}>취소</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -86,10 +87,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     paddingVertical: Platform.OS === 'android' ? 0 : 10,
-    textAlignVertical: 'center',
   },
   cancelWrapper: {paddingHorizontal: 10},
-  cancelText: {color: '#ED423F', fontFamily: 'NotoSansKR-Medium'},
 });
 
 export default InputBox;
