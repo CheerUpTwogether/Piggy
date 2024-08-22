@@ -113,7 +113,6 @@ export interface SideSlideModalProps {
   children?: React.ReactElement;
   size?: number;
 }
-
 export type KeyPadItemType =
   | '1'
   | '2'
@@ -129,4 +128,10 @@ export type KeyPadItemType =
   | 'deleteButton';
 export interface KeyPadProps {
   onPress: (item: KeyPadItemType) => void;
+}
+
+export interface ProgressBarProps {
+  totalStep: number;
+  nowStep: number;
+  progress?: boolean;
 }
