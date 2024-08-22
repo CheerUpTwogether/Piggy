@@ -27,7 +27,7 @@ import HelpDesk from '@/components/setting/HelpDesk';
 import PiggyUsage from '@/pages/piggy/PiggyUsage';
 import GiftFriend from '@/pages/gift/GiftFriend';
 import GiftAmount from '@/pages/gift/GiftAmount';
-import Alarm from '@/components/alarm/Alarm';
+import Alarm from '@/pages/alarm/Alarm';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();

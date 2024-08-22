@@ -1,4 +1,4 @@
-import {color_ef, commonStyle} from '@/styles/common';
+import {commonStyle} from '@/styles/common';
 import {TabBarProps} from '@/types/Common';
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';

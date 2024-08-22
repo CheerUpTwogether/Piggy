@@ -1,4 +1,4 @@
-import {Alram} from '@/components/alarm/type';
+import {Alram} from './type';
 
 export const alarmDetail = {
   join: '약속에 초대되었어요',
@@ -23,6 +23,7 @@ export const alarms: Alram[] = [
     appointment_id: 1,
     appointment_title: '또 늦어보지 왜?',
     date: '2024년 8월 21일 12:30',
+    category: 'appointment',
   },
   {
     alarm_id: 2,
@@ -32,22 +33,25 @@ export const alarms: Alram[] = [
     date: '2024년 8월 18일 12:30',
     uid: 1,
     nick_name: '홍길동',
+    category: 'appointment',
   },
-  {
-    alarm_id: 3,
-    type: 'update', // '약속 변경 요청이 왔어요'
-    appointment_id: 2,
-    appointment_title: '또 늦어보지 왜?',
-    date: '2024년 8월 17일 12:30',
-    uid: 2,
-    nick_name: '홍길동',
-  },
+  // {
+  //   alarm_id: 3,
+  //   type: 'update', // '약속 변경 요청이 왔어요'
+  //   appointment_id: 2,
+  //   appointment_title: '또 늦어보지 왜?',
+  //   date: '2024년 8월 17일 12:30',
+  //   uid: 2,
+  //   nick_name: '홍길동',
+  //   category: 'appointment',
+  // },
   {
     alarm_id: 5,
     type: 'accomplish', //accomplish: '약속이 성사되었어요',
     appointment_id: 1,
     appointment_title: '또 늦어보지 왜?',
     date: '2024년 8월 16일 10:32',
+    category: 'appointment',
   },
   {
     alarm_id: 1,
@@ -55,6 +59,7 @@ export const alarms: Alram[] = [
     appointment_id: 1,
     appointment_title: '또 늦어보지 왜?',
     date: '2024년 8월 15일 12:30',
+    category: 'appointment',
   },
   {
     alarm_id: 6,
@@ -62,6 +67,7 @@ export const alarms: Alram[] = [
     appointment_id: 1,
     appointment_title: '또 늦어보지 왜?',
     date: '2024년 8월 15일 12:30',
+    category: 'appointment',
   },
   {
     alarm_id: 7,
@@ -69,13 +75,17 @@ export const alarms: Alram[] = [
     appointment_id: 1,
     appointment_title: '또 늦어보지 왜?',
     date: '2024년 8월 15일 12:30',
+    category: 'panalty',
+    piggy: 5000,
   },
   {
     alarm_id: 8,
-    type: 'getPiggyPanalty', // givePiggyPanalty: '약속 벌금이 나갔어요',
+    type: 'givePiggyPanalty', // givePiggyPanalty: '약속 벌금이 나갔어요',
     appointment_id: 1,
     appointment_title: '또 늦어보지 왜?',
     date: '2024년 8월 15일 12:30',
+    category: 'panalty',
+    piggy: 15000,
   },
   {
     alarm_id: 9,
@@ -84,6 +94,7 @@ export const alarms: Alram[] = [
     nick_name: '홍길동',
     date: '2024년 6월 15일 12:30',
     piggy: 10000,
+    category: 'piggy',
   },
   {
     alarm_id: 10,
@@ -92,17 +103,20 @@ export const alarms: Alram[] = [
     nick_name: '홍길동',
     date: '2024년 6월 30일 12:30',
     piggy: 5000,
+    category: 'piggy',
   },
   {
     alarm_id: 11,
     type: 'chargePiggy', // chargePiggy: '피기를 충전했어요',
     date: '2024년 5월 30일 12:30',
     piggy: 5000,
+    category: 'piggy',
   },
   {
     alarm_id: 12,
     type: 'buyGoods', // buyGoods: '상품을 구매했어요',
     date: '2024년 4월 30일 12:30',
     piggy: 5000,
+    category: 'piggy',
   },
 ];

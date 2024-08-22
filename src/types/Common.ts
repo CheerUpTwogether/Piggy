@@ -115,7 +115,7 @@ export interface SideSlideModalProps {
 }
 
 export interface TabBarProps {
-  categories: {label: string; value: number | boolean | string}[];
+  categories: {label: string; value: string}[];
   active: string;
-  onChange: (value: number | boolean | string) => void;
+  onChange: (value: string) => void;
 }
