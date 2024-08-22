@@ -123,7 +123,6 @@ const Home = () => {
 const styles = StyleSheet.create({
   tab: {
     marginTop: 40,
-    flexDirection: 'row',
     borderBlockColor: color_ef,
     borderBottomWidth: 1,
     marginHorizontal: -16,

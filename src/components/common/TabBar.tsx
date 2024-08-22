@@ -29,6 +29,7 @@ const TabBar = ({categories, active, onChange}: TabBarProps) => {
 const styles = StyleSheet.create({
   tab: {
     flexDirection: 'row',
+    marginLeft: -8,
   },
   tabBtn: {
     paddingVertical: 8,
