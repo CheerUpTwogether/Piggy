@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import DeleteButtonSvg from '../../assets/icons/delete.svg';
 import {commonStyle} from '../../styles/common.ts';
+
+import DeleteButtonSvg from '../../assets/icons/delete.svg';
 
 // KeyPad 기본 컴포넌트 -> export default
 const KeyPad = ({onPress}) => {
@@ -23,12 +24,7 @@ const KeyPad = ({onPress}) => {
               onPress={() => onPress(item)}
               activeOpacity={0.8}>
               {item === 'deleteButton' ? (
-                <DeleteButtonSvg
-                  width={20}
-                  height={20}
-                  stroke="#333"
-                  strokeWidth={0.4}
-                />
+                <DeleteButtonSvg width={24} height={24} color={'#333'} />
               ) : (
                 <Text style={commonStyle.MEDIUM_33_20}>{item}</Text>
               )}
@@ -47,6 +43,8 @@ export const useKeyPad = () => {
   const handlePress = item => {
     if (item === 'deleteButton') {
       setInputValue(prev => prev.slice(0, -1));
+    } else if ((item === '0' || item === '00') && inputValue === '') {
+      return;
     } else {
       setInputValue(prev => prev + item);
     }
@@ -69,8 +67,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   button: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
