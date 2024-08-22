@@ -113,3 +113,9 @@ export interface SideSlideModalProps {
   children?: React.ReactElement;
   size?: number;
 }
+
+export interface TabBarProps {
+  categories: {label: string; value: number | boolean | string}[];
+  active: string;
+  onChange: (value: number | boolean | string) => void;
+}

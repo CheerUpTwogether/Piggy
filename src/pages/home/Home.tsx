@@ -17,6 +17,7 @@ import PulsSvg from '@/assets/icons/plus.svg';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {useNavigation} from '@react-navigation/native';
+import TabBar from '@/components/common/TabBar';
 
 const Home = () => {
   const categories = [
@@ -80,21 +81,7 @@ const Home = () => {
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
-        {categories.map(el => (
-          <TouchableOpacity
-            style={styles.tabBtn}
-            onPress={() => setSort(el.value)}
-            activeOpacity={0.8}>
-            <Text
-              style={
-                sort === el.value
-                  ? commonStyle.MEDIUM_PRIMARY_18
-                  : commonStyle.MEDIUM_77_18
-              }>
-              {el.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        <TabBar categories={categories} active={sort} onChange={setSort} />
       </View>
 
       {/* 약속 리스트 */}

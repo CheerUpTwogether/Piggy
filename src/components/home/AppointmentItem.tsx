@@ -62,11 +62,11 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
           </View>
 
           {/* 취소 도장 */}
-          {item.isCanceled && (
+          {/* {item.isCanceled && (
             <View style={styles.cancelStapmp}>
               <Text style={commonStyle.BOLD_PRIMARY_18}>취소</Text>
             </View>
-          )}
+          )} */}
         </View>
       </View>
       <View style={styles.hiddenBtnContainer}>
