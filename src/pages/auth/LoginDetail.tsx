@@ -1,24 +1,20 @@
 import {useNavigation} from '@react-navigation/native';
-import InputBox from '@/components/common/InputBox';
 import {commonStyle} from '@/styles/common';
 import {useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import NickNameSvg from '@/assets/icons/nickname.svg';
 import CheckBox from '@/components/common/CheckBox';
 import RightArrowSvg from '@/assets/icons/rightArrow.svg';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import Button from '@/components/common/Button';
 import {useToastStore, useUserStore} from '@/store/store';
-import {dummy_profile} from '@/mock/Friends/Friends';
-import EmailSvg from '@/assets/icons/email.svg';
+import LoginDetailForm from './LoginDetailForm';
+
 const logo = require('@/assets/icons/logo.png');
 
 const LoginDetail = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {userData, setIsAgree} = useUserStore();
-  const [email, setEmail] = useState('(TEST) 약관만 모두 동의 후 시작!');
-  const [nickName, setNickName] = useState(dummy_profile.nick_name);
   const addToast = useToastStore(state => state.addToast);
   const [isAgreeService, setIsAgreeService] = useState(
     userData?.isAgree.service || false,
@@ -26,7 +22,6 @@ const LoginDetail = () => {
   const [isAgreePayment, setIsAgreePayment] = useState(
     userData?.isAgree.payment || false,
   );
-  const [isError, setIsError] = useState(true);
 
   const handleAgreeToast = () =>
     addToast({
@@ -73,43 +68,12 @@ const LoginDetail = () => {
         </Text>
       </View>
       <View style={{gap: 16}}>
-        <View style={{gap: 8}}>
-          <Text style={commonStyle.MEDIUM_33_16}>이메일</Text>
-
-          <View style={styles.disableInputContainer}>
-            <View style={styles.disableInputWrapper}>
-              <EmailSvg width={18} height={18} color={'#333'} />
-              <Text style={{...commonStyle.MEDIUM_33_14, marginTop: -3}}>
-                {email}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={{gap: 8}}>
-          <Text style={commonStyle.MEDIUM_33_16}>닉네임</Text>
-
-          <InputBox
-            value={nickName}
-            setValue={setNickName}
-            placeholder={'수정하실 닉네임을 입력해주세요.'}
-            icon={NickNameSvg}
-            isLarge={true}
-          />
-          {isError && (
-            <Text style={commonStyle.MEDIUM_PRIMARY_12}>
-              *닉네임은 8글자까지 설정할 수 있습니다
-            </Text>
-          )}
-        </View>
-
+        <LoginDetailForm />
         <View style={styles.checkBoxContainer}>
           <CheckBox
             isChecked={isAgreeService}
             setIsChecked={setIsAgreeService}
-            onPress={() => {
-              hadnleAgreeService();
-            }}
+            onPress={() => hadnleAgreeService()}
           />
           <TouchableOpacity
             onPress={() => gotoServiceAgreement()}
@@ -126,22 +90,18 @@ const LoginDetail = () => {
             <RightArrowSvg />
           </TouchableOpacity>
         </View>
-        {/* 나누기 */}
-
         <View style={styles.checkBoxContainer}>
           <CheckBox
             isChecked={isAgreePayment}
             setIsChecked={setIsAgreePayment}
-            onPress={() => {
-              handleAgreePayment();
-            }}
+            onPress={() => handleAgreePayment()}
           />
           <TouchableOpacity
             onPress={() => gotoPaymentAgreement()}
             activeOpacity={0.8}
             style={{flexGrow: 1, paddingVertical: 6}}>
             <Text style={{...commonStyle.REGULAR_33_14}}>
-              Piggy 서비스 이용약관(필수)
+              Piggy 결제 이용약관(필수)
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -169,20 +129,6 @@ const styles = StyleSheet.create({
   },
   logoContainer: {marginLeft: 40, width: 160, height: 62},
   introContainer: {marginVertical: 42, alignItems: 'center', gap: 12},
-  disableInputContainer: {
-    height: 48,
-    backgroundColor: '#EFEFEF',
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: '#AAA',
-    paddingHorizontal: 22,
-    justifyContent: 'center',
-  },
-  disableInputWrapper: {
-    flexDirection: 'row',
-    gap: 16,
-    alignItems: 'center',
-  },
   checkBoxContainer: {
     flexDirection: 'row',
     gap: 8,
