@@ -99,10 +99,6 @@ const RightItems = ({name}: {name: string}) => {
           <TouchableOpacity
             style={styles.icon}
             onPress={() => navigation.navigate('GoodsStorage')}>
-            <GoodsBoxSvg width={24} height={24} color={'#555555'} />
-          <TouchableOpacity 
-            style={styles.icon}
-            onPress={() => navigation.navigate('GoodsStorage')}>>
             <GoodsBoxSvg style={styles.svg} />
           </TouchableOpacity>
           <Alarm />
