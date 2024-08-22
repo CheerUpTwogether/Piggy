@@ -26,7 +26,7 @@ import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
 import PiggyUsage from '@/pages/piggy/PiggyUsage';
 import GiftFriend from '@/pages/gift/GiftFriend';
-import GiftAmount from '@/pages/gift/ GiftAmount';
+import GiftAmount from '@/pages/gift/GiftAmount';
 import PiggyShop from '@/components/piggy/PiggyShop';
 
 const Stack = createStackNavigator();
