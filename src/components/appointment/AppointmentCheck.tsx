@@ -1,7 +1,15 @@
 import React, {useEffect} from 'react';
-import {View, Text, Image, FlatList, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import {appointments} from '@/mock/Home/Home';
+import {FriendsProps} from '@/mock/Home/type';
 
 import LocationSvg from '@/assets/icons/location.svg';
 import DateSvg from '@/assets/icons/calendar.svg';
@@ -15,7 +23,7 @@ const AppointmentCheck = () => {
 
   useEffect(() => {});
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item}: {item: FriendsProps}) => (
     <View style={styles.friendWrapper}>
       {item.url ? (
         <Image source={{uri: item.url}} style={styles.profile} />
@@ -34,7 +42,7 @@ const AppointmentCheck = () => {
   );
 
   return (
-    <View>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.HeaderWrapper}>
         <Text style={commonStyle.BOLD_33_18}>{appointment.subject}</Text>
       </View>
@@ -115,7 +123,7 @@ const AppointmentCheck = () => {
           비율로 나눠드립니다.
         </Text>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -139,12 +147,13 @@ const styles = StyleSheet.create({
   svg: {width: 14, height: 14, color: '#AAA'},
   friendWrapper: {
     marginRight: 14,
+    marginTop: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
   profileWrapper: {
-    width: 40,
-    height: 40,
+    width: 46,
+    height: 46,
     objectFit: 'cover',
     borderColor: '#AAA',
     borderWidth: 0.5,
@@ -153,13 +162,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profile: {
-    width: 40,
-    height: 40,
+    width: 46,
+    height: 46,
     borderRadius: 30,
   },
   nickName: {
     textAlign: 'center',
-    marginTop: 4,
+    marginTop: 6,
     width: 42,
   },
   penaltyRow: {flexDirection: 'row', gap: 20, alignItems: 'center'},
