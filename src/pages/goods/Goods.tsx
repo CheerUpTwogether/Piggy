@@ -46,7 +46,7 @@ const Goods = () => {
           {item.title}
         </Text>
         <Text style={commonStyle.MEDIUM_33_16} numberOfLines={1}>
-          {item.price}원
+          {item.price.toLocaleString()}원
         </Text>
         <Text style={commonStyle.MEDIUM_AA_12} numberOfLines={1}>
           {item.sub_title}
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   itemImg: {
     width: '100%',
-    height: 144,
+    height: 180,
     borderRadius: 8,
     borderColor: '#DDD',
   },

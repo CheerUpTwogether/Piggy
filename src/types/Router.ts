@@ -27,6 +27,7 @@ export type RootStackParamList = {
   HelpDesk: undefined;
   NoticeBoard: undefined;
   FAQBoard: undefined;
+  GoodsStorage: undefined;
 };
 
 export type MainHeaderProps = {

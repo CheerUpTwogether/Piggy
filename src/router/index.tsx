@@ -134,6 +134,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: 'FAQ',
         }}
       />
       <Stack.Screen
@@ -142,6 +143,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: '공지사항',
         }}
       />
       <Stack.Screen
@@ -150,6 +152,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: '공지사항',
         }}
       />
       <Stack.Screen
@@ -158,6 +161,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: '프로필 수정',
         }}
       />
       <Stack.Screen
@@ -166,6 +170,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: '문의하기',
         }}
       />
       <Stack.Screen
