@@ -28,6 +28,7 @@ export type RootStackParamList = {
   AppointmentDetail: AppointmentProps;
   PiggyUsage: undefined;
   Friends: undefined;
+  Alarm: undefined;
 };
 
 export type MainHeaderProps = {

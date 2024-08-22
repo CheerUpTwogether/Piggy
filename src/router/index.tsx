@@ -27,6 +27,7 @@ import HelpDesk from '@/components/setting/HelpDesk';
 import PiggyUsage from '@/pages/piggy/PiggyUsage';
 import GiftFriend from '@/pages/gift/GiftFriend';
 import GiftAmount from '@/pages/gift/GiftAmount';
+import Alarm from '@/components/alarm/Alarm';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -173,10 +174,10 @@ const Router = () => {
         component={PiggyUsage}
         options={{
           header: Header,
-          headerLeftLabelVisible: true,          
+          headerLeftLabelVisible: true,
         }}
       />
-      <Stack.Screen    
+      <Stack.Screen
         name="GiftFriend"
         component={GiftFriend}
         options={{
@@ -192,6 +193,14 @@ const Router = () => {
           header: Header,
           headerLeftLabelVisible: true,
           title: '피기 선물',
+        }}
+      />
+      <Stack.Screen
+        name="Alarm"
+        component={Alarm}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
         }}
       />
     </Stack.Navigator>
