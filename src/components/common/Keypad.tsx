@@ -47,8 +47,8 @@ export const useKeyPad = () => {
     // 숫자만 남기고 나머지 문자 제거
     const numericValue = value.replace(/[^0-9]/g, '');
 
-    // 천 단위로 쉼표 삽입
-    return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    // 숫자로 변환 후 천 단위로 쉼표 삽입
+    return new Intl.NumberFormat('ko-KR').format(Number(numericValue));
   };
 
   const handlePress = (item: KeyPadItemType) => {
