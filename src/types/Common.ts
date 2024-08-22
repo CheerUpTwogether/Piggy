@@ -113,3 +113,9 @@ export interface SideSlideModalProps {
   children?: React.ReactElement;
   size?: number;
 }
+
+export interface ProgressBarProps {
+  totalStep: number;
+  nowStep: number;
+  progress?: boolean;
+}

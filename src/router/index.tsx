@@ -173,10 +173,10 @@ const Router = () => {
         component={PiggyUsage}
         options={{
           header: Header,
-          headerLeftLabelVisible: true,          
+          headerLeftLabelVisible: true,
         }}
       />
-      <Stack.Screen    
+      <Stack.Screen
         name="GiftFriend"
         component={GiftFriend}
         options={{
