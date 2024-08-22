@@ -36,7 +36,7 @@ const GiftAmount = () => {
 
           <View style={styles.amountWrapper}>
             {inputValue ? (
-              <Text style={[commonStyle.BOLD_33_20, styles.amount]}>
+              <Text style={[commonStyle.BOLD_33_24, styles.amount]}>
                 {inputValue}
               </Text>
             ) : (

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import ProgressBar from '@/components/common/ProgressBar';
 import ButtonCouple from '@/components/common/ButtonCouple';
@@ -18,6 +18,11 @@ const AppointmentForm = () => {
 
   return (
     <View style={commonStyle.CONTAINER}>
+      {/* 소제목 위치를 맞추기 위해 아래 View에서 패딩 처리 */}
+      <View style={{paddingTop: 10}}>
+        {/* 컴포넌트 위치 */}
+        {/* 컴포넌트 위치 */}
+      </View>
       <View style={style.progressWrapper}>
         <View style={style.progressBar}>
           <ProgressBar totalStep={totalStep} nowStep={nowStep} />

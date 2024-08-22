@@ -69,7 +69,7 @@ export const useKeyPad = () => {
           addToast({
             success: false,
             text: '100,000피기 초과',
-            multiText: '한 번에 10만 피기를 넘을 수 없어요.',
+            multiText: '10만 피기를 넘을 수 없어요.',
           });
           return prev; // 100,000원 초과 시 이전 값 유지
         }
