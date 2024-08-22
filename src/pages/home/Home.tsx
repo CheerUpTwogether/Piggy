@@ -9,14 +9,20 @@ import {
 } from 'react-native';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import AppointmentItem from '@/components/home/AppointmentItem';
 import {appointments} from '@/mock/Home/Home';
+import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
 import PulsSvg from '@/assets/icons/plus.svg';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '@/types/Router';
+import {useNavigation} from '@react-navigation/native';
+
 const Home = () => {
   const [sort, setSort] = useState('next');
   const [activeIndex, setActiveIndex] = useState<number | null>(null); // 현재 활성화된 슬라이드의 인덱스
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
   const tabText = (value: string) => {
     if (value === sort) {
       return commonStyle.MEDIUM_PRIMARY_16;
@@ -29,6 +35,9 @@ const Home = () => {
 
   const resetOthers = (index: number) => {
     animations.forEach((anim, i) => {
+      if (!index) {
+        navigation.navigate('AppointmentDetail', {...appointments[index]});
+      }
       if (i !== index) {
         Animated.spring(anim.x, {
           toValue: 0,

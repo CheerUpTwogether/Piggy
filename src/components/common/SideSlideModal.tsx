@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {commonStyle} from '@/styles/common';
 import CancleSvg from '@/assets/icons/X.svg';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
@@ -16,8 +17,8 @@ const SideSlideModal: React.FC<SideSlideModalProps> = ({
   title,
   isShow,
   setIsShow,
-  component,
   size = 0.7,
+  children,
 }) => {
   const [isVisible, setIsVisible] = useState(isShow);
   const slideAnimValue = useRef(new Animated.Value(screenWidth * size)).current;
@@ -57,7 +58,9 @@ const SideSlideModal: React.FC<SideSlideModalProps> = ({
     }
   }, [isShow]);
 
-  if (!isVisible) return null;
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <>
@@ -77,26 +80,36 @@ const SideSlideModal: React.FC<SideSlideModalProps> = ({
           },
         ]}>
         <View style={styles.topBarContainer}>
-          <Text style={styles.topBartitle}>{title}</Text>
+          <Text style={commonStyle.REGULAR_77_18}>{title}</Text>
           <TouchableOpacity
             style={styles.cancleContainer}
             onPress={() => setIsShow(false)}>
             <CancleSvg width={18} height={18} color={'#333'} />
           </TouchableOpacity>
         </View>
-        <View style={styles.componentContainer}>{component}</View>
+        <View style={styles.componentContainer}>{children}</View>
       </Animated.View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  overlayTouchable: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: screenWidth,
+    height: screenHeight,
+    zIndex: 1,
+    flex: 1,
+  },
   modalContainer: {
     position: 'absolute',
+    top: 0,
     zIndex: 2,
     right: 0,
     height: screenHeight,
-    backgroundColor: 'red',
+    backgroundColor: '#fff',
   },
   topBarContainer: {
     height: 52,
@@ -106,10 +119,6 @@ const styles = StyleSheet.create({
     paddingLeft: 22,
     paddingRight: 22,
   },
-  topBartitle: {
-    fontSize: 18,
-    fontFamily: 'NotoSansKR-Regular',
-  },
   cancleContainer: {
     width: 24,
     height: 24,
@@ -117,14 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   componentContainer: {height: '100%'},
-  overlayTouchable: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: screenWidth,
-    height: screenHeight,
-    zIndex: 1,
-  },
+
   overlay: {
     position: 'absolute',
     top: 0,

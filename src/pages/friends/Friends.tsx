@@ -9,13 +9,14 @@ import {
   Animated,
   PanResponder,
 } from 'react-native';
-import {commonStyle} from '@/styles/common';
 import EmptyResult from '@/components/common/EmptyResult';
-import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
 import BottomSheet from '@/components/common/BottomSheet';
 import ProfileDetail from './ProfileDetail';
-import MoreSvg from '@/assets/icons/more.svg';
+import {commonStyle} from '@/styles/common';
+import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
 import {Friend, User} from '@/mock/Friends/type';
+
+import MoreSvg from '@/assets/icons/more.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const SWIPE_STANDARD = -100;

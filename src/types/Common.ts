@@ -112,6 +112,29 @@ export interface SideSlideModalProps {
   title?: string;
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
-  component?: React.ReactElement;
+  //component?: React.ReactElement;
+  children?: React.ReactElement;
   size?: number;
+}
+export type KeyPadItemType =
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '00'
+  | '0'
+  | 'deleteButton';
+export interface KeyPadProps {
+  onPress: (item: KeyPadItemType) => void;
+}
+
+export interface ProgressBarProps {
+  totalStep: number;
+  nowStep: number;
+  progress?: boolean;
 }

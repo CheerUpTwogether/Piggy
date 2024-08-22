@@ -19,8 +19,10 @@ const Login = () => {
           height={60}
         />
         <View style={style.explain}>
-          <Text style={style.startText}>시작하기</Text>
-          <Text style={style.simpleText}>
+          <Text style={[style.startText, commonStyle.BOLD_33_24]}>
+            시작하기
+          </Text>
+          <Text style={commonStyle.REGULAR_AA_16}>
             간단한 계정 연동으로 바로 시작해보세요!
           </Text>
         </View>
@@ -60,8 +62,7 @@ const style = StyleSheet.create({
     gap: 14,
     marginTop: 50,
   },
-  startText: {fontSize: 24, fontWeight: 'bold', color: '#333'},
-  simpleText: {fontSize: 16, fontWeight: 'regular', color: '#AAA'},
+  startText: {color: '#333'},
   loginWrapper: {marginTop: 50, gap: 16},
   social: {
     backgroundColor: '#FEE500',

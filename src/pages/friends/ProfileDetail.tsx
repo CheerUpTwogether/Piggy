@@ -8,8 +8,11 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
 import {ProfileDetailProps} from '@/mock/Friends/type';
+import {gradeList, determineGrade} from '@/utils/grade';
+import {ProfileDetailNavigationProp} from './type';
 
 import GradeSvg from '@/assets/icons/grade.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
@@ -21,52 +24,6 @@ import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const {height: screenHeight} = Dimensions.get('window');
 
-const gradeList = [
-  {
-    id: 1,
-    grade: '약속 베이비',
-    explain: '아직 정보가 부족해요.',
-    gradeColor: '#333',
-  },
-  {
-    id: 2,
-    grade: '프로 약속 탈주러',
-    explain: '관심과 노력이 필요해요...',
-    gradeColor: '#ED423F',
-  },
-  {
-    id: 3,
-    grade: '약속 수행러',
-    explain: '약속을 잘 지키는 편이에요!',
-    gradeColor: '#FEE500',
-  },
-  {
-    id: 4,
-    grade: '프로 약속 이행러',
-    explain: '약속은 그 무엇보다 소중해요!',
-    gradeColor: '#04BF8A',
-  },
-];
-
-// 등급 구하는 함수
-const determineGrade = (
-  totalAppointments: number,
-  completedAppointments: number,
-) => {
-  const completionRate = (completedAppointments / totalAppointments) * 100;
-
-  switch (true) {
-    case totalAppointments < 5:
-      return {grade: '약속 베이비', gradeColor: '#333'};
-    case completionRate < 33.3:
-      return {grade: '프로 약속 탈주러', gradeColor: '#ED423F'};
-    case completionRate < 66.6:
-      return {grade: '약속 수행러', gradeColor: '#FEE500'};
-    default:
-      return {grade: '프로 약속 이행러', gradeColor: '#04BF8A'};
-  }
-};
-
 const ProfileDetail: React.FC<ProfileDetailProps> = ({
   uuid,
   nick_name,
@@ -77,6 +34,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
 }) => {
   const [gradeListShow, setGradeListShow] = useState(false);
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
+  const navigation = useNavigation<ProfileDetailNavigationProp>();
 
   const {grade, gradeColor} = determineGrade(
     total_appointments,
@@ -90,6 +48,18 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
       useNativeDriver: true,
     }).start();
   }, [gradeListShow, slideAnim]);
+
+  const handleMoveToGift = (
+    uuid: string,
+    nick_name: string,
+    profile_image_path: string,
+  ) => {
+    navigation.navigate('GiftAmount', {
+      uuid: uuid,
+      nick_name: nick_name,
+      profile_image_path: profile_image_path,
+    });
+  };
 
   const iconShow = () => {
     if (uuid === '1000') {
@@ -105,7 +75,9 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
         <View style={{flexDirection: 'row', gap: 8}}>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => console.log('TODO: 선물하기')}>
+            onPress={() =>
+              handleMoveToGift(uuid, nick_name, profile_image_path)
+            }>
             <GiftSvg style={styles.rightIcon} />
           </TouchableOpacity>
           <TouchableOpacity

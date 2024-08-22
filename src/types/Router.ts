@@ -3,6 +3,7 @@ import {dummyGoodsItem} from '@/mock/Goods/types';
 import {dummyGoodsStorageItem} from '@/mock/GoodsStorage/types';
 import {AppointmentProps} from '@/mock/Home/type';
 import {dummyNoticeItem} from '@/mock/NoticeBoard/types';
+import {FriendSearchParams} from '@/pages/friends/type';
 import {
   StackNavigationOptions,
   StackNavigationProp,
@@ -21,7 +22,13 @@ export type RootStackParamList = {
   Main: {
     screen: keyof RootBottomTabParamList;
   };
-  FriendSearch: undefined;
+  FriendSearch: FriendSearchParams;
+  GiftFriend: undefined;
+  GiftAmount: {
+    uuid: string;
+    nick_name: string;
+    profile_image_path: string;
+  };
   AppointmentDetail: AppointmentProps;
   ServiceAgreement: undefined;
   PaymentAgreement: undefined;
@@ -34,6 +41,9 @@ export type RootStackParamList = {
   GoodsDetail: dummyGoodsItem;
   GoodsStorageDetail: dummyGoodsStorageItem;
   NoticeBoardDetail: dummyNoticeItem;
+  PiggyUsage: undefined;
+  Friends: undefined;
+  PiggyShop: undefined;
 };
 
 export type MainHeaderProps = {
