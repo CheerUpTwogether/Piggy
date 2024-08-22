@@ -2,6 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Animated} from 'react-native';
 import {useToastStore} from '@/store/store';
 import {ToastItemProps} from '@/types/Common';
+import {commonStyle} from '@/styles/common';
 
 import SuccessIconSvg from '@/assets/icons/success.svg';
 import WarningIconSvg from '@/assets/icons/warning.svg';
@@ -73,17 +74,19 @@ const ToastItem: React.FC<ToastItemProps> = ({
     <Animated.View
       style={[
         styles.toast,
-        {opacity: fadeAnim, transform: [{translateY}], marginTop: index * 62},
+        {opacity: fadeAnim, transform: [{translateY}], marginTop: index * 67},
       ]}>
       <View style={styles.wrapper}>
         {success ? (
-          <SuccessIconSvg width={16} height={16} color={'#04BF8A'} />
+          <SuccessIconSvg width={20} height={20} color={'#04BF8A'} />
         ) : (
-          <WarningIconSvg width={16} height={16} color={'#FEE583'} />
+          <WarningIconSvg width={20} height={20} color={'#FEE583'} />
         )}
         <View style={styles.textWrapper}>
-          <Text style={styles.text}>{text}</Text>
-          {multiText && <Text style={styles.text}>{multiText}</Text>}
+          <Text style={commonStyle.MEDIUM_FF_14}>{text}</Text>
+          {multiText && (
+            <Text style={commonStyle.REGULAR_FF_14}>{multiText}</Text>
+          )}
         </View>
       </View>
     </Animated.View>
@@ -112,15 +115,14 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     backgroundColor: '#666',
-    width: 240,
-    height: 60,
+    width: 300,
+    height: 65,
     alignItems: 'center',
     borderRadius: 12,
     paddingHorizontal: 12,
-    gap: 8,
+    gap: 12,
   },
   textWrapper: {gap: 2},
-  text: {color: '#FFF', fontFamily: 'NotoSansKR-Medium', fontWeight: '400'},
 });
 
 export default Toast;
