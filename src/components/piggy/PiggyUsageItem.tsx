@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {color_ef, color_primary, commonStyle} from '@/styles/common';
+import {color_ef, commonStyle} from '@/styles/common';
 import {PiggyUsageHistoryProps} from '@/mock/Piggy/type';
 import ProfileSvg from '@/assets/icons/basicProfile.svg';
 
