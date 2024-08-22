@@ -27,7 +27,11 @@ const PiggyShop = () => {
       </View>
 
       {categories.map((category, index) => (
-        <View style={styles.buyPiggyWrapper}>
+        <View
+          style={[
+            styles.buyPiggyWrapper,
+            radioArray[index] && {borderColor: '#ED423F'},
+          ]}>
           <View style={styles.selectPiggyWrapper}>
             <TouchableOpacity key={index} onPress={() => handleSelect(index)}>
               <View
@@ -38,7 +42,12 @@ const PiggyShop = () => {
                 {radioArray[index] && <View style={styles.radioInner} />}
               </View>
             </TouchableOpacity>
-            <Text style={commonStyle.REGULAR_33_14}>
+            <Text
+              style={
+                radioArray[index]
+                  ? commonStyle.REGULAR_PRIMARY_14
+                  : commonStyle.REGULAR_33_14
+              }>
               {category.toLocaleString()} Piggy
             </Text>
           </View>
