@@ -87,7 +87,7 @@ ios/build/
 ios/Pods/
 
 # Xcode
-*.xcodeproj/
+#*.xcodeproj/
 *.xcworkspace/
 *.xcuserdatad/
 *.xcscheme
