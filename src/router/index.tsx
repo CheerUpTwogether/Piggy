@@ -201,6 +201,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: '알림',
         }}
       />
     </Stack.Navigator>
