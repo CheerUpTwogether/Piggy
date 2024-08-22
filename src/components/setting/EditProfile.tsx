@@ -2,15 +2,16 @@ import {commonStyle} from '@/styles/common';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import InputBox from '../common/InputBox';
 import {useEffect, useState} from 'react';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, RouteProp} from '@react-navigation/native';
 import NickNameSvg from '@/assets/icons/nickname.svg';
 import CameraSvg from '@/assets/icons/camera.svg';
 import Button from '../common/Button';
+import {RootStackParamList} from '@/types/Router';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
   const [iserror, setIsError] = useState(true);
-  const route = useRoute();
+  const route = useRoute<RouteProp<RootStackParamList, 'EditProfile'>>();
   const {nick_name, profile_image_path} = route.params;
 
   useEffect(() => {

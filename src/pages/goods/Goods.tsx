@@ -12,12 +12,13 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {dummyGoodsItem} from '@/mock/Goods/types';
 import {dummyGoodsItemData} from '@/mock/Goods/Goods';
+import {RootStackParamList} from '@/types/Router';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 const Goods = () => {
   const categories = ['전체', '패스트푸드', '카페', '스낵'];
   const [selectedCategory, setSelectedCategory] = useState('전체');
-
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const gotoDetail = (item: dummyGoodsItem) => {
     navigation.navigate('GoodsDetail', {...item});

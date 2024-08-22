@@ -1,5 +1,8 @@
 import {User} from '@/mock/Friends/type';
+import {dummyGoodsItem} from '@/mock/Goods/types';
+import {dummyGoodsStorageItem} from '@/mock/GoodsStorage/types';
 import {AppointmentProps} from '@/mock/Home/type';
+import {dummyNoticeItem} from '@/mock/NoticeBoard/types';
 import {
   StackNavigationOptions,
   StackNavigationProp,
@@ -28,6 +31,9 @@ export type RootStackParamList = {
   NoticeBoard: undefined;
   FAQBoard: undefined;
   GoodsStorage: undefined;
+  GoodsDetail: dummyGoodsItem;
+  GoodsStorageDetail: dummyGoodsStorageItem;
+  NoticeBoardDetail: dummyNoticeItem;
 };
 
 export type MainHeaderProps = {
