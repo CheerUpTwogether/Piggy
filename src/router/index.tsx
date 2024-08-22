@@ -24,6 +24,9 @@ import FriendSearch from '@/pages/friends/FriendSearch';
 import AppointmentDetail from '@/pages/home/AppointmentDetail';
 import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
+import ServiceAgreement from '@/components/userAgreement/ServiceAgreement';
+import PaymentAgreement from '@/components/userAgreement/PaymentAgreement';
+import LoginDetail from '@/pages/auth/LoginDetail';
 import PiggyUsage from '@/pages/piggy/PiggyUsage';
 import GiftFriend from '@/pages/gift/GiftFriend';
 import GiftAmount from '@/pages/gift/GiftAmount';
@@ -135,6 +138,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: 'FAQ',
         }}
       />
       <Stack.Screen
@@ -143,6 +147,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: '공지사항',
         }}
       />
       <Stack.Screen
@@ -151,6 +156,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: '공지사항',
         }}
       />
       <Stack.Screen
@@ -159,6 +165,7 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: '프로필 수정',
         }}
       />
       <Stack.Screen
@@ -167,6 +174,28 @@ const Router = () => {
         options={{
           header: Header,
           headerLeftLabelVisible: true,
+          title: '문의하기',
+        }}
+      />
+      <Stack.Screen
+        name="ServiceAgreement"
+        component={ServiceAgreement}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="PaymentAgreement"
+        component={PaymentAgreement}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="LoginDetail"
+        component={LoginDetail}
+        options={{
+          headerShown: false,
         }}
       />
       <Stack.Screen

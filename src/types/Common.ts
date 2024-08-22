@@ -4,12 +4,14 @@ import {SvgProps} from 'react-native-svg';
 export interface CheckBoxProps {
   isChecked: boolean;
   setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  onPress?: () => void;
   activeColor?: string;
 }
 
 export interface RadioButtonProps {
   isChecked: boolean;
   setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  onPress?: () => void;
   activeColor?: string;
 }
 
@@ -20,7 +22,8 @@ export interface ToggleProps {
 }
 
 export interface UserStore {
-  userData: any[];
+  userData: {isAgree: {service: boolean; payment: boolean}};
+  setIsAgree: (key: keyof UserStore['userData']['isAgree']) => void;
   gotoProfile: () => void;
   setGotoProfile: (func: () => void) => void;
 }

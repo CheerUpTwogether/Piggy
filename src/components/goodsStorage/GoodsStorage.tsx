@@ -13,11 +13,13 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {dummyGoodsStorageItem} from '@/mock/GoodsStorage/types';
 import {dummyGoodsStorageItemData} from '@/mock/GoodsStorage/GoodsStorage';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '@/types/Router';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
 
 const GoodsStorage = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const gotoDetail = (item: dummyGoodsStorageItem) => {
     navigation.navigate('GoodsStorageDetail', {...item});

@@ -1,13 +1,14 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {commonStyle} from '@/styles/common';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, RouteProp} from '@react-navigation/native';
 import CoinSvg from '@/assets/icons/coin.svg';
 import ClockcSvg from '@/assets/icons/clock.svg';
 import UseShopSvg from '@/assets/icons/useShop.svg';
+import {RootStackParamList} from '@/types/Router';
 
 const GoodsStorageDetail = () => {
-  const route = useRoute();
+  const route = useRoute<RouteProp<RootStackParamList, 'GoodsStorageDetail'>>();
   const {
     id,
     provider,

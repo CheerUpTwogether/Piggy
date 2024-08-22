@@ -1,4 +1,8 @@
+import {User} from '@/mock/Friends/type';
+import {dummyGoodsItem} from '@/mock/Goods/types';
+import {dummyGoodsStorageItem} from '@/mock/GoodsStorage/types';
 import {AppointmentProps} from '@/mock/Home/type';
+import {dummyNoticeItem} from '@/mock/NoticeBoard/types';
 import {FriendSearchParams} from '@/pages/friends/type';
 import {
   StackNavigationOptions,
@@ -26,6 +30,17 @@ export type RootStackParamList = {
     profile_image_path: string;
   };
   AppointmentDetail: AppointmentProps;
+  ServiceAgreement: undefined;
+  PaymentAgreement: undefined;
+  LoginDetail: undefined;
+  EditProfile: User;
+  HelpDesk: undefined;
+  NoticeBoard: undefined;
+  FAQBoard: undefined;
+  GoodsStorage: undefined;
+  GoodsDetail: dummyGoodsItem;
+  GoodsStorageDetail: dummyGoodsStorageItem;
+  NoticeBoardDetail: dummyNoticeItem;
   PiggyUsage: undefined;
   Friends: undefined;
   PiggyShop: undefined;

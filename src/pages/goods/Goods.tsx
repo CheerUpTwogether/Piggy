@@ -12,12 +12,13 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {dummyGoodsItem} from '@/mock/Goods/types';
 import {dummyGoodsItemData} from '@/mock/Goods/Goods';
+import {RootStackParamList} from '@/types/Router';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 const Goods = () => {
   const categories = ['전체', '패스트푸드', '카페', '스낵'];
   const [selectedCategory, setSelectedCategory] = useState('전체');
-
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const gotoDetail = (item: dummyGoodsItem) => {
     navigation.navigate('GoodsDetail', {...item});
@@ -46,7 +47,7 @@ const Goods = () => {
           {item.title}
         </Text>
         <Text style={commonStyle.MEDIUM_33_16} numberOfLines={1}>
-          {item.price}원
+          {item.price.toLocaleString()}원
         </Text>
         <Text style={commonStyle.MEDIUM_AA_12} numberOfLines={1}>
           {item.sub_title}
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   },
   itemImg: {
     width: '100%',
-    height: 144,
+    height: 180,
     borderRadius: 8,
     borderColor: '#DDD',
   },

@@ -3,7 +3,19 @@ import {ModalStore, ToastStore, UserStore} from '@/types/Common';
 import {ModalProps} from 'react-native';
 
 export const useUserStore = create<UserStore>(set => ({
-  userData: [],
+  userData: {
+    isAgree: {service: false, payment: false},
+  },
+  setIsAgree: (key: 'service' | 'payment') =>
+    set(state => ({
+      userData: {
+        ...state.userData,
+        isAgree: {
+          ...state.userData.isAgree,
+          [key]: !state.userData.isAgree[key],
+        },
+      },
+    })),
   gotoProfile: () => {},
   setGotoProfile: func => set(() => ({gotoProfile: func})),
 }));
