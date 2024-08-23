@@ -31,6 +31,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   completed_appointments,
   profile_image_path,
   friend,
+  closeModal,
 }) => {
   const [gradeListShow, setGradeListShow] = useState(false);
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
@@ -59,14 +60,28 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
       nick_name: nick_name,
       profile_image_path: profile_image_path,
     });
+    closeModal();
+  };
+
+  const handleEditProfile = () => {
+    console.log('TODO: 프로필 수정 api 호출');
+    closeModal();
+  };
+
+  const handleDeleteFriend = () => {
+    console.log('TODO: 친구 삭제 api 호출');
+    closeModal();
+  };
+
+  const handleAddFriend = () => {
+    console.log('TODO: 친구 추가 api 호출');
+    closeModal();
   };
 
   const iconShow = () => {
     if (uuid === '1000') {
       return (
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => console.log('TODO: 내 정보 수정')}>
+        <TouchableOpacity activeOpacity={0.8} onPress={handleEditProfile}>
           <EditSvg style={styles.rightIcon} />
         </TouchableOpacity>
       );
@@ -80,18 +95,14 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
             }>
             <GiftSvg style={styles.rightIcon} />
           </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => console.log('TODO: 친구 삭제')}>
+          <TouchableOpacity activeOpacity={0.8} onPress={handleDeleteFriend}>
             <TrashSvg style={styles.rightIcon} />
           </TouchableOpacity>
         </View>
       );
     } else {
       return (
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => console.log('TODO: 친구 추가')}>
+        <TouchableOpacity activeOpacity={0.8} onPress={handleAddFriend}>
           <AddFriendSvg style={styles.rightIcon} />
         </TouchableOpacity>
       );

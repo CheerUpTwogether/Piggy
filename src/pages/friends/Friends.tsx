@@ -231,7 +231,7 @@ const Friends = () => {
           isShow={isShow}
           setIsShow={setIsShow}
           size={0.6}
-          component={
+          component={({closeModal}) =>
             selectedUser && (
               <ProfileDetail
                 uuid={selectedUser.uuid}
@@ -242,6 +242,7 @@ const Friends = () => {
                 }
                 profile_image_path={selectedUser.profile_image_path}
                 friend={selectedUser.friend ?? false}
+                closeModal={closeModal}
               />
             )
           }

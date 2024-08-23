@@ -78,6 +78,7 @@ const FriendSearch = () => {
         nick_name: user.nick_name,
         profile_image_path: user.profile_image_path,
       });
+      setIsShow(false);
     }
   };
 
@@ -137,20 +138,17 @@ const FriendSearch = () => {
           isShow={isShow}
           setIsShow={setIsShow}
           size={0.6}
-          component={
-            selectedUser && (
-              <ProfileDetail
-                uuid={selectedUser.uuid}
-                nick_name={selectedUser.nick_name}
-                total_appointments={selectedUser.total_appointments ?? 0}
-                completed_appointments={
-                  selectedUser.completed_appointments ?? 0
-                }
-                profile_image_path={selectedUser.profile_image_path}
-                friend={selectedUser.friend ?? false}
-              />
-            )
-          }
+          component={({closeModal}) => (
+            <ProfileDetail
+              uuid={selectedUser.uuid}
+              nick_name={selectedUser.nick_name}
+              total_appointments={selectedUser.total_appointments ?? 0}
+              completed_appointments={selectedUser.completed_appointments ?? 0}
+              profile_image_path={selectedUser.profile_image_path}
+              friend={selectedUser.friend ?? false}
+              closeModal={closeModal}
+            />
+          )}
         />
       </View>
     </SafeAreaView>

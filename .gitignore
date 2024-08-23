@@ -77,7 +77,7 @@ yarn.lock
 
 # Lock files (optional, depending on your setup)
 package-lock.json
-# yarn.lock
+yarn.lock
 
 # Android Studio
 *.iml

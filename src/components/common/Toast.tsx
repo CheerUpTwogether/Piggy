@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, Animated} from 'react-native';
+import {View, Text, StyleSheet, Animated, Platform} from 'react-native';
 import {useToastStore} from '@/store/store';
 import {ToastItemProps} from '@/types/Common';
 import {commonStyle} from '@/styles/common';
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     zIndex: 9999,
-    marginTop: 20,
+    marginTop: Platform.OS === 'ios' ? 50 : 20,
   },
   toast: {
     position: 'absolute',

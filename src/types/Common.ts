@@ -44,10 +44,11 @@ export interface ToastItemProps extends ToastProps {
 }
 
 export interface BottomSheetProps {
-  component?: React.ReactElement;
+  component?: (props: {closeModal: () => void}) => React.ReactNode;
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
   size: number;
+  onClose?: () => void;
 }
 
 export interface EmptyProps {
