@@ -1,12 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Animated,
-  PanResponder,
-} from 'react-native';
+import {View, Text, StyleSheet, Animated, PanResponder} from 'react-native';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {appointments} from '@/mock/Home/Home';
@@ -80,7 +73,7 @@ const Home = () => {
   );
 
   return (
-    <SafeAreaView style={commonStyle.CONTAINER}>
+    <View style={commonStyle.CONTAINER}>
       {/* 사용자 프로필 */}
       <Profile />
 
@@ -132,7 +125,7 @@ const Home = () => {
         onPress={handleMoveToAppointment}>
         <PulsSvg color="#FFF" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

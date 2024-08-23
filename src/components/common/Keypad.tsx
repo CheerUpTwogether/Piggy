@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Platform} from 'react-native';
 import {useToastStore} from '@/store/store';
 import {commonStyle} from '../../styles/common.ts';
 import {KeyPadItemType, KeyPadProps} from '@/types/Common.ts';
 
 import DeleteButtonSvg from '../../assets/icons/delete.svg';
+const STYLE = Platform.OS === 'ios';
 
 // KeyPad 기본 컴포넌트 -> export default
 const KeyPad: React.FC<KeyPadProps> = ({onPress}) => {
@@ -26,9 +27,18 @@ const KeyPad: React.FC<KeyPadProps> = ({onPress}) => {
               onPress={() => onPress(item)}
               activeOpacity={0.8}>
               {item === 'deleteButton' ? (
-                <DeleteButtonSvg width={24} height={24} color={'#333'} />
+                <DeleteButtonSvg
+                  width={STYLE ? 20 : 24}
+                  height={STYLE ? 20 : 24}
+                  color={'#333'}
+                />
               ) : (
-                <Text style={commonStyle.MEDIUM_33_20}>{item}</Text>
+                <Text
+                  style={
+                    STYLE ? commonStyle.MEDIUM_33_18 : commonStyle.MEDIUM_33_20
+                  }>
+                  {item}
+                </Text>
               )}
             </TouchableOpacity>
           ))}
@@ -96,8 +106,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   button: {
-    width: 70,
-    height: 70,
+    width: STYLE ? 60 : 70,
+    height: STYLE ? 60 : 70,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,

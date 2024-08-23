@@ -1,5 +1,12 @@
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  SafeAreaView,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {BottomTabHeaderProps} from '@react-navigation/bottom-tabs';
 import {StackHeaderProps, StackNavigationProp} from '@react-navigation/stack';
@@ -120,14 +127,16 @@ const RightItems = ({name}: {name: string}) => {
 
 const TopTab = ({route, options}: BottomTabHeaderProps | StackHeaderProps) => {
   return (
-    <View style={styles.container}>
-      <LeftItem
-        name={route.name}
-        headerLeftLabelVisible={options?.headerLeftLabelVisible || false}
-      />
-      <Title title={options.title || ''} />
-      <RightItems name={route.name} />
-    </View>
+    <SafeAreaView style={{backgroundColor: '#FFF'}}>
+      <View style={styles.container}>
+        <LeftItem
+          name={route.name}
+          headerLeftLabelVisible={options?.headerLeftLabelVisible || false}
+        />
+        <Title title={options.title || ''} />
+        <RightItems name={route.name} />
+      </View>
+    </SafeAreaView>
   );
 };
 

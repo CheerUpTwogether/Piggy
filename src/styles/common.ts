@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import {Bold, Regular, Medium} from '@/styles/font';
 
 export const color_primary = '#ED423F';
@@ -18,7 +18,7 @@ export const commonStyle = StyleSheet.create({
   }, // 삭제 예정
   CONTAINER: {
     flex: 1,
-    padding: 16,
+    padding: Platform.OS === 'ios' ? 20 : 16,
     backgroundColor: '#fff',
   },
   BOLD: Bold,

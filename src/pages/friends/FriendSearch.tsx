@@ -6,6 +6,8 @@ import {
   FlatList,
   Image,
   StyleSheet,
+  SafeAreaView,
+  Platform,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
@@ -106,48 +108,52 @@ const FriendSearch = () => {
   );
 
   return (
-    <View style={commonStyle.CONTAINER}>
-      <InputBox
-        value={keyword}
-        setValue={setKeyword}
-        placeholder="친구를 검색해보세요."
-        icon={SearchFriendSvg}
-        isLarge={false}
-        goBack={true}
-      />
-      <FlatList
-        data={sortedData}
-        renderItem={renderItem}
-        keyExtractor={item => item.uuid.toString()}
-        ListEmptyComponent={
-          !keyword ? (
-            <View />
-          ) : (
-            <EmptyResult
-              reason="검색 결과가 없어요."
-              solution="올바른 닉네임을 검색해보세요."
-            />
-          )
-        }
-      />
-      <BottomSheet
-        isShow={isShow}
-        setIsShow={setIsShow}
-        size={0.6}
-        component={
-          selectedUser && (
-            <ProfileDetail
-              uuid={selectedUser.uuid}
-              nick_name={selectedUser.nick_name}
-              total_appointments={selectedUser.total_appointments ?? 0}
-              completed_appointments={selectedUser.completed_appointments ?? 0}
-              profile_image_path={selectedUser.profile_image_path}
-              friend={selectedUser.friend ?? false}
-            />
-          )
-        }
-      />
-    </View>
+    <SafeAreaView style={commonStyle.CONTAINER}>
+      <View style={styles.ios}>
+        <InputBox
+          value={keyword}
+          setValue={setKeyword}
+          placeholder="친구를 검색해보세요."
+          icon={SearchFriendSvg}
+          isLarge={false}
+          goBack={true}
+        />
+        <FlatList
+          data={sortedData}
+          renderItem={renderItem}
+          keyExtractor={item => item.uuid.toString()}
+          ListEmptyComponent={
+            !keyword ? (
+              <View />
+            ) : (
+              <EmptyResult
+                reason="검색 결과가 없어요."
+                solution="올바른 닉네임을 검색해보세요."
+              />
+            )
+          }
+        />
+        <BottomSheet
+          isShow={isShow}
+          setIsShow={setIsShow}
+          size={0.6}
+          component={
+            selectedUser && (
+              <ProfileDetail
+                uuid={selectedUser.uuid}
+                nick_name={selectedUser.nick_name}
+                total_appointments={selectedUser.total_appointments ?? 0}
+                completed_appointments={
+                  selectedUser.completed_appointments ?? 0
+                }
+                profile_image_path={selectedUser.profile_image_path}
+                friend={selectedUser.friend ?? false}
+              />
+            )
+          }
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -177,6 +183,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#DDD',
   },
+  ios: {paddingHorizontal: Platform.OS === 'ios' ? 10 : 0},
 });
 
 export default FriendSearch;

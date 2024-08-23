@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderColor: '#C4C4C4',
     borderWidth: 1,
-    zIndex: 1,
+    zIndex: 0,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFF',
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     borderColor: '#efefef',
     borderWidth: 2,
     marginLeft: -10,
-    zIndex: 1,
+    zIndex: 3,
   },
 });
 
