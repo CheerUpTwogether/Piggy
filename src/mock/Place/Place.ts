@@ -1,11 +1,11 @@
 import {Place, Search} from './type';
 
 export const dummy_search_data: Search[] = [
-  {id: '1', content: 'gagnamr'},
-  {id: '2', content: 'seoulr'},
-  {id: '3', content: 'busanr'},
-  {id: '4', content: 'americar'},
-  {id: '5', content: 'japanr'},
+  {id: '1', content: 'testCity1'},
+  {id: '2', content: 'testCity2'},
+  {id: '3', content: 'testCity3'},
+  {id: '4', content: 'testCity4'},
+  {id: '5', content: 'testCity5'},
 ];
 
 export const dummy_place_data: Place[] = [

@@ -1,31 +1,59 @@
 import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import ProgressBar from '@/components/common/ProgressBar';
 import ButtonCouple from '@/components/common/ButtonCouple';
 import AppointmentCalendar from '@/components/appointment/AppointmentCalendar';
+import AppointmentFriend from '@/components/appointment/AppointmentFriend';
+import AppointmentPlace from '@/components/appointment/AppointmentPlace';
+
+const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
 
 const AppointmentForm = () => {
   const [nowStep, setNowStep] = useState(1);
   const totalStep = 6;
+  console.log(nowStep);
 
   const handleNext = () => {
     setNowStep(prevStep => Math.min(prevStep + 1, totalStep));
   };
 
   const handlePrevious = () => {
-    setNowStep(prevStep => Math.max(prevStep - 1, 0));
+    setNowStep(prevStep => Math.max(prevStep - 1, 1));
+  };
+
+  const handleComponent = () => {
+    switch (nowStep) {
+      case 1:
+        return <AppointmentFriend />;
+      case 2:
+        return <AppointmentPlace />;
+      case 3:
+        return <View></View>;
+      case 4:
+        return <View></View>;
+      case 5:
+        return <View></View>;
+      case 6:
+        return <View></View>;
+      default:
+        return (
+          <View>
+            <Text>Error</Text>
+          </View>
+        );
+    }
   };
 
   return (
     <View style={commonStyle.CONTAINER}>
       {/* 소제목 위치를 맞추기 위해 아래 View에서 패딩 처리 */}
-      <View style={{paddingTop: 10}}>
+      <View style={{height: screenHeight * 0.72}}>
         {/* 컴포넌트 위치 */}
-        <AppointmentCalendar />
+        {handleComponent()}
         {/* 컴포넌트 위치 */}
       </View>
-      <View style={style.progressWrapper}>
+      <View>
         <View style={style.progressBar}>
           <ProgressBar totalStep={totalStep} nowStep={nowStep} />
         </View>
@@ -43,13 +71,6 @@ const AppointmentForm = () => {
 };
 
 const style = StyleSheet.create({
-  progressWrapper: {
-    position: 'absolute',
-    bottom: 30,
-    left: 15,
-    right: 15,
-    alignItems: 'center',
-  },
   progressBar: {
     width: '100%',
   },

@@ -1,7 +1,14 @@
 import useDebounce from '@/hooks/useDebounce';
 import {commonStyle} from '@/styles/common';
 import {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import InputBox from '../common/InputBox';
 import {dummy_place_data, dummy_search_data} from '@/mock/Place/Place';
 import {Place, Search} from '@/mock/Place/type';
@@ -9,6 +16,8 @@ import {Place, Search} from '@/mock/Place/type';
 import SearchSvg from '@/assets/icons/search.svg';
 import PlaceSvg from '@/assets/icons/location.svg';
 import LocationRoad from '@/assets/icons/locationRoad.svg';
+
+const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
 
 const AppointmentPlace = () => {
   const [keyword, setKeyword] = useState('');
@@ -64,6 +73,7 @@ const AppointmentPlace = () => {
 
   const renderPlaceItem = ({item}: {item: Place}) => {
     const isSelected = item.id === selectPlace.id;
+
     return (
       <TouchableOpacity
         style={styles.placeContainer}
@@ -90,7 +100,7 @@ const AppointmentPlace = () => {
 
   return (
     <View>
-      <View style={{marginVertical: 18, gap: 8}}>
+      <View style={{marginBottom: 18, gap: 8}}>
         <Text style={commonStyle.MEDIUM_33_16}>장소</Text>
         <InputBox
           value={keyword}
@@ -113,7 +123,12 @@ const AppointmentPlace = () => {
       <View
         style={{marginHorizontal: -16, height: 5, backgroundColor: '#EFEFEF'}}
       />
-      <View style={sortedSearchData.length ? {height: 300} : {height: 520}}>
+      <View
+        style={
+          sortedSearchData.length
+            ? {height: screenHeight * 0.28 + 45 * (5 - sortedSearchData.length)}
+            : {height: screenHeight * 0.56}
+        }>
         <FlatList
           data={dummy_place_data}
           renderItem={renderPlaceItem}

@@ -2,6 +2,7 @@ import InputBox from '@/components/common/InputBox';
 import {commonStyle} from '@/styles/common';
 import {useEffect, useState} from 'react';
 import {
+  Dimensions,
   FlatList,
   Image,
   StyleSheet,
@@ -18,6 +19,8 @@ import CancleSvg from '@/assets/icons/X.svg';
 import RoundHandShakeSvg from '@/assets/icons/roundHandshake.svg';
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+
+const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
 
 const AppointmentFriend = () => {
   const [keyword, setKeyword] = useState('');
@@ -148,7 +151,7 @@ const AppointmentFriend = () => {
 
   return (
     <View>
-      <View style={{marginVertical: 18, gap: 8}}>
+      <View style={{marginBottom: 18, gap: 8}}>
         <Text style={commonStyle.MEDIUM_33_16}>약속 제목</Text>
         <InputBox
           value={title}
@@ -175,7 +178,7 @@ const AppointmentFriend = () => {
           showsHorizontalScrollIndicator={false}
         />
       </View>
-      <View style={{height: 346}}>
+      <View style={{height: screenHeight * 0.37}}>
         <FlatList
           data={sortedFriendsData}
           renderItem={renderFriendItem}
