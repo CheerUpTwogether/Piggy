@@ -1,8 +1,7 @@
 import InputBox from '@/components/common/InputBox';
 import {commonStyle} from '@/styles/common';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
-  Animated,
   FlatList,
   Image,
   StyleSheet,
@@ -13,20 +12,18 @@ import {
 import useDebounce from '@/hooks/useDebounce';
 import {dummy_friends_data} from '@/mock/Friends/Friends';
 import {Friend} from '@/mock/Friends/type';
-
-import RoundHandShake from '@/assets/icons/roundHandshake.svg';
-import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import EmptyResult from '@/components/common/EmptyResult';
+
+import CancleSvg from '@/assets/icons/X.svg';
+import RoundHandShakeSvg from '@/assets/icons/roundHandshake.svg';
+import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
-import {useToastStore} from '@/store/store';
 
 const AppointmentFriend = () => {
-  const scrollY = useRef(new Animated.Value(0)).current;
   const [keyword, setKeyword] = useState('');
   const debouncedKeyword = useDebounce(keyword, 100);
   const [selectedFriendList, setSelectedFriendList] = useState<Friend[]>([]);
   const [title, setTitle] = useState('');
-  const addToast = useToastStore(state => state.addToast);
 
   const sortedUsersData = debouncedKeyword
     ? dummy_friends_data
@@ -99,10 +96,15 @@ const AppointmentFriend = () => {
       style={styles.firendSelectWrapper}
       onPress={() => handleFriendDelete(item)}>
       {item.profile_image_path ? (
-        <Image
-          source={{uri: item.profile_image_path}}
-          style={styles.friendSelectProfile}
-        />
+        <>
+          <Image
+            source={{uri: item.profile_image_path}}
+            style={styles.friendSelectProfile}
+          />
+          <View style={styles.friendSelectCancleContainer}>
+            <CancleSvg width={12} height={8} stroke={'#FFF'} />
+          </View>
+        </>
       ) : (
         <View style={[styles.friendEmptyProfile, styles.friendSelectProfile]}>
           <BasicProfileSvg width={24} height={24} />
@@ -152,7 +154,7 @@ const AppointmentFriend = () => {
           value={title}
           setValue={setTitle}
           placeholder="약속 제목을 입력해주세요."
-          icon={RoundHandShake}
+          icon={RoundHandShakeSvg}
         />
       </View>
       <View style={{marginVertical: 18, gap: 8}}>
@@ -170,23 +172,27 @@ const AppointmentFriend = () => {
           horizontal
           renderItem={renderSelectFriendItem}
           keyExtractor={item => item.uuid.toString()}
+          showsHorizontalScrollIndicator={false}
         />
       </View>
-      <FlatList
-        data={sortedFriendsData}
-        renderItem={renderFriendItem}
-        keyExtractor={item => item.uuid.toString()}
-        ListEmptyComponent={
-          !keyword ? (
-            <View />
-          ) : (
-            <EmptyResult
-              reason="검색 결과가 없어요."
-              solution="올바른 닉네임을 검색해보세요."
-            />
-          )
-        }
-      />
+      <View style={{height: 346}}>
+        <FlatList
+          data={sortedFriendsData}
+          renderItem={renderFriendItem}
+          keyExtractor={item => item.uuid.toString()}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            !keyword ? (
+              <View />
+            ) : (
+              <EmptyResult
+                reason="검색 결과가 없어요."
+                solution="올바른 닉네임을 검색해보세요."
+              />
+            )
+          }
+        />
+      </View>
     </View>
   );
 };
@@ -223,6 +229,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#DDD',
+  },
+  friendSelectCancleContainer: {
+    width: 14,
+    height: 14,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    right: 0,
   },
   firendSelectContainer: {
     marginHorizontal: 8,
