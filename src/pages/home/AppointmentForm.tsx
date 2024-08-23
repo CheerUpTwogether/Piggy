@@ -1,20 +1,25 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, Dimensions} from 'react-native';
+import {View, StyleSheet, Text, Dimensions, SafeAreaView} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import ProgressBar from '@/components/common/ProgressBar';
 import ButtonCouple from '@/components/common/ButtonCouple';
 import AppointmentCalendar from '@/components/appointment/AppointmentCalendar';
 import AppointmentFriend from '@/components/appointment/AppointmentFriend';
 import AppointmentPlace from '@/components/appointment/AppointmentPlace';
+import AppointmentPenalty from '@/components/appointment/AppointmentPenalty';
+import AppointmentCheck from '@/components/appointment/AppointmentCheck';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
 
 const AppointmentForm = () => {
   const [nowStep, setNowStep] = useState(1);
-  const totalStep = 6;
+  const totalStep = 5;
   console.log(nowStep);
 
   const handleNext = () => {
+    if (nowStep === 5) {
+      console.log('TODO: 약속 생성 api 호출');
+    }
     setNowStep(prevStep => Math.min(prevStep + 1, totalStep));
   };
 
@@ -29,13 +34,11 @@ const AppointmentForm = () => {
       case 2:
         return <AppointmentPlace />;
       case 3:
-        return <View></View>;
+        return <AppointmentCalendar />;
       case 4:
-        return <View></View>;
+        return <AppointmentPenalty />;
       case 5:
-        return <View></View>;
-      case 6:
-        return <View></View>;
+        return <AppointmentCheck />;
       default:
         return (
           <View>
@@ -46,13 +49,8 @@ const AppointmentForm = () => {
   };
 
   return (
-    <View style={commonStyle.CONTAINER}>
-      {/* 소제목 위치를 맞추기 위해 아래 View에서 패딩 처리 */}
-      <View style={{height: screenHeight * 0.72}}>
-        {/* 컴포넌트 위치 */}
-        {handleComponent()}
-        {/* 컴포넌트 위치 */}
-      </View>
+    <SafeAreaView style={commonStyle.CONTAINER}>
+      <View style={{height: screenHeight * 0.72}}>{handleComponent()}</View>
       <View>
         <View style={style.progressBar}>
           <ProgressBar totalStep={totalStep} nowStep={nowStep} />
@@ -62,11 +60,11 @@ const AppointmentForm = () => {
           onPressRight={handleNext}
           theme="outline"
           textLeft={'이전'}
-          textRight={'다음'}
+          textRight={nowStep === 5 ? '생성' : '다음'}
           style={style.button}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
