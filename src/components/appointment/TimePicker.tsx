@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useMemo} from 'react';
 import {
   Text,
   View,
@@ -12,37 +12,22 @@ import {
   getCenterPositionFromIndex,
   getIndexFromOffset,
   fillEmpty,
-} from '@/utils/date';
-import {
+  isPM,
   MERIDIEM_ITEMS,
   MINUTE_ITEMS,
   HOUR_ITEMS,
   BUTTON_HEIGHT,
   GAP,
-} from '@/utils/date';
-import {commonStyle} from '@/styles/common';
+  ITEMS,
+} from '@/utils/timePicker';
 
-const isPM = date => date.getHours() >= 12;
+import {commonStyle} from '@/styles/common';
 
 const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
   if (visibleCount % 2 === 0) {
     throw new Error('visibleCount must be odd');
   }
   const dateString = value.toTimeString();
-  const ITEMS = [
-    {
-      key: 'meridiem',
-      items: MERIDIEM_ITEMS,
-    },
-    {
-      key: 'hour',
-      items: HOUR_ITEMS,
-    },
-    {
-      key: 'minute',
-      items: MINUTE_ITEMS,
-    },
-  ];
 
   const refs = React.useRef(
     Array.from({length: 3}).map(() => React.createRef()),
@@ -71,24 +56,14 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
           const hour = Number(HOUR_ITEMS[itemIdx]);
 
           if (isPM(date)) {
-            const isNoon = hour === 12;
-            if (isNoon) {
-              date.setHours(12);
-            } else {
-              date.setHours(hour + 12);
-            }
+            date.setHours(hour === 12 ? 12 : hour + 12);
           } else {
-            const isMidnight = hour === 12;
-            if (isMidnight) {
-              date.setHours(0);
-            } else {
-              date.setHours(hour);
-            }
+            date.setHours(hour === 12 ? 0 : hour);
           }
         }
 
         if (key === 'minute') {
-          date.setMinutes(MINUTE_ITEMS[itemIdx]);
+          date.setMinutes(Number(MINUTE_ITEMS[itemIdx]));
         }
 
         onChange(date);
@@ -133,7 +108,7 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
     };
   };
 
-  const scrollProps = React.useMemo(() => {
+  const scrollProps = useMemo(() => {
     return ITEMS.map(({key, items}, index) =>
       getScrollProps(index, key, items),
     );
@@ -162,7 +137,7 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
   return (
     <View
       style={[styles.container, {width, height: visibleCount * buttonHeight}]}>
-      {scrollProps.map((props, scrollViewIndex) => {
+      {scrollProps.map(props => {
         const renderItems = fillEmpty(visibleCount, props.items);
 
         return (
@@ -172,7 +147,7 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
               [{nativeEvent: {contentOffset: {y: props.animatedValue}}}],
               {useNativeDriver: false},
             )}>
-            {renderItems.map((item, index) => {
+            {renderItems.map(item => {
               const position = getCenterPositionFromIndex(
                 props.items.indexOf(item),
               );
@@ -188,12 +163,14 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
               });
 
               return (
-                <Button
-                  key={item}
+                <AnimatedPressable
                   style={{opacity}}
-                  label={item}
                   onPress={props.getOnPress(item)}
-                />
+                  key={item}>
+                  <View style={styles.button}>
+                    <Text style={commonStyle.BOLD_33_16}>{item}</Text>
+                  </View>
+                </AnimatedPressable>
               );
             })}
           </ScrollView>
@@ -203,18 +180,7 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
     </View>
   );
 };
-
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-const Button = ({style, label, onPress}) => {
-  return (
-    <AnimatedPressable style={style} onPress={onPress}>
-      <View style={styles.button}>
-        <Text style={commonStyle.BOLD_33_16}>{label}</Text>
-      </View>
-    </AnimatedPressable>
-  );
-};
 
 const OverlayView = () => {
   return (
@@ -223,19 +189,15 @@ const OverlayView = () => {
       style={[StyleSheet.absoluteFill, styles.overlay]}>
       <View style={styles.overlayVisibleView}>
         <View style={styles.overlayVisibleViewInner} />
-        <GapView />
+        <View style={styles.gap} />
         <View style={styles.overlayVisibleViewInner} />
-        <GapView>
+        <View style={styles.gap}>
           <Text style={{position: 'absolute', textAlign: 'center'}}>{':'}</Text>
-        </GapView>
+        </View>
         <View style={styles.overlayVisibleViewInner} />
       </View>
     </View>
   );
-};
-
-const GapView = ({children}) => {
-  return <View style={styles.gap}>{children}</View>;
 };
 
 const styles = StyleSheet.create({

@@ -5,6 +5,7 @@ export const BUTTON_HEIGHT = 50;
 export const VIEW_WIDTH = width - 52;
 export const GAP = 12;
 export const MERIDIEM_ITEMS = ['오전', '오후'];
+
 export const HOUR_ITEMS = [
   '01',
   '02',
@@ -81,6 +82,22 @@ export const MINUTE_ITEMS = [
   '58',
   '59',
 ];
+export const ITEMS = [
+  {
+    key: 'meridiem',
+    items: MERIDIEM_ITEMS,
+  },
+  {
+    key: 'hour',
+    items: HOUR_ITEMS,
+  },
+  {
+    key: 'minute',
+    items: MINUTE_ITEMS,
+  },
+];
+
+export const isPM = date => date.getHours() >= 12;
 
 export const getCenterPosition = offsetY => {
   return getIndexFromOffset(offsetY) * BUTTON_HEIGHT;

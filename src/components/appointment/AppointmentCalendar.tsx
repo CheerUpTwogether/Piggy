@@ -2,8 +2,8 @@ import React, {useRef, useState} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {CalendarList, LocaleConfig} from 'react-native-calendars';
-import {asPickerFormat} from '@/utils/date';
-import {BUTTON_HEIGHT, VIEW_WIDTH} from '@/utils/date';
+import {asPickerFormat} from '@/utils/timePicker';
+import {BUTTON_HEIGHT, VIEW_WIDTH} from '@/utils/timePicker';
 
 import ClockSvg from '@/assets/icons/clock.svg';
 import CalendarSvg from '@/assets/icons/calendar.svg';
@@ -36,6 +36,7 @@ const AppointmentCalendar = () => {
   const [showCalendar, setShowCalendar] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
   const [time, setTime] = useState(asPickerFormat(new Date()));
+
   const fadeAnimCalendar = useRef(new Animated.Value(1)).current;
   const fadeAnimInput = useRef(new Animated.Value(1)).current;
 
