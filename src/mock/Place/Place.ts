@@ -6,6 +6,8 @@ export const dummy_search_data: Search[] = [
   {id: '3', content: 'testCity3'},
   {id: '4', content: 'testCity4'},
   {id: '5', content: 'testCity5'},
+  {id: '6', content: '스타벅스'},
+  {id: '6', content: '도림동'},
 ];
 
 export const dummy_place_data: Place[] = [

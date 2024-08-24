@@ -56,8 +56,6 @@ const AppointmentFriend = () => {
     setRadioState(initialRadioState);
   }, [debouncedKeyword]);
 
-  console.log(radioState);
-
   const handleFriendPress = (friend: Friend, index: number) => {
     const isSelected = selectedFriendList.some(
       item => item.uuid === friend.uuid,

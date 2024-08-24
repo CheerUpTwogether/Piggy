@@ -14,6 +14,8 @@ import {commonStyle} from '@/styles/common';
 const InputBox: React.FC<InputBoxProps> = ({
   value,
   setValue,
+  onSubmitEditing,
+  onFocus,
   placeholder,
   isLarge = true,
   icon: Icon,
@@ -46,6 +48,8 @@ const InputBox: React.FC<InputBoxProps> = ({
           placeholder={placeholder}
           value={value}
           onChangeText={setValue}
+          onSubmitEditing={onSubmitEditing}
+          onFocus={onFocus}
           style={[styles.input, commonStyle.MEDIUM_33_16]}
         />
       </View>

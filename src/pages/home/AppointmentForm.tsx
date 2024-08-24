@@ -12,7 +12,6 @@ const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
 const AppointmentForm = () => {
   const [nowStep, setNowStep] = useState(1);
   const totalStep = 6;
-  console.log(nowStep);
 
   const handleNext = () => {
     setNowStep(prevStep => Math.min(prevStep + 1, totalStep));
