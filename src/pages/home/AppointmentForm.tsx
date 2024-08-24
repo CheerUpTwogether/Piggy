@@ -3,6 +3,7 @@ import {View, StyleSheet, Text, Dimensions, SafeAreaView} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import ProgressBar from '@/components/common/ProgressBar';
 import ButtonCouple from '@/components/common/ButtonCouple';
+import Button from '@/components/common/Button';
 import AppointmentCalendar from '@/components/appointment/AppointmentCalendar';
 import AppointmentFriend from '@/components/appointment/AppointmentFriend';
 import AppointmentPlace from '@/components/appointment/AppointmentPlace';
@@ -14,7 +15,6 @@ const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
 const AppointmentForm = () => {
   const [nowStep, setNowStep] = useState(1);
   const totalStep = 5;
-  console.log(nowStep);
 
   const handleNext = () => {
     if (nowStep === 5) {
@@ -55,14 +55,18 @@ const AppointmentForm = () => {
         <View style={style.progressBar}>
           <ProgressBar totalStep={totalStep} nowStep={nowStep} />
         </View>
-        <ButtonCouple
-          onPressLeft={handlePrevious}
-          onPressRight={handleNext}
-          theme="outline"
-          textLeft={'이전'}
-          textRight={nowStep === 5 ? '생성' : '다음'}
-          style={style.button}
-        />
+        {nowStep === 1 ? (
+          <Button text={'다음'} onPress={handleNext} style={style.button} />
+        ) : (
+          <ButtonCouple
+            onPressLeft={handlePrevious}
+            onPressRight={handleNext}
+            theme="outline"
+            textLeft={'이전'}
+            textRight={nowStep === 5 ? '생성' : '다음'}
+            style={style.button}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
