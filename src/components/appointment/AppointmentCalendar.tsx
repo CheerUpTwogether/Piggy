@@ -2,6 +2,8 @@ import React, {useRef, useState} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {CalendarList, LocaleConfig} from 'react-native-calendars';
+import {asPickerFormat, changeDateText} from '@/utils/timePicker';
+import {BUTTON_HEIGHT, VIEW_WIDTH} from '@/utils/timePicker';
 
 import ClockSvg from '@/assets/icons/clock.svg';
 import CalendarSvg from '@/assets/icons/calendar.svg';
@@ -33,6 +35,7 @@ LocaleConfig.defaultLocale = 'ko';
 const AppointmentCalendar = () => {
   const [showCalendar, setShowCalendar] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [time, setTime] = useState(asPickerFormat(new Date()));
 
   const fadeAnimCalendar = useRef(new Animated.Value(1)).current;
   const fadeAnimInput = useRef(new Animated.Value(1)).current;
@@ -83,7 +86,7 @@ const AppointmentCalendar = () => {
         <CalendarSvg style={styles.svg} />
         <Text
           style={
-            selectedDate ? commonStyle.REGULAR_33_14 : commonStyle.REGULAR_77_14
+            selectedDate ? commonStyle.MEDIUM_33_16 : commonStyle.MEDIUM_AA_16
           }>
           {selectedDate ? selectedDate : '날짜를 선택해주세요'}
         </Text>
@@ -105,9 +108,20 @@ const AppointmentCalendar = () => {
           <Text style={styles.label}>시간</Text>
           <View style={styles.input}>
             <ClockSvg style={styles.svg} />
-            <Text style={commonStyle.REGULAR_33_14}>sdf</Text>
+            <Text style={commonStyle.MEDIUM_33_16}>
+              {`${changeDateText(time.getHours())} : ${changeDateText(
+                time.getMinutes(),
+              )}`}
+            </Text>
           </View>
-          <TimePicker />
+
+          <TimePicker
+            value={time}
+            onChange={setTime}
+            width={VIEW_WIDTH}
+            buttonHeight={BUTTON_HEIGHT}
+            visibleCount={3}
+          />
         </Animated.View>
       )}
     </View>
@@ -118,11 +132,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    //padding: 12,
   },
   label: {
-    ...commonStyle.BOLD_33_14,
-    padding: 4,
+    ...commonStyle.MEDIUM_33_16,
+    paddingBottom: 8,
   },
   input: {
     flexDirection: 'row',
@@ -135,9 +149,10 @@ const styles = StyleSheet.create({
   svg: {
     width: 18,
     height: 18,
-    color: '#aaa',
+    color: '#333',
     padding: 4,
     margin: 8,
+    paddingHorizontal: 22,
   },
   calendar: {
     height: '85%',

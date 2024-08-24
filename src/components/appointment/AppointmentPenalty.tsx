@@ -1,10 +1,25 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import KeyPad, {useKeyPad} from '../common/Keypad';
+import {AppointmentPenaltyProps} from '@/pages/home/type';
 
-const AppointmentPenalty = () => {
-  const {inputValue, handlePress} = useKeyPad();
+const AppointmentPenalty: React.FC<AppointmentPenaltyProps> = ({
+  penalty,
+  onUpdate,
+}) => {
+  const {inputValue, setInputValue, handlePress} = useKeyPad();
+
+  useEffect(() => {
+    if (penalty) {
+      setInputValue(penalty);
+    }
+  }, [penalty]);
+
+  // inputValue가 변경될 때마다 부모 컴포넌트로 업데이트
+  useEffect(() => {
+    onUpdate('penalty', inputValue);
+  }, [inputValue]);
 
   return (
     <View>
@@ -19,7 +34,7 @@ const AppointmentPenalty = () => {
           <View style={styles.amountWrapper}>
             {inputValue ? (
               <Text style={[commonStyle.BOLD_33_24, styles.amount]}>
-                {inputValue}
+                {penalty}
               </Text>
             ) : (
               <Text style={commonStyle.BOLD_33_24}>0</Text>

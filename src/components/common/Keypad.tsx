@@ -92,6 +92,7 @@ export const useKeyPad = () => {
   return {
     inputValue,
     handlePress,
+    setInputValue,
   };
 };
 

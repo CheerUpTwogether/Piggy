@@ -1,40 +1,63 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, Dimensions} from 'react-native';
+import {View, StyleSheet, Text, Dimensions, SafeAreaView} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import ProgressBar from '@/components/common/ProgressBar';
 import ButtonCouple from '@/components/common/ButtonCouple';
+import Button from '@/components/common/Button';
 import AppointmentCalendar from '@/components/appointment/AppointmentCalendar';
 import AppointmentFriend from '@/components/appointment/AppointmentFriend';
 import AppointmentPlace from '@/components/appointment/AppointmentPlace';
+import AppointmentPenalty from '@/components/appointment/AppointmentPenalty';
+import AppointmentCheck from '@/components/appointment/AppointmentCheck';
+import {AppointmentData} from './type';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
 
 const AppointmentForm = () => {
+  const [data, setData] = useState<AppointmentData>({
+    friends: [],
+    subject: '',
+    location: '',
+    date: '',
+    time: '',
+    penalty: '',
+  });
   const [nowStep, setNowStep] = useState(1);
-  const totalStep = 6;
+  const totalStep = 5;
 
-  const handleNext = () => {
-    setNowStep(prevStep => Math.min(prevStep + 1, totalStep));
+  // 주어진 이름(name)에 해당하는 상태 값을 업데이트
+  const onUpdate = (name: string, value: [] | string | number) => {
+    setData(prevData => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
+  const handleNext = () => {
+    if (nowStep === 5) {
+      console.log('TODO: 약속 생성 api 호출');
+    }
+
+    setNowStep(prevStep => Math.min(prevStep + 1, totalStep));
+  };
   const handlePrevious = () => {
     setNowStep(prevStep => Math.max(prevStep - 1, 1));
   };
 
-  const handleComponent = () => {
+  const getCurrentComponent = () => {
     switch (nowStep) {
       case 1:
         return <AppointmentFriend />;
       case 2:
         return <AppointmentPlace />;
       case 3:
-        return <View></View>;
+        return <AppointmentCalendar />;
       case 4:
-        return <View></View>;
+        return (
+          <AppointmentPenalty penalty={data.penalty} onUpdate={onUpdate} />
+        );
       case 5:
-        return <View></View>;
-      case 6:
-        return <View></View>;
+        return <AppointmentCheck data={data} />;
       default:
         return (
           <View>
@@ -45,27 +68,26 @@ const AppointmentForm = () => {
   };
 
   return (
-    <View style={commonStyle.CONTAINER}>
-      {/* 소제목 위치를 맞추기 위해 아래 View에서 패딩 처리 */}
-      <View style={{height: screenHeight * 0.72}}>
-        {/* 컴포넌트 위치 */}
-        {handleComponent()}
-        {/* 컴포넌트 위치 */}
-      </View>
+    <SafeAreaView style={commonStyle.CONTAINER}>
+      <View style={{height: screenHeight * 0.72}}>{getCurrentComponent()}</View>
       <View>
         <View style={style.progressBar}>
           <ProgressBar totalStep={totalStep} nowStep={nowStep} />
         </View>
-        <ButtonCouple
-          onPressLeft={handlePrevious}
-          onPressRight={handleNext}
-          theme="outline"
-          textLeft={'이전'}
-          textRight={'다음'}
-          style={style.button}
-        />
+        {nowStep === 1 ? (
+          <Button text={'다음'} onPress={handleNext} style={style.button} />
+        ) : (
+          <ButtonCouple
+            onPressLeft={handlePrevious}
+            onPressRight={handleNext}
+            theme="outline"
+            textLeft={'이전'}
+            textRight={nowStep === 5 ? '생성' : '다음'}
+            style={style.button}
+          />
+        )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

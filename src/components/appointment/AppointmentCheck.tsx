@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {commonStyle} from '@/styles/common';
-import {appointments} from '@/mock/Home/Home';
-import {FriendsProps} from '@/mock/Home/type';
+import {AppointmentData, FriendsProps} from '@/pages/home/type';
 
 import LocationSvg from '@/assets/icons/location.svg';
 import DateSvg from '@/assets/icons/calendar.svg';
@@ -18,10 +17,9 @@ import PeopleSvg from '@/assets/icons/people.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
 
-const AppointmentCheck = () => {
-  const appointment = appointments[0];
-
-  useEffect(() => {});
+const AppointmentCheck: React.FC<{data: AppointmentData}> = ({data}) => {
+  const totalAmount =
+    Number(data.penalty.replace(/,/g, '')) * (data.friends.length + 1);
 
   const renderItem = ({item}: {item: FriendsProps}) => (
     <View style={styles.friendWrapper}>
@@ -44,7 +42,7 @@ const AppointmentCheck = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.HeaderWrapper}>
-        <Text style={commonStyle.BOLD_33_18}>{appointment.subject}</Text>
+        <Text style={commonStyle.BOLD_33_18}>{data.subject}</Text>
       </View>
 
       <View style={styles.wrapper}>
@@ -53,21 +51,21 @@ const AppointmentCheck = () => {
             <LocationSvg width={20} height={20} color={'#AAA'} />
             <Text style={commonStyle.MEDIUM_33_16}>장소</Text>
           </View>
-          <Text style={commonStyle.BOLD_33_16}>{appointment.location}</Text>
+          <Text style={commonStyle.BOLD_33_16}>{data.location}</Text>
         </View>
         <View style={styles.row}>
           <View style={styles.rowTitle}>
             <DateSvg width={20} height={20} color={'#AAA'} />
             <Text style={commonStyle.MEDIUM_33_16}>날짜</Text>
           </View>
-          <Text style={commonStyle.BOLD_33_16}>{appointment.date}</Text>
+          <Text style={commonStyle.BOLD_33_16}>{data.date}</Text>
         </View>
         <View style={styles.row}>
           <View style={styles.rowTitle}>
             <TimeSvg width={20} height={20} color={'#AAA'} />
             <Text style={commonStyle.MEDIUM_33_16}>시간</Text>
           </View>
-          <Text style={commonStyle.BOLD_PRIMARY_16}>{appointment.time}</Text>
+          <Text style={commonStyle.BOLD_PRIMARY_16}>{data.time}</Text>
         </View>
       </View>
 
@@ -79,9 +77,9 @@ const AppointmentCheck = () => {
           </View>
         </View>
         <FlatList
-          keyExtractor={item => item.uid.toString()}
+          keyExtractor={item => String(item.uuid)}
           renderItem={renderItem}
-          data={appointment.friends}
+          data={data.friends}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         />
@@ -97,9 +95,7 @@ const AppointmentCheck = () => {
         <View style={styles.penaltyRow}>
           <Text style={commonStyle.REGULAR_33_16}>벌칙금</Text>
           <View style={styles.penalty}>
-            <Text style={commonStyle.REGULAR_33_16}>
-              {appointment.penalty / appointment.friends.length}
-            </Text>
+            <Text style={commonStyle.REGULAR_33_16}>{data.penalty}</Text>
             <Text style={commonStyle.REGULAR_PRIMARY_16}>Piggy</Text>
           </View>
         </View>
@@ -107,7 +103,7 @@ const AppointmentCheck = () => {
           <Text style={commonStyle.REGULAR_33_16}>모집 인원</Text>
           <View style={styles.penalty}>
             <Text style={commonStyle.REGULAR_33_16}>
-              {appointment.friends.length}
+              {data.friends.length + 1}
             </Text>
             <Text style={commonStyle.REGULAR_33_16}>명</Text>
           </View>
@@ -115,7 +111,7 @@ const AppointmentCheck = () => {
         <View style={styles.totalWrapper}>
           <Text style={commonStyle.MEDIUM_33_20}>총합</Text>
           <Text style={commonStyle.MEDIUM_PRIMARY_20}>
-            {appointment.penalty} Piggy
+            {totalAmount.toLocaleString()} Piggy
           </Text>
         </View>
         <Text style={[commonStyle.REGULAR_AA_14, {marginTop: 20}]}>
@@ -177,7 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginRight: 60,
+    marginRight: 20,
   },
 });
 
