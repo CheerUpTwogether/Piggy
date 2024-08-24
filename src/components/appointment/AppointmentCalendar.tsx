@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {CalendarList, LocaleConfig} from 'react-native-calendars';
-import {asPickerFormat} from '@/utils/timePicker';
+import {asPickerFormat, changeDateText} from '@/utils/timePicker';
 import {BUTTON_HEIGHT, VIEW_WIDTH} from '@/utils/timePicker';
 
 import ClockSvg from '@/assets/icons/clock.svg';
@@ -108,7 +108,11 @@ const AppointmentCalendar = () => {
           <Text style={styles.label}>시간</Text>
           <View style={styles.input}>
             <ClockSvg style={styles.svg} />
-            <Text style={commonStyle.REGULAR_33_14}>sdf</Text>
+            <Text style={commonStyle.REGULAR_33_14}>
+              {`${changeDateText(time.getHours())} : ${changeDateText(
+                time.getMinutes(),
+              )}`}
+            </Text>
           </View>
 
           <TimePicker

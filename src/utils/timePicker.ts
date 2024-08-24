@@ -7,6 +7,7 @@ export const GAP = 12;
 export const MERIDIEM_ITEMS = ['오전', '오후'];
 
 export const HOUR_ITEMS = [
+  '00',
   '01',
   '02',
   '03',
@@ -18,7 +19,6 @@ export const HOUR_ITEMS = [
   '09',
   '10',
   '11',
-  '12',
 ];
 export const MINUTE_ITEMS = [
   '00',
@@ -119,12 +119,17 @@ export const fillEmpty = (visibleCount, [...values]) => {
 
 export const asPickerFormat = (date: Date) => {
   const _date = new Date(date.getTime());
-  const hour = _date.getHours();
-  const min = _date.getMinutes();
   _date.setTime(Date.now());
-  _date.setHours(hour);
-  _date.setMinutes(min + (5 - (min % 5)));
+  _date.setHours(1);
+  _date.setMinutes(0);
   _date.setSeconds(0);
   _date.setMilliseconds(0);
   return _date;
+};
+
+export const changeDateText = (text: number) => {
+  if (String(text).length === 1) {
+    return `0${text}`;
+  }
+  return text;
 };
