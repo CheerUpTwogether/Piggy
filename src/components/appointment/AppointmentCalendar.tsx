@@ -86,7 +86,7 @@ const AppointmentCalendar = () => {
         <CalendarSvg style={styles.svg} />
         <Text
           style={
-            selectedDate ? commonStyle.REGULAR_33_14 : commonStyle.REGULAR_77_14
+            selectedDate ? commonStyle.MEDIUM_33_16 : commonStyle.MEDIUM_AA_16
           }>
           {selectedDate ? selectedDate : '날짜를 선택해주세요'}
         </Text>
@@ -108,7 +108,7 @@ const AppointmentCalendar = () => {
           <Text style={styles.label}>시간</Text>
           <View style={styles.input}>
             <ClockSvg style={styles.svg} />
-            <Text style={commonStyle.REGULAR_33_14}>
+            <Text style={commonStyle.MEDIUM_33_16}>
               {`${changeDateText(time.getHours())} : ${changeDateText(
                 time.getMinutes(),
               )}`}
@@ -132,11 +132,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    //padding: 12,
   },
   label: {
-    ...commonStyle.BOLD_33_14,
-    padding: 4,
+    ...commonStyle.MEDIUM_33_16,
+    paddingBottom: 8,
   },
   input: {
     flexDirection: 'row',
@@ -149,9 +149,10 @@ const styles = StyleSheet.create({
   svg: {
     width: 18,
     height: 18,
-    color: '#aaa',
+    color: '#333',
     padding: 4,
     margin: 8,
+    paddingHorizontal: 22,
   },
   calendar: {
     height: '85%',
