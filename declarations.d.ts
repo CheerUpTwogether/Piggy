@@ -9,4 +9,5 @@ declare module '@env' {
   export const OPENAPI_SERVICE_KEY: string;
   export const SUPABASE_URL: string;
   export const SUPABASE_KEY: string;
+  export const KAKAO_API_KEY: string;
 }

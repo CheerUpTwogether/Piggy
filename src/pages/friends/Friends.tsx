@@ -2,6 +2,7 @@ import React, {useRef, useState} from 'react';
 import {
   Text,
   View,
+  SafeAreaView,
   TouchableOpacity,
   Image,
   StyleSheet,
@@ -112,76 +113,101 @@ const Friends = () => {
   };
 
   return (
-    <ScrollView style={commonStyle.CONTAINER}>
-      <View style={styles.profileSection}>
-        <TouchableOpacity
-          style={styles.profileWrapper}
-          activeOpacity={0.8}
-          onPress={() => handleProfilePress(dummy_profile)}>
-          <Image
-            source={{uri: dummy_profile.profile_image_path}}
-            style={styles.profile}
-          />
-          <View style={styles.myData}>
-            <Text style={commonStyle.MEDIUM_33_20}>
-              {dummy_profile.nick_name}
-            </Text>
-            <Text style={commonStyle.REGULAR_AA_14}>{dummy_profile.email}</Text>
-          </View>
-        </TouchableOpacity>
-
-        <View style={styles.friendListWrapper}>
-          <Text style={commonStyle.MEDIUM_33_16}>
-            친구 {dummy_friends_data.length}명
-          </Text>
-          {dummy_friends_data.length === 0 ? (
-            <View style={styles.emptyWrapper}>
-              <EmptyResult
-                reason="추가된 친구가 없어요."
-                solution="친구를 추가하고 약속을 잡아보세요!"
-              />
+    <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
+      <ScrollView style={commonStyle.CONTAINER}>
+        <View style={styles.profileSection}>
+          <TouchableOpacity
+            style={styles.profileWrapper}
+            activeOpacity={0.8}
+            onPress={() => handleProfilePress(dummy_profile)}>
+            <Image
+              source={{uri: dummy_profile.profile_image_path}}
+              style={styles.profile}
+            />
+            <View style={styles.myData}>
+              <Text style={commonStyle.MEDIUM_33_20}>
+                {dummy_profile.nick_name}
+              </Text>
+              <Text style={commonStyle.REGULAR_AA_14}>
+                {dummy_profile.email}
+              </Text>
             </View>
-          ) : (
-            <View style={styles.friendList}>
-              {dummy_friends_data.map((item, index) => (
-                <View key={item.uuid} style={styles.swipeContainer}>
-                  <Animated.View
-                    style={[
-                      styles.friendContainer,
-                      {transform: [{translateX: positions[index]}]},
-                    ]}
-                    {...createPanResponder(index).panHandlers}>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => handleProfilePress(item)}
-                      style={styles.friendWrapper}>
-                      {item.profile_image_path ? (
-                        <Image
-                          source={{uri: item.profile_image_path}}
-                          style={styles.friendProfile}
-                        />
-                      ) : (
-                        <View
-                          style={[
-                            styles.friendEmptyProfile,
-                            styles.friendProfile,
-                          ]}>
-                          <BasicProfileSvg width={24} height={24} />
-                        </View>
-                      )}
-                      <Text style={commonStyle.MEDIUM_33_16}>
-                        {item.nick_name}
-                      </Text>
-                    </TouchableOpacity>
+          </TouchableOpacity>
+
+          <View style={styles.friendListWrapper}>
+            <Text style={commonStyle.MEDIUM_33_16}>
+              친구 {dummy_friends_data.length}명
+            </Text>
+            {dummy_friends_data.length === 0 ? (
+              <View style={styles.emptyWrapper}>
+                <EmptyResult
+                  reason="추가된 친구가 없어요."
+                  solution="친구를 추가하고 약속을 잡아보세요!"
+                />
+              </View>
+            ) : (
+              <View style={styles.friendList}>
+                {dummy_friends_data.map((item, index) => (
+                  <View key={item.uuid} style={styles.swipeContainer}>
                     <Animated.View
                       style={[
-                        styles.moreButton,
+                        styles.friendContainer,
+                        {transform: [{translateX: positions[index]}]},
+                      ]}
+                      {...createPanResponder(index).panHandlers}>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => handleProfilePress(item)}
+                        style={styles.friendWrapper}>
+                        {item.profile_image_path ? (
+                          <Image
+                            source={{uri: item.profile_image_path}}
+                            style={styles.friendProfile}
+                          />
+                        ) : (
+                          <View
+                            style={[
+                              styles.friendEmptyProfile,
+                              styles.friendProfile,
+                            ]}>
+                            <BasicProfileSvg width={24} height={24} />
+                          </View>
+                        )}
+                        <Text style={commonStyle.MEDIUM_33_16}>
+                          {item.nick_name}
+                        </Text>
+                      </TouchableOpacity>
+                      <Animated.View
+                        style={[
+                          styles.moreButton,
+                          {
+                            transform: [
+                              {
+                                translateX: positions[index].interpolate({
+                                  inputRange: [SWIPE_STANDARD, 0],
+                                  outputRange: [30, 0],
+                                  extrapolate: 'clamp',
+                                }),
+                              },
+                            ],
+                          },
+                        ]}>
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          onPress={() => handleMorePress(index)}>
+                          <MoreSvg width={20} height={20} color={'#555'} />
+                        </TouchableOpacity>
+                      </Animated.View>
+                    </Animated.View>
+                    <Animated.View
+                      style={[
+                        styles.deleteButton,
                         {
                           transform: [
                             {
                               translateX: positions[index].interpolate({
                                 inputRange: [SWIPE_STANDARD, 0],
-                                outputRange: [30, 0],
+                                outputRange: [0, 60],
                                 extrapolate: 'clamp',
                               }),
                             },
@@ -190,59 +216,41 @@ const Friends = () => {
                       ]}>
                       <TouchableOpacity
                         activeOpacity={0.8}
-                        onPress={() => handleMorePress(index)}>
-                        <MoreSvg width={20} height={20} color={'#555'} />
+                        onPress={() =>
+                          console.log('TODO: 삭제 확인 모달 & 삭제 구현')
+                        }>
+                        <Text style={commonStyle.REGULAR_FF_12}>삭제</Text>
                       </TouchableOpacity>
                     </Animated.View>
-                  </Animated.View>
-                  <Animated.View
-                    style={[
-                      styles.deleteButton,
-                      {
-                        transform: [
-                          {
-                            translateX: positions[index].interpolate({
-                              inputRange: [SWIPE_STANDARD, 0],
-                              outputRange: [0, 60],
-                              extrapolate: 'clamp',
-                            }),
-                          },
-                        ],
-                      },
-                    ]}>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() =>
-                        console.log('TODO: 삭제 확인 모달 & 삭제 구현')
-                      }>
-                      <Text style={commonStyle.REGULAR_FF_12}>삭제</Text>
-                    </TouchableOpacity>
-                  </Animated.View>
-                </View>
-              ))}
-            </View>
-          )}
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
         </View>
-      </View>
-      {/* ProfileDetail 모달 */}
-      <BottomSheet
-        isShow={isShow}
-        setIsShow={setIsShow}
-        size={0.6}
-        component={
-          selectedUser && (
-            <ProfileDetail
-              uuid={selectedUser.uuid}
-              nick_name={selectedUser.nick_name}
-              total_appointments={selectedUser.total_appointments ?? 0}
-              completed_appointments={selectedUser.completed_appointments ?? 0}
-              profile_image_path={selectedUser.profile_image_path}
-              friend={selectedUser.friend ?? false}
-            />
-          )
-        }
-      />
-    </ScrollView>
+        {/* ProfileDetail 모달 */}
+        <BottomSheet
+          isShow={isShow}
+          setIsShow={setIsShow}
+          size={0.6}
+          component={({closeModal}) =>
+            selectedUser && (
+              <ProfileDetail
+                uuid={selectedUser.uuid}
+                nick_name={selectedUser.nick_name}
+                total_appointments={selectedUser.total_appointments ?? 0}
+                completed_appointments={
+                  selectedUser.completed_appointments ?? 0
+                }
+                profile_image_path={selectedUser.profile_image_path}
+                friend={selectedUser.friend ?? false}
+                closeModal={closeModal}
+              />
+            )
+          }
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

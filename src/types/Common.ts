@@ -47,10 +47,11 @@ export interface ToastItemProps extends ToastProps {
 }
 
 export interface BottomSheetProps {
-  component?: React.ReactElement;
+  component?: (props: {closeModal: () => void}) => React.ReactNode;
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
   size: number;
+  onClose?: () => void;
 }
 
 export interface EmptyProps {
@@ -102,6 +103,8 @@ export interface ModalStore {
 export interface InputBoxProps {
   value: string;
   setValue: (text: string) => void;
+  onSubmitEditing?: ((event: GestureResponderEvent) => void) & (() => void);
+  onFocus?: ((event: GestureResponderEvent) => void) & (() => void);
   placeholder: string;
   isLarge?: boolean;
   icon: React.FC<SvgProps>;
@@ -142,4 +145,34 @@ export interface ProgressBarProps {
   totalStep: number;
   nowStep: number;
   progress?: boolean;
+}
+
+export interface SearchKeywordPlace {
+  id?: string;
+  place_name?: string;
+  address_name?: string;
+  road_address_name?: string;
+  x?: string;
+  y?: string;
+  distance?: string;
+  phone?: string;
+  place_url?: string;
+  category_group_code?: string;
+  category_group_name?: string;
+  category_name?: string;
+}
+
+export interface SearchAddressPlaceObjectOld {
+  address_name: string;
+  x: string;
+  y: string;
+}
+export interface SearchAddressPlaceObjectNew {
+  address_name: string;
+  zone_no: string;
+}
+
+export interface SearchAddressPlace {
+  address: SearchAddressPlaceObjectOld;
+  road_address: SearchAddressPlaceObjectNew;
 }

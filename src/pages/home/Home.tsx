@@ -1,12 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Animated,
-  PanResponder,
-} from 'react-native';
+import {View, Text, StyleSheet, Animated, PanResponder} from 'react-native';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {appointments} from '@/mock/Home/Home';
@@ -46,6 +39,10 @@ const Home = () => {
     });
   };
 
+  const handleMoveToAppointment = () => {
+    navigation.navigate('AppointmentForm');
+  };
+
   const panResponders = animations.map((anim, index) =>
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -75,7 +72,7 @@ const Home = () => {
   );
 
   return (
-    <SafeAreaView style={commonStyle.CONTAINER}>
+    <View style={commonStyle.CONTAINER}>
       {/* 사용자 프로필 */}
       <Profile />
 
@@ -113,10 +110,10 @@ const Home = () => {
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.plusBtn}
-        onPress={() => {}}>
+        onPress={handleMoveToAppointment}>
         <PulsSvg color="#FFF" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

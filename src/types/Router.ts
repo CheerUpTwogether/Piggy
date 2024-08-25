@@ -45,6 +45,7 @@ export type RootStackParamList = {
   Friends: undefined;
   Alarm: undefined;
   PiggyShop: undefined;
+  AppointmentForm: undefined;
 };
 
 export type MainHeaderProps = {

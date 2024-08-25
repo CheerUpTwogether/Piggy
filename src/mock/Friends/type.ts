@@ -26,4 +26,5 @@ export interface ProfileDetailProps {
   completed_appointments: number;
   profile_image_path: string;
   friend: boolean | undefined;
+  closeModal: () => void;
 }

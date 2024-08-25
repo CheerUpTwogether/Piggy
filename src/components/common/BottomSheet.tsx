@@ -16,12 +16,16 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   component,
   isShow,
   setIsShow,
+  onClose,
   size,
 }) => {
   // Modal 종료 애니메이션 및 상태 변경(false)
   const closeModal = () => {
     closeBottomSheet.start(() => {
       setIsShow(false);
+      if (onClose) {
+        onClose();
+      }
     });
   };
 
@@ -98,7 +102,9 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
           <View style={styles.bottomSheetTopBarWrapper}>
             <View style={styles.bottomSheetTopBar} />
           </View>
-          <View style={styles.bottomSheetContentsWrapper}>{component}</View>
+          <View style={styles.bottomSheetContentsWrapper}>
+            {component ? component({closeModal}) : null}
+          </View>
         </Animated.View>
       </View>
     </Modal>

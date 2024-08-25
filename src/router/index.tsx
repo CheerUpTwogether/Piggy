@@ -32,6 +32,7 @@ import GiftFriend from '@/pages/gift/GiftFriend';
 import GiftAmount from '@/pages/gift/GiftAmount';
 import Alarm from '@/pages/alarm/Alarm';
 import PiggyShop from '@/components/piggy/PiggyShop';
+import AppointmentForm from '@/pages/home/AppointmentForm';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -241,6 +242,15 @@ const Router = () => {
           header: Header,
           headerLeftLabelVisible: true,
           title: '피기 상점',
+        }}
+      />
+      <Stack.Screen
+        name="AppointmentForm"
+        component={AppointmentForm}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+          title: '약속 잡기',
         }}
       />
     </Stack.Navigator>

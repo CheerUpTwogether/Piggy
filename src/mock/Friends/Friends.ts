@@ -151,4 +151,74 @@ export const dummy_friends_data: Friend[] = [
     nick_name: 'Jonver',
     friend: true,
   },
+  {
+    uuid: '21',
+    profile_image_path:
+      'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
+    nick_name: 'TestUser1',
+    friend: true,
+  },
+  {
+    uuid: '22',
+    profile_image_path:
+      'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
+    nick_name: 'TestUser2',
+    friend: true,
+  },
+  {
+    uuid: '23',
+    profile_image_path:
+      'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
+    nick_name: 'TestUser3',
+    friend: true,
+  },
+  {
+    uuid: '24',
+    profile_image_path:
+      'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
+    nick_name: 'TestUser4',
+    friend: true,
+  },
+  {
+    uuid: '25',
+    profile_image_path:
+      'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
+    nick_name: 'TestUser5',
+    friend: true,
+  },
+  {
+    uuid: '26',
+    profile_image_path:
+      'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
+    nick_name: 'TestUser6',
+    friend: true,
+  },
+  {
+    uuid: '27',
+    profile_image_path:
+      'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
+    nick_name: 'TestUser7',
+    friend: true,
+  },
+  {
+    uuid: '28',
+    profile_image_path:
+      'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
+    nick_name: 'TestUser8',
+    friend: true,
+  },
+  {
+    uuid: '29',
+    profile_image_path:
+      'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
+    nick_name: 'TestUser9',
+    friend: true,
+  },
+  {
+    uuid: '30',
+    profile_image_path:
+      'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
+    nick_name: 'TestUser10',
+    friend: true,
+  },
 ];
