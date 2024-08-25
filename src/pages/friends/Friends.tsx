@@ -56,7 +56,9 @@ const Friends = () => {
 
   // 특정 행을 열거나 닫는 함수
   const handleRowToggle = async (index: number) => {
-    if (isAnimating) setIsAnimating(true);
+    if (isAnimating) {
+      setIsAnimating(true);
+    }
 
     if (openRowIndex === index) {
       await toggleRowAnimation(index, 0); // 현재 열린 행 닫기

@@ -10,18 +10,17 @@ import PulsSvg from '@/assets/icons/plus.svg';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {useNavigation} from '@react-navigation/native';
+import TabBar from '@/components/common/TabBar';
 
 const Home = () => {
+  const categories = [
+    {label: '미래 약속', value: 'next'},
+    {label: '지난 약속', value: 'prev'},
+  ];
   const [sort, setSort] = useState('next');
   const [activeIndex, setActiveIndex] = useState<number | null>(null); // 현재 활성화된 슬라이드의 인덱스
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const tabText = (value: string) => {
-    if (value === sort) {
-      return commonStyle.MEDIUM_PRIMARY_16;
-    }
-    return commonStyle.REGULAR_77_16;
-  };
   const animations = useRef(
     appointments.map(() => new Animated.ValueXY({x: 0, y: 0})),
   ).current;
@@ -79,18 +78,7 @@ const Home = () => {
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
-        <TouchableOpacity
-          style={styles.tabBtn}
-          onPress={() => setSort('next')}
-          activeOpacity={0.8}>
-          <Text style={tabText('next')}>미래 약속</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tabBtn}
-          onPress={() => setSort('prev')}
-          activeOpacity={0.8}>
-          <Text style={tabText('prev')}>지난 약속</Text>
-        </TouchableOpacity>
+        <TabBar categories={categories} active={sort} onChange={setSort} />
       </View>
 
       {/* 약속 리스트 */}
@@ -132,7 +120,6 @@ const Home = () => {
 const styles = StyleSheet.create({
   tab: {
     marginTop: 40,
-    flexDirection: 'row',
     borderBlockColor: color_ef,
     borderBottomWidth: 1,
     marginHorizontal: -16,

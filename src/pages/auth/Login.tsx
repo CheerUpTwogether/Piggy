@@ -1,11 +1,14 @@
 import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
 import {commonStyle} from '@/styles/common';
-
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '@/types/Router';
 import KakaoSvg from '@/assets/icons/kakao.svg';
 const logo = require('@/assets/icons/logo.png');
 
 const Login = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   return (
     <View style={commonStyle.container}>
       <View style={style.wrapper}>
@@ -24,7 +27,12 @@ const Login = () => {
           </Text>
         </View>
         <View style={style.loginWrapper}>
-          <TouchableOpacity activeOpacity={0.8} style={style.social}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={style.social}
+            onPress={() => {
+              navigation.navigate('LoginDetail');
+            }}>
             <KakaoSvg width={33} height={33} />
             <Text style={style.socialText}>카카오로 로그인</Text>
           </TouchableOpacity>

@@ -5,16 +5,20 @@ import {RadioButtonProps} from 'types/Common';
 /*
   isChecked : 상태 값
   setIsChecked : 상태 변경 함수
+  onPress : 눌렀을때 추가 처리 로직
   activeColor : 활성화 시 컬러
 */
 
 const RadioButton: React.FC<RadioButtonProps> = ({
   isChecked,
   setIsChecked,
+  onPress,
   activeColor = '#ED423F',
 }) => {
   const isCheckedRef = useRef(isChecked);
-  const checkAnimatedValue = useRef(new Animated.Value(0)).current;
+  const checkAnimatedValue = useRef(
+    new Animated.Value(Number(isChecked)),
+  ).current;
 
   const checkAnimated = (
     value: number,
@@ -28,6 +32,9 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   };
 
   const onCheck = () => {
+    if (onPress) {
+      onPress();
+    }
     setIsChecked(!isChecked);
     checkAnimated(Number(!isChecked), checkAnimatedValue).start();
     isCheckedRef.current = !isChecked;

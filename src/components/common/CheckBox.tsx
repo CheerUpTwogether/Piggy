@@ -5,17 +5,23 @@ import {CheckBoxProps} from 'types/Common';
 /*
   isChecked : 상태 값
   setIsChecked : 상태 변경 함수
+  onPress : 눌렀을때 추가 처리 로직
   activeColor : 활성화 시 컬러
 */
 
 const CheckBox: React.FC<CheckBoxProps> = ({
   isChecked,
   setIsChecked,
+  onPress,
   activeColor = '#ED423F',
 }) => {
   const isCheckedRef = useRef(isChecked);
-  const checkAnimatedValue = useRef(new Animated.Value(0)).current;
-  const borderAnimatedValue = useRef(new Animated.Value(0)).current;
+  const checkAnimatedValue = useRef(
+    new Animated.Value(Number(isChecked)),
+  ).current;
+  const borderAnimatedValue = useRef(
+    new Animated.Value(Number(isChecked)),
+  ).current;
   const checkAnimated = (
     value: number,
     animatedValue: Animated.Value,
@@ -28,6 +34,9 @@ const CheckBox: React.FC<CheckBoxProps> = ({
   };
 
   const onCheck = () => {
+    if (onPress) {
+      onPress();
+    }
     setIsChecked(!isChecked);
     checkAnimated(Number(!isChecked), checkAnimatedValue).start();
     checkAnimated(Number(!isChecked), borderAnimatedValue).start();
@@ -62,18 +71,18 @@ const CheckBox: React.FC<CheckBoxProps> = ({
 
 const styles = StyleSheet.create({
   checkBoxContainer: {
-    width: 28,
-    height: 28,
+    width: 24,
+    height: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkBoxWrapper: {
-    width: 24,
-    height: 24,
-    borderRadius: 6,
+    width: 20,
+    height: 20,
+    borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
+    borderWidth: 1,
   },
   checkBoxIcon: {
     fontWeight: 'bold',
