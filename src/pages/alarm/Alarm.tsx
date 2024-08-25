@@ -81,7 +81,7 @@ const Icon = ({type}: {type: AlarmType}) => {
       return <GradeSvg width={24} height={20} color="#aaa" />;
   }
 };
-const RenderItem = ({item}: {item: Alram}) => {
+const renderItem = ({item}: {item: Alram}) => {
   return (
     <View style={styles.itemContainer}>
       <View style={styles.iconContainer}>
@@ -109,7 +109,7 @@ const Alarm = () => {
       </View>
       <FlatList
         data={alarms.filter(el => el.category === active)}
-        renderItem={RenderItem}
+        renderItem={renderItem}
       />
     </View>
   );
