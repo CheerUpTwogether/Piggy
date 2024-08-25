@@ -43,6 +43,7 @@ export type RootStackParamList = {
   NoticeBoardDetail: dummyNoticeItem;
   PiggyUsage: undefined;
   Friends: undefined;
+  Alarm: undefined;
   PiggyShop: undefined;
 };
 

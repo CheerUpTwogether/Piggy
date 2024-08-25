@@ -12,13 +12,29 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {dummyGoodsItem} from '@/mock/Goods/types';
 import {dummyGoodsItemData} from '@/mock/Goods/Goods';
-import {RootStackParamList} from '@/types/Router';
-import {StackNavigationProp} from '@react-navigation/stack';
+import TabBar from '@/components/common/TabBar';
 
 const Goods = () => {
-  const categories = ['전체', '패스트푸드', '카페', '스낵'];
-  const [selectedCategory, setSelectedCategory] = useState('전체');
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const categories = [
+    {
+      label: '전체',
+      value: 'all',
+    },
+    {
+      label: '패스트푸드',
+      value: 'fastfood',
+    },
+    {
+      label: '카페',
+      value: 'cafe',
+    },
+    {
+      label: '스낵',
+      value: 'snack',
+    },
+  ];
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const navigation = useNavigation();
 
   const gotoDetail = (item: dummyGoodsItem) => {
     navigation.navigate('GoodsDetail', {...item});
@@ -78,20 +94,11 @@ const Goods = () => {
       </View>
 
       <View style={styles.categoryContainer}>
-        {categories.map(category => (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            key={category}
-            onPress={() => setSelectedCategory(category)}>
-            <Text
-              style={[
-                styles.categoryTitle,
-                selectedCategory === category && {color: '#ED423F'},
-              ]}>
-              {category}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        <TabBar
+          categories={categories}
+          active={selectedCategory}
+          onChange={setSelectedCategory}
+        />
       </View>
 
       <View style={{height: 1, backgroundColor: '#DDD'}} />

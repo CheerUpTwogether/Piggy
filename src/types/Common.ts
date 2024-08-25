@@ -116,6 +116,11 @@ export interface SideSlideModalProps {
   children?: React.ReactElement;
   size?: number;
 }
+export interface TabBarProps {
+  categories: {label: string; value: string}[];
+  active: string;
+  onChange: (value: string) => void;
+}
 export type KeyPadItemType =
   | '1'
   | '2'

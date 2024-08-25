@@ -46,11 +46,17 @@ const Title = ({title}: {title: string}) => {
   );
 };
 
-const Alarm = () => (
-  <TouchableOpacity style={styles.icon}>
-    <AlertSvg style={styles.svg} />
-  </TouchableOpacity>
-);
+const Alarm = () => {
+  const navigation = useNavigation<NavigationProp>();
+  return (
+    <TouchableOpacity
+      style={styles.icon}
+      activeOpacity={0.8}
+      onPress={() => navigation.navigate('Alarm')}>
+      <AlertSvg width={24} height={24} />
+    </TouchableOpacity>
+  );
+};
 
 type NavigationProp = StackNavigationProp<RootStackParamList>;
 const RightItems = ({name}: {name: string}) => {

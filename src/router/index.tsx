@@ -30,6 +30,7 @@ import LoginDetail from '@/pages/auth/LoginDetail';
 import PiggyUsage from '@/pages/piggy/PiggyUsage';
 import GiftFriend from '@/pages/gift/GiftFriend';
 import GiftAmount from '@/pages/gift/GiftAmount';
+import Alarm from '@/pages/alarm/Alarm';
 import PiggyShop from '@/components/piggy/PiggyShop';
 
 const Stack = createStackNavigator();
@@ -222,6 +223,15 @@ const Router = () => {
           header: Header,
           headerLeftLabelVisible: true,
           title: '피기 선물',
+        }}
+      />
+      <Stack.Screen
+        name="Alarm"
+        component={Alarm}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+          title: '알림',
         }}
       />
       <Stack.Screen
