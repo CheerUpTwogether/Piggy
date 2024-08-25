@@ -1,11 +1,12 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {commonStyle} from '@/styles/common';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, RouteProp} from '@react-navigation/native';
 import Button from '../common/Button';
+import {RootStackParamList} from '@/types/Router';
 
 const GoodsDetail = () => {
-  const route = useRoute();
+  const route = useRoute<RouteProp<RootStackParamList, 'GoodsDetail'>>();
   const {id, provider, title, sub_title, price, expire_date, goods_url} =
     route.params;
   return (

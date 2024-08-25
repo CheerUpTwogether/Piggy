@@ -1,12 +1,13 @@
 import React from 'react';
 import {Image, Text, View} from 'react-native';
 import {commonStyle} from '@/styles/common';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, RouteProp} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {splitStringByDot} from '@/utils/splitStringByDot';
+import {RootStackParamList} from '@/types/Router';
 
 const NoticeBoardDetail = () => {
-  const route = useRoute();
+  const route = useRoute<RouteProp<RootStackParamList, 'NoticeBoardDetail'>>();
   const {id, title, content, content_url, create_date} = route.params;
 
   return (

@@ -58,7 +58,7 @@ const Alarm = () => {
   );
 };
 
-type NavigationProp = StackNavigationProp<RootStackParamList, 'FriendSearch'>;
+type NavigationProp = StackNavigationProp<RootStackParamList>;
 const RightItems = ({name}: {name: string}) => {
   const navigation = useNavigation<NavigationProp>();
   const {gotoProfile} = useUserStore();
@@ -102,7 +102,9 @@ const RightItems = ({name}: {name: string}) => {
             <Text style={styles.text}>500</Text>
             <Text style={[styles.text, styles.colorRed]}>P</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.icon}>
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => navigation.navigate('GoodsStorage')}>
             <GoodsBoxSvg style={styles.svg} />
           </TouchableOpacity>
           <Alarm />

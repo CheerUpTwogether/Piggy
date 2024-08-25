@@ -67,10 +67,12 @@ const Settings = () => {
         </View>
       </View>
 
-      <View style={{gap: 48}}>
+      <View style={{gap: 28}}>
         <View style={{gap: 16}}>
           <Text style={commonStyle.MEDIUM_AA_14}>서비스 소식</Text>
-          <TouchableOpacity activeOpacity={0.8}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('NoticeBoard')}>
             <Text style={commonStyle.MEDIUM_33_16}>공지사항</Text>
           </TouchableOpacity>
         </View>
@@ -82,13 +84,28 @@ const Settings = () => {
             onPress={() => navigation.navigate('HelpDesk')}>
             <Text style={commonStyle.MEDIUM_33_16}>문의하기</Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('FAQBoard')}>
             <Text style={commonStyle.MEDIUM_33_16}>FAQ</Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8}>
-            <Text style={commonStyle.MEDIUM_33_16}>이용약관</Text>
+        </View>
+
+        <View style={{gap: 16}}>
+          <Text style={commonStyle.MEDIUM_AA_14}>이용약관</Text>
+
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('ServiceAgreement')}>
+            <Text style={commonStyle.MEDIUM_33_16}>서비스</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('PaymentAgreement')}>
+            <Text style={commonStyle.MEDIUM_33_16}>결제</Text>
           </TouchableOpacity>
         </View>
+
         <View style={{gap: 16}}>
           <Text style={commonStyle.MEDIUM_AA_14}>알림 센터</Text>
           <View style={styles.alertContainer}>

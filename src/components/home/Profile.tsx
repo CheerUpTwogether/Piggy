@@ -34,7 +34,12 @@ const Profile = () => {
           theme="outline"
           size="sm"
         />
-        <Button text="충전하기" onPress={() => {}} theme="outline" size="sm" />
+        <Button
+          text="충전하기"
+          onPress={() => navigation.navigate('PiggyShop')}
+          theme="outline"
+          size="sm"
+        />
       </View>
     </View>
   );

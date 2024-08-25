@@ -4,12 +4,14 @@ import {SvgProps} from 'react-native-svg';
 export interface CheckBoxProps {
   isChecked: boolean;
   setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  onPress?: () => void;
   activeColor?: string;
 }
 
 export interface RadioButtonProps {
   isChecked: boolean;
   setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  onPress?: () => void;
   activeColor?: string;
 }
 
@@ -20,7 +22,8 @@ export interface ToggleProps {
 }
 
 export interface UserStore {
-  userData: any[];
+  userData: {isAgree: {service: boolean; payment: boolean}};
+  setIsAgree: (key: keyof UserStore['userData']['isAgree']) => void;
   gotoProfile: () => void;
   setGotoProfile: (func: () => void) => void;
 }
@@ -113,9 +116,30 @@ export interface SideSlideModalProps {
   children?: React.ReactElement;
   size?: number;
 }
-
 export interface TabBarProps {
   categories: {label: string; value: string}[];
   active: string;
   onChange: (value: string) => void;
+}
+export type KeyPadItemType =
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '00'
+  | '0'
+  | 'deleteButton';
+export interface KeyPadProps {
+  onPress: (item: KeyPadItemType) => void;
+}
+
+export interface ProgressBarProps {
+  totalStep: number;
+  nowStep: number;
+  progress?: boolean;
 }

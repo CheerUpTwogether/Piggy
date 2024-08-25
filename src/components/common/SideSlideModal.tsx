@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {commonStyle} from '@/styles/common';
 import CancleSvg from '@/assets/icons/X.svg';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
@@ -79,7 +80,7 @@ const SideSlideModal: React.FC<SideSlideModalProps> = ({
           },
         ]}>
         <View style={styles.topBarContainer}>
-          <Text style={styles.topBartitle}>{title}</Text>
+          <Text style={commonStyle.REGULAR_77_18}>{title}</Text>
           <TouchableOpacity
             style={styles.cancleContainer}
             onPress={() => setIsShow(false)}>
@@ -117,10 +118,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 22,
     paddingRight: 22,
-  },
-  topBartitle: {
-    fontSize: 18,
-    fontFamily: 'NotoSansKR-Regular',
   },
   cancleContainer: {
     width: 24,

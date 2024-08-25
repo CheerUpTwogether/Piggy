@@ -9,3 +9,8 @@ export interface PiggyUsageHistoryProps {
   appointment_title?: string;
   image_url?: string;
 }
+
+export interface PiggyShopListProps {
+  id: number;
+  price: number;
+}

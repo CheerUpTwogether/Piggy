@@ -5,11 +5,13 @@ import {dummyNoticeItemData} from '@/mock/NoticeBoard/NoticeBoard';
 import {dummyNoticeItem} from '@/mock/NoticeBoard/types';
 import {commonStyle} from '@/styles/common';
 import {splitStringByDot} from '@/utils/splitStringByDot';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '@/types/Router';
 
 const NoticeBoard = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const gotoNoticeBoardDetail = item => {
+  const gotoNoticeBoardDetail = (item: dummyNoticeItem) => {
     navigation.navigate('NoticeBoardDetail', {...item});
   };
 

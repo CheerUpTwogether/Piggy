@@ -1,4 +1,4 @@
-import {PiggyUsageHistoryProps} from './type';
+import {PiggyShopListProps, PiggyUsageHistoryProps} from './type';
 
 export const piggyUsageHistories: PiggyUsageHistoryProps[] = [
   {
@@ -45,5 +45,32 @@ export const piggyUsageHistories: PiggyUsageHistoryProps[] = [
     amount: 157000,
     date: '2024년 8월 01일',
     time: '14시 31분',
+  },
+];
+
+export const piggyShopList: PiggyShopListProps[] = [
+  {
+    id: 1,
+    price: 1000,
+  },
+  {
+    id: 1,
+    price: 5000,
+  },
+  {
+    id: 1,
+    price: 7000,
+  },
+  {
+    id: 3,
+    price: 10000,
+  },
+  {
+    id: 4,
+    price: 15000,
+  },
+  {
+    id: 5,
+    price: 20000,
   },
 ];
