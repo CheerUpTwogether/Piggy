@@ -7,6 +7,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useUserStore} from '@/store/store';
+import {getGifticon} from '@/api/kakao/gift';
 
 const Settings = () => {
   const [isOn, setIsOn] = useState(false);
@@ -18,6 +19,18 @@ const Settings = () => {
     setIsOn(!isOn);
   };
 
+  const handlegift = async () => {
+    try {
+      const res = await getGifticon(
+        'aFdWWThTZ3N3NHBZbG04aGtPdVczNHJ2RnRSNEt3WDBDRW5XUU8xY1l1YVZoemt3NG04bmRFUHZpUGlTVWNDNQ',
+        '010-7162-5172',
+      );
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     setGotoProfile(gotoProfile);
   }, []);
@@ -27,6 +40,13 @@ const Settings = () => {
   };
   return (
     <View style={commonStyle.CONTAINER}>
+      <TouchableOpacity onPress={() => handlegift()}>
+        <Text>배고파</Text>
+      </TouchableOpacity>
+      <Text> . </Text>
+      <TouchableOpacity onPress={() => handlegift()}>
+        <Text>배고2</Text>
+      </TouchableOpacity>
       <View style={{flexDirection: 'row', gap: 18, alignItems: 'center'}}>
         <TouchableOpacity activeOpacity={0.8} onPress={() => gotoProfile()}>
           <Image
