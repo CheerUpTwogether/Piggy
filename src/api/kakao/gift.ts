@@ -9,21 +9,21 @@ export const getGifticon = async (
     const response = await axios.post(
       'https://gateway-giftbiz.kakao.com/openapi/giftbiz/v1/template/order',
       {
-        data: {
-          template_token: template_token,
-          receiver_type: 'PHONE',
-          receivers: [
-            {
-              name: '강현',
-              receiver_id: phone_number,
-              sender_name: '피기',
-              mc_text: '축하드려요',
-            },
-          ],
-          external_order_id: 'string', //요렇게 넣고 테스트 해볼까요? 아무값이나 괜춘한거 같아요
-        },
+        template_token: template_token,
+        receiver_type: 'PHONE',
+        receivers: [
+          {
+            name: '강현',
+            receiver_id: phone_number,
+            sender_name: '피기',
+            mc_text: '축하드려요',
+          },
+        ],
+        external_order_id: 'string', //요렇게 넣고 테스트 해볼까요? 아무값이나 괜춘한거 같아요
+      },
+      {
         headers: {
-          Authorization: `KakaoAK 96dc70e0d4196ce4d0643928cd4aaf84`,
+          Authorization: 'KakaoAK 96dc70e0d4196ce4d0643928cd4aaf84',
         },
       },
     );
@@ -60,7 +60,7 @@ export const sendGift2 = async () => {
     // Axios 요청
     const response = await axios.post(url, requestData, {
       headers: {
-        Authorization: `KakaoAK 96dc70e0d4196ce4d0643928cd4aaf84`, // API Key
+        Authorization: 'KakaoAK 96dc70e0d4196ce4d0643928cd4aaf84', // API Key
         'Content-Type': 'application/json', // 요청의 Content-Type
       },
     });

@@ -23,7 +23,7 @@ const Settings = () => {
     try {
       const res = await getGifticon(
         'aFdWWThTZ3N3NHBZbG04aGtPdVczNHJ2RnRSNEt3WDBDRW5XUU8xY1l1YVZoemt3NG04bmRFUHZpUGlTVWNDNQ',
-        '010-7162-5172',
+        '010-9156-2464',
       );
       console.log(res);
     } catch (e) {
