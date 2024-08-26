@@ -7,7 +7,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useUserStore} from '@/store/store';
-import {getGifticon} from '@/api/kakao/gift';
+import {getGiftcons, getGifticon} from '@/api/kakao/gift';
 
 const Settings = () => {
   const [isOn, setIsOn] = useState(false);
@@ -19,6 +19,9 @@ const Settings = () => {
     setIsOn(!isOn);
   };
 
+  useEffect(() => {
+    getGiftcons();
+  }, []);
   const handlegift = async () => {
     try {
       const res = await getGifticon(
