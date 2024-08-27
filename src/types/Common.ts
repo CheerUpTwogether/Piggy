@@ -1,4 +1,4 @@
-import {GestureResponderEvent} from 'react-native';
+import {GestureResponderEvent, KeyboardTypeOptions} from 'react-native';
 import {SvgProps} from 'react-native-svg';
 
 export interface CheckBoxProps {
@@ -109,6 +109,20 @@ export interface InputBoxProps {
   isLarge?: boolean;
   icon: React.FC<SvgProps>;
   goBack?: boolean;
+  disable?: boolean;
+  label?: string;
+  msg?: string;
+  msgColor?: string;
+  keyboardType?: KeyboardTypeOptions;
+  maxLength?: number;
+  readOnly?: boolean;
+
+  style?: object;
+  btn?: {
+    btnText: string;
+    onPress: ((event: GestureResponderEvent) => void) & (() => void);
+    disable: boolean;
+  };
 }
 
 export interface SideSlideModalProps {
