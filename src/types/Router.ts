@@ -35,6 +35,7 @@ export type RootStackParamList = {
   LoginDetail: undefined;
   EditProfile: User;
   HelpDesk: undefined;
+  HelpHistory: undefined;
   NoticeBoard: undefined;
   FAQBoard: undefined;
   GoodsStorage: undefined;

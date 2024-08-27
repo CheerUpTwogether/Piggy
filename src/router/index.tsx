@@ -24,6 +24,7 @@ import FriendSearch from '@/pages/friends/FriendSearch';
 import AppointmentDetail from '@/pages/home/AppointmentDetail';
 import EditProfile from '@/components/setting/EditProfile';
 import HelpDesk from '@/components/setting/HelpDesk';
+import HelpHistory from '@/components/setting/HelpHistory';
 import ServiceAgreement from '@/components/userAgreement/ServiceAgreement';
 import PaymentAgreement from '@/components/userAgreement/PaymentAgreement';
 import LoginDetail from '@/pages/auth/LoginDetail';
@@ -177,6 +178,15 @@ const Router = () => {
           header: Header,
           headerLeftLabelVisible: true,
           title: '문의하기',
+        }}
+      />
+      <Stack.Screen
+        name="HelpHistory"
+        component={HelpHistory}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+          title: '문의내역',
         }}
       />
       <Stack.Screen
