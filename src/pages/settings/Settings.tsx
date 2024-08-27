@@ -1,11 +1,11 @@
-import ToggleButton from '@/components/common/ToggleButton';
-import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
-import {commonStyle} from '@/styles/common';
-import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '@/types/Router';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '@/types/Router';
+import {commonStyle} from '@/styles/common';
+import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
+import ToggleButton from '@/components/common/ToggleButton';
 import {useUserStore} from '@/store/store';
 
 const Settings = () => {
@@ -78,13 +78,8 @@ const Settings = () => {
 
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => navigation.navigate('HelpDesk')}>
-            <Text style={commonStyle.MEDIUM_33_16}>문의하기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.8}
             onPress={() => navigation.navigate('HelpHistory')}>
-            <Text style={commonStyle.MEDIUM_33_16}>문의내역</Text>
+            <Text style={commonStyle.MEDIUM_33_16}>1 : 1 문의</Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
