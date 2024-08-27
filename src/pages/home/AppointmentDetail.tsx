@@ -18,7 +18,8 @@ const AppointmentDetail = () => {
   const route = useRoute();
   const [isShow, setIsShow] = useState(false);
   const item = route.params as AppointmentProps;
-  const textColor = item.isCanceled
+  const cancelStatus = ['cancelled', 'expired'];
+  const textColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.REGULAR_AA_16
     : commonStyle.REGULAR_33_16;
   return (
@@ -38,32 +39,36 @@ const AppointmentDetail = () => {
           <View>
             <View style={styles.infoSentence}>
               <LocationSvg color="#777" style={styles.svg} />
-              <Text style={textColor}>{item.location}</Text>
+              <Text style={textColor}>{item.place_name}</Text>
             </View>
             <View style={styles.infoSentence}>
               <DateSvg color="#777" style={styles.svg} />
-              <Text style={textColor}>{item.date}</Text>
+              <Text style={textColor}>
+                {item.appointment_date.split(' ')[0]}
+              </Text>
             </View>
             <View style={styles.infoSentence}>
               <TimeSvg color="#777" style={styles.svg} />
-              <Text style={textColor}>{item.time}</Text>
+              <Text style={textColor}>
+                {item.appointment_date.split(' ')[1]}
+              </Text>
             </View>
             <View style={styles.infoSentence}>
               <CoinSvg color="#777" style={styles.svg} />
               <Text
                 style={[
-                  item.isCanceled
+                  cancelStatus.includes(item.appointment_status)
                     ? commonStyle.BOLD_AA_16
-                    : commonStyle.BOLD_33_16,
+                    : commonStyle.BOLD_PRIMARY_16,
                   styles.mr4,
                 ]}>
-                {item.penalty}
+                {item.deal_piggy_count}
               </Text>
               <Text
                 style={
-                  item.isCanceled
-                    ? commonStyle.BOLD_AA_16
-                    : commonStyle.BOLD_PRIMARY_16
+                  cancelStatus.includes(item.appointment_status)
+                    ? commonStyle.REGULAR_AA_16
+                    : commonStyle.REGULAR_33_16
                 }>
                 PIGGY
               </Text>
@@ -75,7 +80,9 @@ const AppointmentDetail = () => {
               onPress={() => {
                 setIsShow(true);
               }}>
-              <FlatItemsFriends images={item.friends.map(el => el.url)} />
+              <FlatItemsFriends
+                images={item.appointment_participants_list.map(el => el.url)}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -84,16 +91,16 @@ const AppointmentDetail = () => {
       <View style={styles.btnArea}>
         <Button
           onPress={() => {}}
-          text={'인증하기'}
-          disable={true}
+          text={'경로찾기'}
+          theme="outline"
           style={{marginBottom: 8}}
         />
-        <Button onPress={() => {}} text={'경로찾기'} theme="outline" />
+        <Button onPress={() => {}} text={'인증하기'} disable={true} />
       </View>
 
       <SideSlideModal isShow={isShow} setIsShow={setIsShow} title="참석자">
         <FlatList
-          data={item.friends}
+          data={item.appointment_participants_list}
           keyExtractor={item => String(item.uid)}
           renderItem={FriendItem}
         />
