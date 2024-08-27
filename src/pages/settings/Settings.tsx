@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Platform,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '@/types/Router';
@@ -13,6 +20,9 @@ const Settings = () => {
   const {setGotoProfile} = useUserStore();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const numberStyle =
+    Platform.OS === 'ios' ? commonStyle.BOLD_33_18 : commonStyle.BOLD_33_22;
 
   const handleToggle = () => {
     setIsOn(!isOn);
@@ -46,19 +56,15 @@ const Settings = () => {
       <View style={styles.dashBoardContainer}>
         <View style={styles.boxWrapper}>
           <Text style={commonStyle.REGULAR_77_14}>친구</Text>
-          <Text style={commonStyle.BOLD_33_22}>
-            {dummy_friends_data.length}
-          </Text>
+          <Text style={numberStyle}>{dummy_friends_data.length}</Text>
         </View>
         <View style={[styles.boxWrapper, styles.totalAppointment]}>
           <Text style={commonStyle.REGULAR_77_14}>전체 약속</Text>
-          <Text style={commonStyle.BOLD_33_22}>
-            {dummy_profile.total_appointments}
-          </Text>
+          <Text style={numberStyle}>{dummy_profile.total_appointments}</Text>
         </View>
         <View style={styles.boxWrapper}>
           <Text style={commonStyle.REGULAR_77_14}>이행 횟수</Text>
-          <Text style={commonStyle.BOLD_33_22}>
+          <Text style={numberStyle}>
             {dummy_profile.completed_appointments}
           </Text>
         </View>
