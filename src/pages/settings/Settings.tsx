@@ -52,13 +52,13 @@ const Settings = () => {
         </View>
         <View style={[styles.boxWrapper, styles.totalAppointment]}>
           <Text style={commonStyle.REGULAR_77_14}>전체 약속</Text>
-          <Text style={commonStyle.BOLD_33_20}>
+          <Text style={commonStyle.BOLD_33_22}>
             {dummy_profile.total_appointments}
           </Text>
         </View>
         <View style={styles.boxWrapper}>
           <Text style={commonStyle.REGULAR_77_14}>이행 횟수</Text>
-          <Text style={commonStyle.BOLD_33_20}>
+          <Text style={commonStyle.BOLD_33_22}>
             {dummy_profile.completed_appointments}
           </Text>
         </View>
