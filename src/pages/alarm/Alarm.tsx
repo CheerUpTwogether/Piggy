@@ -60,9 +60,8 @@ const getDesc = ({
 const Icon = ({type}: {type: AlarmType}) => {
   switch (type) {
     case 'getPiggyPanalty':
-      return <CoinSvg color="#333" width={20} height={20} />;
     case 'givePiggyPanalty':
-      return <CoinSvg color="#aaa" width={20} height={20} />;
+      return <CoinSvg color="#333" width={20} height={20} />;
     case 'join':
       return <InviteSvg width={20} height={20} color="#333" />;
     case 'cancel_request':
@@ -78,7 +77,7 @@ const Icon = ({type}: {type: AlarmType}) => {
     case 'getPiggyGift':
       return <GradeSvg width={24} height={20} color="#333" />;
     default:
-      return <GradeSvg width={24} height={20} color="#aaa" />;
+      return <GradeSvg width={24} height={20} color="#333" />;
   }
 };
 const renderItem = ({item}: {item: Alram}) => {
