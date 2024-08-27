@@ -40,34 +40,28 @@ const Goods = () => {
     navigation.navigate('GoodsDetail', {...item});
   };
 
-  const renderHotItem = ({item}: {item: dummyGoodsItem}) => (
-    <TouchableOpacity activeOpacity={0.8} style={styles.hotItemWrapper}>
-      <Image source={{uri: item.goods_url}} style={styles.hotItemImg} />
-    </TouchableOpacity>
-  );
-
   const renderItem = ({item}: {item: dummyGoodsItem}) => (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={{marginVertical: 9, gap: 10}}
+      style={styles.itemContainer}
       onPress={() => gotoDetail(item)}>
-      <View style={styles.itemWrapper}>
-        <Text style={commonStyle.MEDIUM_FF_12}>추천 상품</Text>
-      </View>
       <Image
-        source={{uri: 'https://picsum.photos/120/120'}}
+        source={{uri: item.product_thumb_image_url}}
         style={styles.itemImg}
       />
-      <View style={{marginHorizontal: 10, gap: 2}}>
-        <Text style={commonStyle.MEDIUM_33_14} numberOfLines={1}>
-          {item.title}
+      <View style={{marginHorizontal: 10, gap: 4}}>
+        <Text style={commonStyle.MEDIUM_AA_14} numberOfLines={1}>
+          {item.brand_name}
         </Text>
         <Text style={commonStyle.MEDIUM_33_16} numberOfLines={1}>
-          {item.price.toLocaleString()}원
+          {item.product_name}
         </Text>
-        <Text style={commonStyle.MEDIUM_AA_12} numberOfLines={1}>
-          {item.sub_title}
-        </Text>
+        <View style={styles.priceWrapper}>
+          <Text style={commonStyle.MEDIUM_33_16} numberOfLines={1}>
+            {item.product_price.toLocaleString()}
+          </Text>
+          <Text style={commonStyle.MEDIUM_PRIMARY_16}>Piggy</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -80,18 +74,6 @@ const Goods = () => {
         }}
         style={styles.bannerImg}
       />
-      <Text style={styles.hotTitle}>이런 상품은 어떠신가요? 🔥</Text>
-
-      <View style={{marginHorizontal: 16}}>
-        <FlatList
-          data={dummyGoodsItemData}
-          horizontal={true}
-          bounces={false}
-          keyExtractor={item => item.id}
-          renderItem={renderHotItem}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
 
       <View style={styles.categoryContainer}>
         <TabBar
@@ -103,7 +85,7 @@ const Goods = () => {
 
       <View style={{height: 1, backgroundColor: '#DDD'}} />
 
-      <View style={styles.itemContainer}>
+      <View>
         <FlatList
           data={dummyGoodsItemData}
           bounces={false}
@@ -121,25 +103,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 80,
   },
-  hotTitle: {
-    ...commonStyle.MEDIUM_33_16,
-    marginLeft: 24,
-    marginTop: 14,
-    marginBottom: 16,
-  },
-  hotItemWrapper: {
-    width: 120,
-    height: 120,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    marginHorizontal: 8,
-  },
-  hotItemImg: {
-    width: 120,
-    height: 120,
-    borderRadius: 8,
-  },
   categoryContainer: {
     height: 40,
     flexDirection: 'row',
@@ -153,28 +116,17 @@ const styles = StyleSheet.create({
     ...commonStyle.MEDIUM_77_18,
   },
   itemContainer: {
-    marginTop: 9,
-    paddingBottom: 320,
-    marginHorizontal: 24,
-  },
-  itemWrapper: {
-    width: 70,
-    height: 22,
-    borderRadius: 20,
-    backgroundColor: '#ED423F',
-    position: 'absolute',
-    zIndex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 10,
-    right: 10,
+    marginBottom: 40,
+    gap: 10,
   },
   itemImg: {
     width: '100%',
-    height: 180,
-    borderRadius: 8,
+    height: 260,
     borderColor: '#DDD',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
   },
+  priceWrapper: {flexDirection: 'row', alignItems: 'center', gap: 4},
 });
 
 export default Goods;
