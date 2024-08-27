@@ -31,14 +31,14 @@ const HelpHistory = () => {
       <ScrollView style={commonStyle.CONTAINER}>
         {dummy_Help_list.map(item => (
           <TouchableOpacity
-            key={item.id} // key 속성을 추가해줍니다.
+            key={item.id}
             activeOpacity={0.8}
             style={styles.itemWrapper}
             onPress={() => gotoDetail(item.id.toString())}>
             <Text style={commonStyle.REGULAR_33_18}>{item.subject}</Text>
             <Text style={commonStyle.REGULAR_33_14}>
               {item.contents.length > 20
-                ? `${item.contents.substring(0, 20)}...`
+                ? `${item.contents.substring(0, 30)}...`
                 : item.contents}
             </Text>
 
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   itemWrapper: {
     borderBottomWidth: 1,
     borderBottomColor: '#EFEFEF',
-    paddingVertical: 12,
+    paddingVertical: 18,
     gap: 6,
   },
   itemAnswer: {

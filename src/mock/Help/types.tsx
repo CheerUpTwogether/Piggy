@@ -7,4 +7,5 @@ export interface HelpItem {
   date: string;
   response: boolean;
   response_date: string;
+  response_data: string;
 }
