@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import {
   FlatList,
   Image,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {dummyGoodsItem} from '@/mock/Goods/types';
 import {dummyGoodsItemData} from '@/mock/Goods/Goods';
 import TabBar from '@/components/common/TabBar';
+import {GoodsNavigationProp} from './type';
 
 const Goods = () => {
   const categories = [
@@ -34,7 +34,7 @@ const Goods = () => {
     },
   ];
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const navigation = useNavigation();
+  const navigation = useNavigation<GoodsNavigationProp>();
 
   const gotoDetail = (item: dummyGoodsItem) => {
     navigation.navigate('GoodsDetail', {...item});
@@ -67,7 +67,7 @@ const Goods = () => {
   );
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
+    <View style={styles.container}>
       <Image
         source={{
           uri: 'https://loremflickr.com/320/80/cat​',
@@ -94,11 +94,12 @@ const Goods = () => {
           showsVerticalScrollIndicator={false}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: '#FFF', paddingBottom: 120},
   bannerImg: {
     width: '100%',
     height: 80,

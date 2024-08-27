@@ -8,7 +8,7 @@ import {RootStackParamList} from '@/types/Router';
 const GoodsDetail = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'GoodsDetail'>>();
   const {
-    id,
+    // id,
     brand_name,
     product_name,
     product_price,
