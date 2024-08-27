@@ -1,75 +1,29 @@
-import React, {useRef, useState} from 'react';
-import {View, Text, StyleSheet, Animated, PanResponder} from 'react-native';
-import {commonStyle, color_ef, color_primary} from '@/styles/common';
+import React, {useState} from 'react';
+import {View, StyleSheet, FlatList} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {commonStyle, color_ef, color_primary} from '@/styles/common';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '@/types/Router';
 import {appointments} from '@/mock/Home/Home';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
-import PulsSvg from '@/assets/icons/plus.svg';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '@/types/Router';
-import {useNavigation} from '@react-navigation/native';
 import TabBar from '@/components/common/TabBar';
+import PulsSvg from '@/assets/icons/plus.svg';
 
 const Home = () => {
   const categories = [
-    {label: '미래 약속', value: 'next'},
-    {label: '지난 약속', value: 'prev'},
+    {label: '대기', value: 'pending'},
+    {label: '확정', value: 'confirmed'},
+    {label: '완료', value: 'complete'},
   ];
-  const [sort, setSort] = useState('next');
-  const [activeIndex, setActiveIndex] = useState<number | null>(null); // 현재 활성화된 슬라이드의 인덱스
+  const [sort, setSort] = useState(categories[0].value);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-  const animations = useRef(
-    appointments.map(() => new Animated.ValueXY({x: 0, y: 0})),
-  ).current;
-
-  const resetOthers = (index: number) => {
-    animations.forEach((anim, i) => {
-      if (!index) {
-        navigation.navigate('AppointmentDetail', {...appointments[index]});
-      }
-      if (i !== index) {
-        Animated.spring(anim.x, {
-          toValue: 0,
-          useNativeDriver: false,
-        }).start();
-      }
-    });
-  };
 
   const handleMoveToAppointment = () => {
     navigation.navigate('AppointmentForm');
   };
-
-  const panResponders = animations.map((anim, index) =>
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        setActiveIndex(index);
-        resetOthers(index);
-      },
-      onPanResponderMove: Animated.event([null, {dx: anim.x}], {
-        useNativeDriver: false,
-      }),
-      onPanResponderRelease: (evt, gestureState) => {
-        if (gestureState.dx < -100) {
-          Animated.spring(anim.x, {
-            toValue: -200,
-            useNativeDriver: false,
-          }).start();
-        } else {
-          Animated.spring(anim.x, {
-            toValue: 0,
-            useNativeDriver: false,
-          }).start(() => {
-            setActiveIndex(null);
-          });
-        }
-      },
-    }),
-  );
 
   return (
     <View style={commonStyle.CONTAINER}>
@@ -83,17 +37,13 @@ const Home = () => {
 
       {/* 약속 리스트 */}
       {appointments.length ? (
-        <Animated.FlatList
+        <FlatList
           data={appointments}
           keyExtractor={item => String(item.appointment_id)}
-          renderItem={({item, index}) => (
-            <View style={{height: 100}}>
-              <Animated.View
-                style={[{transform: animations[index].getTranslateTransform()}]}
-                {...panResponders[index].panHandlers}>
-                <AppointmentItem item={item} />
-              </Animated.View>
-            </View>
+          renderItem={({item}) => (
+            <TouchableOpacity onPress={handleMoveToAppointment}>
+              <AppointmentItem item={item} />
+            </TouchableOpacity>
           )}
           style={{marginHorizontal: -16}}
         />

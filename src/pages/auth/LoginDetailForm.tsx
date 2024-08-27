@@ -4,9 +4,10 @@ import {dummy_profile} from '@/mock/Friends/Friends';
 import InputBox from '@/components/common/InputBox';
 import NickNameSvg from '@/assets/icons/nickname.svg';
 import PhoneSvg from '@/assets/icons/phone.svg';
+import EmailSvg from '@/assets/icons/email.svg';
 
 const LoginDetailForm = () => {
-  //const [email, setEmail] = useState('umparumapa@naver.com');
+  const [email, setEmail] = useState('umparumapa@naver.com');
   const [nickName, setNickName] = useState(dummy_profile.nick_name);
   const [phone, setPhone] = useState('');
   const [cetificationNum, setCertificationNum] = useState('');
@@ -15,7 +16,7 @@ const LoginDetailForm = () => {
 
   return (
     <View>
-      {/* <View style={styles.inputContainer}>
+      <View style={styles.inputContainer}>
         <InputBox
           value={email}
           setValue={setEmail}
@@ -24,7 +25,7 @@ const LoginDetailForm = () => {
           isLarge={true}
           label="이메일"
         />
-      </View> */}
+      </View>
 
       <View style={styles.inputContainer}>
         <InputBox
