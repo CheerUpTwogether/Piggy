@@ -23,15 +23,16 @@ const ButtonBottomSheet: React.FC<ButtonBottomSheetProps> = ({
             <TouchableOpacity
               key={index}
               activeOpacity={0.8}
-              onPress={() => {
-                button.onPress();
-                closeModal();
-              }}>
-              <Button text={button.text} theme={button.theme} />
+              onPress={closeModal}>
+              <Button
+                text={button.text}
+                theme={button.theme}
+                onPress={button.onPress}
+              />
             </TouchableOpacity>
           ))}
           <TouchableOpacity activeOpacity={0.8} onPress={closeModal}>
-            <Button key="cancel" text="취소" theme="sub" />
+            <Button text="취소" theme="sub" />
           </TouchableOpacity>
         </View>
       )}

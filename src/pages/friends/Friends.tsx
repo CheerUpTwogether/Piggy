@@ -31,6 +31,13 @@ const Friends = () => {
     friend: false,
   });
 
+  // 친구 목록을 이름순으로 정렬
+  const sortedFriends = dummy_friends_data.sort((a, b) => {
+    const nameA = a.nick_name.toLowerCase();
+    const nameB = b.nick_name.toLowerCase();
+    return nameA.localeCompare(nameB, 'ko');
+  });
+
   // 프로필 클릭 처리
   const handleProfilePress = (user: Friend) => {
     setIsShow(true);
@@ -49,11 +56,6 @@ const Friends = () => {
     setMoreShow(true);
   };
 
-  const handleFixUser = () => {
-    console.log('TODO: 유저 고정 api 호출');
-    setMoreShow(false);
-  };
-
   const handleDeleteUser = () => {
     console.log('TODO: 친구 삭제 모달 -> 삭제 api 호출');
     setMoreShow(false);
@@ -65,11 +67,6 @@ const Friends = () => {
       theme?: 'sub' | 'primary' | 'outline' | undefined;
       onPress: () => void | Promise<void>;
     }> = [
-      {
-        text: '고정',
-        onPress: handleFixUser,
-        theme: 'outline',
-      },
       {
         text: '삭제',
         onPress: handleDeleteUser,
@@ -103,9 +100,9 @@ const Friends = () => {
 
           <View style={styles.friendListWrapper}>
             <Text style={commonStyle.MEDIUM_33_16}>
-              친구 {dummy_friends_data.length}명
+              친구 {sortedFriends.length}명
             </Text>
-            {dummy_friends_data.length === 0 ? (
+            {sortedFriends.length === 0 ? (
               <View style={styles.emptyWrapper}>
                 <EmptyResult
                   reason="추가된 친구가 없어요."
@@ -114,7 +111,7 @@ const Friends = () => {
               </View>
             ) : (
               <View style={styles.friendList}>
-                {dummy_friends_data.map(item => (
+                {sortedFriends.map(item => (
                   <View key={item.uuid} style={styles.swipeContainer}>
                     <View style={styles.friendContainer}>
                       <TouchableOpacity
