@@ -66,7 +66,7 @@ export interface LeftItemProps {
 
 export interface ButtonProps {
   text: string;
-  onPress: ((event: GestureResponderEvent) => void) & (() => void);
+  onPress?: ((event: GestureResponderEvent) => void) & (() => void);
   theme?: 'primary' | 'sub' | 'outline';
   size?: 'full' | 'lg' | 'md' | 'sm';
   disable?: boolean;
@@ -175,4 +175,14 @@ export interface SearchAddressPlaceObjectNew {
 export interface SearchAddressPlace {
   address: SearchAddressPlaceObjectOld;
   road_address: SearchAddressPlaceObjectNew;
+}
+
+export interface ButtonBottomSheetProps {
+  isShow: boolean;
+  setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
+  buttons: Array<{
+    text: string;
+    theme?: 'sub' | 'primary' | 'outline' | undefined;
+    onPress: () => void | Promise<void>;
+  }>;
 }

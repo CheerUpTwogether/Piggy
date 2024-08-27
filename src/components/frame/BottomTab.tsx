@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, SafeAreaView} from 'react-native';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
@@ -15,7 +15,7 @@ const BottomTab: React.FC<BottomTabBarProps> = ({state}) => {
     useNavigation<StackNavigationProp<RootBottomTabParamList>>();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TouchableOpacity
         onPress={() => navigation.navigate('Home')}
         activeOpacity={0.8}
@@ -56,7 +56,7 @@ const BottomTab: React.FC<BottomTabBarProps> = ({state}) => {
           color={state.index === 3 ? '#555' : '#bbb'}
         />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
