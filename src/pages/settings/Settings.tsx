@@ -1,11 +1,18 @@
-import ToggleButton from '@/components/common/ToggleButton';
-import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
-import {commonStyle} from '@/styles/common';
-import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '@/types/Router';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Platform,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '@/types/Router';
+import {commonStyle} from '@/styles/common';
+import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
+import ToggleButton from '@/components/common/ToggleButton';
 import {useUserStore} from '@/store/store';
 
 const Settings = () => {
@@ -13,6 +20,9 @@ const Settings = () => {
   const {setGotoProfile} = useUserStore();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const numberStyle =
+    Platform.OS === 'ios' ? commonStyle.BOLD_33_18 : commonStyle.BOLD_33_22;
 
   const handleToggle = () => {
     setIsOn(!isOn);
@@ -35,39 +45,32 @@ const Settings = () => {
           />
         </TouchableOpacity>
 
-        <View>
+        <View style={{gap: 6}}>
           <Text style={commonStyle.MEDIUM_33_20}>
             {dummy_profile.nick_name}
           </Text>
-          <Text style={commonStyle.REGULAR_AA_14}>{dummy_profile.email}</Text>
+          <Text style={commonStyle.REGULAR_AA_16}>{dummy_profile.email}</Text>
         </View>
       </View>
 
       <View style={styles.dashBoardContainer}>
-        <View
-          style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={commonStyle.REGULAR_33_14}>친구</Text>
-          <Text style={commonStyle.MEDIUM_33_16}>
-            {dummy_friends_data.length}
-          </Text>
+        <View style={styles.boxWrapper}>
+          <Text style={commonStyle.REGULAR_77_14}>친구</Text>
+          <Text style={numberStyle}>{dummy_friends_data.length}</Text>
         </View>
-        <View
-          style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={commonStyle.REGULAR_33_14}>전체 약속</Text>
-          <Text style={commonStyle.MEDIUM_33_16}>
-            {dummy_profile.total_appointments}
-          </Text>
+        <View style={[styles.boxWrapper, styles.totalAppointment]}>
+          <Text style={commonStyle.REGULAR_77_14}>전체 약속</Text>
+          <Text style={numberStyle}>{dummy_profile.total_appointments}</Text>
         </View>
-        <View
-          style={{flexGrow: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={commonStyle.REGULAR_33_14}>이행 횟수</Text>
-          <Text style={commonStyle.MEDIUM_33_16}>
+        <View style={styles.boxWrapper}>
+          <Text style={commonStyle.REGULAR_77_14}>이행 횟수</Text>
+          <Text style={numberStyle}>
             {dummy_profile.completed_appointments}
           </Text>
         </View>
       </View>
 
-      <View style={{gap: 28}}>
+      <View style={{gap: 28, marginLeft: 4}}>
         <View style={{gap: 16}}>
           <Text style={commonStyle.MEDIUM_AA_14}>서비스 소식</Text>
           <TouchableOpacity
@@ -81,8 +84,8 @@ const Settings = () => {
 
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => navigation.navigate('HelpDesk')}>
-            <Text style={commonStyle.MEDIUM_33_16}>문의하기</Text>
+            onPress={() => navigation.navigate('HelpHistory')}>
+            <Text style={commonStyle.MEDIUM_33_16}>1 : 1 문의</Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -135,6 +138,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  boxWrapper: {flexGrow: 1, justifyContent: 'center', alignItems: 'center'},
+  totalAppointment: {
+    borderColor: '#DDD',
+    borderRightWidth: 1,
+    borderLeftWidth: 1,
   },
 });
 
