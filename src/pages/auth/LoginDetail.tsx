@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {commonStyle} from '@/styles/common';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import CheckBox from '@/components/common/CheckBox';
-import RightArrowSvg from '@/assets/icons/rightArrow.svg';
+import {useToastStore, useUserStore} from '@/store/store';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
+import {commonStyle} from '@/styles/common';
 import Button from '@/components/common/Button';
-import {useToastStore, useUserStore} from '@/store/store';
 import LoginDetailForm from './LoginDetailForm';
+import CheckBox from '@/components/common/CheckBox';
+import RightArrowSvg from '@/assets/icons/rightArrow.svg';
 
 const logo = require('@/assets/icons/topLogo.png');
 
