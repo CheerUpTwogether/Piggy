@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
 import {CheckBoxProps} from 'types/Common';
-
+import CheckSvg from '@/assets/icons/check.svg';
 /*
   isChecked : 상태 값
   setIsChecked : 상태 변경 함수
@@ -55,15 +55,17 @@ const CheckBox: React.FC<CheckBoxProps> = ({
             inputRange: [0, 1],
             outputRange: ['#333333', activeColor],
           }),
+          backgroundColor: borderAnimatedValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['#fff', activeColor],
+          }),
         }}>
-        <Animated.Text
+        <Animated.View
           style={{
-            ...styles.checkBoxIcon,
-            color: activeColor,
             opacity: checkAnimatedValue,
           }}>
-          ✓
-        </Animated.Text>
+          <CheckSvg width={16} />
+        </Animated.View>
       </Animated.View>
     </TouchableOpacity>
   );

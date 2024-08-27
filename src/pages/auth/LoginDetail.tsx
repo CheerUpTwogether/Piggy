@@ -1,16 +1,16 @@
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {commonStyle} from '@/styles/common';
-import {useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import CheckBox from '@/components/common/CheckBox';
-import RightArrowSvg from '@/assets/icons/rightArrow.svg';
+import {useToastStore, useUserStore} from '@/store/store';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
+import {commonStyle} from '@/styles/common';
 import Button from '@/components/common/Button';
-import {useToastStore, useUserStore} from '@/store/store';
 import LoginDetailForm from './LoginDetailForm';
+import CheckBox from '@/components/common/CheckBox';
+import RightArrowSvg from '@/assets/icons/rightArrow.svg';
 
-const logo = require('@/assets/icons/logo.png');
+const logo = require('@/assets/icons/topLogo.png');
 
 const LoginDetail = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -58,13 +58,12 @@ const LoginDetail = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{alignItems: 'center'}}>
-        <Image source={logo} style={styles.logoContainer} />
-      </View>
+      <Image source={logo} style={styles.logoContainer} />
+
       <View style={styles.introContainer}>
-        <Text style={{...commonStyle.BOLD_33_20, fontSize: 24}}>시작하기</Text>
+        <Text style={commonStyle.BOLD_33_24}>시작하기</Text>
         <Text style={commonStyle.REGULAR_AA_16}>
-          피기에서 사용할 닉네임을 설정하세요!
+          간단한 정보 입력으로 피기를 시작하세요!
         </Text>
       </View>
       <View style={{gap: 16}}>
@@ -123,12 +122,20 @@ const LoginDetail = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 70,
     paddingHorizontal: 36,
     backgroundColor: '#FFF',
   },
-  logoContainer: {marginLeft: 40, width: 160, height: 62},
-  introContainer: {marginVertical: 42, alignItems: 'center', gap: 12},
+  logoContainer: {
+    height: 32,
+    width: 80,
+    marginLeft: -24,
+    marginVertical: 8,
+  },
+  introContainer: {
+    marginVertical: 42,
+    alignItems: 'center',
+    gap: 12,
+  },
   checkBoxContainer: {
     flexDirection: 'row',
     gap: 8,

@@ -1,65 +1,82 @@
-import {commonStyle} from '@/styles/common';
-import {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import InputBox from '@/components/common/InputBox';
+import React, {useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {dummy_profile} from '@/mock/Friends/Friends';
-import EmailSvg from '@/assets/icons/email.svg';
+import InputBox from '@/components/common/InputBox';
 import NickNameSvg from '@/assets/icons/nickname.svg';
+import PhoneSvg from '@/assets/icons/phone.svg';
 
 const LoginDetailForm = () => {
-  const [email, setEmail] = useState('(TEST) 약관만 모두 동의 후 시작!');
+  //const [email, setEmail] = useState('umparumapa@naver.com');
   const [nickName, setNickName] = useState(dummy_profile.nick_name);
-  const [isError, setIsError] = useState(true);
+  const [phone, setPhone] = useState('');
+  const [cetificationNum, setCertificationNum] = useState('');
+  const [certificationNumberVisible, setCertificationNumberVisible] =
+    useState(false);
 
   return (
     <View>
-      <View style={{gap: 8}}>
-        <Text style={commonStyle.MEDIUM_33_16}>이메일</Text>
+      {/* <View style={styles.inputContainer}>
+        <InputBox
+          value={email}
+          setValue={setEmail}
+          placeholder={'이메일을 입력해주세요.'}
+          icon={EmailSvg}
+          isLarge={true}
+          label="이메일"
+        />
+      </View> */}
 
-        <View style={styles.disableInputContainer}>
-          <View style={styles.disableInputWrapper}>
-            <EmailSvg width={18} height={18} color={'#333'} />
-            <Text style={{...commonStyle.MEDIUM_33_14, marginTop: -3}}>
-              {email}
-            </Text>
-          </View>
-        </View>
-      </View>
-
-      <View style={{gap: 8}}>
-        <Text style={commonStyle.MEDIUM_33_16}>닉네임</Text>
-
+      <View style={styles.inputContainer}>
         <InputBox
           value={nickName}
+          label="닉네임"
           setValue={setNickName}
-          placeholder={'수정하실 닉네임을 입력해주세요.'}
+          placeholder={'닉네임을 입력해주세요.'}
           icon={NickNameSvg}
           isLarge={true}
+          msg="*닉네임은 8글자까지 설정할 수 있습니다"
         />
-        {isError && (
-          <Text style={commonStyle.MEDIUM_PRIMARY_12}>
-            *닉네임은 8글자까지 설정할 수 있습니다
-          </Text>
-        )}
       </View>
+      <InputBox
+        value={phone}
+        label="전화번호"
+        setValue={setPhone}
+        placeholder={'전화번호를 입력해주세요.'}
+        icon={PhoneSvg}
+        isLarge={true}
+        keyboardType="numeric"
+        maxLength={11}
+        btn={{
+          btnText: certificationNumberVisible ? '재전송' : '전송',
+          onPress: () => setCertificationNumberVisible(true),
+          disable: phone.length !== 11,
+        }}
+      />
+
+      {certificationNumberVisible && (
+        <InputBox
+          value={cetificationNum}
+          setValue={setCertificationNum}
+          placeholder={'인증번호를 입력해주세요.'}
+          icon={PhoneSvg}
+          isLarge={true}
+          keyboardType="numeric"
+          maxLength={11}
+          btn={{
+            btnText: '인증',
+            onPress: () => {},
+            disable: true,
+          }}
+          style={{marginTop: -48}}
+        />
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  disableInputContainer: {
-    height: 48,
-    backgroundColor: '#EFEFEF',
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: '#AAA',
-    paddingHorizontal: 22,
-    justifyContent: 'center',
-  },
-  disableInputWrapper: {
-    flexDirection: 'row',
-    gap: 16,
-    alignItems: 'center',
+  inputContainer: {
+    paddingBottom: 12,
   },
 });
 

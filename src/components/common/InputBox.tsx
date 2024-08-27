@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {InputBoxProps} from 'types/Common';
-import {commonStyle} from '@/styles/common';
+import {commonStyle, color_primary} from '@/styles/common';
+import Button from './Button';
 
 const InputBox: React.FC<InputBoxProps> = ({
   value,
@@ -20,6 +21,15 @@ const InputBox: React.FC<InputBoxProps> = ({
   isLarge = true,
   icon: Icon,
   goBack = false,
+  disable = false,
+  label,
+  msg = '',
+  msgColor = color_primary,
+  keyboardType = 'default',
+  maxLength = 1000,
+  readOnly = false,
+  style = {},
+  btn,
 }) => {
   const navigation = useNavigation();
 
@@ -31,41 +41,79 @@ const InputBox: React.FC<InputBoxProps> = ({
     }
   };
 
+  const filterNumber = (text: string) => {
+    setValue(text.replace(/[^0-9]/g, ''));
+  };
+
   return (
-    <View style={styles.View}>
-      <View
-        style={[
-          styles.container,
-          isLarge ? styles.largeContainer : styles.mediumContainer,
-        ]}>
-        <Icon width={18} height={18} color={'#333'} />
-        <TextInput
-          autoCapitalize="none"
-          autoComplete="off"
-          autoCorrect={false}
-          importantForAutofill="no"
-          placeholderTextColor="#AAA"
-          placeholder={placeholder}
-          value={value}
-          onChangeText={setValue}
-          onSubmitEditing={onSubmitEditing}
-          onFocus={onFocus}
-          style={[styles.input, commonStyle.MEDIUM_33_16]}
-        />
+    <View>
+      <Text style={[styles.label, style]}>{label}</Text>
+
+      <View style={styles.View}>
+        <View
+          style={[
+            styles.container,
+            isLarge ? styles.largeContainer : styles.mediumContainer,
+          ]}>
+          <Icon width={18} height={18} color={'#333'} />
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
+            importantForAutofill="no"
+            placeholderTextColor="#AAA"
+            placeholder={placeholder}
+            value={value}
+            onChangeText={keyboardType === 'numeric' ? filterNumber : setValue}
+            onSubmitEditing={onSubmitEditing}
+            onFocus={onFocus}
+            style={[styles.input, commonStyle.MEDIUM_33_16]}
+            editable={!disable}
+            selectTextOnFocus={!disable}
+            keyboardType={keyboardType}
+            maxLength={maxLength}
+            readOnly={readOnly}
+          />
+          {btn && (
+            <Button
+              text={btn.btnText}
+              onPress={btn.onPress}
+              size="sm"
+              theme="outline"
+              style={{marginRight: -16}}
+              disable={btn.disable}
+            />
+          )}
+        </View>
+        {!isLarge && (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.cancelWrapper}
+            onPress={handleCancel}>
+            <Text style={commonStyle.MEDIUM_PRIMARY_16}>취소</Text>
+          </TouchableOpacity>
+        )}
       </View>
-      {!isLarge && (
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.cancelWrapper}
-          onPress={handleCancel}>
-          <Text style={commonStyle.MEDIUM_PRIMARY_16}>취소</Text>
-        </TouchableOpacity>
-      )}
+      <View style={styles.msgContainer}>
+        {msg && (
+          <Text
+            style={[
+              commonStyle.MEDIUM_PRIMARY_12,
+              {padding: 4, color: msgColor},
+            ]}>
+            {msg}
+          </Text>
+        )}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  label: {
+    ...commonStyle.MEDIUM_33_16,
+    paddingBottom: 12,
+  },
   View: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -93,6 +141,13 @@ const styles = StyleSheet.create({
     paddingVertical: Platform.OS === 'android' ? 0 : 10,
   },
   cancelWrapper: {paddingHorizontal: 10},
+  msgContainer: {
+    height: 24,
+  },
+  msg: {
+    ...commonStyle.MEDIUM_PRIMARY_12,
+    padding: 4,
+  },
 });
 
 export default InputBox;
