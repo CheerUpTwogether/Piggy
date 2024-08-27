@@ -37,7 +37,7 @@ const HelpHistory = () => {
   };
 
   const handleDeleteHelp = () => {
-    console.log(`TODO: 아이디가 ${selectedId}인 삭제 모달 -> 삭제 API 호출`);
+    console.log(`TODO: 삭제 API 호출`);
     setMoreShow(false);
   };
 
@@ -66,7 +66,11 @@ const HelpHistory = () => {
             style={styles.itemWrapper}
             onPress={() => gotoDetail(item.id.toString())}>
             <View style={styles.subjectWrapper}>
-              <Text style={commonStyle.REGULAR_33_18}>{item.subject}</Text>
+              <Text style={commonStyle.REGULAR_33_18}>
+                {item.subject.length > 22
+                  ? `${item.subject.substring(0, 20)}...`
+                  : item.subject}
+              </Text>
               <TouchableOpacity
                 style={styles.moreButton}
                 activeOpacity={0.8}
@@ -76,7 +80,7 @@ const HelpHistory = () => {
             </View>
             <Text style={commonStyle.REGULAR_33_14}>
               {item.contents.length > 20
-                ? `${item.contents.substring(0, 30)}...`
+                ? `${item.contents.substring(0, 28)}...`
                 : item.contents}
             </Text>
 
@@ -111,11 +115,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#EFEFEF',
     paddingVertical: 18,
-    gap: 6,
   },
   itemAnswer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 2,
   },
   plusBtn: {
     position: 'absolute',
