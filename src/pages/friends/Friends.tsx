@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
@@ -7,8 +7,6 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  Animated,
-  PanResponder,
 } from 'react-native';
 import EmptyResult from '@/components/common/EmptyResult';
 import BottomSheet from '@/components/common/BottomSheet';
@@ -16,16 +14,14 @@ import ProfileDetail from './ProfileDetail';
 import {commonStyle} from '@/styles/common';
 import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
 import {Friend, User} from '@/mock/Friends/type';
+import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 
 import MoreSvg from '@/assets/icons/more.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
-const SWIPE_STANDARD = -100;
-
 const Friends = () => {
-  const [openRowIndex, setOpenRowIndex] = useState<number | null>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [isShow, setIsShow] = useState(false);
+  const [moreShow, setMoreShow] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Friend | User>({
     uuid: '',
     nick_name: '',
@@ -35,72 +31,8 @@ const Friends = () => {
     friend: false,
   });
 
-  const positions = useRef(
-    dummy_friends_data.map(() => new Animated.Value(0)),
-  ).current;
-
-  // 행 열기/닫기 애니메이션 처리 함수
-  const toggleRowAnimation = (index: number, toValue: number) => {
-    return new Promise<void>(resolve => {
-      Animated.timing(positions[index], {
-        toValue,
-        duration: 100,
-        useNativeDriver: true,
-      }).start(() => {
-        setOpenRowIndex(toValue === 0 ? null : index);
-        setIsAnimating(false);
-        resolve();
-      });
-    });
-  };
-
-  // 특정 행을 열거나 닫는 함수
-  const handleRowToggle = async (index: number) => {
-    if (isAnimating) {
-      setIsAnimating(true);
-    }
-
-    if (openRowIndex === index) {
-      await toggleRowAnimation(index, 0); // 현재 열린 행 닫기
-    } else {
-      if (openRowIndex !== null) {
-        await toggleRowAnimation(openRowIndex, 0); // 이전에 열린 행 닫기
-      }
-      await toggleRowAnimation(index, SWIPE_STANDARD); // 새로운 행 열기
-    }
-  };
-
-  // PanResponder 생성 함수
-  const createPanResponder = (index: number) => {
-    return PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (e, gestureState) => {
-        if (gestureState.dx < 0) {
-          positions[index].setValue(gestureState.dx);
-        }
-      },
-      onPanResponderRelease: async (e, gestureState) => {
-        if (gestureState.dx < SWIPE_STANDARD / 2) {
-          await handleRowToggle(index);
-        } else {
-          await toggleRowAnimation(index, 0); // 현재 행 닫기
-        }
-      },
-    });
-  };
-
-  // More 버튼 클릭 처리
-  const handleMorePress = async (index: number) => {
-    if (!isAnimating) {
-      await handleRowToggle(index);
-    }
-  };
-
   // 프로필 클릭 처리
-  const handleProfilePress = async (user: Friend) => {
-    if (openRowIndex !== null) {
-      await toggleRowAnimation(openRowIndex, 0);
-    }
+  const handleProfilePress = (user: Friend) => {
     setIsShow(true);
     setSelectedUser({
       uuid: user.uuid,
@@ -110,6 +42,41 @@ const Friends = () => {
       profile_image_path: user.profile_image_path,
       friend: user.friend,
     });
+  };
+
+  const handleMorePress = (user: Friend) => {
+    setSelectedUser(user);
+    setMoreShow(true);
+  };
+
+  const handleFixUser = () => {
+    console.log('TODO: 유저 고정 api 호출');
+    setMoreShow(false);
+  };
+
+  const handleDeleteUser = () => {
+    console.log('TODO: 친구 삭제 모달 -> 삭제 api 호출');
+    setMoreShow(false);
+  };
+
+  const createButtonList = () => {
+    const buttons: Array<{
+      text: string;
+      theme?: 'sub' | 'primary' | 'outline' | undefined;
+      onPress: () => void | Promise<void>;
+    }> = [
+      {
+        text: '고정',
+        onPress: handleFixUser,
+        theme: 'outline',
+      },
+      {
+        text: '삭제',
+        onPress: handleDeleteUser,
+      },
+    ];
+
+    return buttons;
   };
 
   return (
@@ -147,14 +114,9 @@ const Friends = () => {
               </View>
             ) : (
               <View style={styles.friendList}>
-                {dummy_friends_data.map((item, index) => (
+                {dummy_friends_data.map(item => (
                   <View key={item.uuid} style={styles.swipeContainer}>
-                    <Animated.View
-                      style={[
-                        styles.friendContainer,
-                        {transform: [{translateX: positions[index]}]},
-                      ]}
-                      {...createPanResponder(index).panHandlers}>
+                    <View style={styles.friendContainer}>
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => handleProfilePress(item)}
@@ -177,51 +139,14 @@ const Friends = () => {
                           {item.nick_name}
                         </Text>
                       </TouchableOpacity>
-                      <Animated.View
-                        style={[
-                          styles.moreButton,
-                          {
-                            transform: [
-                              {
-                                translateX: positions[index].interpolate({
-                                  inputRange: [SWIPE_STANDARD, 0],
-                                  outputRange: [30, 0],
-                                  extrapolate: 'clamp',
-                                }),
-                              },
-                            ],
-                          },
-                        ]}>
-                        <TouchableOpacity
-                          activeOpacity={0.8}
-                          onPress={() => handleMorePress(index)}>
-                          <MoreSvg width={20} height={20} color={'#555'} />
-                        </TouchableOpacity>
-                      </Animated.View>
-                    </Animated.View>
-                    <Animated.View
-                      style={[
-                        styles.deleteButton,
-                        {
-                          transform: [
-                            {
-                              translateX: positions[index].interpolate({
-                                inputRange: [SWIPE_STANDARD, 0],
-                                outputRange: [0, 60],
-                                extrapolate: 'clamp',
-                              }),
-                            },
-                          ],
-                        },
-                      ]}>
+                      {/* <View style={styles.moreButton} > */}
                       <TouchableOpacity
+                        style={styles.moreButton}
                         activeOpacity={0.8}
-                        onPress={() =>
-                          console.log('TODO: 삭제 확인 모달 & 삭제 구현')
-                        }>
-                        <Text style={commonStyle.REGULAR_FF_12}>삭제</Text>
+                        onPress={() => handleMorePress(item)}>
+                        <MoreSvg width={20} height={20} color={'#555'} />
                       </TouchableOpacity>
-                    </Animated.View>
+                    </View>
                   </View>
                 ))}
               </View>
@@ -248,6 +173,13 @@ const Friends = () => {
               />
             )
           }
+        />
+
+        {/* more 버튼 모달 */}
+        <ButtonBottomSheet
+          isShow={moreShow}
+          setIsShow={setMoreShow}
+          buttons={createButtonList()}
         />
       </ScrollView>
     </SafeAreaView>
