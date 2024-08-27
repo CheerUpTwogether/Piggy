@@ -12,7 +12,6 @@ export const alarmDetail = {
   givePiggyPanalty: '약속 벌금이 나갔어요',
   getPiggyGift: '피기를 선물받았어요',
   givePiggyGift: '피기를 선물했어요',
-  chargePiggy: '피기를 충전했어요',
   buyGoods: '상품을 구매했어요',
 };
 
@@ -102,13 +101,6 @@ export const alarms: Alram[] = [
     uid: 2,
     nick_name: '홍길동',
     date: '2024년 6월 30일 12:30',
-    piggy: 5000,
-    category: 'piggy',
-  },
-  {
-    alarm_id: 11,
-    type: 'chargePiggy', // chargePiggy: '피기를 충전했어요',
-    date: '2024년 5월 30일 12:30',
     piggy: 5000,
     category: 'piggy',
   },

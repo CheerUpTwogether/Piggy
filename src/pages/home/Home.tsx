@@ -1,76 +1,92 @@
-import React, {useRef, useState} from 'react';
-import {View, Text, StyleSheet, Animated, PanResponder} from 'react-native';
-import {commonStyle, color_ef, color_primary} from '@/styles/common';
+import React, {useState} from 'react';
+import {View, StyleSheet, FlatList} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {commonStyle, color_ef, color_primary} from '@/styles/common';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '@/types/Router';
 import {appointments} from '@/mock/Home/Home';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
-import PulsSvg from '@/assets/icons/plus.svg';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '@/types/Router';
-import {useNavigation} from '@react-navigation/native';
 import TabBar from '@/components/common/TabBar';
+import PulsSvg from '@/assets/icons/plus.svg';
+import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 
 const Home = () => {
   const categories = [
-    {label: '미래 약속', value: 'next'},
-    {label: '지난 약속', value: 'prev'},
+    {label: '대기', value: 'pending'},
+    {label: '확정', value: 'confirmed'},
+    {label: '완료', value: 'complete'},
   ];
-  const [sort, setSort] = useState('next');
-  const [activeIndex, setActiveIndex] = useState<number | null>(null); // 현재 활성화된 슬라이드의 인덱스
+  const [bottomSheetShow, setBottomSheetShow] = useState(false);
+  const [sort, setSort] = useState(categories[0].value);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-  const animations = useRef(
-    appointments.map(() => new Animated.ValueXY({x: 0, y: 0})),
-  ).current;
-
-  const resetOthers = (index: number) => {
-    animations.forEach((anim, i) => {
-      if (!index) {
-        navigation.navigate('AppointmentDetail', {...appointments[index]});
-      }
-      if (i !== index) {
-        Animated.spring(anim.x, {
-          toValue: 0,
-          useNativeDriver: false,
-        }).start();
-      }
-    });
-  };
 
   const handleMoveToAppointment = () => {
     navigation.navigate('AppointmentForm');
   };
 
-  const panResponders = animations.map((anim, index) =>
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        setActiveIndex(index);
-        resetOthers(index);
-      },
-      onPanResponderMove: Animated.event([null, {dx: anim.x}], {
-        useNativeDriver: false,
-      }),
-      onPanResponderRelease: (evt, gestureState) => {
-        if (gestureState.dx < -100) {
-          Animated.spring(anim.x, {
-            toValue: -200,
-            useNativeDriver: false,
-          }).start();
-        } else {
-          Animated.spring(anim.x, {
-            toValue: 0,
-            useNativeDriver: false,
-          }).start(() => {
-            setActiveIndex(null);
-          });
-        }
-      },
-    }),
-  );
+  const sortData = () => {
+    if (sort === 'pending') {
+      return appointments.filter(el => el.appointment_status === 'pending');
+    } else if (sort === 'confirmed') {
+      const appointment_status = [
+        'confirmed',
+        'cancellation-request',
+        'cancellation-confirmed',
+        'cancellation-rejected',
+        'cancellation-pending',
+      ];
+      return appointments.filter(el =>
+        appointment_status.includes(el.appointment_status),
+      );
+    } else {
+      const appointment_status = ['fulfilled', 'cancelled', 'expired'];
+      return appointments.filter(el =>
+        appointment_status.includes(el.appointment_status),
+      );
+    }
+  };
 
+  // 고정 event
+  const handleFixUser = () => {
+    console.log('TODO: 유저 고정 api 호출');
+    setBottomSheetShow(false);
+  };
+
+  // 삭제 envent
+  const handleDeleteUser = () => {
+    console.log('TODO: 친구 삭제 모달 -> 삭제 api 호출');
+    setBottomSheetShow(false);
+  };
+
+  // 전달할 버튼 배열
+  const createButtonList = () => {
+    const buttons: Array<{
+      text: string;
+      theme?: 'sub' | 'primary' | 'outline' | undefined;
+      onPress: () => void | Promise<void>;
+    }> = [
+      {
+        text: '고정',
+        onPress: handleFixUser,
+        theme: 'outline',
+      },
+      {
+        text: '삭제',
+        onPress: handleDeleteUser,
+      },
+    ];
+
+    return buttons;
+  };
+
+  // 더보기 버튼 누를 때
+  const onPressMore = () => {
+    console.log('test');
+    setBottomSheetShow(true);
+  };
   return (
     <View style={commonStyle.CONTAINER}>
       {/* 사용자 프로필 */}
@@ -82,18 +98,17 @@ const Home = () => {
       </View>
 
       {/* 약속 리스트 */}
-      {appointments.length ? (
-        <Animated.FlatList
-          data={appointments}
+      {sortData().length ? (
+        <FlatList
+          data={sortData()}
           keyExtractor={item => String(item.appointment_id)}
-          renderItem={({item, index}) => (
-            <View style={{height: 100}}>
-              <Animated.View
-                style={[{transform: animations[index].getTranslateTransform()}]}
-                {...panResponders[index].panHandlers}>
-                <AppointmentItem item={item} />
-              </Animated.View>
-            </View>
+          renderItem={({item}) => (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('AppointmentDetail', {...item})
+              }>
+              <AppointmentItem item={item} onPressMore={onPressMore} />
+            </TouchableOpacity>
           )}
           style={{marginHorizontal: -16}}
         />
@@ -113,6 +128,12 @@ const Home = () => {
         onPress={handleMoveToAppointment}>
         <PulsSvg color="#FFF" />
       </TouchableOpacity>
+
+      <ButtonBottomSheet
+        isShow={bottomSheetShow}
+        setIsShow={setBottomSheetShow}
+        buttons={createButtonList()}
+      />
     </View>
   );
 };

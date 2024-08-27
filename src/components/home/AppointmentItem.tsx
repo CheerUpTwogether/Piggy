@@ -9,15 +9,29 @@ import {commonStyle, color_primary, color_ef} from '@/styles/common';
 import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
+import PendingSvg from '@/assets/icons/pending.svg';
+import CancelCalendarSvg from '@/assets/icons/cancelCalendar.svg';
 
-const AppointmentItem = ({item}: {item: AppointmentProps}) => {
+const AppointmentItem = ({
+  item,
+  onPressMore,
+}: {
+  item: AppointmentProps;
+  onPressMore: () => void;
+}) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const titleFontColor = item.isCanceled
+  const cancelStatus = ['cancelled', 'expired'];
+  const titleFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.MEDIUM_AA_18
     : commonStyle.MEDIUM_33_18;
-  const contentFontColor = item.isCanceled
+  const contentFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.REGULAR_AA_14
     : commonStyle.REGULAR_77_14;
+
+  const notUseFreindsIcon =
+    cancelStatus.includes(item.appointment_status) ||
+    (item.appointment_status === 'pending' &&
+      item.participants_own_status === true);
 
   return (
     <TouchableOpacity
@@ -25,8 +39,20 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
       onPress={() => navigation.navigate('AppointmentDetail', {...item})}>
       <View style={styles.contentContainer}>
         {/* 참석자 프로필 */}
-        <View>
-          <FlatItemsFriends images={item.friends.map(el => el.url)} />
+        <View style={styles.iconContainer}>
+          {notUseFreindsIcon && (
+            <View style={styles.iconBg}>
+              {item.appointment_status === 'pending' && <PendingSvg />}
+              {cancelStatus.includes(item.appointment_status) && (
+                <CancelCalendarSvg color={'#fff'} />
+              )}
+            </View>
+          )}
+          {!notUseFreindsIcon && (
+            <FlatItemsFriends
+              images={item.appointment_participants_list.map(el => el.url)}
+            />
+          )}
         </View>
 
         {/* 모임 타이틀, 핀/상세 아이콘 */}
@@ -34,24 +60,22 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
           <View style={styles.subject}>
             <Text style={titleFontColor}>{item.subject}</Text>
             <View style={styles.svgContainer}>
-              {item.isFixed && (
+              {item.pinned && (
                 <TouchableOpacity style={styles.svgBtn}>
                   <PinSvg color="#777" style={styles.svg} />
                 </TouchableOpacity>
               )}
 
-              <TouchableOpacity style={styles.svgBtn}>
+              <TouchableOpacity style={styles.svgBtn} onPress={onPressMore}>
                 <MoreSvg color="#777" style={styles.svg} />
               </TouchableOpacity>
             </View>
           </View>
-
           {/* 모임 정보 */}
           <View style={styles.flexRow}>
             <View>
-              <Text style={contentFontColor}>{item.location}</Text>
-              <Text
-                style={contentFontColor}>{`${item.date} ${item.time}`}</Text>
+              <Text style={contentFontColor}>{item.place_name}</Text>
+              <Text style={contentFontColor}>{`${item.appointment_date}`}</Text>
             </View>
 
             {item.appointment_id === 1 && (
@@ -60,29 +84,7 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
               </Text>
             )}
           </View>
-
-          {/* 취소 도장 */}
-          {item.isCanceled && (
-            <View style={styles.cancelStapmp}>
-              <Text style={commonStyle.BOLD_PRIMARY_18}>취소</Text>
-            </View>
-          )}
         </View>
-      </View>
-      <View style={styles.hiddenBtnContainer}>
-        <TouchableOpacity style={styles.pinBtnContainer} onPress={() => {}}>
-          <Text style={[styles.textCenter, commonStyle.REGULAR_33_16]}>
-            고정
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteBtnContainer}
-          activeOpacity={0.8}
-          onPress={() => {}}>
-          <Text style={[styles.textCenter, commonStyle.REGULAR_FF_16]}>
-            삭제
-          </Text>
-        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
@@ -108,7 +110,21 @@ const styles = StyleSheet.create({
   wrapper: {
     paddingRight: 12,
     flex: 1,
-    marginLeft: -8,
+  },
+  iconContainer: {
+    width: 100,
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconBg: {
+    backgroundColor: '#777',
+    width: 64,
+    height: 64,
+    borderRadius: 100,
+    padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   subject: {
     flexDirection: 'row',
@@ -128,19 +144,6 @@ const styles = StyleSheet.create({
   },
   flexRow: {
     flexDirection: 'row',
-  },
-  cancelStapmp: {
-    position: 'absolute',
-    top: 16,
-    right: 120,
-    width: 100,
-    height: 40,
-    borderRadius: 10,
-    borderColor: color_primary,
-    borderWidth: 3,
-    transform: [{rotate: '-20deg'}],
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   timer: {
     position: 'absolute',
