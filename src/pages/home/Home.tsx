@@ -25,6 +25,28 @@ const Home = () => {
     navigation.navigate('AppointmentForm');
   };
 
+  const sortData = () => {
+    if (sort === 'pending') {
+      return appointments.filter(el => el.appointment_status === 'pending');
+    } else if (sort === 'confirmed') {
+      const appointment_status = [
+        'confirmed',
+        'cancellation-request',
+        'cancellation-confirmed',
+        'cancellation-rejected',
+        'cancellation-pending',
+      ];
+      return appointments.filter(el =>
+        appointment_status.includes(el.appointment_status),
+      );
+    } else {
+      const appointment_status = ['fulfilled', 'cancelled', 'expired'];
+      return appointments.filter(el =>
+        appointment_status.includes(el.appointment_status),
+      );
+    }
+  };
+
   return (
     <View style={commonStyle.CONTAINER}>
       {/* 사용자 프로필 */}
@@ -36,12 +58,15 @@ const Home = () => {
       </View>
 
       {/* 약속 리스트 */}
-      {appointments.length ? (
+      {sortData().length ? (
         <FlatList
-          data={appointments}
+          data={sortData()}
           keyExtractor={item => String(item.appointment_id)}
           renderItem={({item}) => (
-            <TouchableOpacity onPress={handleMoveToAppointment}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('AppointmentDetail', {...item})
+              }>
               <AppointmentItem item={item} />
             </TouchableOpacity>
           )}
