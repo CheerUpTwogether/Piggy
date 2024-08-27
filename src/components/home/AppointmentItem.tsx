@@ -14,20 +14,16 @@ import CancelCalendarSvg from '@/assets/icons/cancelCalendar.svg';
 
 const AppointmentItem = ({item}: {item: AppointmentProps}) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const titleFontColor =
-    item.appointment_status === 'cancelled' ||
-    item.appointment_status === 'expired'
-      ? commonStyle.MEDIUM_AA_18
-      : commonStyle.MEDIUM_33_18;
-  const contentFontColor =
-    item.appointment_status === 'cancelled' ||
-    item.appointment_status === 'expired'
-      ? commonStyle.REGULAR_AA_14
-      : commonStyle.REGULAR_77_14;
+  const cancelStatus = ['cancelled', 'expired'];
+  const titleFontColor = cancelStatus.includes(item.appointment_status)
+    ? commonStyle.MEDIUM_AA_18
+    : commonStyle.MEDIUM_33_18;
+  const contentFontColor = cancelStatus.includes(item.appointment_status)
+    ? commonStyle.REGULAR_AA_14
+    : commonStyle.REGULAR_77_14;
 
   const notUseFreindsIcon =
-    item.appointment_status === 'cancelled' ||
-    item.appointment_status === 'expired' ||
+    cancelStatus.includes(item.appointment_status) ||
     (item.appointment_status === 'pending' &&
       item.participants_own_status === true);
 
@@ -41,8 +37,9 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
           {notUseFreindsIcon && (
             <View style={styles.iconBg}>
               {item.appointment_status === 'pending' && <PendingSvg />}
-              {(item.appointment_status === 'cancelled' ||
-                item.appointment_status === 'expired') && <CancelCalendarSvg />}
+              {cancelStatus.includes(item.appointment_status) && (
+                <CancelCalendarSvg color={'#fff'} />
+              )}
             </View>
           )}
           {!notUseFreindsIcon && (

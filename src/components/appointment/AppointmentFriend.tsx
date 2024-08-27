@@ -1,6 +1,6 @@
+import React, {useEffect, useState} from 'react';
 import InputBox from '@/components/common/InputBox';
 import {commonStyle} from '@/styles/common';
-import {useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,

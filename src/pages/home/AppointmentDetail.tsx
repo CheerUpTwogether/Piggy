@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View, Dimensions} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import {AppointmentProps} from '@/mock/Home/type';
 import {useRoute} from '@react-navigation/native';
-import {commonStyle} from '@/styles/common';
+import {color_primary, commonStyle} from '@/styles/common';
 import FlatItemsFriends from '@/components/common/FlatItemsFriends';
 import Button from '@/components/common/Button';
 import SideSlideModal from '@/components/common/SideSlideModal';
 
+import CalendarCancelSvg from '@/assets/icons/cancelCalendar.svg';
 import LocationSvg from '@/assets/icons/location.svg';
 import DateSvg from '@/assets/icons/calendar.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
@@ -30,6 +31,11 @@ const AppointmentDetail = () => {
           uri: 'https://www.100news.kr/imgdata/100news_kr/202405/2024050916458352.png',
         }}
       />
+      {cancelStatus.includes(item.appointment_status) && (
+        <View style={styles.mapWrapper}>
+          <CalendarCancelSvg color={color_primary} width={100} height={100} />
+        </View>
+      )}
 
       <View style={styles.contentContainer}>
         <Text style={[commonStyle.BOLD_33_20, styles.subject]}>
@@ -95,7 +101,10 @@ const AppointmentDetail = () => {
           theme="outline"
           style={{marginBottom: 8}}
         />
-        <Button onPress={() => {}} text={'인증하기'} disable={true} />
+        {!cancelStatus.includes(item.appointment_status) &&
+          item.appointment_status !== 'fulfilled' && (
+            <Button onPress={() => {}} text={'인증하기'} disable={true} />
+          )}
       </View>
 
       <SideSlideModal isShow={isShow} setIsShow={setIsShow} title="참석자">
@@ -109,11 +118,22 @@ const AppointmentDetail = () => {
   );
 };
 
+const WIDTH = Dimensions.get('screen').width;
 const styles = StyleSheet.create({
   mapImg: {
     marginHorizontal: -16,
     height: 320,
     marginTop: -16,
+  },
+  mapWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    height: 320,
+    width: WIDTH,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   subject: {
     paddingTop: 8,
