@@ -11,6 +11,7 @@ import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
 import TabBar from '@/components/common/TabBar';
 import PulsSvg from '@/assets/icons/plus.svg';
+import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 
 const Home = () => {
   const categories = [
@@ -18,6 +19,7 @@ const Home = () => {
     {label: '확정', value: 'confirmed'},
     {label: '완료', value: 'complete'},
   ];
+  const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [sort, setSort] = useState(categories[0].value);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -47,6 +49,44 @@ const Home = () => {
     }
   };
 
+  // 고정 event
+  const handleFixUser = () => {
+    console.log('TODO: 유저 고정 api 호출');
+    setBottomSheetShow(false);
+  };
+
+  // 삭제 envent
+  const handleDeleteUser = () => {
+    console.log('TODO: 친구 삭제 모달 -> 삭제 api 호출');
+    setBottomSheetShow(false);
+  };
+
+  // 전달할 버튼 배열
+  const createButtonList = () => {
+    const buttons: Array<{
+      text: string;
+      theme?: 'sub' | 'primary' | 'outline' | undefined;
+      onPress: () => void | Promise<void>;
+    }> = [
+      {
+        text: '고정',
+        onPress: handleFixUser,
+        theme: 'outline',
+      },
+      {
+        text: '삭제',
+        onPress: handleDeleteUser,
+      },
+    ];
+
+    return buttons;
+  };
+
+  // 더보기 버튼 누를 때
+  const onPressMore = () => {
+    console.log('test');
+    setBottomSheetShow(true);
+  };
   return (
     <View style={commonStyle.CONTAINER}>
       {/* 사용자 프로필 */}
@@ -67,7 +107,7 @@ const Home = () => {
               onPress={() =>
                 navigation.navigate('AppointmentDetail', {...item})
               }>
-              <AppointmentItem item={item} />
+              <AppointmentItem item={item} onPressMore={onPressMore} />
             </TouchableOpacity>
           )}
           style={{marginHorizontal: -16}}
@@ -88,6 +128,12 @@ const Home = () => {
         onPress={handleMoveToAppointment}>
         <PulsSvg color="#FFF" />
       </TouchableOpacity>
+
+      <ButtonBottomSheet
+        isShow={bottomSheetShow}
+        setIsShow={setBottomSheetShow}
+        buttons={createButtonList()}
+      />
     </View>
   );
 };

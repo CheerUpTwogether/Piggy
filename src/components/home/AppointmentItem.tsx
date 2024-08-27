@@ -12,7 +12,13 @@ import PinSvg from '@/assets/icons/pin.svg';
 import PendingSvg from '@/assets/icons/pending.svg';
 import CancelCalendarSvg from '@/assets/icons/cancelCalendar.svg';
 
-const AppointmentItem = ({item}: {item: AppointmentProps}) => {
+const AppointmentItem = ({
+  item,
+  onPressMore,
+}: {
+  item: AppointmentProps;
+  onPressMore: () => void;
+}) => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const cancelStatus = ['cancelled', 'expired'];
   const titleFontColor = cancelStatus.includes(item.appointment_status)
@@ -60,7 +66,7 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
                 </TouchableOpacity>
               )}
 
-              <TouchableOpacity style={styles.svgBtn}>
+              <TouchableOpacity style={styles.svgBtn} onPress={onPressMore}>
                 <MoreSvg color="#777" style={styles.svg} />
               </TouchableOpacity>
             </View>
@@ -79,21 +85,6 @@ const AppointmentItem = ({item}: {item: AppointmentProps}) => {
             )}
           </View>
         </View>
-      </View>
-      <View style={styles.hiddenBtnContainer}>
-        <TouchableOpacity style={styles.pinBtnContainer} onPress={() => {}}>
-          <Text style={[styles.textCenter, commonStyle.REGULAR_33_16]}>
-            고정
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteBtnContainer}
-          activeOpacity={0.8}
-          onPress={() => {}}>
-          <Text style={[styles.textCenter, commonStyle.REGULAR_FF_16]}>
-            삭제
-          </Text>
-        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
