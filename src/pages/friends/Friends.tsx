@@ -136,7 +136,6 @@ const Friends = () => {
                           {item.nick_name}
                         </Text>
                       </TouchableOpacity>
-                      {/* <View style={styles.moreButton} > */}
                       <TouchableOpacity
                         style={styles.moreButton}
                         activeOpacity={0.8}

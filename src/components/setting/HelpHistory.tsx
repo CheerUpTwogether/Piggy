@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,15 @@ import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
 import {dummy_Help_list} from '@/mock/Help/Help';
+import ButtonBottomSheet from '../common/ButtonBottomSheet';
 
 import PulsSvg from '@/assets/icons/plus.svg';
+import MoreSvg from '@/assets/icons/more.svg';
 
 const HelpHistory = () => {
+  const [moreShow, setMoreShow] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -26,6 +31,31 @@ const HelpHistory = () => {
     navigation.navigate('HelpDesk');
   };
 
+  const handleMorePress = (id: string) => {
+    setSelectedId(id);
+    setMoreShow(true);
+  };
+
+  const handleDeleteHelp = () => {
+    console.log(`TODO: 아이디가 ${selectedId}인 삭제 모달 -> 삭제 API 호출`);
+    setMoreShow(false);
+  };
+
+  const createButtonList = () => {
+    const buttons: Array<{
+      text: string;
+      theme?: 'sub' | 'primary' | 'outline' | undefined;
+      onPress: () => void | Promise<void>;
+    }> = [
+      {
+        text: '삭제',
+        onPress: handleDeleteHelp,
+      },
+    ];
+
+    return buttons;
+  };
+
   return (
     <View style={{flex: 1}}>
       <ScrollView style={commonStyle.CONTAINER}>
@@ -35,7 +65,15 @@ const HelpHistory = () => {
             activeOpacity={0.8}
             style={styles.itemWrapper}
             onPress={() => gotoDetail(item.id.toString())}>
-            <Text style={commonStyle.REGULAR_33_18}>{item.subject}</Text>
+            <View style={styles.subjectWrapper}>
+              <Text style={commonStyle.REGULAR_33_18}>{item.subject}</Text>
+              <TouchableOpacity
+                style={styles.moreButton}
+                activeOpacity={0.8}
+                onPress={() => handleMorePress(item.id)}>
+                <MoreSvg width={20} height={20} color={'#555'} />
+              </TouchableOpacity>
+            </View>
             <Text style={commonStyle.REGULAR_33_14}>
               {item.contents.length > 20
                 ? `${item.contents.substring(0, 30)}...`
@@ -58,6 +96,12 @@ const HelpHistory = () => {
         onPress={gotoDesk}>
         <PulsSvg color="#ED423F" />
       </TouchableOpacity>
+
+      <ButtonBottomSheet
+        isShow={moreShow}
+        setIsShow={setMoreShow}
+        buttons={createButtonList()}
+      />
     </View>
   );
 };
@@ -87,6 +131,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     marginBottom: 30,
     marginRight: 10,
+  },
+  subjectWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  moreButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 40,
+    height: 40,
   },
 });
 
