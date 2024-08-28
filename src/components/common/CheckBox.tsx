@@ -73,8 +73,8 @@ const CheckBox: React.FC<CheckBoxProps> = ({
 
 const styles = StyleSheet.create({
   checkBoxContainer: {
-    width: 24,
-    height: 24,
+    width: 48,
+    height: 48,
     justifyContent: 'center',
     alignItems: 'center',
   },

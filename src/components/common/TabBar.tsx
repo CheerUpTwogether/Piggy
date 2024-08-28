@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
     marginLeft: -8,
   },
   tabBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
   },
 });
 
