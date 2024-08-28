@@ -29,7 +29,7 @@ const LeftItem = ({name, headerLeftLabelVisible}: LeftItemProps) => {
   const mainName = ['Home', 'Friends', 'Goods', 'Settings'];
 
   if (mainName.includes(name)) {
-    return <Image source={topLogo} style={styles.logo} />;
+    return <Image source={topLogo} style={styles.logo} alt="topLogo" />;
   }
 
   if (headerLeftLabelVisible) {

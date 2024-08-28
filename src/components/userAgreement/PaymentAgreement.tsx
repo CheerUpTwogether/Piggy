@@ -1,14 +1,14 @@
+import React, {useState} from 'react';
+import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '@/types/Router';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useUserStore} from '@/store/store';
+import {splitStringByDot} from '@/utils/splitStringByDot';
 import {dummyAgreementItem} from '@/mock/UserAgreement/type';
 import {dummyPaymentAgreementData} from '@/mock/UserAgreement/UserAgreement';
 import {commonStyle} from '@/styles/common';
-import {splitStringByDot} from '@/utils/splitStringByDot';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import Button from '../common/Button';
-import {RootStackParamList} from '@/types/Router';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {useState} from 'react';
-import {useUserStore} from '@/store/store';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
@@ -73,7 +73,7 @@ const PaymentAgreement = () => {
 
   return (
     <View style={commonStyle.CONTAINER}>
-      <Image source={topLogo} style={styles.logo} />
+      <Image source={topLogo} style={styles.logo} alt="logo" />
       <Text style={styles.agreementTitle}>Piggy 결제 이용약관 동의서</Text>
       <View style={{height: 1, backgroundColor: '#EFEFEF'}} />
       {/* 이용 약관 */}

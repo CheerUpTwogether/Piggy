@@ -26,7 +26,7 @@ const LoginDetail = () => {
   const handleAgreeToast = () =>
     addToast({
       success: false,
-      text: '약관 미동의.',
+      text: '약관 미동의',
       multiText: '모든 필수 약관에 동의해주세요',
     });
 
@@ -58,7 +58,7 @@ const LoginDetail = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={logo} style={styles.logoContainer} />
+      <Image source={logo} style={styles.logoContainer} alt="logo" />
 
       <View style={styles.introContainer}>
         <Text style={commonStyle.BOLD_33_24}>시작하기</Text>
@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rightArrowIconContainer: {
-    width: 32,
-    height: 32,
+    width: 48,
+    height: 48,
     justifyContent: 'center',
     alignItems: 'center',
   },

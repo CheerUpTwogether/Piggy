@@ -14,13 +14,13 @@ import {
   FriendSearchRouteProp,
   FriendSearchNavigationProp,
 } from '@/pages/friends/type';
+import {commonStyle} from '@/styles/common';
+import {dummy_friends_data} from '@/mock/Friends/Friends';
+import {Friend} from '@/mock/Friends/type';
 import useDebounce from '@/hooks/useDebounce';
 import InputBox from '@/components/common/InputBox';
 import BottomSheet from '@/components/common/BottomSheet';
 import ProfileDetail from './ProfileDetail';
-import {commonStyle} from '@/styles/common';
-import {dummy_friends_data} from '@/mock/Friends/Friends';
-import {Friend} from '@/mock/Friends/type';
 
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
@@ -92,6 +92,7 @@ const FriendSearch = () => {
           <Image
             source={{uri: item.profile_image_path}}
             style={styles.friendProfile}
+            alt="friendImage"
           />
         ) : (
           <View style={[styles.friendEmptyProfile, styles.friendProfile]}>

@@ -1,12 +1,12 @@
-import {commonStyle} from '@/styles/common';
+import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import InputBox from '../common/InputBox';
-import {useEffect, useState} from 'react';
+import {RootStackParamList} from '@/types/Router';
 import {useRoute, RouteProp} from '@react-navigation/native';
+import {commonStyle} from '@/styles/common';
+import Button from '../common/Button';
+import InputBox from '../common/InputBox';
 import NickNameSvg from '@/assets/icons/nickname.svg';
 import CameraSvg from '@/assets/icons/camera.svg';
-import Button from '../common/Button';
-import {RootStackParamList} from '@/types/Router';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
@@ -28,6 +28,7 @@ const EditProfile = () => {
             <Image
               source={{uri: profile_image_path}}
               style={styles.profileImg}
+              alt="profileImage"
             />
             <View style={styles.cameraContainer}>
               <CameraSvg />

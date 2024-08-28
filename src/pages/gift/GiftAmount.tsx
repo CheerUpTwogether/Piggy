@@ -21,7 +21,11 @@ const GiftAmount = () => {
     <View style={commonStyle.CONTAINER}>
       <View style={styles.wrapper}>
         <View style={styles.profileWrapper}>
-          <Image style={styles.Profile} source={{uri: profile_image_path}} />
+          <Image
+            style={styles.Profile}
+            source={{uri: profile_image_path}}
+            alt="profile"
+          />
         </View>
         <View style={styles.textWrapper}>
           <Text

@@ -20,7 +20,7 @@ const Splash = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={logo} style={{width: 320, height: 124}} />
+      <Image source={logo} style={{width: 320, height: 124}} alt="logo" />
     </View>
   );
 };

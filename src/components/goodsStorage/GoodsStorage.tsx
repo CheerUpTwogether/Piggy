@@ -1,4 +1,3 @@
-import {commonStyle} from '@/styles/common';
 import React from 'react';
 import {
   Dimensions,
@@ -11,12 +10,25 @@ import {
   View,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {dummyGoodsStorageItem} from '@/mock/GoodsStorage/types';
-import {dummyGoodsStorageItemData} from '@/mock/GoodsStorage/GoodsStorage';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
+import {commonStyle} from '@/styles/common';
+import {dummyGoodsStorageItem} from '@/mock/GoodsStorage/types';
+import {dummyGoodsStorageItemData} from '@/mock/GoodsStorage/GoodsStorage';
 
-const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
+const {width: screenWidth} = Dimensions.get('screen');
+
+const Header = () => (
+  <View style={styles.headerContainer}>
+    <Text style={commonStyle.MEDIUM_33_16}>
+      총{' '}
+      <Text style={commonStyle.BOLD_33_18}>
+        {dummyGoodsStorageItemData.length}
+      </Text>
+      개의 기프티콘을 가지고 있어요!
+    </Text>
+  </View>
+);
 
 const GoodsStorage = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -24,18 +36,6 @@ const GoodsStorage = () => {
   const gotoDetail = (item: dummyGoodsStorageItem) => {
     navigation.navigate('GoodsStorageDetail', {...item});
   };
-
-  const Header = () => (
-    <View style={styles.headerContainer}>
-      <Text style={commonStyle.MEDIUM_33_16}>
-        총{' '}
-        <Text style={commonStyle.BOLD_33_18}>
-          {dummyGoodsStorageItemData.length}
-        </Text>
-        개의 기프티콘을 가지고 있어요!
-      </Text>
-    </View>
-  );
 
   const renderStorageItem = ({item}: {item: dummyGoodsStorageItem}) => (
     <TouchableOpacity
@@ -47,7 +47,11 @@ const GoodsStorage = () => {
       <View style={styles.expireDateWrapper}>
         <Text style={commonStyle.MEDIUM_FF_12}>D-29</Text>
       </View>
-      <Image source={{uri: item.goods_url}} style={styles.itemImg} />
+      <Image
+        source={{uri: item.goods_url}}
+        style={styles.itemImg}
+        alt={`goodsImg${item.id}`}
+      />
       <View style={{marginHorizontal: 10, gap: 2, width: screenWidth / 2 - 48}}>
         <Text style={commonStyle.MEDIUM_SUB_12} numberOfLines={1}>
           {item.provider}

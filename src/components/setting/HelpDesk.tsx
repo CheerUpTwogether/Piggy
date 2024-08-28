@@ -1,4 +1,5 @@
-import {commonStyle} from '@/styles/common';
+import React, {useState} from 'react';
+
 import {
   Image,
   StyleSheet,
@@ -7,11 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {commonStyle} from '@/styles/common';
 import InputBox from '../common/InputBox';
-import {useState} from 'react';
 import NickNameSvg from '@/assets/icons/nickname.svg';
 import EditSvg from '@/assets/icons/edit.svg';
-
 import PlusSvg from '@/assets/icons/X.svg';
 import Button from '../common/Button';
 
@@ -98,7 +98,11 @@ const HelpDesk = () => {
               </TouchableOpacity>
             )}
             {imageList.map(item => (
-              <Image source={{uri: item}} style={styles.itemContainer} />
+              <Image
+                source={{uri: item}}
+                style={styles.itemContainer}
+                alt="helpDeskImage"
+              />
             ))}
           </View>
           {isImageError && (

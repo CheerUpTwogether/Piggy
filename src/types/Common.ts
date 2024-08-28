@@ -52,6 +52,7 @@ export interface BottomSheetProps {
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
   size: number;
   onClose?: () => void;
+  minHeight?: number;
 }
 
 export interface EmptyProps {

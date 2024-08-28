@@ -30,6 +30,7 @@ const AppointmentDetail = () => {
         source={{
           uri: 'https://www.100news.kr/imgdata/100news_kr/202405/2024050916458352.png',
         }}
+        alt="mapImage"
       />
       {cancelStatus.includes(item.appointment_status) && (
         <View style={styles.mapWrapper}>

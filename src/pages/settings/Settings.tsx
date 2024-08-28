@@ -42,6 +42,7 @@ const Settings = () => {
           <Image
             source={{uri: dummy_profile.profile_image_path}}
             style={{width: 80, height: 80, borderRadius: 80}}
+            alt="profile"
           />
         </TouchableOpacity>
 

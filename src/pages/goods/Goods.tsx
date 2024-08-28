@@ -48,6 +48,7 @@ const Goods = () => {
       <Image
         source={{uri: item.product_thumb_image_url}}
         style={styles.itemImg}
+        alt="goodsImage"
       />
       <View style={{marginHorizontal: 10, gap: 4}}>
         <Text style={commonStyle.MEDIUM_AA_14} numberOfLines={1}>
@@ -73,6 +74,7 @@ const Goods = () => {
           uri: 'https://loremflickr.com/320/80/cat​',
         }}
         style={styles.bannerImg}
+        alt="bannerImage"
       />
 
       <View style={styles.categoryContainer}>

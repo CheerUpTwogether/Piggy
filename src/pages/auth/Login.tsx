@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import KakaoSvg from '@/assets/icons/kakao.svg';
+import GoogleSvg from '@/assets/icons/google.svg';
 const logo = require('@/assets/icons/logo.png');
 
 const Login = () => {
@@ -17,6 +18,7 @@ const Login = () => {
           style={{marginLeft: 40, width: 160, height: 62}}
           width={160}
           height={60}
+          alt="logo"
         />
         <View style={style.explain}>
           <Text style={[style.startText, commonStyle.BOLD_33_24]}>
@@ -29,12 +31,21 @@ const Login = () => {
         <View style={style.loginWrapper}>
           <TouchableOpacity
             activeOpacity={0.8}
-            style={style.social}
+            style={style.socialKakao}
             onPress={() => {
               navigation.navigate('LoginDetail');
             }}>
             <KakaoSvg width={33} height={33} />
             <Text style={style.socialText}>카카오로 로그인</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={style.socialGoogle}
+            onPress={() => {
+              navigation.navigate('LoginDetail');
+            }}>
+            <GoogleSvg width={33} height={33} />
+            <Text style={style.socialText}>구글로 로그인</Text>
           </TouchableOpacity>
         </View>
 
@@ -64,7 +75,7 @@ const style = StyleSheet.create({
   },
   startText: {color: '#333'},
   loginWrapper: {marginTop: 50, gap: 16},
-  social: {
+  socialKakao: {
     backgroundColor: '#FEE500',
     width: 340,
     height: 50,
@@ -73,6 +84,16 @@ const style = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
   },
+  socialGoogle: {
+    backgroundColor: '#F2F2F2',
+    width: 340,
+    height: 50,
+    borderRadius: 100,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+
   socialText: {
     fontSize: 14,
     fontWeight: 'regular',

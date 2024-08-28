@@ -47,7 +47,7 @@ const InputBox: React.FC<InputBoxProps> = ({
 
   return (
     <View>
-      <Text style={[styles.label, style]}>{label}</Text>
+      {label && <Text style={[styles.label, style]}>{label}</Text>}
 
       <View style={styles.View}>
         <View
@@ -80,7 +80,7 @@ const InputBox: React.FC<InputBoxProps> = ({
               onPress={btn.onPress}
               size="sm"
               theme="outline"
-              style={{marginRight: -16}}
+              style={{marginRight: -23}}
               disable={btn.disable}
             />
           )}
@@ -140,7 +140,13 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingVertical: Platform.OS === 'android' ? 0 : 10,
   },
-  cancelWrapper: {paddingHorizontal: 10},
+  cancelWrapper: {
+    paddingHorizontal: 10,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   msgContainer: {
     height: 24,
   },

@@ -27,7 +27,11 @@ const HelpDetail = () => {
           {helpItem?.img_url &&
             helpItem.img_url.map((url, index) => (
               <TouchableOpacity key={index} style={styles.imageWrapper}>
-                <Image source={{uri: url}} style={styles.image} />
+                <Image
+                  source={{uri: url}}
+                  style={styles.image}
+                  alt="helpItemImage"
+                />
               </TouchableOpacity>
             ))}
         </View>

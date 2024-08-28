@@ -15,6 +15,7 @@ const FriendItem = ({item}: {item: FriendsProps}) => {
             width={40}
             height={40}
             style={styles.img}
+            alt={`${item.nick_name}Image`}
           />
         ) : (
           <View style={styles.imgContainer}>

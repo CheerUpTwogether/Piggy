@@ -12,7 +12,11 @@ const FlatItemsFriends: React.FC<{images: string[]}> = ({images}) => {
     <View style={styles.container}>
       <View style={styles.mainProfileContainer}>
         {mainImage ? (
-          <Image source={{uri: mainImage}} style={styles.mainProfile} />
+          <Image
+            source={{uri: mainImage}}
+            style={styles.mainProfile}
+            alt={'profile'}
+          />
         ) : (
           <View style={styles.mainBasicProfile}>
             <BasicProfileSvg width={40} height={40} />
@@ -32,6 +36,7 @@ const FlatItemsFriends: React.FC<{images: string[]}> = ({images}) => {
                   : styles.additionalProfile,
                 index !== 0 && styles.additionalProfileOffset,
               ]}
+              alt={`profile${index}`}
             />
           ) : (
             <View
