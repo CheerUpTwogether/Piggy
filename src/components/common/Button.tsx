@@ -69,8 +69,10 @@ const styles = StyleSheet.create({
   smBtn: {
     justifyContent: 'center',
     paddingVertical: 8,
-    //paddingHorizontal: 12,
+    paddingHorizontal: 16,
     width: 80,
+    height: 48,
+    backgroundColor: 'yellow',
   },
   primaryBtn: {
     backgroundColor: color_primary,

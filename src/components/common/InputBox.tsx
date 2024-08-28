@@ -80,7 +80,7 @@ const InputBox: React.FC<InputBoxProps> = ({
               onPress={btn.onPress}
               size="sm"
               theme="outline"
-              style={{marginRight: -16}}
+              style={{marginRight: -23}}
               disable={btn.disable}
             />
           )}
