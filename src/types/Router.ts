@@ -8,6 +8,7 @@ import {
   StackNavigationOptions,
   StackNavigationProp,
 } from '@react-navigation/stack';
+import {GoodsProduct} from './gift';
 
 export type RootBottomTabParamList = {
   Home: undefined;
@@ -40,7 +41,7 @@ export type RootStackParamList = {
   NoticeBoard: undefined;
   FAQBoard: undefined;
   GoodsStorage: undefined;
-  GoodsDetail: dummyGoodsItem;
+  GoodsDetail: GoodsProduct;
   GoodsStorageDetail: dummyGoodsStorageItem;
   NoticeBoardDetail: dummyNoticeItem;
   PiggyUsage: undefined;

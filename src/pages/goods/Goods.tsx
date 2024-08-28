@@ -11,8 +11,8 @@ import {
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {getGoodsAPI} from '@/api/kakao/gift';
 import {GoodsNavigationProp} from './type';
-import {dummyGoodsItem} from '@/mock/Goods/types';
 import TabBar from '@/components/common/TabBar';
+import {GoodsItem, GoodsProduct} from '@/types/gift';
 
 const categories = [
   {
@@ -53,15 +53,15 @@ const Goods = () => {
     }
   };
 
-  const gotoDetail = (item: dummyGoodsItem) => {
+  const gotoDetail = (item: GoodsProduct) => {
     navigation.navigate('GoodsDetail', {...item});
   };
 
-  const renderItem = ({item}: {item: dummyGoodsItem}) => (
+  const renderItem = ({item}: {item: GoodsItem}) => (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.itemContainer}
-      onPress={() => gotoDetail(item)}>
+      onPress={() => gotoDetail(item.product)}>
       <Image
         source={{uri: item.product.product_thumb_image_url}}
         style={styles.itemImg}
@@ -108,7 +108,7 @@ const Goods = () => {
         <FlatList
           data={goods}
           bounces={false}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.product.product_thumb_image_url}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
         />
