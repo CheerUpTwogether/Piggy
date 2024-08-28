@@ -81,7 +81,10 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   const iconShow = () => {
     if (uuid === '1000') {
       return (
-        <TouchableOpacity activeOpacity={0.8} onPress={handleEditProfile}>
+        <TouchableOpacity
+          style={styles.rightIconWrapper}
+          activeOpacity={0.8}
+          onPress={handleEditProfile}>
           <EditSvg style={styles.rightIcon} />
         </TouchableOpacity>
       );
@@ -89,20 +92,27 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
       return (
         <View style={{flexDirection: 'row', gap: 8}}>
           <TouchableOpacity
+            style={styles.rightIconWrapper}
             activeOpacity={0.8}
             onPress={() =>
               handleMoveToGift(uuid, nick_name, profile_image_path)
             }>
             <GiftSvg style={styles.rightIcon} />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.8} onPress={handleDeleteFriend}>
+          <TouchableOpacity
+            style={styles.rightIconWrapper}
+            activeOpacity={0.8}
+            onPress={handleDeleteFriend}>
             <TrashSvg style={styles.rightIcon} />
           </TouchableOpacity>
         </View>
       );
     } else {
       return (
-        <TouchableOpacity activeOpacity={0.8} onPress={handleAddFriend}>
+        <TouchableOpacity
+          style={styles.rightIconWrapper}
+          activeOpacity={0.8}
+          onPress={handleAddFriend}>
           <AddFriendSvg style={styles.rightIcon} />
         </TouchableOpacity>
       );
@@ -211,6 +221,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFF',
     justifyContent: 'center',
+  },
+  rightIconWrapper: {
+    width: 48,
+    height: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   rightIcon: {width: 28, height: 28, color: '#555'},
   uTurnIconWrapper: {
