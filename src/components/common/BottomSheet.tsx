@@ -1,4 +1,5 @@
 import {BottomSheetProps} from '@/types/Common';
+
 import {useEffect, useRef} from 'react';
 import {
   Animated,
@@ -18,6 +19,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   setIsShow,
   onClose,
   size,
+  minHeight = 0,
 }) => {
   // Modal 종료 애니메이션 및 상태 변경(false)
   const closeModal = () => {
@@ -40,6 +42,8 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     }
   }, [isShow]);
 
+  const modalHeight =
+    screenHeight * size < minHeight ? minHeight : screenHeight * size;
   // 모달 움직일 높이
   const panY = useRef(new Animated.Value(screenHeight * size)).current;
 
@@ -58,7 +62,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
 
   // 모달 종료 애니메이션 함수
   const closeBottomSheet = Animated.timing(panY, {
-    toValue: screenHeight * size,
+    toValue: modalHeight,
     duration: 100,
     useNativeDriver: true,
   });
@@ -95,7 +99,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
         <Animated.View
           style={{
             ...styles.bottomSheetWrapper,
-            height: screenHeight * size,
+            height: modalHeight,
             transform: [{translateY: translateY}],
           }}
           {...panResponder.panHandlers}>

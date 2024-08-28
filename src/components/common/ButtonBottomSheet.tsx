@@ -15,6 +15,8 @@ const ButtonBottomSheet: React.FC<ButtonBottomSheetProps> = ({
     android: buttons.length === 1 ? 0.18 : 0.25,
   }) as number;
 
+  const minHeight = buttons.length === 1 ? 190 : 250;
+
   const handlePress = (
     onPress: () => void | Promise<void>,
     closeModal: () => void,
@@ -28,6 +30,7 @@ const ButtonBottomSheet: React.FC<ButtonBottomSheetProps> = ({
       isShow={isShow}
       setIsShow={setIsShow}
       size={size}
+      minHeight={minHeight}
       component={({closeModal}) => (
         <View style={styles.modalContainer}>
           {buttons.map((button, index) => (
