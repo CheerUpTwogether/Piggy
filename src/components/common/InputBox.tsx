@@ -140,7 +140,13 @@ const styles = StyleSheet.create({
     height: '100%',
     paddingVertical: Platform.OS === 'android' ? 0 : 10,
   },
-  cancelWrapper: {paddingHorizontal: 10},
+  cancelWrapper: {
+    paddingHorizontal: 10,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   msgContainer: {
     height: 24,
   },
