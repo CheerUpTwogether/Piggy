@@ -58,7 +58,7 @@ const LoginDetail = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={logo} style={styles.logoContainer} />
+      <Image source={logo} style={styles.logoContainer} alt="logo" />
 
       <View style={styles.introContainer}>
         <Text style={commonStyle.BOLD_33_24}>시작하기</Text>

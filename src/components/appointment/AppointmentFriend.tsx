@@ -20,7 +20,7 @@ import RoundHandShakeSvg from '@/assets/icons/roundHandshake.svg';
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
-const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
+const {height: screenHeight} = Dimensions.get('screen');
 
 const AppointmentFriend = () => {
   const [keyword, setKeyword] = useState('');
@@ -101,6 +101,7 @@ const AppointmentFriend = () => {
           <Image
             source={{uri: item.profile_image_path}}
             style={styles.friendSelectProfile}
+            alt={`${item.nick_name}profile`}
           />
           <View style={styles.friendSelectCancleContainer}>
             <CancleSvg width={12} height={8} stroke={'#FFF'} />
@@ -128,6 +129,7 @@ const AppointmentFriend = () => {
           <Image
             source={{uri: item.profile_image_path}}
             style={styles.friendProfile}
+            alt={`${item.nick_name}profile`}
           />
         ) : (
           <View style={[styles.friendEmptyProfile, styles.friendProfile]}>

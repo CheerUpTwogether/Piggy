@@ -116,7 +116,11 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   return (
     <View style={commonStyle.CONTAINER}>
       {profile_image_path ? (
-        <Image source={{uri: profile_image_path}} style={styles.profile} />
+        <Image
+          source={{uri: profile_image_path}}
+          style={styles.profile}
+          alt="profile"
+        />
       ) : (
         <View style={styles.emptyProfileWrapper}>
           <BasicProfileSvg width={220} height={220} />

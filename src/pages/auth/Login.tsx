@@ -17,6 +17,7 @@ const Login = () => {
           style={{marginLeft: 40, width: 160, height: 62}}
           width={160}
           height={60}
+          alt="logo"
         />
         <View style={style.explain}>
           <Text style={[style.startText, commonStyle.BOLD_33_24]}>

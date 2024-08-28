@@ -25,6 +25,7 @@ const GoodsStorageDetail = () => {
         <Image
           source={{uri: goods_url}}
           style={{width: 244, height: 244, borderRadius: 8}}
+          alt="goodsImage"
         />
       </View>
       <View style={{gap: 4, alignItems: 'center', justifyContent: 'center'}}>
@@ -36,6 +37,7 @@ const GoodsStorageDetail = () => {
         <Image
           source={{uri: goods_barcode_url}}
           style={{width: 260, height: 100}}
+          alt="goodsBarcodeImage"
         />
       </View>
 

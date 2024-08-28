@@ -31,6 +31,7 @@ const NoticeBoardDetail = () => {
         <Image
           source={{uri: 'https://picsum.photos/300/680'}}
           style={{width: '100%', height: 680, marginVertical: 36}}
+          alt={'noticeImage'}
         />
       </ScrollView>
     </View>

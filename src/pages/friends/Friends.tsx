@@ -87,6 +87,7 @@ const Friends = () => {
             <Image
               source={{uri: dummy_profile.profile_image_path}}
               style={styles.profile}
+              alt="profile"
             />
             <View style={styles.myData}>
               <Text style={commonStyle.MEDIUM_33_20}>
@@ -122,6 +123,7 @@ const Friends = () => {
                           <Image
                             source={{uri: item.profile_image_path}}
                             style={styles.friendProfile}
+                            alt="profile"
                           />
                         ) : (
                           <View

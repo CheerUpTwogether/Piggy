@@ -24,7 +24,11 @@ const AppointmentCheck: React.FC<{data: AppointmentData}> = ({data}) => {
   const renderItem = ({item}: {item: FriendsProps}) => (
     <View style={styles.friendWrapper}>
       {item.url ? (
-        <Image source={{uri: item.url}} style={styles.profile} />
+        <Image
+          source={{uri: item.url}}
+          style={styles.profile}
+          alt={`${item.nick_name}프로필사진`}
+        />
       ) : (
         <View style={styles.profileWrapper}>
           <BasicProfileSvg width={22} height={22} color={'#999'} />

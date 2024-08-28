@@ -31,9 +31,15 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
             <Image
               source={require('@/assets/icons/topLogo.png')}
               style={styles.img}
+              alt="topLogo"
             />
           ) : item.image_url ? (
-            <Image source={{uri: uri}} style={styles.img} resizeMode="cover" />
+            <Image
+              source={{uri: uri}}
+              style={styles.img}
+              resizeMode="cover"
+              alt="freindsProfile"
+            />
           ) : (
             <ProfileSvg style={styles.img} width={28} height={28} />
           )}

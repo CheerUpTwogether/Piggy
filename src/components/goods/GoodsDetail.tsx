@@ -21,6 +21,7 @@ const GoodsDetail = () => {
         <Image
           source={{uri: product_thumb_image_url}}
           style={{width: 244, height: 244, borderRadius: 8}}
+          alt={`${product_name}Image`}
         />
       </View>
       <View style={{gap: 14, marginVertical: 8}}>
