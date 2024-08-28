@@ -7,23 +7,29 @@ import {RootStackParamList} from '@/types/Router';
 
 const GoodsDetail = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'GoodsDetail'>>();
-  const {id, provider, title, sub_title, price, expire_date, goods_url} =
-    route.params;
+  const {
+    // id,
+    brand_name,
+    product_name,
+    product_price,
+    expire_date,
+    product_thumb_image_url,
+  } = route.params;
   return (
     <View style={commonStyle.container}>
       <View style={{alignItems: 'center', marginTop: 42, marginBottom: 42}}>
         <Image
-          source={{uri: goods_url}}
+          source={{uri: product_thumb_image_url}}
           style={{width: 244, height: 244, borderRadius: 8}}
         />
       </View>
-      <View style={{gap: 14}}>
+      <View style={{gap: 14, marginVertical: 8}}>
         <Text style={{...commonStyle.MEDIUM_33_20, textAlign: 'center'}}>
-          {title}
+          {product_name}
         </Text>
         <View style={styles.goodsPriceContainer}>
           <Text style={commonStyle.BOLD_33_20}>
-            {new Intl.NumberFormat('ko-KR').format(price)}
+            {new Intl.NumberFormat('ko-KR').format(product_price)}
           </Text>
           <Text style={commonStyle.BOLD_PRIMARY_20}>P</Text>
         </View>
@@ -36,7 +42,7 @@ const GoodsDetail = () => {
         </View>
         <View style={{gap: 2}}>
           <Text style={commonStyle.REGULAR_99_14}>사용처</Text>
-          <Text style={commonStyle.REGULAR_33_16}>{provider}</Text>
+          <Text style={commonStyle.REGULAR_33_16}>{brand_name}</Text>
         </View>
       </View>
       <Text style={{...commonStyle.MEDIUM_PRIMARY_12, marginVertical: 10}}>

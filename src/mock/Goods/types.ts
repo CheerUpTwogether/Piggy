@@ -1,9 +1,8 @@
 export interface dummyGoodsItem {
   id: string;
-  provider: string;
-  title: string;
-  sub_title: string;
-  price: number;
+  brand_name: string;
+  product_name: string;
+  product_price: number;
   expire_date: string;
-  goods_url: string;
+  product_thumb_image_url: string;
 }
