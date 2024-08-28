@@ -8,33 +8,50 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {dummyGoodsItem} from '@/mock/Goods/types';
-import {dummyGoodsItemData} from '@/mock/Goods/Goods';
-import TabBar from '@/components/common/TabBar';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {getGoodsAPI} from '@/api/kakao/gift';
 import {GoodsNavigationProp} from './type';
+import {dummyGoodsItem} from '@/mock/Goods/types';
+import TabBar from '@/components/common/TabBar';
+
+const categories = [
+  {
+    label: '전체',
+    value: 'all',
+  },
+  {
+    label: '패스트푸드',
+    value: 'fastfood',
+  },
+  {
+    label: '카페',
+    value: 'cafe',
+  },
+  {
+    label: '스낵',
+    value: 'snack',
+  },
+];
 
 const Goods = () => {
-  const categories = [
-    {
-      label: '전체',
-      value: 'all',
-    },
-    {
-      label: '패스트푸드',
-      value: 'fastfood',
-    },
-    {
-      label: '카페',
-      value: 'cafe',
-    },
-    {
-      label: '스낵',
-      value: 'snack',
-    },
-  ];
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [goods, setGoods] = useState([]);
   const navigation = useNavigation<GoodsNavigationProp>();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getGoods();
+    }, []),
+  );
+
+  const getGoods = async () => {
+    try {
+      const res = await getGoodsAPI();
+      setGoods(res.data.contents);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const gotoDetail = (item: dummyGoodsItem) => {
     navigation.navigate('GoodsDetail', {...item});
@@ -46,22 +63,22 @@ const Goods = () => {
       style={styles.itemContainer}
       onPress={() => gotoDetail(item)}>
       <Image
-        source={{uri: item.product_thumb_image_url}}
+        source={{uri: item.product.product_thumb_image_url}}
         style={styles.itemImg}
         alt="goodsImage"
       />
       <View style={{marginHorizontal: 10, gap: 4}}>
         <Text style={commonStyle.MEDIUM_AA_14} numberOfLines={1}>
-          {item.brand_name}
+          {item.product.brand_name}
         </Text>
-        <Text style={commonStyle.MEDIUM_33_16} numberOfLines={1}>
-          {item.product_name}
+        <Text style={commonStyle.REGULAR_33_18} numberOfLines={1}>
+          {item.product.product_name}
         </Text>
         <View style={styles.priceWrapper}>
-          <Text style={commonStyle.MEDIUM_33_16} numberOfLines={1}>
-            {item.product_price.toLocaleString()}
+          <Text style={commonStyle.MEDIUM_33_20} numberOfLines={1}>
+            {item.product.product_price}
           </Text>
-          <Text style={commonStyle.MEDIUM_PRIMARY_16}>Piggy</Text>
+          <Text style={commonStyle.MEDIUM_PRIMARY_18}>Piggy</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -89,7 +106,7 @@ const Goods = () => {
 
       <View>
         <FlatList
-          data={dummyGoodsItemData}
+          data={goods}
           bounces={false}
           keyExtractor={item => item.id}
           renderItem={renderItem}
@@ -101,17 +118,23 @@ const Goods = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#FFF', paddingBottom: 120},
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF',
+    paddingBottom: 120,
+    borderRadius: 100,
+    borderColor: '#efefef',
+  },
   bannerImg: {
     width: '100%',
     height: 80,
   },
   categoryContainer: {
-    height: 40,
+    //height: 40,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    marginVertical: 12,
+    marginTop: 12,
     paddingVertical: 1,
     marginHorizontal: 24,
   },
@@ -120,7 +143,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     marginBottom: 40,
-    gap: 10,
+    gap: 8,
   },
   itemImg: {
     width: '100%',
