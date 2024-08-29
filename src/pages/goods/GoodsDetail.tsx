@@ -13,7 +13,6 @@ const GoodsDetail = () => {
     product_price,
     product_thumb_image_url,
     brand_image_url,
-    product_image_url,
   } = route.params;
   return (
     <View style={commonStyle.container}>
