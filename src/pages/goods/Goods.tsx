@@ -71,14 +71,14 @@ const Goods = () => {
         <Text style={commonStyle.MEDIUM_AA_14} numberOfLines={1}>
           {item.product.brand_name}
         </Text>
-        <Text style={commonStyle.REGULAR_33_18} numberOfLines={1}>
+        <Text style={commonStyle.REGULAR_33_20} numberOfLines={1}>
           {item.product.product_name}
         </Text>
         <View style={styles.priceWrapper}>
-          <Text style={commonStyle.MEDIUM_33_20} numberOfLines={1}>
+          <Text style={commonStyle.MEDIUM_33_18} numberOfLines={1}>
             {item.product.product_price}
           </Text>
-          <Text style={commonStyle.MEDIUM_PRIMARY_18}>Piggy</Text>
+          <Text style={commonStyle.MEDIUM_PRIMARY_16}>Piggy</Text>
         </View>
       </View>
     </TouchableOpacity>
