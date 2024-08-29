@@ -68,7 +68,7 @@ const Goods = () => {
         alt="goodsImage"
       />
       <View style={{marginHorizontal: 10, gap: 4}}>
-        <Text style={commonStyle.MEDIUM_AA_14} numberOfLines={1}>
+        <Text style={commonStyle.REGULAR_AA_14} numberOfLines={1}>
           {item.product.brand_name}
         </Text>
         <Text style={commonStyle.REGULAR_33_20} numberOfLines={1}>
@@ -76,9 +76,9 @@ const Goods = () => {
         </Text>
         <View style={styles.priceWrapper}>
           <Text style={commonStyle.MEDIUM_33_18} numberOfLines={1}>
-            {item.product.product_price}
+            {item.product.product_price.toLocaleString()}
           </Text>
-          <Text style={commonStyle.MEDIUM_PRIMARY_16}>Piggy</Text>
+          <Text style={commonStyle.MEDIUM_PRIMARY_18}>P</Text>
         </View>
       </View>
     </TouchableOpacity>
