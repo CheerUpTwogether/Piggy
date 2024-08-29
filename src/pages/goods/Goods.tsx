@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {getGoodsAPI} from '@/api/kakao/gift';
-import GoodsFlatItem from '@/assets/goods/GoodsFlatItem';
+import GoodsFlatItem from '@/components/goods/GoodsFlatItem';
 import {GoodsList} from '@/types/gift';
 import {commonStyle} from '@/styles/common';
 
@@ -33,21 +33,25 @@ const Goods = () => {
           keyExtractor={item => item.product.product_thumb_image_url}
           renderItem={({item}) => <GoodsFlatItem item={item} />}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={
-            <View style={styles.bannerContainer}>
-              <Image
-                source={require('@/assets/icons/gift.png')}
-                alt="bannerImage"
-                style={styles.bannerImg}
-              />
-              <View>
-                <Text style={styles.bannerText}>
-                  적립하신 피기로 상품을 구매해보세요
-                </Text>
-              </View>
-            </View>
-          }
+          ListHeaderComponent={renderBanner}
         />
+      </View>
+    </View>
+  );
+};
+
+const renderBanner = () => {
+  return (
+    <View style={styles.bannerContainer}>
+      <Image
+        source={require('@/assets/icons/gift.png')}
+        alt="bannerImage"
+        style={styles.bannerImg}
+      />
+      <View>
+        <Text style={styles.bannerText}>
+          적립하신 피기로 상품을 구매해보세요
+        </Text>
       </View>
     </View>
   );
