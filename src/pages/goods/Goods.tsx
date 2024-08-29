@@ -4,7 +4,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {getGoodsAPI} from '@/api/kakao/gift';
 import GoodsFlatItem from '@/components/goods/GoodsFlatItem';
 import {GoodsList} from '@/types/gift';
-import {commonStyle} from '@/styles/common';
+import {color_primary, commonStyle} from '@/styles/common';
 
 const Goods = () => {
   const [goods, setGoods] = useState<GoodsList>([]);
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   bannerContainer: {
     height: 80,
-    backgroundColor: '#FFD9D8',
+    backgroundColor: '#efefef',
     flexDirection: 'row',
     marginBottom: 12,
     justifyContent: 'center',
