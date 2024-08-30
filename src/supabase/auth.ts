@@ -2,7 +2,7 @@ import supabase from './supabase';
 
 // 닉네임 중복 확인
 export const checkNicknameDuplicateSpb = (nickname: string) => {
-  return supabase.from('profile').select('user_id').eq('nickname', nickname);
+  return supabase.from('users_nickname').select('*').eq('nickname', nickname);
 };
 
 // 이메일 회원가입
