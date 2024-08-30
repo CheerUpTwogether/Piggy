@@ -1,17 +1,18 @@
 import supabase from '@/supabase/supabase';
+import {Appointment} from '@/types/appointment';
 
 // 약속만들기
-export const setAppointmentSpb = async (
+export const setAppointmentSpb = async ({
   id,
   subject,
-  participants_count,
-  address_name,
+  participant_count,
+  address,
   place_name,
   latitude,
   longitude,
   appointment_date,
   deal_piggy_count,
-) => {
+}: Appointment) => {
   try {
     const {data, error} = await supabase
       .from('appointment')
@@ -19,8 +20,8 @@ export const setAppointmentSpb = async (
         {
           proposer_id: id,
           subject: subject,
-          participants_count: participants_count,
-          address_name: address_name,
+          participant_count,
+          address,
           place_name: place_name,
           latitude: latitude,
           longitude: longitude,
