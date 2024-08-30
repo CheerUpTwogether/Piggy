@@ -13,6 +13,7 @@ import {
   signUpSpb,
 } from '@/supabase/auth';
 import {useToastStore} from '@/store/store';
+import {User, Session} from '@supabase/supabase-js';
 const logo = require('@/assets/icons/logo.png');
 
 const Regist = () => {
@@ -44,7 +45,7 @@ const Regist = () => {
   };
 
   const signUp = async () => {
-    const {user, error} = await signUpSpb(email, password);
+    const {data: user, error} = await signUpSpb(email, password);
     if (error) {
       addToast({
         success: false,
@@ -56,7 +57,7 @@ const Regist = () => {
     setProfile(user);
   };
 
-  const setProfile = user => {
+  const setProfile = (user: {user: User | null; session: Session | null}) => {
     const {error} = setProfileSpb(user, nickname);
     addToast({
       success: false,
@@ -106,7 +107,7 @@ const Regist = () => {
           label="닉네임"
         />
       </View>
-      <Button text={'가입하기'} onPress={checkNicknameDuplicate} />
+      <Button text={'가입하기'} onPress={checkNicknameDuplicate} disable={} />
     </View>
   );
 };

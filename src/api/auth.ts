@@ -1,4 +1,3 @@
-import supabase from '@/supabase/supabase';
 import * as kakao from '@react-native-seoul/kakao-login';
 
 // 로그인후 던저 주는 response결과 확인용(추후 삭제)
