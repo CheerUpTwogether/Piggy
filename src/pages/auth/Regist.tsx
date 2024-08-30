@@ -107,7 +107,11 @@ const Regist = () => {
           label="닉네임"
         />
       </View>
-      <Button text={'가입하기'} onPress={checkNicknameDuplicate} disable={} />
+      <Button
+        text={'가입하기'}
+        onPress={checkNicknameDuplicate}
+        disable={!email || !password || !nickname}
+      />
     </View>
   );
 };
