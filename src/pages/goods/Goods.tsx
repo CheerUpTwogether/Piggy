@@ -1,135 +1,84 @@
-import {commonStyle} from '@/styles/common';
 import React, {useState} from 'react';
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {dummyGoodsItem} from '@/mock/Goods/types';
-import {dummyGoodsItemData} from '@/mock/Goods/Goods';
-import TabBar from '@/components/common/TabBar';
-import {GoodsNavigationProp} from './type';
+import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+import {getGoodsAPI} from '@/api/kakao/gift';
+import GoodsFlatItem from '@/components/goods/GoodsFlatItem';
+import {GoodsList} from '@/types/gift';
+import {color_primary, commonStyle} from '@/styles/common';
 
 const Goods = () => {
-  const categories = [
-    {
-      label: '전체',
-      value: 'all',
-    },
-    {
-      label: '패스트푸드',
-      value: 'fastfood',
-    },
-    {
-      label: '카페',
-      value: 'cafe',
-    },
-    {
-      label: '스낵',
-      value: 'snack',
-    },
-  ];
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const navigation = useNavigation<GoodsNavigationProp>();
+  const [goods, setGoods] = useState<GoodsList>([]);
 
-  const gotoDetail = (item: dummyGoodsItem) => {
-    navigation.navigate('GoodsDetail', {...item});
-  };
-
-  const renderItem = ({item}: {item: dummyGoodsItem}) => (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      style={styles.itemContainer}
-      onPress={() => gotoDetail(item)}>
-      <Image
-        source={{uri: item.product_thumb_image_url}}
-        style={styles.itemImg}
-        alt="goodsImage"
-      />
-      <View style={{marginHorizontal: 10, gap: 4}}>
-        <Text style={commonStyle.MEDIUM_AA_14} numberOfLines={1}>
-          {item.brand_name}
-        </Text>
-        <Text style={commonStyle.MEDIUM_33_16} numberOfLines={1}>
-          {item.product_name}
-        </Text>
-        <View style={styles.priceWrapper}>
-          <Text style={commonStyle.MEDIUM_33_16} numberOfLines={1}>
-            {item.product_price.toLocaleString()}
-          </Text>
-          <Text style={commonStyle.MEDIUM_PRIMARY_16}>Piggy</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+  useFocusEffect(
+    React.useCallback(() => {
+      getGoods();
+    }, []),
   );
+
+  const getGoods = async () => {
+    try {
+      const res = await getGoodsAPI();
+      setGoods(res.data.contents);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{
-          uri: 'https://loremflickr.com/320/80/cat​',
-        }}
-        style={styles.bannerImg}
-        alt="bannerImage"
-      />
-
-      <View style={styles.categoryContainer}>
-        <TabBar
-          categories={categories}
-          active={selectedCategory}
-          onChange={setSelectedCategory}
-        />
-      </View>
-
-      <View style={{height: 1, backgroundColor: '#DDD'}} />
-
       <View>
         <FlatList
-          data={dummyGoodsItemData}
+          data={goods}
           bounces={false}
-          keyExtractor={item => item.id}
-          renderItem={renderItem}
+          keyExtractor={item => item.product.product_thumb_image_url}
+          renderItem={({item}) => <GoodsFlatItem item={item} />}
           showsVerticalScrollIndicator={false}
+          ListHeaderComponent={renderBanner}
         />
       </View>
     </View>
   );
 };
 
+const renderBanner = () => {
+  return (
+    <View style={styles.bannerContainer}>
+      <Image
+        source={require('@/assets/icons/gift.png')}
+        alt="bannerImage"
+        style={styles.bannerImg}
+      />
+      <View>
+        <Text style={styles.bannerText}>
+          적립하신 피기로 상품을 구매해보세요
+        </Text>
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#FFF', paddingBottom: 120},
-  bannerImg: {
-    width: '100%',
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF',
+    borderColor: '#efefef',
+  },
+  bannerContainer: {
     height: 80,
-  },
-  categoryContainer: {
-    height: 40,
+    backgroundColor: '#efefef',
     flexDirection: 'row',
+    marginBottom: 12,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
-    marginVertical: 12,
-    paddingVertical: 1,
-    marginHorizontal: 24,
   },
-  categoryTitle: {
-    ...commonStyle.MEDIUM_77_18,
+  bannerImg: {
+    width: 52,
+    height: 52,
   },
-  itemContainer: {
-    marginBottom: 40,
-    gap: 10,
+  bannerText: {
+    ...commonStyle.MEDIUM_33_18,
+    padding: 8,
   },
-  itemImg: {
-    width: '100%',
-    height: 260,
-    borderColor: '#DDD',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-  },
-  priceWrapper: {flexDirection: 'row', alignItems: 'center', gap: 4},
 });
 
 export default Goods;

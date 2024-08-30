@@ -2,18 +2,17 @@ import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import {useRoute, RouteProp} from '@react-navigation/native';
-import Button from '../common/Button';
+import Button from '@/components/common/Button';
 import {RootStackParamList} from '@/types/Router';
 
 const GoodsDetail = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'GoodsDetail'>>();
   const {
-    // id,
     brand_name,
     product_name,
     product_price,
-    expire_date,
     product_thumb_image_url,
+    brand_image_url,
   } = route.params;
   return (
     <View style={commonStyle.container}>
@@ -25,7 +24,7 @@ const GoodsDetail = () => {
         />
       </View>
       <View style={{gap: 14, marginVertical: 8}}>
-        <Text style={{...commonStyle.MEDIUM_33_20, textAlign: 'center'}}>
+        <Text style={{...commonStyle.REGULAR_33_20, textAlign: 'center'}}>
           {product_name}
         </Text>
         <View style={styles.goodsPriceContainer}>
@@ -38,17 +37,21 @@ const GoodsDetail = () => {
 
       <View style={styles.goodsDetailContainer}>
         <View style={{gap: 2}}>
-          <Text style={commonStyle.REGULAR_99_14}>유효기간</Text>
-          <Text style={commonStyle.REGULAR_33_16}>{expire_date}</Text>
-        </View>
-        <View style={{gap: 2}}>
           <Text style={commonStyle.REGULAR_99_14}>사용처</Text>
-          <Text style={commonStyle.REGULAR_33_16}>{brand_name}</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Image
+              source={{uri: brand_image_url}}
+              style={{width: 32, height: 32, borderRadius: 8}}
+              alt={`${brand_image_url}Image`}
+            />
+            <Text style={commonStyle.REGULAR_33_16}>{brand_name}</Text>
+          </View>
         </View>
       </View>
       <Text style={{...commonStyle.MEDIUM_PRIMARY_12, marginVertical: 10}}>
         *해당 쿠폰은 일부 점포에서는 취급하지 않는 상품일 수 있습니다.
       </Text>
+
       <View style={{marginVertical: 24}}>
         <Button text="구매" onPress={() => {}} size="full" />
       </View>
