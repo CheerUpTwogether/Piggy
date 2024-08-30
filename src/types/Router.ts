@@ -33,6 +33,7 @@ export type RootStackParamList = {
   ServiceAgreement: undefined;
   PaymentAgreement: undefined;
   LoginDetail: undefined;
+  LoginEmail: undefined;
   EditProfile: User;
   HelpDesk: undefined;
   HelpHistory: undefined;

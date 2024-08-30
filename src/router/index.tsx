@@ -36,6 +36,7 @@ import Alarm from '@/pages/alarm/Alarm';
 import PiggyShop from '@/components/piggy/PiggyShop';
 import AppointmentForm from '@/pages/home/AppointmentForm';
 import Regist from '@/pages/auth/Regist';
+import LoginEmail from '@/pages/auth/LoginEmail';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -91,6 +92,11 @@ const Router = () => {
       <Stack.Screen
         name="Login"
         component={Login}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LoginEmail"
+        component={LoginEmail}
         options={{headerShown: false}}
       />
       <Stack.Screen

@@ -6,6 +6,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import KakaoSvg from '@/assets/icons/kakao.svg';
 import GoogleSvg from '@/assets/icons/google.svg';
+import EmailSvg from '@/assets/icons/email.svg';
 const logo = require('@/assets/icons/logo.png');
 
 const Login = () => {
@@ -29,6 +30,15 @@ const Login = () => {
           </Text>
         </View>
         <View style={style.loginWrapper}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={style.email}
+            onPress={() => {
+              navigation.navigate('LoginEmail');
+            }}>
+            <EmailSvg width={24} height={24} color={'#333'} />
+            <Text style={style.socialText}>이메일로 로그인</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
             style={style.socialKakao}
@@ -80,6 +90,16 @@ const style = StyleSheet.create({
   },
   startText: {color: '#333'},
   loginWrapper: {marginTop: 50, gap: 16},
+  email: {
+    borderWidth: 1,
+    borderColor: '#ED423F',
+    width: 340,
+    height: 50,
+    borderRadius: 100,
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+  },
   socialKakao: {
     backgroundColor: '#FEE500',
     width: 340,
@@ -98,7 +118,6 @@ const style = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
   },
-
   socialText: {
     fontSize: 14,
     fontWeight: 'regular',

@@ -24,3 +24,31 @@ export const setProfileSpb = (user, nickname) => {
     },
   ]);
 };
+
+export const signInSpb = async (
+  email: string,
+  password: string,
+): Promise<boolean> => {
+  const {data, error: authError} = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (authError) {
+    console.log('로그인 실패');
+    return false;
+  }
+
+  console.log('로그인 성공', data.user.id);
+
+  const {data: insertData, error: insertError} = await supabase
+    .from('users_nickname')
+    .insert([
+      {
+        id: data.user.id,
+        email: data.user.email,
+      },
+    ]);
+
+  return true;
+};
