@@ -16,7 +16,7 @@ import Goods from '@/pages/goods/Goods';
 import Settings from '@/pages/settings/Settings';
 import GoodsStorage from '@/components/goodsStorage/GoodsStorage';
 import GoodsStorageDetail from '@/components/goodsStorage/GoodsStorageDetail';
-import GoodsDetail from '@/components/goods/GoodsDetail';
+import GoodsDetail from '@/pages/goods/GoodsDetail';
 import NoticeBoard from '@/components/NoticeBoard/NoticeBoard';
 import NoticeBoardDetail from '@/components/NoticeBoard/NoticeBoardDetail';
 import FAQBoard from '@/components/FAQBoard/FAQBoard';
@@ -35,6 +35,8 @@ import GiftAmount from '@/pages/gift/GiftAmount';
 import Alarm from '@/pages/alarm/Alarm';
 import PiggyShop from '@/components/piggy/PiggyShop';
 import AppointmentForm from '@/pages/home/AppointmentForm';
+import Regist from '@/pages/auth/Regist';
+import LoginEmail from '@/pages/auth/LoginEmail';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -90,6 +92,11 @@ const Router = () => {
       <Stack.Screen
         name="Login"
         component={Login}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LoginEmail"
+        component={LoginEmail}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -271,6 +278,14 @@ const Router = () => {
           header: Header,
           headerLeftLabelVisible: true,
           title: '약속 잡기',
+        }}
+      />
+      <Stack.Screen
+        name="Regist"
+        component={Regist}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
         }}
       />
     </Stack.Navigator>

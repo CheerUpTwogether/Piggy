@@ -8,6 +8,7 @@ import {
   StackNavigationOptions,
   StackNavigationProp,
 } from '@react-navigation/stack';
+import {GoodsProduct} from './gift';
 
 export type RootBottomTabParamList = {
   Home: undefined;
@@ -33,6 +34,7 @@ export type RootStackParamList = {
   ServiceAgreement: undefined;
   PaymentAgreement: undefined;
   LoginDetail: undefined;
+  LoginEmail: undefined;
   EditProfile: User;
   HelpDesk: undefined;
   HelpHistory: undefined;
@@ -40,7 +42,7 @@ export type RootStackParamList = {
   NoticeBoard: undefined;
   FAQBoard: undefined;
   GoodsStorage: undefined;
-  GoodsDetail: dummyGoodsItem;
+  GoodsDetail: GoodsProduct;
   GoodsStorageDetail: dummyGoodsStorageItem;
   NoticeBoardDetail: dummyNoticeItem;
   PiggyUsage: undefined;
@@ -48,6 +50,7 @@ export type RootStackParamList = {
   Alarm: undefined;
   PiggyShop: undefined;
   AppointmentForm: undefined;
+  Regist: undefined;
 };
 
 export type MainHeaderProps = {
