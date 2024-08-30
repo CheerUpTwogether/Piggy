@@ -48,6 +48,7 @@ export type RootStackParamList = {
   Alarm: undefined;
   PiggyShop: undefined;
   AppointmentForm: undefined;
+  Regist: undefined;
 };
 
 export type MainHeaderProps = {

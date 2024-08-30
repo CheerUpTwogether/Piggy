@@ -50,9 +50,14 @@ const Login = () => {
         </View>
 
         <View style={style.helperWrapper}>
-          <Text style={[style.helper, {textDecorationLine: 'underline'}]}>
-            로그인에 문제가 있으신가요?
-          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Regist');
+            }}>
+            <Text style={[style.helper, {textDecorationLine: 'underline'}]}>
+              이메일로 회원가입하겠어요?
+            </Text>
+          </TouchableOpacity>
           <Text style={style.helper}>이용 약관</Text>
         </View>
       </View>

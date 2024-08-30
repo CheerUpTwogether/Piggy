@@ -35,6 +35,7 @@ import GiftAmount from '@/pages/gift/GiftAmount';
 import Alarm from '@/pages/alarm/Alarm';
 import PiggyShop from '@/components/piggy/PiggyShop';
 import AppointmentForm from '@/pages/home/AppointmentForm';
+import Regist from '@/pages/auth/Regist';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -271,6 +272,14 @@ const Router = () => {
           header: Header,
           headerLeftLabelVisible: true,
           title: '약속 잡기',
+        }}
+      />
+      <Stack.Screen
+        name="Regist"
+        component={Regist}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
         }}
       />
     </Stack.Navigator>
