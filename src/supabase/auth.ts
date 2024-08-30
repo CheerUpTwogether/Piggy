@@ -1,7 +1,7 @@
 import supabase from '@/supabase/supabase';
 
 // 카카오 로그인
-export const kakaoLoginSPB = (idToken, accessToken) => {
+export const kakaoLoginSpb = (idToken: string, accessToken: string) => {
   return supabase.auth.signInWithIdToken({
     provider: 'kakao',
     token: idToken,
@@ -14,22 +14,39 @@ export const checkNicknameDuplicateSpb = (nickname: string) => {
   return supabase.from('users_nickname').select('*').eq('nickname', nickname);
 };
 
+// 프로필 가져오기
+export const getProfileSpb = (uid: string) => {
+  return supabase.from('users_nickname').select('*').eq('id', uid);
+};
+
 // 이메일 회원가입
 export const signUpSpb = async (email: string, password: string) => {
   return await supabase.auth.signUp({email, password});
 };
 
 // 이메일 세팅
-export const setProfileSpb = (user, nickname) => {
-  return supabase.from('profile').insert([
+export const setProfileSpb = (
+  id: string,
+  email: string,
+  nickname: string,
+  created_at: string,
+  updated_at: string,
+  service_terms_agreement: boolean,
+  payment_terms_agreement: boolean,
+  notification_agreement: boolean,
+  social_login_type: string,
+) => {
+  return supabase.from('users_nickname').insert([
     {
-      user_id: user?.user?.id,
-      email: user?.user?.email,
-      nickname: nickname,
-      introduce: 'please edit your introduce',
-      profileimagepath: '',
-      communitycount: 0,
-      favoritecount: 0,
+      id,
+      email,
+      nickname,
+      created_at,
+      updated_at,
+      service_terms_agreement,
+      payment_terms_agreement,
+      notification_agreement,
+      social_login_type,
     },
   ]);
 };
@@ -60,4 +77,8 @@ export const signInSpb = async (
     ]);
 
   return true;
+};
+
+export const isPiggySignup = () => {
+  return supabase.from('users_nickname').select('*').eq('nickname', nickname);
 };

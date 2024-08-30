@@ -1,5 +1,5 @@
 import * as kakao from '@react-native-seoul/kakao-login';
-import {kakaoLoginSPB} from '@/supabase/auth';
+import {getProfileSpb, kakaoLoginSpb} from '@/supabase/auth';
 
 // 카카오 로그인
 export const kakaoSignInAPI = async () => {
@@ -7,10 +7,30 @@ export const kakaoSignInAPI = async () => {
     const {idToken, accessToken} = await kakao.login();
 
     if (idToken) {
-      const {data, error} = await kakaoLoginSPB(idToken, accessToken);
-      console.log(data);
-      console.log(error?.message);
-      console.log(error?.status);
+      console.log(idToken);
+      console.log(accessToken);
+      const {data: authData, error: authDataError} = await kakaoLoginSpb(
+        idToken,
+        accessToken,
+      );
+
+      if (authDataError) {
+        console.log(authDataError);
+        return;
+      }
+
+      const {data: profileData, error: profileDataError} = await getProfileSpb(
+        authData.session.user.id,
+      );
+
+      if (profileDataError) {
+        console.log(profileDataError);
+        return;
+      }
+
+      const isExistProfile = profileData.length > 0;
+      const res = {authData, isExistProfile};
+      return res;
     }
   } catch (e) {
     console.log(e);
