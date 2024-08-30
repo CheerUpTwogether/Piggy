@@ -6,7 +6,8 @@ export const kakaoLoginSPB = (idToken, accessToken) => {
     provider: 'kakao',
     token: idToken,
     access_token: accessToken,
-
+  });
+};
 
 // 닉네임 중복 확인
 export const checkNicknameDuplicateSpb = (nickname: string) => {
