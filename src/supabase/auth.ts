@@ -6,8 +6,8 @@ export const checkNicknameDuplicateSpb = (nickname: string) => {
 };
 
 // 이메일 회원가입
-export const signUpSpb = (email: string, password: string) => {
-  return supabase.auth.signUp({email, password});
+export const signUpSpb = async (email: string, password: string) => {
+  return await supabase.auth.signUp({email, password});
 };
 
 // 이메일 세팅
