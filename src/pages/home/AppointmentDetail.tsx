@@ -102,10 +102,12 @@ const AppointmentDetail = () => {
           theme="outline"
           style={{marginBottom: 8}}
         />
-        {!cancelStatus.includes(item.appointment_status) &&
-          item.appointment_status !== 'fulfilled' && (
-            <Button onPress={() => {}} text={'인증하기'} disable={true} />
-          )}
+
+        <Button
+          onPress={() => {}}
+          text={'인증하기'}
+          disable={cancelStatus.includes(item.appointment_status)}
+        />
       </View>
 
       <SideSlideModal isShow={isShow} setIsShow={setIsShow} title="참석자">

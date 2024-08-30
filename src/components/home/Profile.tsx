@@ -20,7 +20,7 @@ const Profile = () => {
           alt="peofileImage"
         />
         <View>
-          <Text style={commonStyle.REGULAR_FF_14}>
+          <Text style={commonStyle.REGULAR_FF_16}>
             {dummy_profile.nick_name}
           </Text>
           <Text style={commonStyle.MEDIUM_FF_20}>
@@ -33,14 +33,14 @@ const Profile = () => {
           text="사용내역"
           onPress={() => navigation.navigate('PiggyUsage')}
           theme="outline"
-          size="sm"
+          size="md"
         />
-        <Button
+        {/* <Button
           text="충전하기"
           onPress={() => navigation.navigate('PiggyShop')}
           theme="outline"
           size="sm"
-        />
+        /> */}
       </View>
     </View>
   );
@@ -57,14 +57,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   profileImg: {
-    width: 40,
-    height: 40,
+    width: 52,
+    height: 52,
     borderRadius: 100,
     marginRight: 8,
   },
   btnArea: {
     flexDirection: 'row',
-    paddingTop: 28,
+    paddingTop: 8,
     justifyContent: 'flex-end',
     gap: 4,
   },

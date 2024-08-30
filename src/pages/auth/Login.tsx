@@ -6,11 +6,17 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import KakaoSvg from '@/assets/icons/kakao.svg';
 import GoogleSvg from '@/assets/icons/google.svg';
+import {kakaoSignInAPI} from '@/api/auth';
 import EmailSvg from '@/assets/icons/email.svg';
 const logo = require('@/assets/icons/logo.png');
 
 const Login = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const kakaoLogin = async () => {
+    await kakaoSignInAPI();
+  };
+
   return (
     <View style={commonStyle.container}>
       <View style={style.wrapper}>
@@ -43,7 +49,8 @@ const Login = () => {
             activeOpacity={0.8}
             style={style.socialKakao}
             onPress={() => {
-              navigation.navigate('LoginDetail');
+              kakaoLogin();
+              //navigation.navigate('LoginDetail');
             }}>
             <KakaoSvg width={33} height={33} />
             <Text style={style.socialText}>카카오로 로그인</Text>
