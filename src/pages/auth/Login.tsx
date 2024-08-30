@@ -6,10 +6,16 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import KakaoSvg from '@/assets/icons/kakao.svg';
 import GoogleSvg from '@/assets/icons/google.svg';
+import {kakaoSignInAPI} from '@/api/auth';
 const logo = require('@/assets/icons/logo.png');
 
 const Login = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const kakaoLogin = async () => {
+    await kakaoSignInAPI();
+  };
+
   return (
     <View style={commonStyle.container}>
       <View style={style.wrapper}>
@@ -33,7 +39,8 @@ const Login = () => {
             activeOpacity={0.8}
             style={style.socialKakao}
             onPress={() => {
-              navigation.navigate('LoginDetail');
+              kakaoLogin();
+              //navigation.navigate('LoginDetail');
             }}>
             <KakaoSvg width={33} height={33} />
             <Text style={style.socialText}>카카오로 로그인</Text>
@@ -50,9 +57,14 @@ const Login = () => {
         </View>
 
         <View style={style.helperWrapper}>
-          <Text style={[style.helper, {textDecorationLine: 'underline'}]}>
-            로그인에 문제가 있으신가요?
-          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Regist');
+            }}>
+            <Text style={[style.helper, {textDecorationLine: 'underline'}]}>
+              이메일로 로그인하시겠어요?
+            </Text>
+          </TouchableOpacity>
           <Text style={style.helper}>이용 약관</Text>
         </View>
       </View>

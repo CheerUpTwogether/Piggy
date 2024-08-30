@@ -1,15 +1,16 @@
-import supabase from '@/supabase/supabase';
 import * as kakao from '@react-native-seoul/kakao-login';
+import {kakaoLoginSPB} from '@/supabase/auth';
 
-// 로그인후 던저 주는 response결과 확인용(추후 삭제)
-export const kakaoSignInTest = async () => {
+// 카카오 로그인
+export const kakaoSignInAPI = async () => {
   try {
-    const data = await kakao.login();
+    const {idToken, accessToken} = await kakao.login();
 
-    console.log('로그인 결과', data);
-    if (data) {
-      const profile = await kakao.getProfile();
-      console.log('유저 정보', profile);
+    if (idToken) {
+      const {data, error} = await kakaoLoginSPB(idToken, accessToken);
+      console.log(data);
+      console.log(error?.message);
+      console.log(error?.status);
     }
   } catch (e) {
     console.log(e);
