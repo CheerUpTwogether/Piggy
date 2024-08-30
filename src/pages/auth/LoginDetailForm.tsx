@@ -6,9 +6,11 @@ import NickNameSvg from '@/assets/icons/nickname.svg';
 import PhoneSvg from '@/assets/icons/phone.svg';
 import EmailSvg from '@/assets/icons/email.svg';
 
-const LoginDetailForm = () => {
-  const [email, setEmail] = useState('umparumapa@naver.com');
-  const [nickName, setNickName] = useState(dummy_profile.nick_name);
+const LoginDetailForm = ({authData}) => {
+  const [email, setEmail] = useState(authData.session.user.email);
+  const [nickName, setNickName] = useState(
+    authData.session.user.user_metadata.name,
+  );
   const [phone, setPhone] = useState('');
   const [cetificationNum, setCertificationNum] = useState('');
   const [certificationNumberVisible, setCertificationNumberVisible] =

@@ -14,7 +14,21 @@ const Login = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const kakaoLogin = async () => {
-    await kakaoSignInAPI();
+    const res = await kakaoSignInAPI();
+    if (res) {
+      const {authData, isExistProfile} = res;
+
+      if (isExistProfile) {
+        // 여기에 zutand profileData 정보가지고 전역설정
+        navigation.replace('Main', {screen: 'Home'});
+        return;
+      }
+      console.log('==========');
+      console.log('==========');
+      console.log('==========');
+
+      navigation.navigate('LoginDetail', {authData: authData});
+    }
   };
 
   return (
