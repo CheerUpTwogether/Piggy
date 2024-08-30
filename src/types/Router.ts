@@ -34,6 +34,7 @@ export type RootStackParamList = {
   ServiceAgreement: undefined;
   PaymentAgreement: undefined;
   LoginDetail: undefined;
+  LoginEmail: undefined;
   EditProfile: User;
   HelpDesk: undefined;
   HelpHistory: undefined;
@@ -49,6 +50,7 @@ export type RootStackParamList = {
   Alarm: undefined;
   PiggyShop: undefined;
   AppointmentForm: undefined;
+  Regist: undefined;
 };
 
 export type MainHeaderProps = {
