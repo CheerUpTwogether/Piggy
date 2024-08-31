@@ -60,10 +60,11 @@ export const setAppointmentParticipantsSpb = async (
 };
 
 // 약속 리스트 불러오기
-export const getAppointmentsSpb = async id => {
+export const getAppointmentsSpb = async (id, appointment_selector) => {
   try {
     const {data, error} = await supabase.rpc('select_appointment_list_detail', {
       user_uuid: id,
+      appointment_selector: appointment_selector,
     });
   } catch (e) {
     console.error(e);
