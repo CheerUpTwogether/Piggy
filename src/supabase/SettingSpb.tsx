@@ -94,6 +94,26 @@ export const getInquiryDetailSpb = async (id: string) => {
   }
 };
 
+// 문의 내역 삭제
+export const deleteInquirySpb = async (inquiryId: string) => {
+  try {
+    const {error} = await supabase
+      .from('inquiry_log')
+      .delete()
+      .eq('id', inquiryId);
+
+    if (error) {
+      console.error('Supabase error in deleteInquirySpb:', error.message);
+      return false;
+    }
+
+    return true;
+  } catch (e) {
+    console.error('Error appeared in deleteInquirySpb:', e);
+    return false;
+  }
+};
+
 // 공지
 export const getAnnouncementSpb = async () => {
   try {

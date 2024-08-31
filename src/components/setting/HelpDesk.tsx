@@ -88,8 +88,6 @@ const HelpDesk = () => {
       email,
     );
 
-    console.log('res data ====> ', res);
-
     if (res) {
       addToast({
         success: true,

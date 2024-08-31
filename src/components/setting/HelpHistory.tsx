@@ -13,7 +13,8 @@ import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
 import ButtonBottomSheet from '../common/ButtonBottomSheet';
 import EmptyResult from '../common/EmptyResult';
-import {getMyInquirysSpb} from '@/supabase/SettingSpb';
+import {useToastStore, useModalStore} from '@/store/store';
+import {getMyInquirysSpb, deleteInquirySpb} from '@/supabase/SettingSpb';
 import {Inquiry} from '@/types/setting';
 
 import PulsSvg from '@/assets/icons/plus.svg';
@@ -25,6 +26,8 @@ const HelpHistory = () => {
   const [inquiryList, setInquiryList] = useState<Inquiry[]>([]);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const addToast = useToastStore(state => state.addToast);
+  const {openModal, closeModal} = useModalStore();
 
   // 화면이 포커스될 때마다 데이터 새로고침
   useFocusEffect(
@@ -35,7 +38,6 @@ const HelpHistory = () => {
 
   // 문의 리스트 조회
   const fetchInquirys = async () => {
-    // TODO: uid 전역에서 가져와서 넣어주기
     const res = await getMyInquirysSpb('7b4a9f58-028f-40cb-9600-7dbf8f3744b3');
     if (res) {
       const sortedList = res.sort(
@@ -47,11 +49,39 @@ const HelpHistory = () => {
     }
   };
 
+  // 문의 내역 삭제
+  const removeInquiry = async () => {
+    if (selectedId) {
+      const res = await deleteInquirySpb(selectedId);
+      if (!res) {
+        addToast({
+          success: false,
+          text: '문의 내역 삭제 실패',
+          multiText: '다시 시도해주세요.',
+        });
+        return;
+      }
+      addToast({
+        success: true,
+        text: '삭제 완료',
+        multiText: '문의 내역이 성공적으로 삭제되었습니다.',
+      });
+      fetchInquirys();
+      closeModal(); // 삭제 후 모달을 닫습니다.
+    } else {
+      addToast({
+        success: false,
+        text: '삭제할 항목이 없습니다.',
+      });
+    }
+  };
+
   const gotoDetail = () => {
     if (selectedId) {
       navigation.navigate('HelpDetail', {id: selectedId});
     }
   };
+
   const gotoDesk = () => {
     navigation.navigate('HelpDesk');
   };
@@ -62,8 +92,16 @@ const HelpHistory = () => {
   };
 
   const handleDeleteHelp = () => {
-    console.log(`TODO: 삭제 API 호출`);
-    setMoreShow(false);
+    if (selectedId) {
+      setMoreShow(false);
+      openModal({
+        title: '문의 내역을 정말 삭제하시겠습니까?',
+        content: '삭제할 경우 다시 확인할 수 없습니다.',
+        text: '삭제하기',
+        onPress: removeInquiry,
+        textCancel: '취소',
+      });
+    }
   };
 
   const createButtonList = () => {
