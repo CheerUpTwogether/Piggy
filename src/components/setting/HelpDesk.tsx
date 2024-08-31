@@ -8,6 +8,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
 import {setInquirySpb} from '@/supabase/SettingSpb';
 import {useToastStore} from '@/store/store';
@@ -24,6 +27,9 @@ const HelpDesk = () => {
   const [content, setContent] = useState('');
   const [imageList, setImageList] = useState(['https://i.pravatar.cc/250']);
   const addToast = useToastStore(state => state.addToast);
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const validateInput = (
     value: string,
@@ -74,7 +80,6 @@ const HelpDesk = () => {
     ) {
       return;
     }
-
     const res = await setInquirySpb(
       // TODO: uid 전역에서 호출
       '7b4a9f58-028f-40cb-9600-7dbf8f3744b3',
@@ -83,7 +88,7 @@ const HelpDesk = () => {
       email,
     );
 
-    console.log(res);
+    console.log('res data ====> ', res);
 
     if (res) {
       addToast({
@@ -91,6 +96,7 @@ const HelpDesk = () => {
         text: '문의 전송 완료',
         multiText: '문의가 성공적으로 전송되었습니다.',
       });
+      navigation.navigate('HelpHistory');
     } else {
       addToast({
         success: false,
@@ -109,7 +115,7 @@ const HelpDesk = () => {
           <InputBox
             value={email}
             setValue={setEmail}
-            placeholder={'문의하실 이메일을 입력해주세요.'}
+            placeholder={'문의자의 이메일을 입력해주세요.'}
             icon={NickNameSvg}
             isLarge={true}
           />

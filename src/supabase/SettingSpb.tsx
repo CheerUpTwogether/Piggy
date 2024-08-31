@@ -25,24 +25,26 @@ export const setInquirySpb = async (
   email: string,
 ) => {
   try {
-    const {data, error} = await supabase.from('inquiry_log').insert([
-      {
-        user_id: id,
-        subject: subject,
-        contents: contents,
-        email: email,
-      },
-    ]);
+    const {data, error} = await supabase
+      .from('inquiry_log')
+      .insert([
+        {
+          user_id: id,
+          subject: subject,
+          contents: contents,
+          email: email,
+        },
+      ])
+      .select();
 
     if (error) {
-      console.error('Supabase error:', error.message); // 오류 메시지를 로그에 출력
       throw error;
     }
 
     return data;
   } catch (e) {
-    console.error('Error appeared in setInquirySpb : ', e.message || e); // 구체적인 오류 메시지 출력
-    return null; // 오류 발생 시 null 반환
+    console.error('Error appeared in setInquirySpb:', e);
+    return null;
   }
 };
 

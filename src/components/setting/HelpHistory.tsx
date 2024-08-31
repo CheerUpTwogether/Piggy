@@ -22,6 +22,8 @@ const HelpHistory = () => {
   const [moreShow, setMoreShow] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [inquiryList, setInquiryList] = useState<Inquiry[]>([]);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   useEffect(() => {
     fetchInquirys();
@@ -32,12 +34,14 @@ const HelpHistory = () => {
     // TODO: uid 전역에서 가져와서 넣어주기
     const res = await getMyInquirysSpb('7b4a9f58-028f-40cb-9600-7dbf8f3744b3');
     if (res) {
-      setInquiryList(res);
+      const sortedList = res.sort(
+        (a, b) =>
+          new Date(b.inquiry_date).getTime() -
+          new Date(a.inquiry_date).getTime(),
+      );
+      setInquiryList(sortedList);
     }
   };
-
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const gotoDetail = () => {
     if (selectedId) {
