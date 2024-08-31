@@ -108,7 +108,7 @@ const AppointmentFriend = () => {
 
       {/* 친구 검색 결과 리스트 */}
       <FlatList
-        style={{height: screenHeight * 0.37}}
+        style={{height: screenHeight * 0.37, marginTop: 12}}
         data={users}
         renderItem={({item}) => (
           <RenderFreindsItem

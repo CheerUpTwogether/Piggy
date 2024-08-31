@@ -26,7 +26,9 @@ const SelectFriendItem = ({item, handleFriendDelete}: SelectFriendItemProp) => {
           <BasicProfileSvg width={24} height={24} />
         </View>
       )}
-      <Text style={commonStyle.REGULAR_33_12}>{item.nickname}</Text>
+      <Text style={styles.nickname} numberOfLines={1} ellipsizeMode="tail">
+        {item.nickname}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -62,6 +64,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 4,
+  },
+  nickname: {
+    ...commonStyle.REGULAR_33_12,
+    maxWidth: 52,
+    flexWrap: 'wrap',
   },
 });
 export default SelectFriendItem;
