@@ -13,19 +13,10 @@ import {commonStyle} from '@/styles/common';
 import ButtonBottomSheet from '../common/ButtonBottomSheet';
 import EmptyResult from '../common/EmptyResult';
 import {getMyInquirysSpb} from '@/supabase/SettingSpb';
+import {Inquiry} from '@/types/setting';
 
 import PulsSvg from '@/assets/icons/plus.svg';
 import MoreSvg from '@/assets/icons/more.svg';
-
-interface Inquiry {
-  id: number;
-  subject: string;
-  contents: string;
-  email: string;
-  inquiry_date: string;
-  response: string | null;
-  response_date: string | null;
-}
 
 const HelpHistory = () => {
   const [moreShow, setMoreShow] = useState(false);
@@ -34,7 +25,6 @@ const HelpHistory = () => {
 
   useEffect(() => {
     fetchInquirys();
-    console.log(inquiryList);
   }, []);
 
   // 문의 리스트 조회

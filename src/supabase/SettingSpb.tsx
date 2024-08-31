@@ -46,7 +46,7 @@ export const setInquirySpb = async (
   }
 };
 
-// 내 문의 리스트 조회 - getMyInquirysSpb
+// 내 문의 리스트 조회
 export const getMyInquirysSpb = async (id: string) => {
   try {
     const {data, error} = await supabase
@@ -64,6 +64,30 @@ export const getMyInquirysSpb = async (id: string) => {
     return data;
   } catch (e) {
     console.error('Error appeared in getMyInquirysSpb:', e);
+    return null;
+  }
+};
+
+// 문의 상세 조회
+// TODO: img_url 추가
+export const getInquiryDetailSpb = async (id: string) => {
+  try {
+    const {data, error} = await supabase
+      .from('inquiry_log')
+      .select(
+        'id, user_id, subject, contents, email, inquiry_date, response, response_date',
+      )
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('Supabase error in getInquiryDetailSpb:', error.message);
+      return null;
+    }
+
+    return data;
+  } catch (e) {
+    console.error('Error appeared in getInquiryDetailSpb:', e);
     return null;
   }
 };
