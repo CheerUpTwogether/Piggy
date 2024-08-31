@@ -58,16 +58,16 @@ const Regist = () => {
   };
 
   const setProfile = (user: {user: User | null; session: Session | null}) => {
-    const {error} = setProfileSpb(user, nickname);
-    addToast({
-      success: false,
-      text: '에러가 발생했어요',
-      multiText: error.message,
-    });
-    addToast({
-      success: false,
-      text: '회원가입에 성공하셨습니다!',
-    });
+    // const {error} = setProfileSpb(user, nickname);
+    // addToast({
+    //   success: false,
+    //   text: '에러가 발생했어요',
+    //   multiText: error.message,
+    // });
+    // addToast({
+    //   success: false,
+    //   text: '회원가입에 성공하셨습니다!',
+    // });
   };
 
   return (
