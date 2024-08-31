@@ -18,7 +18,12 @@ export const getFaqSpb = async () => {
 
 // 문의하기
 // TODO: img_url 추가
-export const setInquirySpb = async (id, subject, contents, email) => {
+export const setInquirySpb = async (
+  id: string,
+  subject: string,
+  contents: string,
+  email: string,
+) => {
   try {
     const {data, error} = await supabase.from('inquiry_log').insert([
       {
@@ -28,24 +33,38 @@ export const setInquirySpb = async (id, subject, contents, email) => {
         email: email,
       },
     ]);
+
     if (error) {
+      console.error('Supabase error:', error.message); // 오류 메시지를 로그에 출력
       throw error;
     }
+
     return data;
   } catch (e) {
-    console.error('Error appeared in setInquirySpb : ', e);
+    console.error('Error appeared in setInquirySpb : ', e.message || e); // 구체적인 오류 메시지 출력
+    return null; // 오류 발생 시 null 반환
   }
 };
 
 // 내 문의 리스트 조회 - getMyInquirysSpb
-export const getMyInquirysSpb = async id => {
+export const getMyInquirysSpb = async (id: string) => {
   try {
     const {data, error} = await supabase
       .from('inquiry_log')
-      .select('id, subject, contents, email, date, response, response_date')
+      .select(
+        'id, user_id, subject, contents, email, inquiry_date, response, response_date',
+      )
       .eq('user_id', id);
+
+    if (error) {
+      console.error('Supabase error in getMyInquirysSpb:', error.message);
+      return null;
+    }
+
+    return data;
   } catch (e) {
-    console.error('Error appeared in getMyInqeuirysSpb : ', e);
+    console.error('Error appeared in getMyInquirysSpb:', e);
+    return null;
   }
 };
 
@@ -55,6 +74,13 @@ export const getAnnouncementSpb = async () => {
     const {data, error} = await supabase
       .from('announcement')
       .select('id,subject,content,created_at'); // TODO: img_url 추가
+
+    if (error) {
+      console.error('Supabase error in getMyInquirysSpb:', error.message);
+      return null;
+    }
+
+    return data;
   } catch (e) {
     console.error('Error appeared in getAnnouncementSpb : ', e);
   }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {useRoute, RouteProp} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
@@ -9,6 +9,9 @@ const HelpDetail = () => {
   const route = useRoute<RouteProp<HelpDetailRouteParams, 'HelpDetail'>>();
   const {id} = route.params;
 
+  useEffect(() => {
+    console.log(id);
+  }, []);
   const helpItem = dummy_Help_list.find(item => item.id.toString() === id);
 
   return (
