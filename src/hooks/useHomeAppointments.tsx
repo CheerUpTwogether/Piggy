@@ -1,15 +1,7 @@
-import {useState} from 'react';
-import {
-  AppointmentStatus,
-  AppointmentTabCategory,
-  AppointmentTabStatus,
-} from '@/types/appointment';
-import {getAppointmentsSpb} from '@/supabase/appointmentSpb';
-import {useToastStore} from '@/store/store';
+import {AppointmentTabCategory} from '@/types/appointment';
 import {StackNavigation} from '@/types/Router';
 import {useNavigation} from '@react-navigation/native';
 const useHomeAppointments = () => {
-  const addToast = useToastStore(state => state.addToast);
   const categories: AppointmentTabCategory[] = [
     {label: '대기', value: 'pending', status: ['pending']},
     {label: '확정', value: 'confirmed', status: ['confirmed']},
