@@ -30,7 +30,7 @@ const AppointmentItem = ({
   const notUseFreindsIcon =
     cancelStatus.includes(item.appointment_status) ||
     (item.appointment_status === 'pending' &&
-      item.agreement_status === 'pendging');
+      item.agreement_status === 'pending');
 
   return (
     <TouchableOpacity
@@ -76,7 +76,10 @@ const AppointmentItem = ({
               <Text style={contentFontColor}>
                 {item?.place_name || item.address}
               </Text>
-              <Text style={contentFontColor}>{`${item.appointment_date}`}</Text>
+              <Text style={contentFontColor}>
+                {`${item.appointment_date.split('T')[0]} `}
+                {item.appointment_date.split('T')[1].substring(0, 5)}
+              </Text>
             </View>
 
             {item.appointment_id === 1 && (

@@ -45,11 +45,23 @@ const AppointmentDetail = () => {
         </Text>
         <View style={styles.contentWrapper}>
           <View>
-            <View style={styles.infoSentence}>
-              <LocationSvg color="#777" style={styles.svg} />
-              <Text style={textColor}>{item.place_name}</Text>
-            </View>
-            <Text style={[textColor, {paddingLeft: 22}]}>{item.address}</Text>
+            {item.place_name && (
+              <View>
+                <View style={styles.infoSentence}>
+                  <LocationSvg color="#777" style={styles.svg} />
+                  <Text style={textColor}>{item.place_name}</Text>
+                </View>
+                <Text style={[textColor, {paddingLeft: 22}]}>
+                  {item.address}
+                </Text>
+              </View>
+            )}
+            {!item.place_name && (
+              <View style={styles.infoSentence}>
+                <LocationSvg color="#777" style={styles.svg} />
+                <Text style={textColor}>{item.address}</Text>
+              </View>
+            )}
             <View style={styles.infoSentence}>
               <DateSvg color="#777" style={styles.svg} />
               <Text style={textColor}>
@@ -59,7 +71,7 @@ const AppointmentDetail = () => {
             <View style={styles.infoSentence}>
               <TimeSvg color="#777" style={styles.svg} />
               <Text style={textColor}>
-                {item.appointment_date.split('T')[1]}
+                {item.appointment_date.split('T')[1].substring(0, 5)}
               </Text>
             </View>
             <View style={styles.infoSentence}>

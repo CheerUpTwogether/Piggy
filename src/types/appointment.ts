@@ -15,7 +15,7 @@ export type AppointmentProps = {
   address: string;
   appointment_agreement_deadline_date?: string | null;
   appointment_date: string;
-  appointment_status?: AppointmentStatus;
+  appointment_status: AppointmentStatus;
   agreement_status: AppointmentStatus;
   contents?: string | null;
   created_at?: string | null;
