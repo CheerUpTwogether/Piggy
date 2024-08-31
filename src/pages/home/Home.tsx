@@ -1,16 +1,10 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useFocusEffect} from '@react-navigation/native';
 import {useToastStore} from '@/store/store';
 import {useButtonBottomSheet} from '@/hooks/useButtonBottomSheet';
-import {StackNavigation} from '@/types/Router';
-import {
-  AppointmentStatus,
-  AppointmentTabCategory,
-  AppointmentTabStatus,
-} from '@/types/appointment';
+import {AppointmentStatus, AppointmentTabStatus} from '@/types/appointment';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
 import {getAppointmentsSpb} from '@/supabase/appointmentSpb';
 import AppointmentItem from '@/components/home/AppointmentItem';
@@ -19,24 +13,19 @@ import Profile from '@/components/home/Profile';
 import TabBar from '@/components/common/TabBar';
 import PulsSvg from '@/assets/icons/plus.svg';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
-
-const categories: AppointmentTabCategory[] = [
-  {label: '대기', value: 'pending', status: ['pending']},
-  {label: '확정', value: 'confirmed', status: ['confirmed']},
-  {
-    label: '완료',
-    value: 'fulfilled',
-    status: ['fulfilled', 'cancelled', 'expired'],
-  },
-];
+import useHomeAppointments from '@/hooks/useHomeAppointments';
 
 const Home = () => {
-  const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
-  const [appointments, setAppointments] = useState([]);
   const {createButtonList, bottomSheetShow, setBottomSheetShow} =
     useButtonBottomSheet();
+  const {
+    categories,
+    handleMoveToAppointmentForm,
+    handleMoveToAppointmentDetail,
+  } = useHomeAppointments();
   const addToast = useToastStore(state => state.addToast);
-  const navigation = useNavigation<StackNavigation>();
+  const [appointments, setAppointments] = useState([]);
+  const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -44,15 +33,10 @@ const Home = () => {
     }, []),
   );
 
-  const handleMoveToAppointment = () => {
-    navigation.navigate('AppointmentForm');
-  };
-
   const changeSort = (sortValue: AppointmentTabStatus) => {
     setSort(sortValue);
     getAppointment(sortValue);
   };
-
   const getAppointment = async (sortValue: AppointmentStatus) => {
     const {data, error} = await getAppointmentsSpb(
       '8b9f1998-084e-447f-b586-d18c72cf1db4',
@@ -86,9 +70,7 @@ const Home = () => {
           keyExtractor={item => String(item.appointment_id)}
           renderItem={({item}) => (
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('AppointmentDetail', {...item})
-              }>
+              onPress={() => handleMoveToAppointmentDetail(item)}>
               <AppointmentItem
                 item={item}
                 onPressMore={() => setBottomSheetShow(true)}
@@ -110,7 +92,7 @@ const Home = () => {
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.plusBtn}
-        onPress={handleMoveToAppointment}>
+        onPress={handleMoveToAppointmentForm}>
         <PulsSvg color="#FFF" />
       </TouchableOpacity>
 
