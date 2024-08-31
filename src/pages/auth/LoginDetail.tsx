@@ -25,7 +25,7 @@ const LoginDetail = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'LoginDetail'>>();
   const {authData} = route.params;
-  const {userData, setIsAgree} = useUserStore();
+  const {userData, setLoginProfile, setIsAgree} = useUserStore();
   const addToast = useToastStore(state => state.addToast);
   const [isAgreeService, setIsAgreeService] = useState(
     userData?.isAgree.service || false,
@@ -33,7 +33,6 @@ const LoginDetail = () => {
   const [isAgreePayment, setIsAgreePayment] = useState(
     userData?.isAgree.payment || false,
   );
-  console.log(authData);
 
   const handleAgreeToast = () =>
     addToast({
@@ -55,7 +54,7 @@ const LoginDetail = () => {
       handleAgreeToast();
       return;
     }
-    const {data, error} = await setProfileSpb(
+    const {data: profileData, error} = await setProfileSpb(
       authData.session.user.id,
       authData.session.user.email,
       authData.session.user.user_metadata.name,
@@ -65,11 +64,28 @@ const LoginDetail = () => {
       isAgreePayment,
       false,
       authData.session.user.app_metadata.provider,
+      authData.session.user.user_metadata.picture,
     );
 
     if (error) {
+      // 테이블 생성 오류
       console.log(error);
       return;
+    }
+
+    if (profileData) {
+      setLoginProfile(
+        profileData.id,
+        profileData.email,
+        profileData.nickname,
+        profileData.created_at,
+        profileData.updated_at,
+        profileData.service_terms_agreement,
+        profileData.payment_terms_agreement,
+        profileData.notification_agreement,
+        profileData.social_login_type,
+        profileData.profile_img_url,
+      );
     }
 
     navigation.replace('Main', {screen: 'Home'});

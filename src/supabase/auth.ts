@@ -19,12 +19,7 @@ export const getProfileSpb = (uid: string) => {
   return supabase.from('users_nickname').select('*').eq('id', uid);
 };
 
-// 이메일 회원가입
-export const signUpSpb = async (email: string, password: string) => {
-  return await supabase.auth.signUp({email, password});
-};
-
-// 이메일 세팅
+// 프로필 세팅
 export const setProfileSpb = (
   id: string,
   email: string,
@@ -35,20 +30,32 @@ export const setProfileSpb = (
   payment_terms_agreement: boolean,
   notification_agreement: boolean,
   social_login_type: string,
+  profile_img_url: string,
 ) => {
-  return supabase.from('users_nickname').insert([
-    {
-      id,
-      email,
-      nickname,
-      created_at,
-      updated_at,
-      service_terms_agreement,
-      payment_terms_agreement,
-      notification_agreement,
-      social_login_type,
-    },
-  ]);
+  return supabase
+    .from('users_nickname')
+    .insert([
+      {
+        id,
+        email,
+        nickname,
+        created_at,
+        updated_at,
+        service_terms_agreement,
+        payment_terms_agreement,
+        notification_agreement,
+        social_login_type,
+        profile_img_url,
+      },
+    ])
+    .select()
+    .single();
+};
+
+// ====================== 밑에 로직들은 deprecated 예정.
+// 이메일 회원가입
+export const signUpSpb = async (email: string, password: string) => {
+  return await supabase.auth.signUp({email, password});
 };
 
 export const signInSpb = async (
