@@ -34,3 +34,4 @@ export interface Inquiry {
   response: string | null;
   response_date: string | null;
 }
+

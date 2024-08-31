@@ -1,10 +1,10 @@
-import {KAKAO_BIZ_API_KEY} from '@env';
+import {KAKAO_API_KEY} from '@env';
 import axios from 'axios';
 
 export const instance = axios.create({
   baseURL: 'https://gateway-giftbiz.kakao.com',
   headers: {
-    Authorization: `KakaoAK ${KAKAO_BIZ_API_KEY}`,
+    Authorization: `KakaoAK ${KAKAO_API_KEY}`,
   },
 });
 

@@ -1,7 +1,5 @@
 import {User} from '@/mock/Friends/type';
-import {dummyGoodsItem} from '@/mock/Goods/types';
 import {dummyGoodsStorageItem} from '@/mock/GoodsStorage/types';
-import {AppointmentProps} from '@/mock/Home/type';
 import {dummyNoticeItem} from '@/mock/NoticeBoard/types';
 import {FriendSearchParams} from '@/pages/friends/type';
 import {
@@ -9,6 +7,7 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 import {GoodsProduct} from './gift';
+import {AppointmentProps} from '@/types/appointment';
 
 export type RootBottomTabParamList = {
   Home: undefined;
@@ -53,7 +52,9 @@ export type RootStackParamList = {
   Regist: undefined;
 };
 
+export type StackNavigation = StackNavigationProp<RootStackParamList>;
+
 export type MainHeaderProps = {
   options: StackNavigationOptions;
-  navigation: StackNavigationProp<RootStackParamList>;
+  navigation: StackNavigation;
 };

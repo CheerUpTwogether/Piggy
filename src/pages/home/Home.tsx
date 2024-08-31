@@ -1,92 +1,58 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useFocusEffect} from '@react-navigation/native';
+import {useToastStore} from '@/store/store';
+import {useButtonBottomSheet} from '@/hooks/useButtonBottomSheet';
+import {AppointmentStatus, AppointmentTabStatus} from '@/types/appointment';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '@/types/Router';
-import {appointments} from '@/mock/Home/Home';
+import {getAppointmentsSpb} from '@/supabase/appointmentSpb';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
 import TabBar from '@/components/common/TabBar';
 import PulsSvg from '@/assets/icons/plus.svg';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
+import useHomeAppointments from '@/hooks/useHomeAppointments';
 
 const Home = () => {
-  const categories = [
-    {label: '대기', value: 'pending'},
-    {label: '확정', value: 'confirmed'},
-    {label: '완료', value: 'complete'},
-  ];
-  const [bottomSheetShow, setBottomSheetShow] = useState(false);
-  const [sort, setSort] = useState(categories[0].value);
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const {createButtonList, bottomSheetShow, setBottomSheetShow} =
+    useButtonBottomSheet();
+  const {
+    categories,
+    handleMoveToAppointmentForm,
+    handleMoveToAppointmentDetail,
+  } = useHomeAppointments();
+  const addToast = useToastStore(state => state.addToast);
+  const [appointments, setAppointments] = useState([]);
+  const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
 
-  const handleMoveToAppointment = () => {
-    navigation.navigate('AppointmentForm');
+  useFocusEffect(
+    React.useCallback(() => {
+      getAppointment(sort);
+    }, []),
+  );
+
+  const changeSort = (sortValue: AppointmentTabStatus) => {
+    setSort(sortValue);
+    getAppointment(sortValue);
   };
-
-  const sortData = () => {
-    if (sort === 'pending') {
-      return appointments.filter(el => el.appointment_status === 'pending');
-    } else if (sort === 'confirmed') {
-      const appointment_status = [
-        'confirmed',
-        'cancellation-request',
-        'cancellation-confirmed',
-        'cancellation-rejected',
-        'cancellation-pending',
-      ];
-      return appointments.filter(el =>
-        appointment_status.includes(el.appointment_status),
-      );
-    } else {
-      const appointment_status = ['fulfilled', 'cancelled', 'expired'];
-      return appointments.filter(el =>
-        appointment_status.includes(el.appointment_status),
-      );
+  const getAppointment = async (sortValue: AppointmentStatus) => {
+    const {data, error} = await getAppointmentsSpb(
+      '8b9f1998-084e-447f-b586-d18c72cf1db4',
+      categories.filter(el => el.value === sortValue)[0].status,
+    );
+    if (error) {
+      addToast({
+        success: false,
+        text: '약속 정보를 불러오지 못했어요.',
+      });
+      return;
     }
+    console.log(data);
+    setAppointments(data);
   };
 
-  // 고정 event
-  const handleFixUser = () => {
-    console.log('TODO: 유저 고정 api 호출');
-    setBottomSheetShow(false);
-  };
-
-  // 삭제 envent
-  const handleDeleteUser = () => {
-    console.log('TODO: 친구 삭제 모달 -> 삭제 api 호출');
-    setBottomSheetShow(false);
-  };
-
-  // 전달할 버튼 배열
-  const createButtonList = () => {
-    const buttons: Array<{
-      text: string;
-      theme?: 'sub' | 'primary' | 'outline' | undefined;
-      onPress: () => void | Promise<void>;
-    }> = [
-      {
-        text: '고정',
-        onPress: handleFixUser,
-        theme: 'outline',
-      },
-      {
-        text: '삭제',
-        onPress: handleDeleteUser,
-      },
-    ];
-
-    return buttons;
-  };
-
-  // 더보기 버튼 누를 때
-  const onPressMore = () => {
-    console.log('test');
-    setBottomSheetShow(true);
-  };
   return (
     <View style={commonStyle.CONTAINER}>
       {/* 사용자 프로필 */}
@@ -94,20 +60,21 @@ const Home = () => {
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
-        <TabBar categories={categories} active={sort} onChange={setSort} />
+        <TabBar categories={categories} active={sort} onChange={changeSort} />
       </View>
 
       {/* 약속 리스트 */}
-      {sortData().length ? (
+      {appointments.length ? (
         <FlatList
-          data={sortData()}
+          data={appointments}
           keyExtractor={item => String(item.appointment_id)}
           renderItem={({item}) => (
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('AppointmentDetail', {...item})
-              }>
-              <AppointmentItem item={item} onPressMore={onPressMore} />
+              onPress={() => handleMoveToAppointmentDetail(item)}>
+              <AppointmentItem
+                item={item}
+                onPressMore={() => setBottomSheetShow(true)}
+              />
             </TouchableOpacity>
           )}
           style={{marginHorizontal: -16}}
@@ -125,7 +92,7 @@ const Home = () => {
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.plusBtn}
-        onPress={handleMoveToAppointment}>
+        onPress={handleMoveToAppointmentForm}>
         <PulsSvg color="#FFF" />
       </TouchableOpacity>
 
@@ -157,10 +124,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-  },
-  deleteButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
   },
   plusBtn: {
     position: 'absolute',

@@ -2,15 +2,14 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '@/types/Router';
-import {AppointmentProps} from '@/mock/Home/type';
+import {StackNavigation} from '@/types/Router';
 import {commonStyle, color_primary, color_ef} from '@/styles/common';
 import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
 import PendingSvg from '@/assets/icons/pending.svg';
 import CancelCalendarSvg from '@/assets/icons/cancelCalendar.svg';
+import {AppointmentProps} from '@/types/appointment';
 
 const AppointmentItem = ({
   item,
@@ -19,7 +18,7 @@ const AppointmentItem = ({
   item: AppointmentProps;
   onPressMore: () => void;
 }) => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<StackNavigation>();
   const cancelStatus = ['cancelled', 'expired'];
   const titleFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.MEDIUM_AA_18
@@ -31,7 +30,7 @@ const AppointmentItem = ({
   const notUseFreindsIcon =
     cancelStatus.includes(item.appointment_status) ||
     (item.appointment_status === 'pending' &&
-      item.participants_own_status === true);
+      item.agreement_status === 'pending');
 
   return (
     <TouchableOpacity
@@ -74,8 +73,13 @@ const AppointmentItem = ({
           {/* 모임 정보 */}
           <View style={styles.flexRow}>
             <View>
-              <Text style={contentFontColor}>{item.place_name}</Text>
-              <Text style={contentFontColor}>{`${item.appointment_date}`}</Text>
+              <Text style={contentFontColor}>
+                {item?.place_name || item.address}
+              </Text>
+              <Text style={contentFontColor}>
+                {`${item.appointment_date.split('T')[0]} `}
+                {item.appointment_date.split('T')[1].substring(0, 5)}
+              </Text>
             </View>
 
             {item.appointment_id === 1 && (
