@@ -53,7 +53,9 @@ export type RootStackParamList = {
   Regist: undefined;
 };
 
+export type StackNavigation = StackNavigationProp<RootStackParamList>;
+
 export type MainHeaderProps = {
   options: StackNavigationOptions;
-  navigation: StackNavigationProp<RootStackParamList>;
+  navigation: StackNavigation;
 };
