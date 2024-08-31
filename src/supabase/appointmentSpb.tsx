@@ -41,6 +41,17 @@ export const setAppointmentSpb = async ({
   }
 };
 
+// 약속 리스트 불러오기
+export const getAppointmentsSpb = (
+  id: string,
+  appointmentStatusArray: string[],
+) => {
+  return supabase.rpc('select_appointment_list_detail_temp', {
+    user_uuid: id,
+    appointment_status_array: appointmentStatusArray,
+  });
+};
+
 // 약속 친구 리스트 - 약속 멤버 초대
 export const setAppointmentParticipantsSpb = async (
   appointment_id,
@@ -56,17 +67,6 @@ export const setAppointmentParticipantsSpb = async (
     );
   } catch (e) {
     console.error('Error appeared in setAppointmentParticipantsSpb : ', e);
-  }
-};
-
-// 약속 리스트 불러오기
-export const getAppointmentsSpb = async id => {
-  try {
-    const {data, error} = await supabase.rpc('select_appointment_list_detail', {
-      user_uuid: id,
-    });
-  } catch (e) {
-    console.error(e);
   }
 };
 
@@ -159,30 +159,5 @@ export const setAppointmentCancellationSpb = async (id, appointment_id) => {
     }
   } catch (e) {
     console.error('Error appeared in setAppointmentCancellationSpb : ', e);
-  }
-};
-
-export const setAppointmentCancellationSpb = async (
-  id,
-  appointment_id,
-  cancellation_status,
-) => {
-  try {
-    const response_cancellation = cancellation_status
-      ? 'cancellation-confirmed'
-      : 'cancellation-rejected';
-    const {data, error} = await supabase
-      .from('appointment_cancellation_request_log')
-      .update({
-        cancellation_status: response_cancellation,
-      })
-      .eq('user_id', id)
-      .eq('appointment_id', appointment_id);
-
-    if (error) {
-      throw error;
-    }
-  } catch (e) {
-    console.error('Error Appeared in setAppointmentCancealltionSpb : ', e);
   }
 };
