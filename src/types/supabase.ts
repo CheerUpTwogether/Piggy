@@ -51,7 +51,7 @@ export type Database = {
           address: string;
           appointment_agreement_deadline_date?: string | null;
           appointment_date: string;
-          appointment_status?: string;
+          appointment_status: string;
           contents?: string | null;
           created_at?: string | null;
           deal_piggy_count: number;
