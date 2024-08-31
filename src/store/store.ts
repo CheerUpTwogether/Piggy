@@ -15,6 +15,7 @@ export const useUserStore = create<UserStore>(set => ({
     notification_agreement: false,
     social_login_type: '',
     profile_img_url: '',
+    phone_number: '',
     isAgree: {service: false, payment: false},
   },
 
@@ -29,6 +30,7 @@ export const useUserStore = create<UserStore>(set => ({
     notification_agreement: boolean,
     social_login_type: string,
     profile_img_url: string,
+    phone_number: string,
   ) =>
     set(state => ({
       userData: {
@@ -43,6 +45,7 @@ export const useUserStore = create<UserStore>(set => ({
         notification_agreement,
         social_login_type,
         profile_img_url,
+        phone_number,
       },
     })),
   setNickName: (nick_name: string) =>
@@ -71,6 +74,13 @@ export const useUserStore = create<UserStore>(set => ({
       userData: {
         ...state.userData,
         payment_terms_agreement,
+      },
+    })),
+  setPhoneNumber: (phone_number: string) =>
+    set(state => ({
+      userData: {
+        ...state.userData,
+        phone_number,
       },
     })),
 

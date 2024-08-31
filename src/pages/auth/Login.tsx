@@ -34,6 +34,7 @@ const Login = () => {
           notification_agreement,
           social_login_type,
           profile_img_url,
+          phone_number,
         } = profileData[0];
 
         setLoginProfile(
@@ -47,6 +48,7 @@ const Login = () => {
           notification_agreement,
           social_login_type,
           profile_img_url,
+          phone_number,
         );
 
         navigation.replace('Main', {screen: 'Home'});

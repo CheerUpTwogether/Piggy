@@ -14,6 +14,14 @@ export const checkNicknameDuplicateSpb = (nickname: string) => {
   return supabase.from('users_nickname').select('*').eq('nickname', nickname);
 };
 
+// 폰넘버 중복 확인
+export const checkPhoneNumberDuplicateSpb = (phone_number: string) => {
+  return supabase
+    .from('users_nickname')
+    .select('*')
+    .eq('phone_number', phone_number);
+};
+
 // 프로필 가져오기
 export const getProfileSpb = (uid: string) => {
   return supabase.from('users_nickname').select('*').eq('id', uid);
@@ -31,6 +39,7 @@ export const setProfileSpb = (
   notification_agreement: boolean,
   social_login_type: string,
   profile_img_url: string,
+  phone_number: string,
 ) => {
   return supabase
     .from('users_nickname')
@@ -46,6 +55,7 @@ export const setProfileSpb = (
         notification_agreement,
         social_login_type,
         profile_img_url,
+        phone_number,
       },
     ])
     .select()

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '@/types/Router';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useUserStore} from '@/store/store';
@@ -14,6 +14,8 @@ const topLogo = require('@/assets/icons/topLogo.png');
 
 const PaymentAgreement = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'PaymentAgreement'>>();
+  const {authData} = route.params;
   const {userData, setIsAgree} = useUserStore();
   const [isPaymentAgree, setIsPaymentAgree] = useState(
     userData?.isAgree.payment || false,
@@ -58,7 +60,7 @@ const PaymentAgreement = () => {
             text="동의하기"
             onPress={() => {
               setIsAgree('payment');
-              navigation.replace('LoginDetail');
+              navigation.replace('LoginDetail', {authData: authData});
             }}
           />
         )}
