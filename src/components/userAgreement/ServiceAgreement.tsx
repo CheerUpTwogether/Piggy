@@ -3,7 +3,7 @@ import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {RootStackParamList} from '@/types/Router';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useUserStore} from '@/store/store';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {dummyAgreementItem} from '@/mock/UserAgreement/type';
 import {dummyServiceAgreementData} from '@/mock/UserAgreement/UserAgreement';
 import {commonStyle} from '@/styles/common';
@@ -14,6 +14,8 @@ const topLogo = require('@/assets/icons/topLogo.png');
 
 const ServiceAgreement = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'PaymentAgreement'>>();
+  const {authData} = route.params;
   const {userData, setIsAgree} = useUserStore();
   const [isServiceAgree, setIsServiceAgree] = useState(
     userData?.isAgree.service || false,
@@ -57,7 +59,7 @@ const ServiceAgreement = () => {
             text="동의하기"
             onPress={() => {
               setIsAgree('service');
-              navigation.replace('LoginDetail');
+              navigation.replace('LoginDetail', {authData: authData});
             }}
           />
         )}

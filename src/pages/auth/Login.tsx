@@ -8,26 +8,60 @@ import KakaoSvg from '@/assets/icons/kakao.svg';
 import GoogleSvg from '@/assets/icons/google.svg';
 import {kakaoSignInAPI} from '@/api/auth';
 import EmailSvg from '@/assets/icons/email.svg';
+import {useToastStore, useUserStore} from '@/store/store';
 const logo = require('@/assets/icons/logo.png');
 
 const Login = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const addToast = useToastStore(state => state.addToast);
+  const setLoginProfile = useUserStore(state => state.setLoginProfile);
 
   const kakaoLogin = async () => {
     const res = await kakaoSignInAPI();
     if (res) {
-      const {authData, isExistProfile} = res;
+      const {authData, profileData} = res;
 
-      if (isExistProfile) {
+      if (profileData.length > 0) {
         // 여기에 zutand profileData 정보가지고 전역설정
+        const {
+          id,
+          email,
+          nickname,
+          created_at,
+          updated_at,
+          service_terms_agreement,
+          payment_terms_agreement,
+          notification_agreement,
+          social_login_type,
+          profile_img_url,
+          phone_number,
+        } = profileData[0];
+
+        setLoginProfile(
+          id,
+          email,
+          nickname,
+          created_at,
+          updated_at,
+          service_terms_agreement,
+          payment_terms_agreement,
+          notification_agreement,
+          social_login_type,
+          profile_img_url,
+          phone_number,
+        );
+
         navigation.replace('Main', {screen: 'Home'});
+
         return;
       }
-      console.log('==========');
-      console.log('==========');
-      console.log('==========');
 
       navigation.navigate('LoginDetail', {authData: authData});
+    } else {
+      addToast({
+        success: false,
+        text: '카카오 로그인에 문제가 발생하였습니다.',
+      });
     }
   };
 

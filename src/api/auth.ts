@@ -7,8 +7,6 @@ export const kakaoSignInAPI = async () => {
     const {idToken, accessToken} = await kakao.login();
 
     if (idToken) {
-      console.log(idToken);
-      console.log(accessToken);
       const {data: authData, error: authDataError} = await kakaoLoginSpb(
         idToken,
         accessToken,
@@ -28,8 +26,7 @@ export const kakaoSignInAPI = async () => {
         return;
       }
 
-      const isExistProfile = profileData.length > 0;
-      const res = {authData, isExistProfile};
+      const res = {authData, profileData};
       return res;
     }
   } catch (e) {
