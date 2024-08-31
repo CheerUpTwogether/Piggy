@@ -1,5 +1,5 @@
 import supabase from '@/supabase/supabase';
-import {Appointment} from '@/types/appointment';
+import {AppointmentInsert} from '@/types/appointment';
 
 // 약속만들기
 export const setAppointmentSpb = ({
@@ -12,7 +12,7 @@ export const setAppointmentSpb = ({
   longitude,
   appointment_date,
   deal_piggy_count,
-}: Appointment) => {
+}: AppointmentInsert) => {
   return supabase
     .from('appointment')
     .insert([
@@ -32,21 +32,16 @@ export const setAppointmentSpb = ({
 };
 
 // 약속 리스트 불러오기
-export const getAppointmentsSpb = async (id, appointment_selector) => {
-  try {
-    const {data, error} = await supabase.rpc('select_appointment_list_detail', {
-      user_uuid: id,
-      appointment_selector: appointment_selector,
-    });
-    if (error) {
-      throw error;
-    }
-
-    return data;
-  } catch (e) {
-    console.error(e);
-  }
+export const getAppointmentsSpb = (
+  user_uuid: string,
+  appointment_selector: string[],
+) => {
+  return supabase.rpc('select_appointment_list_detail', {
+    user_uuid,
+    appointment_selector,
+  });
 };
+
 
 // 약속 인증 상태 확인 - 자기 자신의 인증 상태만
 export const getCertificationStatusSpb = (

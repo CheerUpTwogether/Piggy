@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, Text, View, Dimensions} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
-import {AppointmentProps} from '@/mock/Home/type';
+
 import {useRoute} from '@react-navigation/native';
 import {color_primary, commonStyle} from '@/styles/common';
+import {AppointmentProps} from '@/types/appointment';
 import FlatItemsFriends from '@/components/common/FlatItemsFriends';
 import Button from '@/components/common/Button';
 import SideSlideModal from '@/components/common/SideSlideModal';
@@ -44,20 +45,33 @@ const AppointmentDetail = () => {
         </Text>
         <View style={styles.contentWrapper}>
           <View>
-            <View style={styles.infoSentence}>
-              <LocationSvg color="#777" style={styles.svg} />
-              <Text style={textColor}>{item.place_name}</Text>
-            </View>
+            {item.place_name && (
+              <View>
+                <View style={styles.infoSentence}>
+                  <LocationSvg color="#777" style={styles.svg} />
+                  <Text style={textColor}>{item.place_name}</Text>
+                </View>
+                <Text style={[textColor, {paddingLeft: 22}]}>
+                  {item.address}
+                </Text>
+              </View>
+            )}
+            {!item.place_name && (
+              <View style={styles.infoSentence}>
+                <LocationSvg color="#777" style={styles.svg} />
+                <Text style={textColor}>{item.address}</Text>
+              </View>
+            )}
             <View style={styles.infoSentence}>
               <DateSvg color="#777" style={styles.svg} />
               <Text style={textColor}>
-                {item.appointment_date.split(' ')[0]}
+                {item.appointment_date.split('T')[0]}
               </Text>
             </View>
             <View style={styles.infoSentence}>
               <TimeSvg color="#777" style={styles.svg} />
               <Text style={textColor}>
-                {item.appointment_date.split(' ')[1]}
+                {item.appointment_date.split('T')[1].substring(0, 5)}
               </Text>
             </View>
             <View style={styles.infoSentence}>

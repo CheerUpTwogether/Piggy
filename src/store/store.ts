@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import {ModalStore, ToastStore, UserStore} from '@/types/Common';
+import {ModalStore, ToastStore, UserStore} from '@/types/common';
 import {ModalProps} from 'react-native';
 import {setServiceTermsAgreeSpb} from '@/supabase/AuthSpb';
 

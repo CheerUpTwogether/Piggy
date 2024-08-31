@@ -1,95 +1,56 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {commonStyle, color_ef, color_primary} from '@/styles/common';
-import {StackNavigation} from '@/types/Router';
-import {appointments} from '@/mock/Home/Home';
-import {getAppointmentsSpb} from '@/supabase/appointmentSpb';
 import {useFocusEffect} from '@react-navigation/native';
 import {useToastStore} from '@/store/store';
 import {useButtonBottomSheet} from '@/hooks/useButtonBottomSheet';
-import {AppointmentStatus} from '@/types/appointment';
-
+import {AppointmentStatus, AppointmentTabStatus} from '@/types/appointment';
+import {commonStyle, color_ef, color_primary} from '@/styles/common';
+import {getAppointmentsSpb} from '@/supabase/appointmentSpb';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
 import TabBar from '@/components/common/TabBar';
 import PulsSvg from '@/assets/icons/plus.svg';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
-
-const categories: {
-  label: string;
-  value: 'confirmed' | 'complete' | 'pending';
-  status: AppointmentStatus[];
-}[] = [
-  {label: '대기', value: 'pending', status: ['pending']},
-  {
-    label: '확정',
-    value: 'confirmed',
-    status: [
-      'confirmed',
-      'cancellation-request',
-      'cancellation-confirmed',
-      'cancellation-rejected',
-      'cancellation-pending',
-    ],
-  },
-  {
-    label: '완료',
-    value: 'complete',
-    status: ['fulfilled', 'cancelled', 'expired'],
-  },
-];
+import useHomeAppointments from '@/hooks/useHomeAppointments';
 
 const Home = () => {
-  const [sort, setSort] = useState(categories[0].value);
   const {createButtonList, bottomSheetShow, setBottomSheetShow} =
     useButtonBottomSheet();
+  const {
+    categories,
+    handleMoveToAppointmentForm,
+    handleMoveToAppointmentDetail,
+  } = useHomeAppointments();
   const addToast = useToastStore(state => state.addToast);
-  const navigation = useNavigation<StackNavigation>();
+  const [appointments, setAppointments] = useState([]);
+  const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
 
   useFocusEffect(
     React.useCallback(() => {
-      getAppointment();
+      getAppointment(sort);
     }, []),
   );
 
-  const handleMoveToAppointment = () => {
-    navigation.navigate('AppointmentForm');
+  const changeSort = (sortValue: AppointmentTabStatus) => {
+    setSort(sortValue);
+    getAppointment(sortValue);
   };
-
-  const sortData = () => {
-    if (sort === 'pending') {
-      return appointments.filter(el => el.appointment_status === 'pending');
-    } else if (sort === 'confirmed') {
-      return appointments.filter(el =>
-        categories[1].status.includes(el.appointment_status),
-      );
-    } else {
-      return appointments.filter(el =>
-        categories[2].status.includes(el.appointment_status),
-      );
-    }
-  };
-
-  const getAppointment = async () => {
+  const getAppointment = async (sortValue: AppointmentStatus) => {
     const {data, error} = await getAppointmentsSpb(
-      '1238b9f1998-084e-447f-b586-d18c72cf1db4123',
-      [],
+      '8b9f1998-084e-447f-b586-d18c72cf1db4',
+      categories.filter(el => el.value === sortValue)[0].status,
     );
     if (error) {
       addToast({
         success: false,
-        text: 'Error',
-        multiText: error.message,
+        text: '약속 정보를 불러오지 못했어요.',
       });
-      console.log(error.message);
-      console.log('==============');
-      console.log(error);
       return;
     }
     console.log(data);
+    setAppointments(data);
   };
 
   return (
@@ -99,19 +60,17 @@ const Home = () => {
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
-        <TabBar categories={categories} active={sort} onChange={setSort} />
+        <TabBar categories={categories} active={sort} onChange={changeSort} />
       </View>
 
       {/* 약속 리스트 */}
-      {sortData().length ? (
+      {appointments.length ? (
         <FlatList
-          data={sortData()}
+          data={appointments}
           keyExtractor={item => String(item.appointment_id)}
           renderItem={({item}) => (
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('AppointmentDetail', {...item})
-              }>
+              onPress={() => handleMoveToAppointmentDetail(item)}>
               <AppointmentItem
                 item={item}
                 onPressMore={() => setBottomSheetShow(true)}
@@ -133,7 +92,7 @@ const Home = () => {
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.plusBtn}
-        onPress={handleMoveToAppointment}>
+        onPress={handleMoveToAppointmentForm}>
         <PulsSvg color="#FFF" />
       </TouchableOpacity>
 
