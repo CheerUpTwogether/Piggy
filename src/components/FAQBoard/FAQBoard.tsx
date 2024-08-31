@@ -1,35 +1,42 @@
-import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import {splitStringByDot} from '@/utils/splitStringByDot';
-import {dummyFAQItem} from '@/mock/FAQBoard/types';
-import {dummyFAQItemData} from '@/mock/FAQBoard/FAQBoard';
+import {getFaqSpb} from '@/supabase/SettingSpb';
+import {FapData} from '@/types/setting';
 
 const FAQBoard = () => {
-  const renderFAQItem = ({item}: {item: dummyFAQItem}) => (
-    <View style={styles.renderContainer}>
-      <Text style={commonStyle.REGULAR_33_16}>Q. {item.title}</Text>
-      <View style={{gap: 2}}>
-        {splitStringByDot(item.content).map((item, index) => (
-          <Text
-            key={index}
-            style={{...commonStyle.REGULAR_77_14, marginLeft: 2}}>
-            {index === 0 && 'A. '}
-            {item}
-          </Text>
-        ))}
-      </View>
-    </View>
-  );
+  const [data, setData] = useState<FapData[]>([]);
 
+  useEffect(() => {
+    fetchFaq();
+  }, []);
+
+  const fetchFaq = async () => {
+    const res = await getFaqSpb();
+    if (res) {
+      setData(res);
+    } else {
+      setData([]);
+    }
+  };
   return (
     <View style={{flex: 1, paddingHorizontal: 24, backgroundColor: '#FFF'}}>
-      <FlatList
-        data={dummyFAQItemData}
-        keyExtractor={item => item.id}
-        renderItem={renderFAQItem}
-        showsVerticalScrollIndicator={false}
-      />
+      {data.map((item, index) => (
+        <View style={styles.renderContainer} key={index}>
+          <Text style={commonStyle.REGULAR_33_16}>Q. {item.question}</Text>
+          <View style={{gap: 2}}>
+            {splitStringByDot(item.answer).map((item, index) => (
+              <Text
+                key={index}
+                style={{...commonStyle.REGULAR_77_14, marginLeft: 2}}>
+                {index === 0 && 'A. '}
+                {item}
+              </Text>
+            ))}
+          </View>
+        </View>
+      ))}
     </View>
   );
 };
