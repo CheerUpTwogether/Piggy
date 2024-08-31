@@ -32,25 +32,20 @@ export const setAppointmentSpb = ({
 };
 
 // 약속 리스트 불러오기
-export const getAppointmentsSpb = (
-  id: string,
-  appointmentStatusArray: string[],
-) => {
-  return supabase.rpc('select_appointment_list_detail', {
-    user_uuid: id,
-    appointment_status_array: appointmentStatusArray,
-  });
-};
+export const getAppointmentsSpb = async (id, appointment_selector) => {
+  try {
+    const {data, error} = await supabase.rpc('select_appointment_list_detail', {
+      user_uuid: id,
+      appointment_selector: appointment_selector,
+    });
+    if (error) {
+      throw error;
+    }
 
-// 약속 친구 리스트 - 약속 멤버 초대
-export const setAppointmentParticipantsSpb = (
-  appointment_id: number,
-  participants_uuid: string[],
-) => {
-  return supabase.rpc('insert_appointment_participants', {
-    appointment_id,
-    participants_uuid,
-  });
+    return data;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 // 약속 인증 상태 확인 - 자기 자신의 인증 상태만
