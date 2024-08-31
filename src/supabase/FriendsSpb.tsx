@@ -9,7 +9,7 @@ export const getUsersSpb = (id: string, keyword: string) => {
 };
 
 // 친구 추가
-export const setFriendshipAddSpb = async (id, friend_id) => {
+export const setFriendshipAddSpb = async (id: string, friend_id: string) => {
   try {
     const {data, error} = await supabase
       .from('user_friend_relationship')

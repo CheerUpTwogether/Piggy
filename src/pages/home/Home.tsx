@@ -49,7 +49,7 @@ const Home = () => {
       });
       return;
     }
-    console.log(data);
+
     setAppointments(data);
   };
 
