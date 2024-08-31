@@ -3,8 +3,7 @@ import {View, StyleSheet, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '@/types/Router';
+import {StackNavigation} from '@/types/Router';
 import {appointments} from '@/mock/Home/Home';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
@@ -28,7 +27,7 @@ const Home = () => {
     useButtonBottomSheet();
   const addToast = useToastStore(state => state.addToast);
   const [sort, setSort] = useState(categories[0].value);
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<StackNavigation>();
 
   const handleMoveToAppointment = () => {
     navigation.navigate('AppointmentForm');
