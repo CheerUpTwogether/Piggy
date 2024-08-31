@@ -42,16 +42,6 @@ export const getAppointmentsSpb = (
   });
 };
 
-// 약속 친구 리스트 - 약속 멤버 초대
-export const setAppointmentParticipantsSpb = (
-  appointment_id: number,
-  participants_uuid: string[],
-) => {
-  return supabase.rpc('insert_appointment_participants', {
-    appointment_id,
-    participants_uuid,
-  });
-};
 
 // 약속 인증 상태 확인 - 자기 자신의 인증 상태만
 export const getCertificationStatusSpb = (
