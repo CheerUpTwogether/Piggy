@@ -8,7 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
+import {setInquirySpb} from '@/supabase/SettingSpb';
+import {useToastStore} from '@/store/store';
+
 import InputBox from '../common/InputBox';
 import NickNameSvg from '@/assets/icons/nickname.svg';
 import EditSvg from '@/assets/icons/edit.svg';
@@ -17,14 +23,86 @@ import Button from '../common/Button';
 
 const HelpDesk = () => {
   const [email, setEmail] = useState('');
-  const [title, setTitle] = useState('');
+  const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
   const [imageList, setImageList] = useState(['https://i.pravatar.cc/250']);
+  const addToast = useToastStore(state => state.addToast);
 
-  const [isEmailError, setIsEmailError] = useState(false);
-  const [isTitleError, setIsTitleError] = useState(false);
-  const [isContentError, setIsContentError] = useState(false);
-  const [isImageError, setIsImageError] = useState(true);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const validateInput = (
+    value: string,
+    fieldName: string,
+    errorMessage: string,
+    validationFn?: (value: string) => boolean,
+  ) => {
+    if (!value) {
+      addToast({
+        success: false,
+        text: `${fieldName} 입력`,
+        multiText: `${errorMessage} 입력해주세요.`,
+      });
+      return false;
+    }
+
+    if (validationFn && !validationFn(value)) {
+      addToast({
+        success: false,
+        text: `${fieldName} 형식 오류`,
+        multiText: `${errorMessage} 올바르게 입력해주세요.`,
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleAddInquiry = async () => {
+    const validateEmail = (emailAddress: string) =>
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
+    const validateSubject = (subjectText: string) => subjectText.length >= 5;
+    const validateContent = (contentText: string) => contentText.length >= 10;
+
+    if (!validateInput(email, '이메일', '올바른 이메일을', validateEmail)) {
+      return;
+    }
+    if (!validateInput(subject, '제목', '문의 제목을', validateSubject)) {
+      return;
+    }
+    if (
+      !validateInput(
+        content,
+        '내용',
+        '최소 10자 이상의 내용을',
+        validateContent,
+      )
+    ) {
+      return;
+    }
+    const res = await setInquirySpb(
+      // TODO: uid 전역에서 호출
+      '7b4a9f58-028f-40cb-9600-7dbf8f3744b3',
+      subject,
+      content,
+      email,
+    );
+
+    if (res) {
+      addToast({
+        success: true,
+        text: '문의 전송 완료',
+        multiText: '문의가 성공적으로 전송되었습니다.',
+      });
+      navigation.navigate('HelpHistory');
+    } else {
+      addToast({
+        success: false,
+        text: '전송 실패',
+        multiText: '문의 전송에 실패했습니다. 다시 시도해주세요.',
+      });
+    }
+  };
 
   return (
     <View style={commonStyle.CONTAINER}>
@@ -35,33 +113,21 @@ const HelpDesk = () => {
           <InputBox
             value={email}
             setValue={setEmail}
-            placeholder={'문의하실 이메일을 입력해주세요.'}
+            placeholder={'문의자의 이메일을 입력해주세요.'}
             icon={NickNameSvg}
             isLarge={true}
           />
-
-          {isEmailError && (
-            <Text style={{...commonStyle.MEDIUM_PRIMARY_12, marginLeft: 10}}>
-              *옳바르지 않은 이메일입니다.
-            </Text>
-          )}
         </View>
         <View style={{gap: 8}}>
           <Text style={commonStyle.MEDIUM_33_16}>문의 제목</Text>
 
           <InputBox
-            value={title}
-            setValue={setTitle}
+            value={subject}
+            setValue={setSubject}
             placeholder={'문의하실 제목을 입력해주세요.'}
             icon={EditSvg}
             isLarge={true}
           />
-
-          {isTitleError && (
-            <Text style={{...commonStyle.MEDIUM_PRIMARY_12, marginLeft: 10}}>
-              *최소 5자 이상의 문의 제목이 필요합니다.
-            </Text>
-          )}
         </View>
         <View style={{marginVertical: 8, gap: 8}}>
           <Text style={commonStyle.MEDIUM_33_16}>문의 내용</Text>
@@ -78,11 +144,6 @@ const HelpDesk = () => {
             style={styles.contentContainer}
             multiline={true}
           />
-          {isContentError && (
-            <Text style={{...commonStyle.MEDIUM_PRIMARY_12, marginLeft: 10}}>
-              * 최소 10자 이상의 내용이 필요합니다.
-            </Text>
-          )}
         </View>
       </View>
       <View style={{marginVertical: 8, gap: 14}}>
@@ -105,14 +166,9 @@ const HelpDesk = () => {
               />
             ))}
           </View>
-          {isImageError && (
-            <Text style={{...commonStyle.MEDIUM_PRIMARY_12, marginLeft: 10}}>
-              *사진은 3장까지 추가할 수 있습니다.
-            </Text>
-          )}
         </View>
         <View style={{marginVertical: 50}}>
-          <Button text="보내기" onPress={() => console.log('보내기')} />
+          <Button text="보내기" onPress={handleAddInquiry} />
         </View>
       </View>
     </View>

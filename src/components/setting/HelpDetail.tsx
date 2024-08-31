@@ -1,21 +1,30 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {useRoute, RouteProp} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
-import {dummy_Help_list} from '@/mock/Help/Help';
-import {HelpDetailRouteParams} from '@/pages/settings/type';
+import {HelpDetailRouteParams} from '@/types/setting';
+import {getInquiryDetailSpb} from '@/supabase/SettingSpb';
+import {InquiryDetail} from '@/types/setting';
 
 const HelpDetail = () => {
   const route = useRoute<RouteProp<HelpDetailRouteParams, 'HelpDetail'>>();
   const {id} = route.params;
+  const [helpItem, setHelpItem] = useState<InquiryDetail | null>(null);
 
-  const helpItem = dummy_Help_list.find(item => item.id.toString() === id);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getInquiryDetailSpb(id);
+      setHelpItem(data);
+    };
+
+    fetchData();
+  }, [id]);
 
   return (
     <View style={commonStyle.CONTAINER}>
       <View style={styles.subjectWrapper}>
         <Text style={commonStyle.MEDIUM_33_18}>{helpItem?.subject}</Text>
-        <Text style={commonStyle.REGULAR_77_14}>{helpItem?.date}</Text>
+        <Text style={commonStyle.REGULAR_77_14}>{helpItem?.contents}</Text>
       </View>
 
       <View style={styles.contentWrapper}>
@@ -42,7 +51,7 @@ const HelpDetail = () => {
         {helpItem?.response ? (
           <View style={{gap: 12}}>
             <Text style={[commonStyle.REGULAR_33_16, {lineHeight: 24}]}>
-              {helpItem.response_data}
+              {helpItem.response_date}
             </Text>
             <Text style={commonStyle.REGULAR_77_14}>
               {helpItem.response_date}

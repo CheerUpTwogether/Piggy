@@ -96,6 +96,7 @@ export interface ModalProps {
   textCancel?: string;
   disable?: boolean;
 }
+
 // ModalStore 타입
 export interface ModalState {
   text: string;
@@ -109,6 +110,7 @@ export interface ModalStore {
   openModal: (modal: Omit<ModalState, 'isOpen'>) => void;
   closeModal: () => void;
 }
+
 
 export interface InputBoxProps {
   value: string;

@@ -18,34 +18,99 @@ export const getFaqSpb = async () => {
 
 // 문의하기
 // TODO: img_url 추가
-export const setInquirySpb = async (id, subject, contents, email) => {
-  try {
-    const {data, error} = await supabase.from('inquiry_log').insert([
-      {
-        user_id: id,
-        subject: subject,
-        contents: contents,
-        email: email,
-      },
-    ]);
-    if (error) {
-      throw error;
-    }
-    return data;
-  } catch (e) {
-    console.error('Error appeared in setInquirySpb : ', e);
-  }
-};
-
-// 내 문의 리스트 조회 - getMyInquirysSpb
-export const getMyInquirysSpb = async id => {
+export const setInquirySpb = async (
+  id: string,
+  subject: string,
+  contents: string,
+  email: string,
+) => {
   try {
     const {data, error} = await supabase
       .from('inquiry_log')
-      .select('id, subject, contents, email, date, response, response_date')
-      .eq('user_id', id);
+      .insert([
+        {
+          user_id: id,
+          subject: subject,
+          contents: contents,
+          email: email,
+        },
+      ])
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
   } catch (e) {
-    console.error('Error appeared in getMyInqeuirysSpb : ', e);
+    console.error('Error appeared in setInquirySpb:', e);
+    return null;
+  }
+};
+
+// 내 문의 리스트 조회
+export const getMyInquirysSpb = async (id: string) => {
+  try {
+    const {data, error} = await supabase
+      .from('inquiry_log')
+      .select(
+        'id, user_id, subject, contents, email, inquiry_date, response, response_date',
+      )
+      .eq('user_id', id);
+
+    if (error) {
+      console.error('Supabase error in getMyInquirysSpb:', error.message);
+      return null;
+    }
+
+    return data;
+  } catch (e) {
+    console.error('Error appeared in getMyInquirysSpb:', e);
+    return null;
+  }
+};
+
+// 문의 상세 조회
+// TODO: img_url 추가
+export const getInquiryDetailSpb = async (id: string) => {
+  try {
+    const {data, error} = await supabase
+      .from('inquiry_log')
+      .select(
+        'id, user_id, subject, contents, email, inquiry_date, response, response_date',
+      )
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error('Supabase error in getInquiryDetailSpb:', error.message);
+      return null;
+    }
+
+    return data;
+  } catch (e) {
+    console.error('Error appeared in getInquiryDetailSpb:', e);
+    return null;
+  }
+};
+
+// 문의 내역 삭제
+export const deleteInquirySpb = async (inquiryId: string) => {
+  try {
+    const {error} = await supabase
+      .from('inquiry_log')
+      .delete()
+      .eq('id', inquiryId);
+
+    if (error) {
+      console.error('Supabase error in deleteInquirySpb:', error.message);
+      return false;
+    }
+
+    return true;
+  } catch (e) {
+    console.error('Error appeared in deleteInquirySpb:', e);
+    return false;
   }
 };
 
@@ -55,6 +120,13 @@ export const getAnnouncementSpb = async () => {
     const {data, error} = await supabase
       .from('announcement')
       .select('id,subject,content,created_at'); // TODO: img_url 추가
+
+    if (error) {
+      console.error('Supabase error in getMyInquirysSpb:', error.message);
+      return null;
+    }
+
+    return data;
   } catch (e) {
     console.error('Error appeared in getAnnouncementSpb : ', e);
   }

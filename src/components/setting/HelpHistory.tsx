@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,16 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
-import {dummy_Help_list} from '@/mock/Help/Help';
 import ButtonBottomSheet from '../common/ButtonBottomSheet';
+import EmptyResult from '../common/EmptyResult';
+import {useToastStore, useModalStore} from '@/store/store';
+import {getMyInquirysSpb, deleteInquirySpb} from '@/supabase/SettingSpb';
+import {Inquiry} from '@/types/setting';
 
 import PulsSvg from '@/assets/icons/plus.svg';
 import MoreSvg from '@/assets/icons/more.svg';
@@ -19,12 +23,63 @@ import MoreSvg from '@/assets/icons/more.svg';
 const HelpHistory = () => {
   const [moreShow, setMoreShow] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
+  const [inquiryList, setInquiryList] = useState<Inquiry[]>([]);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const addToast = useToastStore(state => state.addToast);
+  const {openModal, closeModal} = useModalStore();
 
-  const gotoDetail = (id: string) => {
-    navigation.navigate('HelpDetail', {id});
+  // 화면이 포커스될 때마다 데이터 새로고침
+  useFocusEffect(
+    useCallback(() => {
+      fetchInquirys();
+    }, []),
+  );
+
+  // 문의 리스트 조회
+  const fetchInquirys = async () => {
+    const res = await getMyInquirysSpb('7b4a9f58-028f-40cb-9600-7dbf8f3744b3');
+    if (res) {
+      const sortedList = res.sort(
+        (a, b) =>
+          new Date(b.inquiry_date).getTime() -
+          new Date(a.inquiry_date).getTime(),
+      );
+      setInquiryList(sortedList);
+    }
+  };
+
+  // 문의 내역 삭제
+  const removeInquiry = async () => {
+    if (selectedId) {
+      const res = await deleteInquirySpb(selectedId);
+      if (!res) {
+        addToast({
+          success: false,
+          text: '문의 내역 삭제 실패',
+          multiText: '다시 시도해주세요.',
+        });
+        return;
+      }
+      addToast({
+        success: true,
+        text: '삭제 완료',
+        multiText: '문의 내역이 성공적으로 삭제되었습니다.',
+      });
+      fetchInquirys();
+      closeModal(); // 삭제 후 모달을 닫습니다.
+    } else {
+      addToast({
+        success: false,
+        text: '삭제할 항목이 없습니다.',
+      });
+    }
+  };
+
+  const gotoDetail = () => {
+    if (selectedId) {
+      navigation.navigate('HelpDetail', {id: selectedId});
+    }
   };
 
   const gotoDesk = () => {
@@ -37,8 +92,16 @@ const HelpHistory = () => {
   };
 
   const handleDeleteHelp = () => {
-    console.log(`TODO: 삭제 API 호출`);
-    setMoreShow(false);
+    if (selectedId) {
+      setMoreShow(false);
+      openModal({
+        title: '문의 내역을 정말 삭제하시겠습니까?',
+        content: '삭제할 경우 다시 확인할 수 없습니다.',
+        text: '삭제하기',
+        onPress: removeInquiry,
+        textCancel: '취소',
+      });
+    }
   };
 
   const createButtonList = () => {
@@ -59,39 +122,57 @@ const HelpHistory = () => {
   return (
     <View style={{flex: 1}}>
       <ScrollView style={commonStyle.CONTAINER}>
-        {dummy_Help_list.map(item => (
-          <TouchableOpacity
-            key={item.id}
-            activeOpacity={0.8}
-            style={styles.itemWrapper}
-            onPress={() => gotoDetail(item.id.toString())}>
-            <View style={styles.subjectWrapper}>
-              <Text style={commonStyle.REGULAR_33_18}>
-                {item.subject.length > 22
-                  ? `${item.subject.substring(0, 20)}...`
-                  : item.subject}
+        {inquiryList && inquiryList.length > 0 ? (
+          inquiryList.map(item => (
+            <TouchableOpacity
+              key={item.id}
+              activeOpacity={0.8}
+              style={styles.itemWrapper}
+              onPress={gotoDetail}>
+              <View style={styles.subjectWrapper}>
+                <Text style={commonStyle.REGULAR_33_18}>
+                  {item.subject
+                    ? item.subject.length > 22
+                      ? `${item.subject.substring(0, 20)}...`
+                      : item.subject
+                    : '제목이 없습니다.'}
+                </Text>
+                <TouchableOpacity
+                  style={styles.moreButton}
+                  activeOpacity={0.8}
+                  onPress={() => handleMorePress(item.id.toString())}>
+                  <MoreSvg width={20} height={20} color={'#555'} />
+                </TouchableOpacity>
+              </View>
+              <Text style={commonStyle.REGULAR_33_14}>
+                {item.contents && item.contents.length > 20
+                  ? `${item.contents.substring(0, 28)}...`
+                  : item.contents || '내용이 없습니다.'}
               </Text>
-              <TouchableOpacity
-                style={styles.moreButton}
-                activeOpacity={0.8}
-                onPress={() => handleMorePress(item.id)}>
-                <MoreSvg width={20} height={20} color={'#555'} />
-              </TouchableOpacity>
-            </View>
-            <Text style={commonStyle.REGULAR_33_14}>
-              {item.contents.length > 20
-                ? `${item.contents.substring(0, 28)}...`
-                : item.contents}
-            </Text>
-
-            <View style={styles.itemAnswer}>
-              <Text style={commonStyle.REGULAR_77_14}>{item.date}</Text>
-              <Text style={commonStyle.REGULAR_AA_14}>
-                {item.response ? '답변완료' : '답변 대기'}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+              <View style={styles.itemAnswer}>
+                <Text style={commonStyle.REGULAR_77_14}>
+                  {item.inquiry_date
+                    ? new Date(item.inquiry_date).toLocaleDateString('ko-KR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                      })
+                    : '날짜 정보 없음'}
+                </Text>
+                <Text style={commonStyle.REGULAR_AA_14}>
+                  {item.response ? '답변완료' : '답변 대기'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <View style={styles.empty}>
+            <EmptyResult
+              reason="등록된 문의 내역이 없어요."
+              solution="문의할 내용이 있나요?"
+            />
+          </View>
+        )}
       </ScrollView>
 
       <TouchableOpacity
@@ -147,6 +228,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
+  empty: {marginTop: 30},
 });
 
 export default HelpHistory;
