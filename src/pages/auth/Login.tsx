@@ -4,11 +4,17 @@ import {commonStyle} from '@/styles/common';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {useToastStore, useUserStore} from '@/store/store';
+import {googleSignInAPI, kakaoSignInAPI} from '@/api/auth';
+import {GOOGLE_WEB_API_KEY, GOOGLE_IOS_API_KEY} from '@env';
 import KakaoSvg from '@/assets/icons/kakao.svg';
 import GoogleSvg from '@/assets/icons/google.svg';
-import {kakaoSignInAPI} from '@/api/auth';
 import EmailSvg from '@/assets/icons/email.svg';
-import {useToastStore, useUserStore} from '@/store/store';
 const logo = require('@/assets/icons/logo.png');
 
 const Login = () => {
@@ -16,8 +22,27 @@ const Login = () => {
   const addToast = useToastStore(state => state.addToast);
   const setLoginProfile = useUserStore(state => state.setLoginProfile);
 
-  const kakaoLogin = async () => {
-    const res = await kakaoSignInAPI();
+  const socialLogin = async (provider: string) => {
+    let res = null;
+    switch (provider) {
+      case 'kakao':
+        res = await kakaoSignInAPI();
+        break;
+      case 'google':
+        GoogleSignin.configure({
+          scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+          webClientId: GOOGLE_WEB_API_KEY,
+          iosClientId: GOOGLE_IOS_API_KEY,
+        });
+        await GoogleSignin.hasPlayServices();
+        const {idToken} = await GoogleSignin.signIn();
+        if (idToken) {
+          res = await googleSignInAPI(idToken);
+        }
+        break;
+      default:
+    }
+
     if (res) {
       const {authData, profileData} = res;
 
@@ -60,7 +85,7 @@ const Login = () => {
     } else {
       addToast({
         success: false,
-        text: '카카오 로그인에 문제가 발생하였습니다.',
+        text: '소셜 로그인을 다시 진행해주세요.',
       });
     }
   };
@@ -97,8 +122,7 @@ const Login = () => {
             activeOpacity={0.8}
             style={style.socialKakao}
             onPress={() => {
-              kakaoLogin();
-              //navigation.navigate('LoginDetail');
+              socialLogin('kakao');
             }}>
             <KakaoSvg width={33} height={33} />
             <Text style={style.socialText}>카카오로 로그인</Text>
@@ -107,7 +131,7 @@ const Login = () => {
             activeOpacity={0.8}
             style={style.socialGoogle}
             onPress={() => {
-              navigation.navigate('LoginDetail');
+              socialLogin('google');
             }}>
             <GoogleSvg width={33} height={33} />
             <Text style={style.socialText}>구글로 로그인</Text>
