@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, FlatList, Text} from 'react-native';
+import {View, StyleSheet, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useFocusEffect} from '@react-navigation/native';
 import {useToastStore} from '@/store/store';
@@ -91,16 +91,14 @@ const Home = () => {
           data={appointments}
           keyExtractor={item => String(item.appointment_id)}
           renderItem={({item}) => (
-            <TouchableOpacity
-              onPress={() => handleMoveToAppointmentDetail(item)}>
-              <AppointmentItem
-                item={item}
-                onPressMore={() => {
-                  setSelectedId(item.appointment_id);
-                  setBottomSheetShow(true);
-                }}
-              />
-            </TouchableOpacity>
+            <AppointmentItem
+              item={item}
+              onPressMore={() => {
+                setSelectedId(item.appointment_id);
+                setBottomSheetShow(true);
+                handleMoveToAppointmentDetail(item);
+              }}
+            />
           )}
           style={{marginHorizontal: -16}}
         />

@@ -29,6 +29,7 @@ export type AppointmentProps = {
   subject?: string | null;
   list_displayed: true;
   pinned: boolean;
+  appointment_id: number;
 };
 
 export type AppointmentInsert =
