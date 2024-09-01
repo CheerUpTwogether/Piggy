@@ -10,13 +10,13 @@ import {
 } from 'react-native';
 import EmptyResult from '@/components/common/EmptyResult';
 import BottomSheet from '@/components/common/BottomSheet';
-import ProfileDetail from './ProfileDetail';
 import {commonStyle} from '@/styles/common';
 import {Friend, User} from '@/mock/Friends/type';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import {useUserStore, useToastStore, useModalStore} from '@/store/store';
 import {getFriendsSpb, deleteFriendshipSpb} from '@/supabase/FriendsSpb';
 import {useFriendActions} from '@/hooks/useFriendActions';
+import ProfileDetailComponent from '@/components/setting/ProfileDetailComponent';
 
 import MoreSvg from '@/assets/icons/more.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
@@ -44,16 +44,25 @@ const Friends = () => {
     fetchFriends();
   }, []);
 
+  useEffect(() => {
+    console.log('ddd', selectedUser);
+  }, [selectedUser]);
+
   const fetchFriends = async () => {
     const friends = await getFriendsSpb(userData.id);
-    if (!friends) {
+    if (friends) {
+      // 각 친구 객체에 is_friend 속성을 추가하는 로직을 추가할 수 있습니다.
+      const friendsWithStatus = friends.map(friend => ({
+        ...friend,
+        is_friend: true, // 이 부분을 적절히 수정해야 할 수 있습니다.
+      }));
+      setFriendsList(friendsWithStatus);
+    } else {
       addToast({
         success: false,
         text: '친구 목록을 불러오지 못했습니다.',
         multiText: '다시 시도해주세요.',
       });
-
-      setFriendsList(friends);
     }
   };
 
@@ -80,11 +89,11 @@ const Friends = () => {
       text: '삭제하기',
       onPress: async () => {
         try {
-          const res = await deleteFriendshipSpb(userData.id, selectedUser.id); // selectedUser.id 사용
+          const res = await deleteFriendshipSpb(userData.id, selectedUser.id);
           if (!res) {
             addToast({
               success: false,
-              text: '친구 삭제 실패',
+              text: '친구 삭제에 실패했습니다.',
               multiText: '다시 시도해주세요.',
             });
             return;
@@ -230,32 +239,6 @@ const Friends = () => {
     </SafeAreaView>
   );
 };
-
-export interface ProfileDetailComponentProps {
-  selectedUser: Friend | User;
-  closeModal: () => void;
-  onFriendAdded: (friendId: string) => void;
-  onFriendRemoved: (friendId: string) => void;
-}
-
-const ProfileDetailComponent = ({
-  selectedUser,
-  closeModal,
-  onFriendAdded,
-  onFriendRemoved,
-}: ProfileDetailComponentProps) => (
-  <ProfileDetail
-    id={selectedUser.id}
-    nickname={selectedUser.nickname}
-    total_appointment={selectedUser.total_appointment ?? 0}
-    completed_appointment={selectedUser.completed_appointment ?? 0}
-    profile_img_url={selectedUser.profile_img_url}
-    is_friend={selectedUser.is_friend ?? false}
-    closeModal={closeModal}
-    onFriendAdded={onFriendAdded}
-    onFriendRemoved={onFriendRemoved}
-  />
-);
 
 const styles = StyleSheet.create({
   profileSection: {marginBottom: 30},

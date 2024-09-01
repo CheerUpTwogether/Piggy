@@ -19,10 +19,10 @@ import {Friend} from '@/mock/Friends/type';
 import useDebounce from '@/hooks/useDebounce';
 import InputBox from '@/components/common/InputBox';
 import BottomSheet from '@/components/common/BottomSheet';
-import ProfileDetail from './ProfileDetail';
 import {useUserStore} from '@/store/store';
 import {getUsersSpb} from '@/supabase/FriendsSpb';
 import {useFriendActions} from '@/hooks/useFriendActions';
+import ProfileDetailComponent from '@/components/setting/ProfileDetailComponent';
 
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
@@ -158,13 +158,8 @@ const FriendSearch = () => {
           setIsShow={setIsShow}
           size={0.6}
           component={({closeModal}) => (
-            <ProfileDetail
-              id={selectedUser.id}
-              nickname={selectedUser.nickname}
-              total_appointment={selectedUser.total_appointment ?? 0}
-              completed_appointment={selectedUser.completed_appointment ?? 0}
-              profile_img_url={selectedUser.profile_img_url}
-              is_friend={selectedUser.is_friend ?? false}
+            <ProfileDetailComponent
+              selectedUser={selectedUser}
               closeModal={closeModal}
               onFriendAdded={onFriendAdded}
               onFriendRemoved={onFriendRemoved}
