@@ -11,6 +11,13 @@ export type AppointmentStatus =
   | 'cancellation-rejected'
   | 'cancellation-pending';
 
+export interface AppointmentProps extends AppointmentInsert {
+  appointment_id: number;
+  agreement_status: AppointmentTabStatus;
+  appointment_participants_list: [];
+  pinned: boolean;
+}
+
 export type AppointmentInsert =
   Database['public']['Tables']['appointment']['Insert'];
 export interface AppointmentProps extends AppointmentInsert {
