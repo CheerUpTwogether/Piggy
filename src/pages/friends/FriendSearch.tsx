@@ -13,9 +13,9 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   FriendSearchRouteProp,
   FriendSearchNavigationProp,
-} from '@/pages/friends/type';
+} from '@/types/friends';
 import {commonStyle} from '@/styles/common';
-import {Friend} from '@/mock/Friends/type';
+import {Friend} from '@/types/friends';
 import useDebounce from '@/hooks/useDebounce';
 import InputBox from '@/components/common/InputBox';
 import BottomSheet from '@/components/common/BottomSheet';

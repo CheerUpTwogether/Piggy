@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
-import {ProfileDetailProps} from '@/mock/Friends/type';
+import {ProfileDetailProps} from '@/types/friends';
 import {gradeList, determineGrade} from '@/utils/grade';
-import {ProfileDetailNavigationProp} from './type';
+import {ProfileDetailNavigationProp} from '@/types/friends';
 import {useUserStore, useToastStore, useModalStore} from '@/store/store';
 import {
   setFriendshipAddSpb,

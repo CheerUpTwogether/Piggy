@@ -12,7 +12,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import EmptyResult from '@/components/common/EmptyResult';
 import BottomSheet from '@/components/common/BottomSheet';
 import {commonStyle} from '@/styles/common';
-import {Friend, User} from '@/mock/Friends/type';
+import {Friend, User} from '@/types/friends';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import {useUserStore, useToastStore, useModalStore} from '@/store/store';
 import {getFriendsSpb, deleteFriendshipSpb} from '@/supabase/FriendsSpb';
