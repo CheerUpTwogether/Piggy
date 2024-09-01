@@ -1,4 +1,4 @@
-import {BottomSheetProps} from '@/types/Common';
+import {BottomSheetProps} from '@/types/common';
 
 import {useEffect, useRef} from 'react';
 import {

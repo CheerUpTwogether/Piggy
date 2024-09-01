@@ -1,16 +1,22 @@
 import {useState} from 'react';
 
-export const useButtonBottomSheet = () => {
+export const useButtonBottomSheet = (
+  onPressFix: () => void,
+  onPressDelete: () => void,
+) => {
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   // 고정 event
-  const handleFixUser = () => {
+  const handleFix = () => {
+    onPressFix();
     setBottomSheetShow(false);
   };
 
   // 삭제 envent
-  const handleDeleteUser = () => {
+  const handleDelete = () => {
+    onPressDelete();
     setBottomSheetShow(false);
   };
+
   const createButtonList = () => {
     const buttons: Array<{
       text: string;
@@ -19,12 +25,12 @@ export const useButtonBottomSheet = () => {
     }> = [
       {
         text: '고정',
-        onPress: handleFixUser,
+        onPress: handleFix,
         theme: 'outline',
       },
       {
         text: '삭제',
-        onPress: handleDeleteUser,
+        onPress: handleDelete,
       },
     ];
 

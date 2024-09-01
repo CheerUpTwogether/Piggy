@@ -1,12 +1,16 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
+import {View, StyleSheet, FlatList, Text} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useFocusEffect} from '@react-navigation/native';
 import {useToastStore} from '@/store/store';
 import {useButtonBottomSheet} from '@/hooks/useButtonBottomSheet';
-import {AppointmentStatus, AppointmentTabStatus} from '@/types/appointment';
+import {
+  AppointmentProps,
+  AppointmentStatus,
+  AppointmentTabStatus,
+} from '@/types/appointment';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
-import {getAppointmentsSpb} from '@/supabase/appointmentSpb';
+import {getAppointmentsSpb, setPinnedSpb} from '@/supabase/appointmentSpb';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
@@ -16,27 +20,48 @@ import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import useHomeAppointments from '@/hooks/useHomeAppointments';
 
 const Home = () => {
-  const {createButtonList, bottomSheetShow, setBottomSheetShow} =
-    useButtonBottomSheet();
   const {
     categories,
     handleMoveToAppointmentForm,
     handleMoveToAppointmentDetail,
   } = useHomeAppointments();
   const addToast = useToastStore(state => state.addToast);
-  const [appointments, setAppointments] = useState([]);
+  const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
-
+  const [selectedId, setSelectedId] = useState(0);
   useFocusEffect(
     React.useCallback(() => {
       getAppointment(sort);
     }, []),
   );
 
+  const onPressDelete = () => {
+    console.log(selectedId);
+  };
+
+  const onPressFix = async () => {
+    const {error} = setPinnedSpb(
+      '8b9f1998-084e-447f-b586-d18c72cf1db4',
+      selectedId,
+    );
+
+    if (error) {
+      addToast({
+        success: false,
+        text: '약속 고정/취소에 실패했어요.',
+      });
+    }
+  };
+
+  const {createButtonList, bottomSheetShow, setBottomSheetShow} =
+    useButtonBottomSheet(onPressFix, onPressDelete);
+
+  // 정렬기준 변경
   const changeSort = (sortValue: AppointmentTabStatus) => {
     setSort(sortValue);
     getAppointment(sortValue);
   };
+
   const getAppointment = async (sortValue: AppointmentStatus) => {
     const {data, error} = await getAppointmentsSpb(
       '8b9f1998-084e-447f-b586-d18c72cf1db4',
@@ -73,7 +98,10 @@ const Home = () => {
               onPress={() => handleMoveToAppointmentDetail(item)}>
               <AppointmentItem
                 item={item}
-                onPressMore={() => setBottomSheetShow(true)}
+                onPressMore={() => {
+                  setSelectedId(item.appointment_id);
+                  setBottomSheetShow(true);
+                }}
               />
             </TouchableOpacity>
           )}

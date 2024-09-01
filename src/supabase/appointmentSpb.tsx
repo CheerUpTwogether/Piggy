@@ -42,7 +42,6 @@ export const getAppointmentsSpb = (
   });
 };
 
-
 // 약속 인증 상태 확인 - 자기 자신의 인증 상태만
 export const getCertificationStatusSpb = (
   id: string,
@@ -56,7 +55,7 @@ export const getCertificationStatusSpb = (
 };
 
 // 약속 고정/해제
-export const setPinnedSpb = async (id, appointment_id) => {
+export const setPinnedSpb = (id, appointment_id) => {
   try {
     const {data, error} = await supabase
       .from('appointment_participants')
