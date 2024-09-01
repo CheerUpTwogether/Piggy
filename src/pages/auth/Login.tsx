@@ -4,11 +4,7 @@ import {commonStyle} from '@/styles/common';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useToastStore, useUserStore} from '@/store/store';
 import {googleSignInAPI, kakaoSignInAPI} from '@/api/auth';
 import {GOOGLE_WEB_API_KEY, GOOGLE_IOS_API_KEY} from '@env';
@@ -22,6 +18,17 @@ const Login = () => {
   const addToast = useToastStore(state => state.addToast);
   const setLoginProfile = useUserStore(state => state.setLoginProfile);
 
+  const getGoogleIdToken = async () => {
+    GoogleSignin.configure({
+      scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+      webClientId: GOOGLE_WEB_API_KEY,
+      iosClientId: GOOGLE_IOS_API_KEY,
+    });
+    await GoogleSignin.hasPlayServices();
+    const {idToken} = await GoogleSignin.signIn();
+    return idToken || null;
+  };
+
   const socialLogin = async (provider: string) => {
     let res = null;
     switch (provider) {
@@ -29,13 +36,7 @@ const Login = () => {
         res = await kakaoSignInAPI();
         break;
       case 'google':
-        GoogleSignin.configure({
-          scopes: ['https://www.googleapis.com/auth/drive.readonly'],
-          webClientId: GOOGLE_WEB_API_KEY,
-          iosClientId: GOOGLE_IOS_API_KEY,
-        });
-        await GoogleSignin.hasPlayServices();
-        const {idToken} = await GoogleSignin.signIn();
+        const idToken = await getGoogleIdToken();
         if (idToken) {
           res = await googleSignInAPI(idToken);
         }
