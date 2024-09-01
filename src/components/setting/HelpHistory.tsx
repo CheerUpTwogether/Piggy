@@ -52,7 +52,7 @@ const HelpHistory = () => {
       } else {
         addToast({
           success: false,
-          text: '사용자 정보를 불러오지 못했습니다.',
+          text: '문의 내역을 불러오지 못했습니다.',
         });
       }
     }

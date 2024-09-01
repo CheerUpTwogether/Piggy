@@ -1,6 +1,6 @@
 import React from 'react';
 import ProfileDetail from '@/pages/friends/ProfileDetail';
-import {Friend, User} from '@/mock/Friends/type';
+import {Friend, User} from '@/types/friends';
 
 export interface ProfileDetailComponentProps {
   selectedUser: Friend | User;
@@ -16,8 +16,7 @@ const ProfileDetailComponent = ({
   onFriendRemoved,
 }: ProfileDetailComponentProps) => (
   <ProfileDetail
-    id={selectedUser.id}
-    nickname={selectedUser.nickname}
+    {...selectedUser}
     total_appointment={selectedUser.total_appointment ?? 0}
     completed_appointment={selectedUser.completed_appointment ?? 0}
     profile_img_url={selectedUser.profile_img_url}

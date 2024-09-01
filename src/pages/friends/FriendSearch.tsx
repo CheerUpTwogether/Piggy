@@ -93,9 +93,9 @@ const FriendSearch = () => {
       setIsShow(true);
     } else {
       navigation.navigate('GiftAmount', {
-        uuid: user.id,
+        id: user.id,
         nickname: user.nickname,
-        profile_image_path: user.profile_img_url,
+        profile_img_url: user.profile_img_url,
       });
       setIsShow(false);
     }

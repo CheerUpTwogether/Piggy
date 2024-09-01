@@ -11,13 +11,13 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import EmptyResult from '@/components/common/EmptyResult';
 import BottomSheet from '@/components/common/BottomSheet';
-import {commonStyle} from '@/styles/common';
-import {Friend, User} from '@/types/friends';
+import ProfileDetailComponent from '@/components/setting/ProfileDetailComponent';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import {useUserStore, useToastStore, useModalStore} from '@/store/store';
-import {getFriendsSpb, deleteFriendshipSpb} from '@/supabase/FriendsSpb';
 import {useFriendActions} from '@/hooks/useFriendActions';
-import ProfileDetailComponent from '@/components/setting/ProfileDetailComponent';
+import {getFriendsSpb, deleteFriendshipSpb} from '@/supabase/FriendsSpb';
+import {Friend, User} from '@/types/friends';
+import {commonStyle} from '@/styles/common';
 
 import MoreSvg from '@/assets/icons/more.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';

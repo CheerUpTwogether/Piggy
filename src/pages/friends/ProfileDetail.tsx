@@ -62,15 +62,11 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   }, [gradeListShow, slideAnim]);
 
   const handleMoveToGift = (
-    uuid: string,
+    id: string,
     nickname: string,
-    profile_image_path: string,
+    profile_img_url: string,
   ) => {
-    navigation.navigate('GiftAmount', {
-      uuid: uuid,
-      nickname: nickname,
-      profile_image_path: profile_image_path,
-    });
+    navigation.navigate('GiftAmount', {id, nickname, profile_img_url});
     closeModal();
   };
 

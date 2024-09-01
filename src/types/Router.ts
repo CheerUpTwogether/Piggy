@@ -1,7 +1,7 @@
 import {User} from '@/mock/Friends/type';
 import {dummyGoodsStorageItem} from '@/mock/GoodsStorage/types';
 import {dummyNoticeItem} from '@/mock/NoticeBoard/types';
-import {FriendSearchParams} from '@/pages/friends/type';
+import {FriendSearchParams} from './friends';
 import {
   StackNavigationOptions,
   StackNavigationProp,
@@ -25,9 +25,9 @@ export type RootStackParamList = {
   FriendSearch: FriendSearchParams;
   GiftFriend: undefined;
   GiftAmount: {
-    uuid: string;
+    id: string;
     nickname: string;
-    profile_image_path: string;
+    profile_img_url: string;
   };
   AppointmentDetail: AppointmentProps;
   ServiceAgreement: undefined;
