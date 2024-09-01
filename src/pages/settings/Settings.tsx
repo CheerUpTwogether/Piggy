@@ -14,10 +14,21 @@ import {commonStyle} from '@/styles/common';
 import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
 import ToggleButton from '@/components/common/ToggleButton';
 import {useUserStore} from '@/store/store';
+import {getMySettingsSpb} from '@/supabase/SettingSpb';
 
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
+interface MyProfileData {
+  id: string;
+  nickname: string;
+  email: string;
+  friend_count: number;
+  total_appointment: number;
+  completed_appointments: number;
+}
+
 const Settings = () => {
+  const [myData, setMyData] = useState<MyProfileData | null>(null);
   const [isOn, setIsOn] = useState(false);
   const {setGotoProfile} = useUserStore();
   const userData = useUserStore(state => state.userData);
@@ -32,11 +43,24 @@ const Settings = () => {
   };
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     setGotoProfile(gotoProfile);
   }, []);
 
+  const fetchData = async () => {
+    try {
+      const res = await getMySettingsSpb(userData.id);
+      console.log('ffff', res);
+      setMyData(res[0] as MyProfileData);
+    } catch (error) {
+      console.error('Failed to fetch settings data: ', error);
+    }
+  };
   const gotoProfile = () => {
-    navigation.navigate('EditProfile', {...dummy_profile});
+    navigation.navigate('EditProfile', {...myData});
   };
 
   return (
@@ -65,15 +89,15 @@ const Settings = () => {
       <View style={styles.dashBoardContainer}>
         <View style={styles.boxWrapper}>
           <Text style={commonStyle.REGULAR_77_14}>친구</Text>
-          <Text style={numberStyle}>{dummy_friends_data.length}</Text>
+          <Text style={numberStyle}>{myData?.friend_count ?? 0}</Text>
         </View>
         <View style={[styles.boxWrapper, styles.totalAppointment]}>
           <Text style={commonStyle.REGULAR_77_14}>전체 약속</Text>
-          <Text style={numberStyle}>{dummy_profile.total_appointment}</Text>
+          <Text style={numberStyle}>{myData?.total_appointment ?? 0}</Text>
         </View>
         <View style={styles.boxWrapper}>
           <Text style={commonStyle.REGULAR_77_14}>이행 횟수</Text>
-          <Text style={numberStyle}>{dummy_profile.completed_appointment}</Text>
+          <Text style={numberStyle}>{myData?.completed_appointments ?? 0}</Text>
         </View>
       </View>
 

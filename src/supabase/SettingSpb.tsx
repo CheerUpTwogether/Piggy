@@ -145,9 +145,9 @@ export const setMyProfileSpb = async id => {
 };
 
 // 설정 프로필 조회
-export const getMySettingsSpb = async id => {
+export const getMySettingsSpb = async (id: string) => {
   try {
-    const {data, error} = await supabase.rpc('selet_My_profile', {
+    const {data, error} = await supabase.rpc('select_my_profile', {
       user_uuid: id,
     });
 
