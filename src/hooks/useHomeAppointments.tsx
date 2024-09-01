@@ -83,13 +83,11 @@ const useHomeAppointments = () => {
 
   return {
     categories,
-    goAppointmentForm,
-    goAppointmentDetail,
-    getAppointment,
     appointments,
     sort,
-    setSort,
     changeSort,
+    goAppointmentForm,
+    goAppointmentDetail,
     onPressFix,
     onPressDelete,
   };
