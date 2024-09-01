@@ -1,6 +1,7 @@
 import {GestureResponderEvent, KeyboardTypeOptions} from 'react-native';
 import {SvgProps} from 'react-native-svg';
 import {AppointmentInsert} from './appointment';
+import {FriendRelationshipRow} from './friend';
 
 export interface CheckBoxProps {
   isChecked: boolean;
@@ -215,8 +216,10 @@ export interface ButtonBottomSheetProps {
 
 export interface AppointmentFormStore {
   appointmentForm: AppointmentInsert;
+  appointmentParticipants: FriendRelationshipRow[];
   setAppointmentForm: (
     key: keyof AppointmentInsert,
     value: string | number,
   ) => void;
+  resetAppointmentForm: () => void;
 }

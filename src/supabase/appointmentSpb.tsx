@@ -29,6 +29,9 @@ export const setAppointmentSpb = ({
       },
     ])
     .select('id');
+
+  // appointment_participants 추가 로직 필요
+  // appointment_participants에 추가된 row중에 id가 proposer_id랑 같은거 찾아서 status를 수락상태로 변경 필요
 };
 
 // 약속 리스트 불러오기
