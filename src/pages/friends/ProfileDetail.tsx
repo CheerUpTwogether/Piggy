@@ -122,7 +122,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
         if (!res) {
           addToast({
             success: false,
-            text: '친구 삭제 실패',
+            text: '친구 삭제에 실패했습니다.',
             multiText: '다시 시도해주세요.',
           });
           return;

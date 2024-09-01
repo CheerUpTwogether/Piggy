@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   Text,
   View,
@@ -32,7 +32,6 @@ const Friends = () => {
     completed_appointment: 0,
     profile_img_url: '',
     is_friend: false,
-    piggy_grade: '',
   });
   const userData = useUserStore(state => state.userData);
   const addToast = useToastStore(state => state.addToast);
@@ -108,7 +107,6 @@ const Friends = () => {
             prevFriends.filter(friend => friend.id !== selectedUser.id),
           );
         } catch (error) {
-          console.error('Error deleting friend:', error);
           addToast({
             success: false,
             text: '친구 삭제에 실패했습니다.',
@@ -144,7 +142,7 @@ const Friends = () => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
       <ScrollView style={commonStyle.CONTAINER}>
-        <View style={styles.profileSection}>
+        <View style={{marginBottom: 30}}>
           <TouchableOpacity
             style={styles.profileWrapper}
             activeOpacity={0.8}
@@ -172,7 +170,7 @@ const Friends = () => {
               친구 {sortedFriends.length}명
             </Text>
             {sortedFriends.length === 0 ? (
-              <View style={styles.emptyWrapper}>
+              <View style={{marginTop: 60}}>
                 <EmptyResult
                   reason="추가된 친구가 없어요."
                   solution="친구를 추가하고 약속을 잡아보세요!"
@@ -181,42 +179,40 @@ const Friends = () => {
             ) : (
               <View style={styles.friendList}>
                 {sortedFriends.map(item => (
-                  <View key={item.id} style={styles.swipeContainer}>
-                    <View style={styles.friendContainer}>
-                      <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() => handleProfilePress(item)}
-                        style={styles.friendWrapper}>
-                        {item.profile_img_url ? (
-                          <Image
-                            source={{uri: item.profile_img_url}}
-                            style={styles.friendProfile}
-                            alt="profile"
+                  <View key={item.id} style={styles.friendContainer}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => handleProfilePress(item)}
+                      style={styles.friendWrapper}>
+                      {item.profile_img_url ? (
+                        <Image
+                          source={{uri: item.profile_img_url}}
+                          style={styles.friendProfile}
+                          alt="profile"
+                        />
+                      ) : (
+                        <View
+                          style={[
+                            styles.friendEmptyProfile,
+                            styles.friendProfile,
+                          ]}>
+                          <BasicProfileSvg
+                            width={24}
+                            height={24}
+                            color={'#555'}
                           />
-                        ) : (
-                          <View
-                            style={[
-                              styles.friendEmptyProfile,
-                              styles.friendProfile,
-                            ]}>
-                            <BasicProfileSvg
-                              width={24}
-                              height={24}
-                              color={'#555'}
-                            />
-                          </View>
-                        )}
-                        <Text style={commonStyle.MEDIUM_33_16}>
-                          {item.nickname}
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.moreButton}
-                        activeOpacity={0.8}
-                        onPress={() => handleMorePress(item)}>
-                        <MoreSvg width={20} height={20} color={'#555'} />
-                      </TouchableOpacity>
-                    </View>
+                        </View>
+                      )}
+                      <Text style={commonStyle.MEDIUM_33_16}>
+                        {item.nickname}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.moreButton}
+                      activeOpacity={0.8}
+                      onPress={() => handleMorePress(item)}>
+                      <MoreSvg width={20} height={20} color={'#555'} />
+                    </TouchableOpacity>
                   </View>
                 ))}
               </View>
@@ -240,11 +236,6 @@ const Friends = () => {
 };
 
 const styles = StyleSheet.create({
-  profileSection: {marginBottom: 30},
-  swipeContainer: {
-    position: 'relative',
-    overflow: 'hidden',
-  },
   profileWrapper: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -299,19 +290,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
-  deleteButton: {
-    backgroundColor: '#ED423F',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 60,
-    height: '100%',
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    zIndex: 0,
-  },
-  emptyWrapper: {marginTop: 60},
 });
 
 export default Friends;

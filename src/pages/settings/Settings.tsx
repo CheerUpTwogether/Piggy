@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   Image,
   StyleSheet,
@@ -14,17 +14,9 @@ import {commonStyle} from '@/styles/common';
 import ToggleButton from '@/components/common/ToggleButton';
 import {useUserStore} from '@/store/store';
 import {getMySettingsSpb} from '@/supabase/SettingSpb';
+import {MyProfileData} from '@/types/setting';
 
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
-
-interface MyProfileData {
-  id: string;
-  nickname: string;
-  email: string;
-  friend_count: number;
-  total_appointment: number;
-  completed_appointments: number;
-}
 
 const Settings = () => {
   const [myData, setMyData] = useState<MyProfileData | null>(null);
