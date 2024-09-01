@@ -18,7 +18,6 @@ const AppointmentFriend = () => {
     setKeyword,
     handleFriendPress,
     handleFriendDelete,
-    selectedFriends,
     appointmentForm,
   } = useAppointmentFriend();
 
@@ -26,7 +25,7 @@ const AppointmentFriend = () => {
     <View>
       {/* 제목 */}
       <InputBox
-        value={appointmentForm.subject}
+        value={appointmentForm.subject || ''}
         setValue={changeTitle}
         placeholder="약속 제목을 입력해주세요."
         label="약속 제목"
@@ -45,7 +44,7 @@ const AppointmentFriend = () => {
 
       {/* 선택한 친구 */}
       <FlatList
-        data={selectedFriends}
+        data={appointmentForm.appointment_participants_list || []}
         horizontal
         renderItem={({item}) => (
           <SelectFriendItem
@@ -66,7 +65,9 @@ const AppointmentFriend = () => {
           <FreindsItem
             handleFriendPress={handleFriendPress}
             item={item}
-            selectedFriends={selectedFriends}
+            selectedFriends={
+              appointmentForm.appointment_participants_list || []
+            }
           />
         )}
         keyExtractor={item => item.id}

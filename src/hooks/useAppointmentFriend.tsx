@@ -8,10 +8,10 @@ import useDebounce from '@/hooks/useDebounce';
 const useAppointmentFriend = () => {
   const [users, setUsers] = useState<FriendProp[]>([]);
   const [keyword, setKeyword] = useState('');
-  const [selectedFriends, setSelectedFriends] = useState<FriendProp[]>([]);
-  const addToast = useToastStore(state => state.addToast);
   const debouncedKeyword = useDebounce(keyword, 100);
   const {appointmentForm, setAppointmentForm} = useAppointmentForm();
+  const addToast = useToastStore(state => state.addToast);
+
   // debouncedKeyword가 변경될 때 라디오 상태 초기화 (선택된 친구는 유지)
   useEffect(() => {
     setKeyword(debouncedKeyword);
@@ -41,21 +41,29 @@ const useAppointmentFriend = () => {
   };
 
   const handleFriendPress = (friend: FriendProp) => {
-    const isSelected = selectedFriends.some(item => item.id === friend.id);
+    const isSelected = appointmentForm?.appointment_participants_list?.some(
+      item => item.id === friend.id,
+    );
 
     if (isSelected) {
       // 이미 선택된 친구일 경우 선택 해제
-      setSelectedFriends(prev =>
-        prev.filter((item: FriendProp) => item.id !== friend.id),
+      setAppointmentForm(
+        'appointment_participants_list',
+        appointmentForm?.appointment_participants_list?.filter(
+          item => item.id !== friend.id,
+        ) || [],
       );
     } else {
       // 새로운 친구 선택
-      setSelectedFriends([friend, ...selectedFriends]);
+      handleFriendDelete(friend);
     }
   };
 
   const handleFriendDelete = (friend: FriendProp) => {
-    setSelectedFriends(selectedFriends.filter(item => item.id !== friend.id));
+    setAppointmentForm('appointment_participants_list', [
+      friend,
+      ...(appointmentForm?.appointment_participants_list || []),
+    ]);
   };
 
   // 제목변경
@@ -70,7 +78,6 @@ const useAppointmentFriend = () => {
     setKeyword,
     handleFriendPress,
     handleFriendDelete,
-    selectedFriends,
     changeTitle,
     appointmentForm,
   };
