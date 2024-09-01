@@ -14,8 +14,9 @@ import ProfileDetail from './ProfileDetail';
 import {commonStyle} from '@/styles/common';
 import {Friend, User} from '@/mock/Friends/type';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
-import {useUserStore, useToastStore} from '@/store/store';
-import {getFriendsSpb} from '@/supabase/FriendsSpb';
+import {useUserStore, useToastStore, useModalStore} from '@/store/store';
+import {getFriendsSpb, deleteFriendshipSpb} from '@/supabase/FriendsSpb';
+import {useFriendActions} from '@/hooks/useFriendActions';
 
 import MoreSvg from '@/assets/icons/more.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
@@ -23,7 +24,6 @@ import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 const Friends = () => {
   const [isShow, setIsShow] = useState(false);
   const [moreShow, setMoreShow] = useState(false);
-  const [friendsList, setFriendsList] = useState<Friend[]>([]);
   const [selectedUser, setSelectedUser] = useState<Friend | User>({
     id: '',
     nickname: '',
@@ -35,6 +35,10 @@ const Friends = () => {
   });
   const userData = useUserStore(state => state.userData);
   const addToast = useToastStore(state => state.addToast);
+  const {openModal, closeModal: closeConfirmModal} = useModalStore();
+
+  const {friendsList, onFriendAdded, onFriendRemoved, setFriendsList} =
+    useFriendActions([]);
 
   useEffect(() => {
     fetchFriends();
@@ -48,12 +52,11 @@ const Friends = () => {
         text: '친구 목록을 불러오지 못했습니다.',
         multiText: '다시 시도해주세요.',
       });
-      return;
+
+      setFriendsList(friends);
     }
-    setFriendsList(friends);
   };
 
-  // 친구 목록을 이름순으로 정렬
   const sortedFriends = friendsList.sort((a, b) => {
     const nameA = a.nickname ? a.nickname.toLowerCase() : '';
     const nameB = b.nickname ? b.nickname.toLowerCase() : '';
@@ -61,8 +64,8 @@ const Friends = () => {
   });
 
   const handleProfilePress = (user: Friend) => {
-    setIsShow(true);
     setSelectedUser(user);
+    setIsShow(true);
   };
 
   const handleMorePress = (user: Friend) => {
@@ -71,18 +74,55 @@ const Friends = () => {
   };
 
   const handleDeleteUser = () => {
-    console.log('TODO: 친구 삭제 모달 -> 삭제 api 호출');
-    setMoreShow(false);
+    openModal({
+      title: '친구를 삭제하시겠습니까?',
+      content: '삭제할 경우 해당 친구와 약속을 생성할 수 없습니다.',
+      text: '삭제하기',
+      onPress: async () => {
+        try {
+          const res = await deleteFriendshipSpb(userData.id, selectedUser.id); // selectedUser.id 사용
+          if (!res) {
+            addToast({
+              success: false,
+              text: '친구 삭제 실패',
+              multiText: '다시 시도해주세요.',
+            });
+            return;
+          }
+
+          addToast({
+            success: true,
+            text: '친구가 성공적으로 삭제되었습니다.',
+          });
+
+          onFriendRemoved(selectedUser.id);
+
+          // 삭제된 친구를 친구 목록에서 제거
+          setFriendsList(prevFriends =>
+            prevFriends.filter(friend => friend.id !== selectedUser.id),
+          );
+        } catch (error) {
+          console.error('Error deleting friend:', error);
+          addToast({
+            success: false,
+            text: '친구 삭제에 실패했습니다.',
+            multiText: '다시 시도해주세요.',
+          });
+        } finally {
+          closeConfirmModal();
+          setMoreShow(false);
+        }
+      },
+      textCancel: '취소',
+    });
   };
 
-  const createButtonList = () => {
-    return [
-      {
-        text: '삭제',
-        onPress: handleDeleteUser,
-      },
-    ];
-  };
+  const createButtonList = () => [
+    {
+      text: '삭제',
+      onPress: handleDeleteUser,
+    },
+  ];
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
@@ -167,7 +207,6 @@ const Friends = () => {
           </View>
         </View>
 
-        {/* ProfileDetail 모달 */}
         <BottomSheet
           isShow={isShow}
           setIsShow={setIsShow}
@@ -176,11 +215,12 @@ const Friends = () => {
             <ProfileDetailComponent
               selectedUser={selectedUser}
               closeModal={closeModal}
+              onFriendAdded={onFriendAdded}
+              onFriendRemoved={onFriendRemoved}
             />
           )}
         />
 
-        {/* more 버튼 모달 */}
         <ButtonBottomSheet
           isShow={moreShow}
           setIsShow={setMoreShow}
@@ -194,11 +234,15 @@ const Friends = () => {
 export interface ProfileDetailComponentProps {
   selectedUser: Friend | User;
   closeModal: () => void;
+  onFriendAdded: (friendId: string) => void;
+  onFriendRemoved: (friendId: string) => void;
 }
 
 const ProfileDetailComponent = ({
   selectedUser,
   closeModal,
+  onFriendAdded,
+  onFriendRemoved,
 }: ProfileDetailComponentProps) => (
   <ProfileDetail
     id={selectedUser.id}
@@ -208,6 +252,8 @@ const ProfileDetailComponent = ({
     profile_img_url={selectedUser.profile_img_url}
     is_friend={selectedUser.is_friend ?? false}
     closeModal={closeModal}
+    onFriendAdded={onFriendAdded}
+    onFriendRemoved={onFriendRemoved}
   />
 );
 

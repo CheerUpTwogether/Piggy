@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -9,11 +9,7 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
-import {
-  useNavigation,
-  useRoute,
-  useFocusEffect,
-} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   FriendSearchRouteProp,
   FriendSearchNavigationProp,
@@ -26,6 +22,7 @@ import BottomSheet from '@/components/common/BottomSheet';
 import ProfileDetail from './ProfileDetail';
 import {useUserStore} from '@/store/store';
 import {getUsersSpb} from '@/supabase/FriendsSpb';
+import {useFriendActions} from '@/hooks/useFriendActions';
 
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
@@ -44,34 +41,35 @@ const FriendSearch = () => {
     is_friend: false,
     piggy_grade: '',
   });
-  const [searchResults, setSearchResults] = useState<Friend[]>([]);
   const route = useRoute<FriendSearchRouteProp>();
   const {previousScreen} = route.params;
   const navigation = useNavigation<FriendSearchNavigationProp>();
   const debouncedKeyword = useDebounce(keyword, 500);
   const currentUserId = useUserStore(state => state.userData.id);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchUsers();
-    }, []),
-  );
+  // useFriendActions 훅 사용
+  const {friendsList, onFriendAdded, onFriendRemoved, setFriendsList} =
+    useFriendActions([]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [debouncedKeyword]);
 
   const fetchUsers = async () => {
     if (debouncedKeyword) {
       try {
         const data = await getUsersSpb(currentUserId, debouncedKeyword);
-        setSearchResults(data || []);
+        setFriendsList(data || []); // 검색 결과를 friendsList에 설정
       } catch (e) {
         console.error(e);
-        setSearchResults([]);
+        setFriendsList([]);
       }
     } else {
-      setSearchResults([]);
+      setFriendsList([]);
     }
   };
 
-  const filterFriend = searchResults.sort((a, b) => {
+  const filterFriend = friendsList.sort((a, b) => {
     const nameA = a.nickname.toLowerCase();
     const nameB = b.nickname.toLowerCase();
     return nameA.localeCompare(nameB, 'ko');
@@ -102,22 +100,6 @@ const FriendSearch = () => {
       });
       setIsShow(false);
     }
-  };
-
-  const handleFriendAdded = (friendId: string) => {
-    setSearchResults(prevResults =>
-      prevResults.map(user =>
-        user.id === friendId ? {...user, is_friend: true} : user,
-      ),
-    );
-  };
-
-  const handleFriendRemoved = (friendId: string) => {
-    setSearchResults(prevResults =>
-      prevResults.map(user =>
-        user.id === friendId ? {...user, is_friend: false} : user,
-      ),
-    );
   };
 
   const renderItem = ({item}: {item: Friend}) => (
@@ -184,8 +166,8 @@ const FriendSearch = () => {
               profile_img_url={selectedUser.profile_img_url}
               is_friend={selectedUser.is_friend ?? false}
               closeModal={closeModal}
-              onFriendAdded={handleFriendAdded}
-              onFriendRemoved={handleFriendRemoved}
+              onFriendAdded={onFriendAdded}
+              onFriendRemoved={onFriendRemoved}
             />
           )}
         />
