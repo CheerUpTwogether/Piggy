@@ -6,7 +6,7 @@ import {getUsersSpb} from '@/supabase/FriendsSpb';
 import {FriendProp} from '@/types/friend';
 import InputBox from '@/components/common/InputBox';
 import EmptyResult from '@/components/common/EmptyResult';
-import RenderFreindsItem from '@/components/appointment/FriendsItem';
+import FreindsItem from '@/components/appointment/FriendsItem';
 import SelectFriendItem from './SelectFriendItem';
 import RoundHandShakeSvg from '@/assets/icons/roundHandshake.svg';
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
@@ -111,7 +111,7 @@ const AppointmentFriend = () => {
         style={{height: screenHeight * 0.37, marginTop: 12}}
         data={users}
         renderItem={({item}) => (
-          <RenderFreindsItem
+          <FreindsItem
             handleFriendPress={handleFriendPress}
             item={item}
             selectedFriends={selectedFriends}
