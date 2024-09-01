@@ -1,16 +1,8 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useFocusEffect} from '@react-navigation/native';
-import {useToastStore} from '@/store/store';
 import {useButtonBottomSheet} from '@/hooks/useButtonBottomSheet';
-import {
-  AppointmentProps,
-  AppointmentStatus,
-  AppointmentTabStatus,
-} from '@/types/appointment';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
-import {getAppointmentsSpb, setPinnedSpb} from '@/supabase/appointmentSpb';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
@@ -22,58 +14,17 @@ import useHomeAppointments from '@/hooks/useHomeAppointments';
 const Home = () => {
   const {
     categories,
-    handleMoveToAppointmentForm,
-    handleMoveToAppointmentDetail,
+    appointments,
+    sort,
+    changeSort,
+    goAppointmentForm,
+    goAppointmentDetail,
+    onPressFix,
+    onPressDelete,
   } = useHomeAppointments();
-  const addToast = useToastStore(state => state.addToast);
-  const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
-  const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
-  useFocusEffect(
-    React.useCallback(() => {
-      getAppointment(sort);
-    }, []),
-  );
-
-  const onPressDelete = () => {
-    console.log(selectedId);
-  };
-
-  const onPressFix = async () => {
-    try {
-      await setPinnedSpb('8b9f1998-084e-447f-b586-d18c72cf1db4', selectedId);
-      getAppointment(sort);
-    } catch {
-      addToast({
-        success: false,
-        text: '약속 고정/취소에 실패했어요.',
-      });
-    }
-  };
-
   const {createButtonList, bottomSheetShow, setBottomSheetShow} =
-    useButtonBottomSheet(onPressFix, onPressDelete);
-
-  // 정렬기준 변경
-  const changeSort = (sortValue: AppointmentTabStatus) => {
-    setSort(sortValue);
-    getAppointment(sortValue);
-  };
-
-  const getAppointment = async (sortValue: AppointmentStatus) => {
-    const {data, error} = await getAppointmentsSpb(
-      '8b9f1998-084e-447f-b586-d18c72cf1db4',
-      categories.filter(el => el.value === sortValue)[0].status,
-    );
-    if (error) {
-      addToast({
-        success: false,
-        text: '약속 정보를 불러오지 못했어요.',
-      });
-      return;
-    }
-    setAppointments(data);
-  };
+    useButtonBottomSheet(() => onPressFix(selectedId), onPressDelete);
 
   return (
     <View style={commonStyle.CONTAINER}>
@@ -86,39 +37,39 @@ const Home = () => {
       </View>
 
       {/* 약속 리스트 */}
-      {appointments.length ? (
-        <FlatList
-          data={appointments}
-          keyExtractor={item => String(item.appointment_id)}
-          renderItem={({item}) => (
-            <AppointmentItem
-              item={item}
-              onPressMore={() => {
-                setSelectedId(item.appointment_id);
-                setBottomSheetShow(true);
-                handleMoveToAppointmentDetail(item);
-              }}
-            />
-          )}
-          style={{marginHorizontal: -16}}
-        />
-      ) : (
-        <View style={{flex: 1, paddingTop: 40}}>
-          <EmptyResult
-            reason={'아직 약속이 없어요'}
-            solution={'친구들과의 약속을 등록해보세요!'}
+      <FlatList
+        data={appointments}
+        keyExtractor={item => String(item.appointment_id)}
+        renderItem={({item}) => (
+          <AppointmentItem
+            item={item}
+            onPressMore={() => {
+              setSelectedId(item.appointment_id);
+              setBottomSheetShow(true);
+              goAppointmentDetail(item);
+            }}
           />
-        </View>
-      )}
+        )}
+        style={{marginHorizontal: -16}}
+        ListEmptyComponent={
+          <View style={{flex: 1, paddingTop: 40}}>
+            <EmptyResult
+              reason={'아직 약속이 없어요'}
+              solution={'친구들과의 약속을 등록해보세요!'}
+            />
+          </View>
+        }
+      />
 
       {/* 약속 추가 버튼 */}
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.plusBtn}
-        onPress={handleMoveToAppointmentForm}>
+        onPress={goAppointmentForm}>
         <PulsSvg color="#FFF" />
       </TouchableOpacity>
 
+      {/* 더보기 버튼 클릭 시 나타나는 바텀 시트 */}
       <ButtonBottomSheet
         isShow={bottomSheetShow}
         setIsShow={setBottomSheetShow}
