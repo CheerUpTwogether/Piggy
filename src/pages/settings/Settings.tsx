@@ -11,7 +11,6 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
-import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
 import ToggleButton from '@/components/common/ToggleButton';
 import {useUserStore} from '@/store/store';
 import {getMySettingsSpb} from '@/supabase/SettingSpb';
@@ -44,23 +43,20 @@ const Settings = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  useEffect(() => {
     setGotoProfile(gotoProfile);
   }, []);
 
   const fetchData = async () => {
     try {
       const res = await getMySettingsSpb(userData.id);
-      console.log('ffff', res);
       setMyData(res[0] as MyProfileData);
     } catch (error) {
       console.error('Failed to fetch settings data: ', error);
     }
   };
+
   const gotoProfile = () => {
-    navigation.navigate('EditProfile', {...myData});
+    navigation.navigate('EditProfile', {...userData});
   };
 
   return (
