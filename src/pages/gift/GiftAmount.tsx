@@ -10,7 +10,7 @@ const STYLE = Platform.OS === 'ios';
 
 const GiftAmount = () => {
   const route = useRoute<GiftAmountRouteProp>();
-  const {uuid, nick_name, profile_image_path} = route.params;
+  const {uuid, nickname, profile_image_path} = route.params;
   const {inputValue, handlePress} = useKeyPad();
 
   const handleSubmit = () => {
@@ -33,7 +33,7 @@ const GiftAmount = () => {
               STYLE ? commonStyle.MEDIUM_33_16 : commonStyle.MEDIUM_33_20,
               styles.text,
             ]}>
-            {nick_name}님에게
+            {nickname}님에게
           </Text>
           <Text
             style={[

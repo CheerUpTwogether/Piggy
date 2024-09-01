@@ -7,7 +7,7 @@ export const useUserStore = create<UserStore>(set => ({
   userData: {
     id: '',
     email: '',
-    nick_name: '',
+    nickname: '',
     created_at: '',
     updated_at: '',
     service_terms_agreement: false,
@@ -22,7 +22,7 @@ export const useUserStore = create<UserStore>(set => ({
   setLoginProfile: (
     id: string,
     email: string,
-    nick_name: string,
+    nickname: string,
     created_at: string,
     updated_at: string,
     service_terms_agreement: boolean,
@@ -37,7 +37,7 @@ export const useUserStore = create<UserStore>(set => ({
         ...state.userData,
         id,
         email,
-        nick_name,
+        nickname,
         created_at,
         updated_at,
         service_terms_agreement,
@@ -48,11 +48,11 @@ export const useUserStore = create<UserStore>(set => ({
         phone_number,
       },
     })),
-  setNickName: (nick_name: string) =>
+  setNickName: (nickname: string) =>
     set(state => ({
       userData: {
         ...state.userData,
-        nick_name,
+        nickname,
       },
     })),
   setProfileImgUrl: (profile_img_url: string) =>

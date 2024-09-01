@@ -21,7 +21,7 @@ const Profile = () => {
         />
         <View>
           <Text style={commonStyle.REGULAR_FF_16}>
-            {dummy_profile.nick_name}
+            {dummy_profile.nickname}
           </Text>
           <Text style={commonStyle.MEDIUM_FF_20}>
             {dummy_profile.piggy} Piggy

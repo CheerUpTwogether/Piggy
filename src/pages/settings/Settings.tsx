@@ -40,16 +40,14 @@ const Settings = () => {
       <View style={{flexDirection: 'row', gap: 18, alignItems: 'center'}}>
         <TouchableOpacity activeOpacity={0.8} onPress={() => gotoProfile()}>
           <Image
-            source={{uri: dummy_profile.profile_image_path}}
+            source={{uri: dummy_profile.profile_img_url}}
             style={{width: 80, height: 80, borderRadius: 80}}
             alt="profile"
           />
         </TouchableOpacity>
 
         <View style={{gap: 6}}>
-          <Text style={commonStyle.MEDIUM_33_20}>
-            {dummy_profile.nick_name}
-          </Text>
+          <Text style={commonStyle.MEDIUM_33_20}>{dummy_profile.nickname}</Text>
           <Text style={commonStyle.REGULAR_AA_16}>{dummy_profile.email}</Text>
         </View>
       </View>
@@ -61,13 +59,11 @@ const Settings = () => {
         </View>
         <View style={[styles.boxWrapper, styles.totalAppointment]}>
           <Text style={commonStyle.REGULAR_77_14}>전체 약속</Text>
-          <Text style={numberStyle}>{dummy_profile.total_appointments}</Text>
+          <Text style={numberStyle}>{dummy_profile.total_appointment}</Text>
         </View>
         <View style={styles.boxWrapper}>
           <Text style={commonStyle.REGULAR_77_14}>이행 횟수</Text>
-          <Text style={numberStyle}>
-            {dummy_profile.completed_appointments}
-          </Text>
+          <Text style={numberStyle}>{dummy_profile.completed_appointment}</Text>
         </View>
       </View>
 

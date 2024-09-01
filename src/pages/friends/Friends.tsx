@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -12,10 +12,10 @@ import EmptyResult from '@/components/common/EmptyResult';
 import BottomSheet from '@/components/common/BottomSheet';
 import ProfileDetail from './ProfileDetail';
 import {commonStyle} from '@/styles/common';
-import {dummy_friends_data} from '@/mock/Friends/Friends';
 import {Friend, User} from '@/mock/Friends/type';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
-import {useToastStore, useUserStore} from '@/store/store';
+import {useUserStore, useToastStore} from '@/store/store';
+import {getFriendsSpb} from '@/supabase/FriendsSpb';
 
 import MoreSvg from '@/assets/icons/more.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
@@ -23,41 +23,46 @@ import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 const Friends = () => {
   const [isShow, setIsShow] = useState(false);
   const [moreShow, setMoreShow] = useState(false);
+  const [friendsList, setFriendsList] = useState<Friend[]>([]);
   const [selectedUser, setSelectedUser] = useState<Friend | User>({
-    uuid: '',
-    nick_name: '',
-    total_appointments: 0,
-    completed_appointments: 0,
+    id: '',
+    nickname: '',
+    total_appointment: 0,
+    completed_appointment: 0,
     profile_img_url: '',
-    friend: false,
+    is_friend: false,
+    piggy_grade: '',
   });
   const userData = useUserStore(state => state.userData);
   const addToast = useToastStore(state => state.addToast);
 
-  // addToast({
-  //   success: false,
-  //   text: `${fieldName} 형식 오류`,
-  //   multiText: `${errorMessage} 올바르게 입력해주세요.`,
-  // });
+  useEffect(() => {
+    fetchFriends();
+  }, []);
+
+  const fetchFriends = async () => {
+    const friends = await getFriendsSpb(userData.id);
+    if (!friends) {
+      addToast({
+        success: false,
+        text: '친구 목록을 불러오지 못했습니다.',
+        multiText: '다시 시도해주세요.',
+      });
+      return;
+    }
+    setFriendsList(friends);
+  };
 
   // 친구 목록을 이름순으로 정렬
-  const sortedFriends = dummy_friends_data.sort((a, b) => {
-    const nameA = a.nick_name.toLowerCase();
-    const nameB = b.nick_name.toLowerCase();
+  const sortedFriends = friendsList.sort((a, b) => {
+    const nameA = a.nickname ? a.nickname.toLowerCase() : '';
+    const nameB = b.nickname ? b.nickname.toLowerCase() : '';
     return nameA.localeCompare(nameB, 'ko');
   });
 
-  // 프로필 클릭 처리
   const handleProfilePress = (user: Friend) => {
     setIsShow(true);
-    setSelectedUser({
-      uuid: user.uuid,
-      nick_name: user.nick_name,
-      total_appointments: user.total_appointments,
-      completed_appointments: user.completed_appointments,
-      profile_img_url: user.profile_img_url,
-      friend: user.friend,
-    });
+    setSelectedUser(user);
   };
 
   const handleMorePress = (user: Friend) => {
@@ -71,18 +76,12 @@ const Friends = () => {
   };
 
   const createButtonList = () => {
-    const buttons: Array<{
-      text: string;
-      theme?: 'sub' | 'primary' | 'outline' | undefined;
-      onPress: () => void | Promise<void>;
-    }> = [
+    return [
       {
         text: '삭제',
         onPress: handleDeleteUser,
       },
     ];
-
-    return buttons;
   };
 
   return (
@@ -106,7 +105,7 @@ const Friends = () => {
             )}
 
             <View style={styles.myData}>
-              <Text style={commonStyle.MEDIUM_33_20}>{userData.nick_name}</Text>
+              <Text style={commonStyle.MEDIUM_33_20}>{userData.nickname}</Text>
               <Text style={commonStyle.REGULAR_AA_14}>{userData.email}</Text>
             </View>
           </TouchableOpacity>
@@ -125,7 +124,7 @@ const Friends = () => {
             ) : (
               <View style={styles.friendList}>
                 {sortedFriends.map(item => (
-                  <View key={item.uuid} style={styles.swipeContainer}>
+                  <View key={item.id} style={styles.swipeContainer}>
                     <View style={styles.friendContainer}>
                       <TouchableOpacity
                         activeOpacity={0.8}
@@ -143,11 +142,15 @@ const Friends = () => {
                               styles.friendEmptyProfile,
                               styles.friendProfile,
                             ]}>
-                            <BasicProfileSvg width={24} height={24} />
+                            <BasicProfileSvg
+                              width={24}
+                              height={24}
+                              color={'#555'}
+                            />
                           </View>
                         )}
                         <Text style={commonStyle.MEDIUM_33_16}>
-                          {item.nick_name}
+                          {item.nickname}
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
@@ -163,26 +166,18 @@ const Friends = () => {
             )}
           </View>
         </View>
+
         {/* ProfileDetail 모달 */}
         <BottomSheet
           isShow={isShow}
           setIsShow={setIsShow}
           size={0.6}
-          component={({closeModal}) =>
-            selectedUser && (
-              <ProfileDetail
-                uuid={selectedUser.uuid}
-                nick_name={selectedUser.nick_name}
-                total_appointments={selectedUser.total_appointments ?? 0}
-                completed_appointments={
-                  selectedUser.completed_appointments ?? 0
-                }
-                profile_image_path={selectedUser.profile_image_path}
-                friend={selectedUser.friend ?? false}
-                closeModal={closeModal}
-              />
-            )
-          }
+          component={({closeModal}) => (
+            <ProfileDetailComponent
+              selectedUser={selectedUser}
+              closeModal={closeModal}
+            />
+          )}
         />
 
         {/* more 버튼 모달 */}
@@ -195,6 +190,26 @@ const Friends = () => {
     </SafeAreaView>
   );
 };
+
+export interface ProfileDetailComponentProps {
+  selectedUser: Friend | User;
+  closeModal: () => void;
+}
+
+const ProfileDetailComponent = ({
+  selectedUser,
+  closeModal,
+}: ProfileDetailComponentProps) => (
+  <ProfileDetail
+    id={selectedUser.id}
+    nickname={selectedUser.nickname}
+    total_appointment={selectedUser.total_appointment ?? 0}
+    completed_appointment={selectedUser.completed_appointment ?? 0}
+    profile_img_url={selectedUser.profile_img_url}
+    is_friend={selectedUser.is_friend ?? false}
+    closeModal={closeModal}
+  />
+);
 
 const styles = StyleSheet.create({
   profileSection: {marginBottom: 30},

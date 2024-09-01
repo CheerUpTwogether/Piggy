@@ -1,12 +1,12 @@
 export interface User {
-  uuid: string;
-  profile_image_path: string;
-  nick_name: string;
+  id: string;
+  profile_img_url: string;
+  nickname: string;
   email?: string;
   piggy: number;
-  total_appointments?: number;
-  completed_appointments?: number;
-  friend?: true;
+  total_appointment?: number;
+  completed_appointment?: number;
+  is_friend?: true;
 }
 
 export interface Friend {
@@ -17,11 +17,11 @@ export interface Friend {
   is_friend?: boolean;
   total_appointment?: number;
   completed_appointment?: number;
-  piggy_grade: string;
+  piggy_grade?: string;
 }
 
 export interface ProfileDetailProps {
-  uuid: string;
+  id: string;
   nickname: string;
   total_appointment: number;
   completed_appointment: number;

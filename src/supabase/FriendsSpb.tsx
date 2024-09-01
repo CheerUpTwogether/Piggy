@@ -1,5 +1,35 @@
 import supabase from '@/supabase/supabase';
 
+// 친구 목록 불러오기
+export const getFriendsSpb = async (userId: string) => {
+  try {
+    const {data: friendsData, error: friendsError} = await supabase
+      .from('user_friend_relationship')
+      .select('id_to')
+      .eq('id_from', userId);
+
+    if (friendsError || !friendsData) {
+      throw friendsError || new Error('No friends found');
+    }
+
+    const friendIds = friendsData.map(friend => friend.id_to);
+
+    const {data: userDetails, error: userDetailsError} = await supabase
+      .from('users_nickname')
+      .select('id, email, nickname, profile_img_url')
+      .in('id', friendIds);
+
+    if (userDetailsError) {
+      throw userDetailsError;
+    }
+
+    return userDetails;
+  } catch (error) {
+    console.error('Error in getFriendsSpb:', error);
+    throw error;
+  }
+};
+
 // 사용자 리스트 검색
 export const getUsersSpb = async (id: string, keyword: string) => {
   try {
@@ -15,21 +45,6 @@ export const getUsersSpb = async (id: string, keyword: string) => {
     console.error('Error appeared in getUsersSpb : ', e);
   }
 };
-
-// export const getUsersSpb = async (keyword: string, currentUserId: string) => {
-//   try {
-//     const {data, error} = await supabase.rpc('select_users_list', {
-//       keyword: keyword,
-//       current_user_id: currentUserId,
-//     });
-//     if (error) {
-//       throw error;
-//     }
-//     return data;
-//   } catch (e) {
-//     console.error('Error appeared in getUsersSpb : ', e);
-//   }
-// };
 
 // 친구 추가
 export const setFriendshipAddSpb = async (id: string, friend_id: string) => {
@@ -73,7 +88,11 @@ export const setFriendshipDeleteSpb = async (id: string, friend_id: string) => {
 };
 
 // 선물하기
-export const setGiftPiggySpb = async (id, friend_id, gift_piggy_count) => {
+export const setGiftPiggySpb = async (
+  id: string,
+  friend_id: string,
+  gift_piggy_count: number | string,
+) => {
   try {
     const {data, error} = await supabase
       .from('piggy_gift_log')

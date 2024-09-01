@@ -13,6 +13,7 @@ import {commonStyle} from '@/styles/common';
 import {ProfileDetailProps} from '@/mock/Friends/type';
 import {gradeList, determineGrade} from '@/utils/grade';
 import {ProfileDetailNavigationProp} from './type';
+import {useUserStore} from '@/store/store';
 
 import GradeSvg from '@/assets/icons/grade.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
@@ -25,7 +26,7 @@ import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 const {height: screenHeight} = Dimensions.get('window');
 
 const ProfileDetail: React.FC<ProfileDetailProps> = ({
-  uuid,
+  id,
   nickname,
   total_appointment,
   completed_appointment,
@@ -36,6 +37,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   const [gradeListShow, setGradeListShow] = useState(false);
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
   const navigation = useNavigation<ProfileDetailNavigationProp>();
+  const userData = useUserStore(state => state.userData);
 
   const {grade, gradeColor} = determineGrade(
     total_appointment,
@@ -52,12 +54,12 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
 
   const handleMoveToGift = (
     uuid: string,
-    nick_name: string,
+    nickname: string,
     profile_image_path: string,
   ) => {
     navigation.navigate('GiftAmount', {
       uuid: uuid,
-      nick_name: nick_name,
+      nickname: nickname,
       profile_image_path: profile_image_path,
     });
     closeModal();
@@ -79,7 +81,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   };
 
   const iconShow = () => {
-    if (uuid === '1000') {
+    if (id === userData.id) {
       return (
         <TouchableOpacity
           style={styles.rightIconWrapper}
@@ -94,7 +96,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
           <TouchableOpacity
             style={styles.rightIconWrapper}
             activeOpacity={0.8}
-            onPress={() => handleMoveToGift(uuid, nickname, profile_img_url)}>
+            onPress={() => handleMoveToGift(id, nickname, profile_img_url)}>
             <GiftSvg style={styles.rightIcon} />
           </TouchableOpacity>
           <TouchableOpacity

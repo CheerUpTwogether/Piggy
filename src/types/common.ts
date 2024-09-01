@@ -24,7 +24,7 @@ export interface ToggleProps {
 export interface UserData {
   id: string;
   email: string;
-  nick_name: string;
+  nickname: string;
   created_at: string;
   updated_at: string;
   service_terms_agreement: boolean;
@@ -40,7 +40,7 @@ export interface UserStore {
   setLoginProfile: (
     id: string,
     email: string,
-    nick_name: string,
+    nickname: string,
     created_at: string,
     updated_at: string,
     service_terms_agreement: boolean,
@@ -50,7 +50,7 @@ export interface UserStore {
     profile_img_url: string,
     phone_number: string,
   ) => void;
-  setNickName: (nick_name: string) => void;
+  setNickName: (nickname: string) => void;
   setProfileImgUrl: (profile_img_url: string) => void;
   setServiceTermsAgreement: (service_terms_agreement: boolean) => void;
   setPaymentTermsAgreement: (payment_terms_agreement: boolean) => void;

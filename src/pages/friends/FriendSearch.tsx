@@ -92,7 +92,7 @@ const FriendSearch = () => {
     } else {
       navigation.navigate('GiftAmount', {
         uuid: user.id,
-        nick_name: user.nickname,
+        nickname: user.nickname,
         profile_image_path: user.profile_img_url,
       });
       setIsShow(false);
@@ -156,12 +156,12 @@ const FriendSearch = () => {
           size={0.6}
           component={({closeModal}) => (
             <ProfileDetail
-              uuid={selectedUser.id}
+              id={selectedUser.id}
               nickname={selectedUser.nickname}
               total_appointment={selectedUser.total_appointment ?? 0}
               completed_appointment={selectedUser.completed_appointment ?? 0}
-              profile_image_path={selectedUser.profile_img_url}
-              friend={selectedUser.is_friend ?? false}
+              profile_img_url={selectedUser.profile_img_url}
+              is_friend={selectedUser.is_friend ?? false}
               closeModal={closeModal}
             />
           )}
