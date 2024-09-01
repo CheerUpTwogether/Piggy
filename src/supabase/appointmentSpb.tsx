@@ -70,7 +70,7 @@ export const setPinnedSpb = async (id: string, appointment_id: number) => {
     const {error: updateError} = await supabase
       .from('appointment_participants')
       .update({
-        pinned: !data.pinned,
+        pinned: !data?.[0]?.pinned,
       })
       .eq('appointment_id', appointment_id)
       .eq('user_id', id);
