@@ -9,6 +9,8 @@ import NickNameSvg from '@/assets/icons/nickname.svg';
 import CameraSvg from '@/assets/icons/camera.svg';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {deleteItemSession} from '@/utils/auth';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY} from '@env';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
@@ -18,8 +20,18 @@ const EditProfile = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'EditProfile'>>();
   const {nick_name, profile_image_path} = route.params;
 
+  const googleLogOut = async () => {
+    GoogleSignin.configure({
+      scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+      webClientId: GOOGLE_WEB_API_KEY,
+      iosClientId: GOOGLE_IOS_API_KEY,
+    });
+    await GoogleSignin.signOut();
+  };
+
   const handleLogout = async () => {
     await deleteItemSession();
+    await googleLogOut();
     navigation.replace('Login');
   };
 

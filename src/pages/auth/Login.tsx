@@ -25,9 +25,13 @@ const Login = () => {
       webClientId: GOOGLE_WEB_API_KEY,
       iosClientId: GOOGLE_IOS_API_KEY,
     });
-    await GoogleSignin.hasPlayServices();
-    const {idToken} = await GoogleSignin.signIn();
-    return idToken || null;
+    try {
+      await GoogleSignin.hasPlayServices();
+      const {idToken} = await GoogleSignin.signIn();
+      return idToken || null;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const socialLogin = async (provider: string) => {
