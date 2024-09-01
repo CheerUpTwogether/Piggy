@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import {ModalStore, ToastStore, UserStore} from '@/types/common';
 import {ModalProps} from 'react-native';
-import {setServiceTermsAgreeSpb} from '@/supabase/AuthSpb';
+// import {setServiceTermsAgreeSpb} from '@/supabase/AuthSpb';
 
 export const useUserStore = create<UserStore>(set => ({
   userData: {
@@ -62,14 +62,14 @@ export const useUserStore = create<UserStore>(set => ({
         profile_img_url,
       },
     })),
-  setServiceTermsAgreement: (service_terms_agreement: string) =>
+  setServiceTermsAgreement: (service_terms_agreement: boolean) =>
     set(state => ({
       userData: {
         ...state.userData,
         service_terms_agreement,
       },
     })),
-  setPaymentTermsAgreement: (payment_terms_agreement: string) =>
+  setPaymentTermsAgreement: (payment_terms_agreement: boolean) =>
     set(state => ({
       userData: {
         ...state.userData,

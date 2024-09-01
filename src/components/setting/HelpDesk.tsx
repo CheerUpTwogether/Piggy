@@ -13,7 +13,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
 import {setInquirySpb} from '@/supabase/SettingSpb';
-import {useToastStore} from '@/store/store';
+import {useToastStore, useUserStore} from '@/store/store';
 
 import InputBox from '../common/InputBox';
 import NickNameSvg from '@/assets/icons/nickname.svg';
@@ -27,6 +27,7 @@ const HelpDesk = () => {
   const [content, setContent] = useState('');
   const [imageList, setImageList] = useState(['https://i.pravatar.cc/250']);
   const addToast = useToastStore(state => state.addToast);
+  const userData = useUserStore(state => state.userData);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -82,7 +83,7 @@ const HelpDesk = () => {
     }
     const res = await setInquirySpb(
       // TODO: uid 전역에서 호출
-      '7b4a9f58-028f-40cb-9600-7dbf8f3744b3',
+      userData.id,
       subject,
       content,
       email,

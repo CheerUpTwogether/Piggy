@@ -21,12 +21,51 @@ export interface ToggleProps {
   loading?: boolean;
 }
 
+export interface UserData {
+  id: string;
+  email: string;
+  nick_name: string;
+  created_at: string;
+  updated_at: string;
+  service_terms_agreement: boolean;
+  payment_terms_agreement: boolean;
+  notification_agreement: boolean;
+  social_login_type: string;
+  profile_img_url: string;
+  phone_number: string;
+  isAgree: {service: boolean; payment: boolean};
+}
 export interface UserStore {
-  userData: {isAgree: {service: boolean; payment: boolean}};
+  userData: UserData;
+  setLoginProfile: (
+    id: string,
+    email: string,
+    nick_name: string,
+    created_at: string,
+    updated_at: string,
+    service_terms_agreement: boolean,
+    payment_terms_agreement: boolean,
+    notification_agreement: boolean,
+    social_login_type: string,
+    profile_img_url: string,
+    phone_number: string,
+  ) => void;
+  setNickName: (nick_name: string) => void;
+  setProfileImgUrl: (profile_img_url: string) => void;
+  setServiceTermsAgreement: (service_terms_agreement: boolean) => void;
+  setPaymentTermsAgreement: (payment_terms_agreement: boolean) => void;
+  setPhoneNumber: (phone_number: string) => void;
   setIsAgree: (key: keyof UserStore['userData']['isAgree']) => void;
   gotoProfile: () => void;
   setGotoProfile: (func: () => void) => void;
 }
+
+// export interface UserStore {
+//   userData: {isAgree: {service: boolean; payment: boolean}};
+//   setIsAgree: (key: keyof UserStore['userData']['isAgree']) => void;
+//   gotoProfile: () => void;
+//   setGotoProfile: (func: () => void) => void;
+// }
 
 export interface ToastStore {
   toasts: ToastProps[];
@@ -103,6 +142,8 @@ export interface ModalState {
   title: string;
   isOpen: boolean;
   content: string;
+  textCancel?: string;
+  onPress?: () => void;
 }
 
 export interface ModalStore {
@@ -110,7 +151,6 @@ export interface ModalStore {
   openModal: (modal: Omit<ModalState, 'isOpen'>) => void;
   closeModal: () => void;
 }
-
 
 export interface InputBoxProps {
   value: string;
