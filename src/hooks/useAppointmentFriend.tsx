@@ -47,23 +47,23 @@ const useAppointmentFriend = () => {
 
     if (isSelected) {
       // 이미 선택된 친구일 경우 선택 해제
-      setAppointmentForm(
-        'appointment_participants_list',
-        appointmentForm?.appointment_participants_list?.filter(
-          item => item.id !== friend.id,
-        ) || [],
-      );
+      handleFriendDelete(friend);
     } else {
       // 새로운 친구 선택
-      handleFriendDelete(friend);
+      setAppointmentForm('appointment_participants_list', [
+        friend,
+        ...(appointmentForm?.appointment_participants_list || []),
+      ]);
     }
   };
 
   const handleFriendDelete = (friend: FriendProp) => {
-    setAppointmentForm('appointment_participants_list', [
-      friend,
-      ...(appointmentForm?.appointment_participants_list || []),
-    ]);
+    setAppointmentForm(
+      'appointment_participants_list',
+      appointmentForm?.appointment_participants_list?.filter(
+        item => item.id !== friend.id,
+      ) || [],
+    );
   };
 
   // 제목변경
