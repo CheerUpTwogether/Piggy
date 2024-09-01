@@ -20,6 +20,10 @@ export interface AppointmentProps extends AppointmentInsert {
 
 export type AppointmentInsert =
   Database['public']['Tables']['appointment']['Insert'];
+export interface AppointmentProps extends AppointmentInsert {
+  list_displayed: true;
+  pinned: boolean;
+}
 
 export type AppointmentTabStatus = 'confirmed' | 'fulfilled' | 'pending';
 export interface AppointmentTabCategory {

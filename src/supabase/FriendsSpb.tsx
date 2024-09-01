@@ -1,23 +1,15 @@
 import supabase from '@/supabase/supabase';
 
 // 사용자 리스트 검색
-export const getUsersSpb = async (id, keyword) => {
-  try {
-    const {data, error} = await supabase.rpc('select_users_list', {
-      user_uuid: id,
-      keyword: keyword,
-    });
-    if (error) {
-      throw error;
-    }
-    return data;
-  } catch (e) {
-    console.error('Error appeared in getUsersSpb : ', e);
-  }
+export const getUsersSpb = (id: string, keyword: string) => {
+  return supabase.rpc('select_users_list', {
+    user_uuid: id,
+    keyword: keyword,
+  });
 };
 
 // 친구 추가
-export const setFriendshipAddSpb = async (id, friend_id) => {
+export const setFriendshipAddSpb = async (id: string, friend_id: string) => {
   try {
     const {data, error} = await supabase
       .from('user_friend_relationship')
