@@ -40,12 +40,10 @@ const Home = () => {
   };
 
   const onPressFix = async () => {
-    const {error} = setPinnedSpb(
-      '8b9f1998-084e-447f-b586-d18c72cf1db4',
-      selectedId,
-    );
-
-    if (error) {
+    try {
+      await setPinnedSpb('8b9f1998-084e-447f-b586-d18c72cf1db4', selectedId);
+      getAppointment(sort);
+    } catch {
       addToast({
         success: false,
         text: '약속 고정/취소에 실패했어요.',
@@ -74,7 +72,6 @@ const Home = () => {
       });
       return;
     }
-    console.log(data);
     setAppointments(data);
   };
 

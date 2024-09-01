@@ -55,7 +55,7 @@ export const getCertificationStatusSpb = (
 };
 
 // 약속 고정/해제
-export const setPinnedSpb = (id, appointment_id) => {
+export const setPinnedSpb = async (id: string, appointment_id: number) => {
   try {
     const {data, error} = await supabase
       .from('appointment_participants')
@@ -67,10 +67,10 @@ export const setPinnedSpb = (id, appointment_id) => {
       throw error;
     }
 
-    const {data: updateData, error: updateError} = await supabase
+    const {error: updateError} = await supabase
       .from('appointment_participants')
       .update({
-        pinned: !data,
+        pinned: !data.pinned,
       })
       .eq('appointment_id', appointment_id)
       .eq('user_id', id);
