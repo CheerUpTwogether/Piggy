@@ -14,9 +14,11 @@ import {AppointmentProps} from '@/types/appointment';
 const AppointmentItem = ({
   item,
   onPressMore,
+  onPressFix,
 }: {
   item: AppointmentProps;
-  onPressMore: () => void;
+  onPressMore: (item: AppointmentProps) => void;
+  onPressFix: (id: number) => void;
 }) => {
   const navigation = useNavigation<StackNavigation>();
   const cancelStatus = ['cancelled', 'expired'];
@@ -60,12 +62,16 @@ const AppointmentItem = ({
             <Text style={titleFontColor}>{item.subject}</Text>
             <View style={styles.svgContainer}>
               {item.pinned && (
-                <TouchableOpacity style={styles.svgBtn}>
+                <TouchableOpacity
+                  style={styles.svgBtn}
+                  onPress={() => onPressFix(item.appointment_id)}>
                   <PinSvg color="#777" style={styles.svg} />
                 </TouchableOpacity>
               )}
 
-              <TouchableOpacity style={styles.svgBtn} onPress={onPressMore}>
+              <TouchableOpacity
+                style={styles.svgBtn}
+                onPress={() => onPressMore(item)}>
                 <MoreSvg color="#777" style={styles.svg} />
               </TouchableOpacity>
             </View>

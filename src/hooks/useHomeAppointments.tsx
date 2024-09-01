@@ -9,27 +9,40 @@ import {
   AppointmentTabStatus,
 } from '@/types/appointment';
 import {StackNavigation} from '@/types/Router';
+import {useButtonBottomSheet} from './useButtonBottomSheet';
 
+const categories: AppointmentTabCategory[] = [
+  {label: '대기', value: 'pending', status: ['pending']},
+  {label: '확정', value: 'confirmed', status: ['confirmed']},
+  {
+    label: '완료',
+    value: 'fulfilled',
+    status: ['fulfilled', 'cancelled', 'expired'],
+  },
+];
 const useHomeAppointments = () => {
   const addToast = useToastStore(state => state.addToast);
   const navigation = useNavigation<StackNavigation>();
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
-  const categories: AppointmentTabCategory[] = [
-    {label: '대기', value: 'pending', status: ['pending']},
-    {label: '확정', value: 'confirmed', status: ['confirmed']},
-    {
-      label: '완료',
-      value: 'fulfilled',
-      status: ['fulfilled', 'cancelled', 'expired'],
-    },
-  ];
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
+  const [selectedId, setSelectedId] = useState(0);
+  const {createButtonList, bottomSheetShow, setBottomSheetShow} =
+    useButtonBottomSheet(
+      () => onPressFix(selectedId),
+      () => onPressDelete(),
+    );
 
   useFocusEffect(
     useCallback(() => {
       getAppointment(sort);
     }, []),
   );
+
+  // 약속 더보기 버튼 클릭
+  const onPressMore = (item: AppointmentProps) => {
+    setSelectedId(item.appointment_id);
+    setBottomSheetShow(true);
+  };
 
   // 정렬기준 변경
   const changeSort = (sortValue: AppointmentTabStatus) => {
@@ -40,11 +53,6 @@ const useHomeAppointments = () => {
   // 약속 생성 폼 이동
   const goAppointmentForm = () => {
     navigation.navigate('AppointmentForm');
-  };
-
-  // 약속 상세로 이동
-  const goAppointmentDetail = (item: AppointmentProps) => {
-    navigation.navigate('AppointmentDetail', {...item});
   };
 
   // 약속 리스트
@@ -87,9 +95,11 @@ const useHomeAppointments = () => {
     sort,
     changeSort,
     goAppointmentForm,
-    goAppointmentDetail,
+    onPressMore,
     onPressFix,
-    onPressDelete,
+    createButtonList,
+    bottomSheetShow,
+    setBottomSheetShow,
   };
 };
 

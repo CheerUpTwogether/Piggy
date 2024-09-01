@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useButtonBottomSheet} from '@/hooks/useButtonBottomSheet';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
@@ -18,13 +17,12 @@ const Home = () => {
     sort,
     changeSort,
     goAppointmentForm,
-    goAppointmentDetail,
+    onPressMore,
     onPressFix,
-    onPressDelete,
+    createButtonList,
+    bottomSheetShow,
+    setBottomSheetShow,
   } = useHomeAppointments();
-  const [selectedId, setSelectedId] = useState(0);
-  const {createButtonList, bottomSheetShow, setBottomSheetShow} =
-    useButtonBottomSheet(() => onPressFix(selectedId), onPressDelete);
 
   return (
     <View style={commonStyle.CONTAINER}>
@@ -43,11 +41,8 @@ const Home = () => {
         renderItem={({item}) => (
           <AppointmentItem
             item={item}
-            onPressMore={() => {
-              setSelectedId(item.appointment_id);
-              setBottomSheetShow(true);
-              goAppointmentDetail(item);
-            }}
+            onPressMore={onPressMore}
+            onPressFix={onPressFix}
           />
         )}
         style={{marginHorizontal: -16}}
