@@ -16,14 +16,15 @@ import {commonStyle} from '@/styles/common';
 import Button from '@/components/common/Button';
 import LoginDetailForm from './LoginDetailForm';
 import CheckBox from '@/components/common/CheckBox';
-import RightArrowSvg from '@/assets/icons/rightArrow.svg';
 import {
   checkNicknameDuplicateSpb,
   checkPhoneNumberDuplicateSpb,
   setProfileSpb,
 } from '@/supabase/auth';
 import {set} from 'lodash';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {setItemSession} from '@/utils/auth';
+import RightArrowSvg from '@/assets/icons/rightArrow.svg';
 const logo = require('@/assets/icons/topLogo.png');
 
 const LoginDetail = () => {
@@ -130,6 +131,10 @@ const LoginDetail = () => {
       );
     }
 
+    await setItemSession(
+      authData.session.access_token,
+      authData.session.refresh_token,
+    );
     navigation.replace('Main', {screen: 'Home'});
   };
 

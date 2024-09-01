@@ -1,4 +1,5 @@
 import supabase from '@/supabase/supabase';
+import {setItemSession} from '@/utils/auth';
 
 // 카카오 로그인
 export const kakaoLoginSpb = (idToken: string, accessToken: string) => {
@@ -68,6 +69,29 @@ export const setProfileSpb = (
     ])
     .select()
     .single();
+};
+
+// 세션 토큰으로 로그인
+export const loginSessionSpb = async (
+  access_token: string,
+  refresh_token: string,
+) => {
+  const {data, error} = await supabase.auth.setSession({
+    access_token,
+    refresh_token,
+  });
+
+  if (data.session && access_token !== data.session.access_token) {
+    // 재 갱신된 access_token(기본:1시간) 스토리지에 저장.
+    await setItemSession(data.session.access_token, refresh_token);
+  }
+
+  if (error) {
+    // 세션 오류 - refresh_token(기본: 30일) 만료 될때는 로그인 다시하게 함.
+    console.log(error);
+  }
+
+  return data;
 };
 
 // ====================== 밑에 로직들은 deprecated 예정.
