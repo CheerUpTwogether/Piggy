@@ -72,6 +72,7 @@ const Home = () => {
       });
       return;
     }
+
     setAppointments(data);
   };
 
