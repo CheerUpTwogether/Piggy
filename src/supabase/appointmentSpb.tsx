@@ -56,74 +56,69 @@ export const getCertificationStatusSpb = (
 
 // 약속 고정/해제
 export const setPinnedSpb = async (id: string, appointment_id: number) => {
-  try {
-    const {data, error} = await supabase
-      .from('appointment_participants')
-      .select('pinned')
-      .eq('appointment_id', appointment_id)
-      .eq('user_id', id);
+  const {data, error} = await supabase
+    .from('appointment_participants')
+    .select('pinned')
+    .eq('appointment_id', appointment_id)
+    .eq('user_id', id);
 
-    if (error) {
-      throw error;
-    }
+  if (error) {
+    throw error;
+  }
 
-    const {error: updateError} = await supabase
-      .from('appointment_participants')
-      .update({
-        pinned: !data?.[0]?.pinned,
-      })
-      .eq('appointment_id', appointment_id)
-      .eq('user_id', id);
+  const {error: updateError} = await supabase
+    .from('appointment_participants')
+    .update({
+      pinned: !data?.[0]?.pinned,
+    })
+    .eq('appointment_id', appointment_id)
+    .eq('user_id', id);
 
-    if (updateError) {
-      throw updateError;
-    }
-  } catch (e) {
-    console.error('Error appeared in setPinned : ', e);
+  if (updateError) {
+    throw updateError;
   }
 };
 
 // 약속 수락/거절
 export const setAppointmentAcceptanceSpb = async (
-  id,
-  appointment_id,
-  agreement_status,
+  id: string,
+  appointment_id: number,
+  agreement_status: boolean,
 ) => {
   try {
-    const response_agreement = agreement_status ? 'confirmed' : 'cancelled';
     const {data, error} = await supabase
       .from('appointment_participants')
       .update({
-        agreement_status: response_agreement,
+        agreement_status: agreement_status ? 'confirmed' : 'cancelled',
       })
       .eq('user_id', id)
       .eq('appointment_id', appointment_id);
     if (error) {
       throw error;
     }
-    return agreement_status;
+    return data;
   } catch (e) {
     console.error('Error appeared in setAppointmentAcceptanceSpb : ', e);
   }
 };
 
 // 약속 취소 요청
-export const setAppointmentCancellationSpb = async (id, appointment_id) => {
-  try {
-    const {data, error} = await supabase
-      .from('appointment_cancellation_request_log')
-      .insert([
-        {
-          user_id: id,
-          appointment_id: appointment_id,
-          cancellation_status: 'cancellation-request',
-        },
-      ]);
+export const setAppointmentCancellationSpb = async (
+  id: string,
+  appointment_id: number,
+) => {
+  const {data, error} = await supabase
+    .from('appointment_cancellation_request_log')
+    .insert([
+      {
+        user_id: id,
+        appointment_id: appointment_id,
+        cancellation_status: 'cancellation-request',
+      },
+    ]);
 
-    if (error) {
-      throw error;
-    }
-  } catch (e) {
-    console.error('Error appeared in setAppointmentCancellationSpb : ', e);
+  if (error) {
+    throw error;
   }
+  return data;
 };
