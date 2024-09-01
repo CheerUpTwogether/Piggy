@@ -6,9 +6,11 @@ import {color_primary, commonStyle} from '@/styles/common';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '@/types/Router';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {useUserStore} from '@/store/store';
 
 const Profile = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const {userData} = useUserStore();
   return (
     <View style={styles.myInfoBox}>
       <View style={styles.flexRow}>
@@ -20,9 +22,7 @@ const Profile = () => {
           alt="peofileImage"
         />
         <View>
-          <Text style={commonStyle.REGULAR_FF_16}>
-            {dummy_profile.nick_name}
-          </Text>
+          <Text style={commonStyle.REGULAR_FF_16}>{userData.nickname}</Text>
           <Text style={commonStyle.MEDIUM_FF_20}>
             {dummy_profile.piggy} Piggy
           </Text>
@@ -35,12 +35,6 @@ const Profile = () => {
           theme="outline"
           size="md"
         />
-        {/* <Button
-          text="충전하기"
-          onPress={() => navigation.navigate('PiggyShop')}
-          theme="outline"
-          size="sm"
-        /> */}
       </View>
     </View>
   );

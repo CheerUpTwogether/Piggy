@@ -7,7 +7,7 @@ export const useUserStore = create<UserStore>(set => ({
   userData: {
     id: '',
     email: '',
-    nick_name: '',
+    nickname: '',
     created_at: '',
     updated_at: '',
     service_terms_agreement: false,

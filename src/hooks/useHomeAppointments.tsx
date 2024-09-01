@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
-import {useToastStore} from '@/store/store';
+import {useToastStore, useUserStore} from '@/store/store';
 import {getAppointmentsSpb, setPinnedSpb} from '@/supabase/appointmentSpb';
 import {
   AppointmentProps,
@@ -22,6 +22,7 @@ const categories: AppointmentTabCategory[] = [
 ];
 const useHomeAppointments = () => {
   const addToast = useToastStore(state => state.addToast);
+  const {userData} = useUserStore();
   const navigation = useNavigation<StackNavigation>();
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
@@ -58,7 +59,7 @@ const useHomeAppointments = () => {
   // 약속 리스트
   const getAppointment = async (sortValue: AppointmentStatus) => {
     const {data, error} = await getAppointmentsSpb(
-      '8b9f1998-084e-447f-b586-d18c72cf1db4',
+      userData.id,
       categories.filter(el => el.value === sortValue)[0].status,
     );
     if (error) {
@@ -74,7 +75,7 @@ const useHomeAppointments = () => {
   // 약속 고정/해제
   const onPressFix = async (selectedId: number) => {
     try {
-      await setPinnedSpb('8b9f1998-084e-447f-b586-d18c72cf1db4', selectedId);
+      await setPinnedSpb(userData.id, selectedId);
       getAppointment(sort);
     } catch {
       addToast({
