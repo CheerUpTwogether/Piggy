@@ -60,13 +60,6 @@ export interface UserStore {
   setGotoProfile: (func: () => void) => void;
 }
 
-// export interface UserStore {
-//   userData: {isAgree: {service: boolean; payment: boolean}};
-//   setIsAgree: (key: keyof UserStore['userData']['isAgree']) => void;
-//   gotoProfile: () => void;
-//   setGotoProfile: (func: () => void) => void;
-// }
-
 export interface ToastStore {
   toasts: ToastProps[];
   addToast: (toast: Omit<ToastProps, 'id'>) => void;

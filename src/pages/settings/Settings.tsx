@@ -15,9 +15,12 @@ import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
 import ToggleButton from '@/components/common/ToggleButton';
 import {useUserStore} from '@/store/store';
 
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+
 const Settings = () => {
   const [isOn, setIsOn] = useState(false);
   const {setGotoProfile} = useUserStore();
+  const userData = useUserStore(state => state.userData);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -35,20 +38,27 @@ const Settings = () => {
   const gotoProfile = () => {
     navigation.navigate('EditProfile', {...dummy_profile});
   };
+
   return (
     <View style={commonStyle.CONTAINER}>
       <View style={{flexDirection: 'row', gap: 18, alignItems: 'center'}}>
         <TouchableOpacity activeOpacity={0.8} onPress={() => gotoProfile()}>
-          <Image
-            source={{uri: dummy_profile.profile_img_url}}
-            style={{width: 80, height: 80, borderRadius: 80}}
-            alt="profile"
-          />
+          {userData.profile_img_url ? (
+            <Image
+              source={{uri: userData.profile_img_url}}
+              style={styles.profileImage}
+              alt="profile"
+            />
+          ) : (
+            <View style={styles.profileImageWrapper}>
+              <BasicProfileSvg width={45} height={45} color={'#555'} />
+            </View>
+          )}
         </TouchableOpacity>
 
         <View style={{gap: 6}}>
-          <Text style={commonStyle.MEDIUM_33_20}>{dummy_profile.nickname}</Text>
-          <Text style={commonStyle.REGULAR_AA_16}>{dummy_profile.email}</Text>
+          <Text style={commonStyle.MEDIUM_33_20}>{userData.nickname}</Text>
+          <Text style={commonStyle.REGULAR_AA_16}>{userData.email}</Text>
         </View>
       </View>
 
@@ -142,6 +152,17 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderLeftWidth: 1,
   },
+  profileImageWrapper: {
+    width: 80,
+    height: 80,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  profileImage: {width: 80, height: 80, borderRadius: 30},
 });
 
 export default Settings;

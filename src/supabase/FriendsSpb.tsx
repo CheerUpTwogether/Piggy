@@ -62,7 +62,7 @@ export const setFriendshipAddSpb = async (id: string, friend_id: string) => {
     if (error) {
       throw error;
     }
-    return data.id ? {success: true} : {success: false};
+    return data[0].id ? {success: true} : {success: false};
   } catch (e) {
     console.error('Error appeared in setFriendshipAddSpb : ', e);
   }
@@ -71,7 +71,7 @@ export const setFriendshipAddSpb = async (id: string, friend_id: string) => {
 // 친구 삭제
 export const deleteFriendshipSpb = async (id: string, friend_id: string) => {
   try {
-    const {data, error} = await supabase
+    const {error} = await supabase
       .from('user_friend_relationship')
       .delete()
       .eq('id_from', id)
@@ -83,7 +83,7 @@ export const deleteFriendshipSpb = async (id: string, friend_id: string) => {
 
     return {success: true};
   } catch (e) {
-    console.error('Error appeared in setFriendshipDeletespb : ', e);
+    console.error('Error appeared in setFriendshipDeleteSpb : ', e);
   }
 };
 
@@ -108,7 +108,7 @@ export const setGiftPiggySpb = async (
       throw error;
     }
 
-    return data.id ? {success: true} : {success: false};
+    return data[0].id ? {success: true} : {success: false};
   } catch (e) {
     console.error('Error appeared in setGiftPiggySpb : ', e);
   }

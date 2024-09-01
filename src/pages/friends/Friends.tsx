@@ -36,7 +36,6 @@ const Friends = () => {
   const userData = useUserStore(state => state.userData);
   const addToast = useToastStore(state => state.addToast);
   const {openModal, closeModal: closeConfirmModal} = useModalStore();
-
   const {friendsList, onFriendAdded, onFriendRemoved, setFriendsList} =
     useFriendActions([]);
 
@@ -51,10 +50,10 @@ const Friends = () => {
   const fetchFriends = async () => {
     const friends = await getFriendsSpb(userData.id);
     if (friends) {
-      // 각 친구 객체에 is_friend 속성을 추가하는 로직을 추가할 수 있습니다.
+      // 각 친구 객체에 is_friend 속성을 추가하는 로직 추가
       const friendsWithStatus = friends.map(friend => ({
         ...friend,
-        is_friend: true, // 이 부분을 적절히 수정해야 할 수 있습니다.
+        is_friend: true,
       }));
       setFriendsList(friendsWithStatus);
     } else {
@@ -106,7 +105,6 @@ const Friends = () => {
 
           onFriendRemoved(selectedUser.id);
 
-          // 삭제된 친구를 친구 목록에서 제거
           setFriendsList(prevFriends =>
             prevFriends.filter(friend => friend.id !== selectedUser.id),
           );
@@ -132,6 +130,17 @@ const Friends = () => {
       onPress: handleDeleteUser,
     },
   ];
+
+  const renderProfileDetailModal = ({closeModal}: {closeModal: () => void}) => {
+    return (
+      <ProfileDetailComponent
+        selectedUser={selectedUser}
+        closeModal={closeModal}
+        onFriendAdded={onFriendAdded}
+        onFriendRemoved={onFriendRemoved}
+      />
+    );
+  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
@@ -215,21 +224,12 @@ const Friends = () => {
             )}
           </View>
         </View>
-
         <BottomSheet
           isShow={isShow}
           setIsShow={setIsShow}
           size={0.6}
-          component={({closeModal}) => (
-            <ProfileDetailComponent
-              selectedUser={selectedUser}
-              closeModal={closeModal}
-              onFriendAdded={onFriendAdded}
-              onFriendRemoved={onFriendRemoved}
-            />
-          )}
+          component={renderProfileDetailModal}
         />
-
         <ButtonBottomSheet
           isShow={moreShow}
           setIsShow={setMoreShow}

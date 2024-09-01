@@ -47,7 +47,6 @@ const FriendSearch = () => {
   const debouncedKeyword = useDebounce(keyword, 500);
   const currentUserId = useUserStore(state => state.userData.id);
 
-  // useFriendActions 훅 사용
   const {friendsList, onFriendAdded, onFriendRemoved, setFriendsList} =
     useFriendActions([]);
 
@@ -59,7 +58,7 @@ const FriendSearch = () => {
     if (debouncedKeyword) {
       try {
         const data = await getUsersSpb(currentUserId, debouncedKeyword);
-        setFriendsList(data || []); // 검색 결과를 friendsList에 설정
+        setFriendsList(data || []);
       } catch (e) {
         console.error(e);
         setFriendsList([]);
@@ -127,6 +126,17 @@ const FriendSearch = () => {
     </TouchableOpacity>
   );
 
+  const renderProfileDetailModal = ({closeModal}: {closeModal: () => void}) => {
+    return (
+      <ProfileDetailComponent
+        selectedUser={selectedUser}
+        closeModal={closeModal}
+        onFriendAdded={onFriendAdded}
+        onFriendRemoved={onFriendRemoved}
+      />
+    );
+  };
+
   return (
     <SafeAreaView style={commonStyle.CONTAINER}>
       <View style={styles.ios}>
@@ -157,14 +167,7 @@ const FriendSearch = () => {
           isShow={isShow}
           setIsShow={setIsShow}
           size={0.6}
-          component={({closeModal}) => (
-            <ProfileDetailComponent
-              selectedUser={selectedUser}
-              closeModal={closeModal}
-              onFriendAdded={onFriendAdded}
-              onFriendRemoved={onFriendRemoved}
-            />
-          )}
+          component={renderProfileDetailModal}
         />
       </View>
     </SafeAreaView>
