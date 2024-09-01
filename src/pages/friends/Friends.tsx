@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   Text,
   View,
@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import EmptyResult from '@/components/common/EmptyResult';
 import BottomSheet from '@/components/common/BottomSheet';
 import {commonStyle} from '@/styles/common';
@@ -39,13 +40,11 @@ const Friends = () => {
   const {friendsList, onFriendAdded, onFriendRemoved, setFriendsList} =
     useFriendActions([]);
 
-  useEffect(() => {
-    fetchFriends();
-  }, []);
-
-  useEffect(() => {
-    console.log('ddd', selectedUser);
-  }, [selectedUser]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchFriends();
+    }, []),
+  );
 
   const fetchFriends = async () => {
     const friends = await getFriendsSpb(userData.id);

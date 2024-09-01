@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Image,
   StyleSheet,
@@ -7,7 +7,7 @@ import {
   View,
   Platform,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
@@ -37,14 +37,16 @@ const Settings = () => {
   const numberStyle =
     Platform.OS === 'ios' ? commonStyle.BOLD_33_18 : commonStyle.BOLD_33_22;
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+      setGotoProfile(gotoProfile);
+    }, []),
+  );
+
   const handleToggle = () => {
     setIsOn(!isOn);
   };
-
-  useEffect(() => {
-    fetchData();
-    setGotoProfile(gotoProfile);
-  }, []);
 
   const fetchData = async () => {
     try {
