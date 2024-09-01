@@ -12,7 +12,7 @@ import EmptyResult from '@/components/common/EmptyResult';
 import BottomSheet from '@/components/common/BottomSheet';
 import ProfileDetail from './ProfileDetail';
 import {commonStyle} from '@/styles/common';
-import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
+import {dummy_friends_data} from '@/mock/Friends/Friends';
 import {Friend, User} from '@/mock/Friends/type';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import {useToastStore, useUserStore} from '@/store/store';
@@ -28,7 +28,7 @@ const Friends = () => {
     nick_name: '',
     total_appointments: 0,
     completed_appointments: 0,
-    profile_image_path: '',
+    profile_img_url: '',
     friend: false,
   });
   const userData = useUserStore(state => state.userData);
@@ -55,7 +55,7 @@ const Friends = () => {
       nick_name: user.nick_name,
       total_appointments: user.total_appointments,
       completed_appointments: user.completed_appointments,
-      profile_image_path: user.profile_image_path,
+      profile_img_url: user.profile_img_url,
       friend: user.friend,
     });
   };
@@ -92,7 +92,7 @@ const Friends = () => {
           <TouchableOpacity
             style={styles.profileWrapper}
             activeOpacity={0.8}
-            onPress={() => handleProfilePress(dummy_profile)}>
+            onPress={() => handleProfilePress(userData)}>
             {userData.profile_img_url ? (
               <Image
                 source={{uri: userData.profile_img_url}}
@@ -131,9 +131,9 @@ const Friends = () => {
                         activeOpacity={0.8}
                         onPress={() => handleProfilePress(item)}
                         style={styles.friendWrapper}>
-                        {item.profile_image_path ? (
+                        {item.profile_img_url ? (
                           <Image
-                            source={{uri: item.profile_image_path}}
+                            source={{uri: item.profile_img_url}}
                             style={styles.friendProfile}
                             alt="profile"
                           />

@@ -26,11 +26,11 @@ const {height: screenHeight} = Dimensions.get('window');
 
 const ProfileDetail: React.FC<ProfileDetailProps> = ({
   uuid,
-  nick_name,
-  total_appointments,
-  completed_appointments,
-  profile_image_path,
-  friend,
+  nickname,
+  total_appointment,
+  completed_appointment,
+  profile_img_url,
+  is_friend,
   closeModal,
 }) => {
   const [gradeListShow, setGradeListShow] = useState(false);
@@ -38,8 +38,8 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   const navigation = useNavigation<ProfileDetailNavigationProp>();
 
   const {grade, gradeColor} = determineGrade(
-    total_appointments,
-    completed_appointments,
+    total_appointment,
+    completed_appointment,
   );
 
   useEffect(() => {
@@ -88,15 +88,13 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
           <EditSvg style={styles.rightIcon} />
         </TouchableOpacity>
       );
-    } else if (friend) {
+    } else if (is_friend) {
       return (
         <View style={{flexDirection: 'row', gap: 8}}>
           <TouchableOpacity
             style={styles.rightIconWrapper}
             activeOpacity={0.8}
-            onPress={() =>
-              handleMoveToGift(uuid, nick_name, profile_image_path)
-            }>
+            onPress={() => handleMoveToGift(uuid, nickname, profile_img_url)}>
             <GiftSvg style={styles.rightIcon} />
           </TouchableOpacity>
           <TouchableOpacity
@@ -125,9 +123,9 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
 
   return (
     <View style={commonStyle.CONTAINER}>
-      {profile_image_path ? (
+      {profile_img_url ? (
         <Image
-          source={{uri: profile_image_path}}
+          source={{uri: profile_img_url}}
           style={styles.profile}
           alt="profile"
         />
@@ -155,7 +153,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
             )}
           </TouchableOpacity>
           <View style={styles.nickNameWrapper}>
-            <Text style={commonStyle.BOLD_33_20}>{nick_name}</Text>
+            <Text style={commonStyle.BOLD_33_20}>{nickname}</Text>
             <Text style={commonStyle.MEDIUM_99_14}>{grade}</Text>
           </View>
         </View>

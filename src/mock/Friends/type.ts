@@ -10,21 +10,22 @@ export interface User {
 }
 
 export interface Friend {
-  uuid: string;
-  profile_image_path: string;
-  nick_name: string;
+  id: string;
+  profile_img_url: string;
+  nickname: string;
   email?: string;
-  friend?: boolean;
-  total_appointments?: number;
-  completed_appointments?: number;
+  is_friend?: boolean;
+  total_appointment?: number;
+  completed_appointment?: number;
+  piggy_grade: string;
 }
 
 export interface ProfileDetailProps {
   uuid: string;
-  nick_name: string;
-  total_appointments: number;
-  completed_appointments: number;
-  profile_image_path: string;
-  friend: boolean | undefined;
+  nickname: string;
+  total_appointment: number;
+  completed_appointment: number;
+  profile_img_url: string;
+  is_friend: boolean | undefined;
   closeModal: () => void;
 }

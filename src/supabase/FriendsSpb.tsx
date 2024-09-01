@@ -1,7 +1,7 @@
 import supabase from '@/supabase/supabase';
 
 // 사용자 리스트 검색
-export const getUsersSpb = async (id, keyword) => {
+export const getUsersSpb = async (id: string, keyword: string) => {
   try {
     const {data, error} = await supabase.rpc('select_users_list', {
       user_uuid: id,
@@ -16,8 +16,23 @@ export const getUsersSpb = async (id, keyword) => {
   }
 };
 
+// export const getUsersSpb = async (keyword: string, currentUserId: string) => {
+//   try {
+//     const {data, error} = await supabase.rpc('select_users_list', {
+//       keyword: keyword,
+//       current_user_id: currentUserId,
+//     });
+//     if (error) {
+//       throw error;
+//     }
+//     return data;
+//   } catch (e) {
+//     console.error('Error appeared in getUsersSpb : ', e);
+//   }
+// };
+
 // 친구 추가
-export const setFriendshipAddSpb = async (id, friend_id) => {
+export const setFriendshipAddSpb = async (id: string, friend_id: string) => {
   try {
     const {data, error} = await supabase
       .from('user_friend_relationship')
@@ -39,7 +54,7 @@ export const setFriendshipAddSpb = async (id, friend_id) => {
 };
 
 // 친구 삭제
-export const setFriendshipDeleteSpb = async (id, friend_id) => {
+export const setFriendshipDeleteSpb = async (id: string, friend_id: string) => {
   try {
     const {data, error} = await supabase
       .from('user_friend_relationship')

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -15,12 +15,13 @@ import {
   FriendSearchNavigationProp,
 } from '@/pages/friends/type';
 import {commonStyle} from '@/styles/common';
-import {dummy_friends_data} from '@/mock/Friends/Friends';
 import {Friend} from '@/mock/Friends/type';
 import useDebounce from '@/hooks/useDebounce';
 import InputBox from '@/components/common/InputBox';
 import BottomSheet from '@/components/common/BottomSheet';
 import ProfileDetail from './ProfileDetail';
+import {useUserStore} from '@/store/store';
+import {getUsersSpb} from '@/supabase/FriendsSpb';
 
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
@@ -31,52 +32,68 @@ const FriendSearch = () => {
   const [keyword, setKeyword] = useState('');
   const [isShow, setIsShow] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Friend>({
-    uuid: '',
-    nick_name: '',
-    total_appointments: 0,
-    completed_appointments: 0,
-    profile_image_path: '',
-    friend: false,
+    id: '',
+    nickname: '',
+    total_appointment: 0,
+    completed_appointment: 0,
+    profile_img_url: '',
+    is_friend: false,
+    piggy_grade: '',
   });
+  const [searchResults, setSearchResults] = useState<Friend[]>([]);
   const route = useRoute<FriendSearchRouteProp>();
   const {previousScreen} = route.params;
   const navigation = useNavigation<FriendSearchNavigationProp>();
   const debouncedKeyword = useDebounce(keyword, 500);
+  const currentUserId = useUserStore(state => state.userData.id);
 
-  const filterFriend = debouncedKeyword
-    ? dummy_friends_data
-        .filter(friend =>
-          friend.nick_name.toLowerCase().includes(keyword.toLowerCase()),
-        )
-        .sort((a, b) => {
-          const nameA = a.nick_name.toLowerCase();
-          const nameB = b.nick_name.toLowerCase();
-          return nameA.localeCompare(nameB, 'ko');
-        })
-    : [];
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (debouncedKeyword) {
+        try {
+          const data = await getUsersSpb(currentUserId, debouncedKeyword);
+          setSearchResults(data || []);
+          console.log(data);
+        } catch (e) {
+          console.error(e);
+          setSearchResults([]);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    };
 
-  const friends = filterFriend.filter(friend => friend.friend);
-  const nonFriends = filterFriend.filter(friend => !friend.friend);
+    fetchUsers();
+  }, [debouncedKeyword, currentUserId]);
+
+  const filterFriend = searchResults.sort((a, b) => {
+    const nameA = a.nickname.toLowerCase();
+    const nameB = b.nickname.toLowerCase();
+    return nameA.localeCompare(nameB, 'ko');
+  });
+
+  const friends = filterFriend.filter(friend => friend.is_friend);
+  const nonFriends = filterFriend.filter(friend => !friend.is_friend);
 
   const sortedData = [...friends, ...nonFriends];
 
   const handleProfilePress = (user: Friend) => {
     if (previousScreen === 'Friends') {
       setSelectedUser({
-        uuid: user.uuid,
-        nick_name: user.nick_name,
-        total_appointments: user.total_appointments,
-        completed_appointments: user.completed_appointments,
-        profile_image_path: user.profile_image_path,
-        friend: user.friend,
+        id: user.id,
+        nickname: user.nickname,
+        total_appointment: user.total_appointment,
+        completed_appointment: user.completed_appointment,
+        profile_img_url: user.profile_img_url,
+        is_friend: user.is_friend,
+        piggy_grade: user.piggy_grade,
       });
       setIsShow(true);
     } else {
       navigation.navigate('GiftAmount', {
-        // TODO: 친구만 가능하게
-        uuid: user.uuid,
-        nick_name: user.nick_name,
-        profile_image_path: user.profile_image_path,
+        uuid: user.id,
+        nick_name: user.nickname,
+        profile_image_path: user.profile_img_url,
       });
       setIsShow(false);
     }
@@ -88,9 +105,9 @@ const FriendSearch = () => {
       style={styles.friendContainer}
       onPress={() => handleProfilePress(item)}>
       <View style={styles.friendWrapper}>
-        {item.profile_image_path ? (
+        {item.profile_img_url ? (
           <Image
-            source={{uri: item.profile_image_path}}
+            source={{uri: item.profile_img_url}}
             style={styles.friendProfile}
             alt="friendImage"
           />
@@ -99,11 +116,9 @@ const FriendSearch = () => {
             <BasicProfileSvg width={24} height={24} />
           </View>
         )}
-        <Text style={commonStyle.MEDIUM_33_14}>{item.nick_name}</Text>
+        <Text style={commonStyle.MEDIUM_33_14}>{item.nickname}</Text>
       </View>
-      {item.friend ? (
-        <View />
-      ) : (
+      {!item.is_friend && (
         <AddFriendSvg width={18} height={18} color={'#333'} />
       )}
     </TouchableOpacity>
@@ -123,7 +138,7 @@ const FriendSearch = () => {
         <FlatList
           data={sortedData}
           renderItem={renderItem}
-          keyExtractor={item => item.uuid.toString()}
+          keyExtractor={item => item.id}
           ListEmptyComponent={
             !keyword ? (
               <View />
@@ -141,12 +156,12 @@ const FriendSearch = () => {
           size={0.6}
           component={({closeModal}) => (
             <ProfileDetail
-              uuid={selectedUser.uuid}
-              nick_name={selectedUser.nick_name}
-              total_appointments={selectedUser.total_appointments ?? 0}
-              completed_appointments={selectedUser.completed_appointments ?? 0}
-              profile_image_path={selectedUser.profile_image_path}
-              friend={selectedUser.friend ?? false}
+              uuid={selectedUser.id}
+              nickname={selectedUser.nickname}
+              total_appointment={selectedUser.total_appointment ?? 0}
+              completed_appointment={selectedUser.completed_appointment ?? 0}
+              profile_image_path={selectedUser.profile_img_url}
+              friend={selectedUser.is_friend ?? false}
               closeModal={closeModal}
             />
           )}
