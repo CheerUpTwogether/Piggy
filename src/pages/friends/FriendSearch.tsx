@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   Text,
   View,
@@ -9,7 +9,11 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+  useFocusEffect,
+} from '@react-navigation/native';
 import {
   FriendSearchRouteProp,
   FriendSearchNavigationProp,
@@ -47,24 +51,25 @@ const FriendSearch = () => {
   const debouncedKeyword = useDebounce(keyword, 500);
   const currentUserId = useUserStore(state => state.userData.id);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (debouncedKeyword) {
-        try {
-          const data = await getUsersSpb(currentUserId, debouncedKeyword);
-          setSearchResults(data || []);
-          console.log(data);
-        } catch (e) {
-          console.error(e);
-          setSearchResults([]);
-        }
-      } else {
+  useFocusEffect(
+    useCallback(() => {
+      fetchUsers();
+    }, []),
+  );
+
+  const fetchUsers = async () => {
+    if (debouncedKeyword) {
+      try {
+        const data = await getUsersSpb(currentUserId, debouncedKeyword);
+        setSearchResults(data || []);
+      } catch (e) {
+        console.error(e);
         setSearchResults([]);
       }
-    };
-
-    fetchUsers();
-  }, [debouncedKeyword, currentUserId]);
+    } else {
+      setSearchResults([]);
+    }
+  };
 
   const filterFriend = searchResults.sort((a, b) => {
     const nameA = a.nickname.toLowerCase();
@@ -97,6 +102,22 @@ const FriendSearch = () => {
       });
       setIsShow(false);
     }
+  };
+
+  const handleFriendAdded = (friendId: string) => {
+    setSearchResults(prevResults =>
+      prevResults.map(user =>
+        user.id === friendId ? {...user, is_friend: true} : user,
+      ),
+    );
+  };
+
+  const handleFriendRemoved = (friendId: string) => {
+    setSearchResults(prevResults =>
+      prevResults.map(user =>
+        user.id === friendId ? {...user, is_friend: false} : user,
+      ),
+    );
   };
 
   const renderItem = ({item}: {item: Friend}) => (
@@ -163,6 +184,8 @@ const FriendSearch = () => {
               profile_img_url={selectedUser.profile_img_url}
               is_friend={selectedUser.is_friend ?? false}
               closeModal={closeModal}
+              onFriendAdded={handleFriendAdded}
+              onFriendRemoved={handleFriendRemoved}
             />
           )}
         />

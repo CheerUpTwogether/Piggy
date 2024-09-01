@@ -13,7 +13,12 @@ import {commonStyle} from '@/styles/common';
 import {ProfileDetailProps} from '@/mock/Friends/type';
 import {gradeList, determineGrade} from '@/utils/grade';
 import {ProfileDetailNavigationProp} from './type';
-import {useUserStore} from '@/store/store';
+import {useUserStore, useToastStore, useModalStore} from '@/store/store';
+import {
+  setFriendshipAddSpb,
+  getFriendsSpb,
+  deleteFriendshipSpb,
+} from '@/supabase/FriendsSpb';
 
 import GradeSvg from '@/assets/icons/grade.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
@@ -33,11 +38,15 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   profile_img_url,
   is_friend,
   closeModal,
+  onFriendAdded,
+  onFriendRemoved,
 }) => {
   const [gradeListShow, setGradeListShow] = useState(false);
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
   const navigation = useNavigation<ProfileDetailNavigationProp>();
+  const addToast = useToastStore(state => state.addToast);
   const userData = useUserStore(state => state.userData);
+  const {openModal, closeModal: closeConfirmModal} = useModalStore();
 
   const {grade, gradeColor} = determineGrade(
     total_appointment,
@@ -70,14 +79,66 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
     closeModal();
   };
 
-  const handleDeleteFriend = () => {
-    console.log('TODO: 친구 삭제 api 호출');
+  const handleAddFriend = async () => {
+    const friends = await getFriendsSpb(userData.id);
+
+    // 이미 친구 목록에 있는지 확인
+    const isAlreadyFriend = friends.some(friend => friend.id === id);
+
+    if (isAlreadyFriend) {
+      addToast({
+        success: false,
+        text: '이미 친구로 추가된 사용자입니다.',
+      });
+      return false;
+    }
+
+    const res = await setFriendshipAddSpb(userData.id, id);
+    if (!res) {
+      addToast({
+        success: false,
+        text: '친구 추가 실패',
+        multiText: '다시 시도해주세요.',
+      });
+      return false;
+    }
+
+    addToast({
+      success: true,
+      text: '친구로 추가되었습니다!',
+    });
+    onFriendAdded(id);
     closeModal();
+    return true;
   };
 
-  const handleAddFriend = () => {
-    console.log('TODO: 친구 추가 api 호출');
-    closeModal();
+  const handleDeleteFriend = () => {
+    openModal({
+      title: '친구를 삭제하시겠습니까?',
+      content: '삭제할 경우 해당 친구와 약속을 생성할 수 없습니다.',
+      text: '삭제하기',
+      onPress: async () => {
+        const res = await deleteFriendshipSpb(userData.id, id);
+        if (!res) {
+          addToast({
+            success: false,
+            text: '친구 삭제 실패',
+            multiText: '다시 시도해주세요.',
+          });
+          return;
+        }
+
+        addToast({
+          success: true,
+          text: '친구가 성공적으로 삭제되었습니다.',
+        });
+
+        onFriendRemoved(id);
+        closeConfirmModal();
+        closeModal();
+      },
+      textCancel: '취소',
+    });
   };
 
   const iconShow = () => {

@@ -69,7 +69,7 @@ export const setFriendshipAddSpb = async (id: string, friend_id: string) => {
 };
 
 // 친구 삭제
-export const setFriendshipDeleteSpb = async (id: string, friend_id: string) => {
+export const deleteFriendshipSpb = async (id: string, friend_id: string) => {
   try {
     const {data, error} = await supabase
       .from('user_friend_relationship')

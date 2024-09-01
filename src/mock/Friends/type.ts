@@ -28,4 +28,6 @@ export interface ProfileDetailProps {
   profile_img_url: string;
   is_friend: boolean | undefined;
   closeModal: () => void;
+  onFriendAdded: (friendId: string) => void;
+  onFriendRemoved: (friendId: string) => void;
 }
