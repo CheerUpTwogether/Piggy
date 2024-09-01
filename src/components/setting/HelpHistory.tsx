@@ -76,7 +76,7 @@ const HelpHistory = () => {
         multiText: '문의 내역이 성공적으로 삭제되었습니다.',
       });
       fetchInquirys();
-      closeModal(); // 삭제 후 모달을 닫습니다.
+      closeModal();
     } else {
       addToast({
         success: false,

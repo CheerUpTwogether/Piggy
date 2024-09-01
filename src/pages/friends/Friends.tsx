@@ -15,6 +15,7 @@ import {commonStyle} from '@/styles/common';
 import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
 import {Friend, User} from '@/mock/Friends/type';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
+import {useToastStore, useUserStore} from '@/store/store';
 
 import MoreSvg from '@/assets/icons/more.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
@@ -30,6 +31,14 @@ const Friends = () => {
     profile_image_path: '',
     friend: false,
   });
+  const userData = useUserStore(state => state.userData);
+  const addToast = useToastStore(state => state.addToast);
+
+  // addToast({
+  //   success: false,
+  //   text: `${fieldName} 형식 오류`,
+  //   multiText: `${errorMessage} 올바르게 입력해주세요.`,
+  // });
 
   // 친구 목록을 이름순으로 정렬
   const sortedFriends = dummy_friends_data.sort((a, b) => {
@@ -84,18 +93,21 @@ const Friends = () => {
             style={styles.profileWrapper}
             activeOpacity={0.8}
             onPress={() => handleProfilePress(dummy_profile)}>
-            <Image
-              source={{uri: dummy_profile.profile_image_path}}
-              style={styles.profile}
-              alt="profile"
-            />
+            {userData.profile_img_url ? (
+              <Image
+                source={{uri: userData.profile_img_url}}
+                style={styles.profile}
+                alt="profile"
+              />
+            ) : (
+              <View style={[styles.basicProfileWrapper, styles.profile]}>
+                <BasicProfileSvg width={40} height={40} />
+              </View>
+            )}
+
             <View style={styles.myData}>
-              <Text style={commonStyle.MEDIUM_33_20}>
-                {dummy_profile.nick_name}
-              </Text>
-              <Text style={commonStyle.REGULAR_AA_14}>
-                {dummy_profile.email}
-              </Text>
+              <Text style={commonStyle.MEDIUM_33_20}>{userData.nick_name}</Text>
+              <Text style={commonStyle.REGULAR_AA_14}>{userData.email}</Text>
             </View>
           </TouchableOpacity>
 
@@ -198,6 +210,12 @@ const styles = StyleSheet.create({
     gap: 14,
     height: 90,
     paddingHorizontal: 14,
+  },
+  basicProfileWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#DDD',
   },
   profile: {
     width: 60,

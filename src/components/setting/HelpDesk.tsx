@@ -81,13 +81,7 @@ const HelpDesk = () => {
     ) {
       return;
     }
-    const res = await setInquirySpb(
-      // TODO: uid 전역에서 호출
-      userData.id,
-      subject,
-      content,
-      email,
-    );
+    const res = await setInquirySpb(userData.id, subject, content, email);
 
     if (res) {
       addToast({
