@@ -5,9 +5,9 @@ import {commonStyle} from '@/styles/common';
 import ProgressBar from '@/components/common/ProgressBar';
 import ButtonCouple from '@/components/common/ButtonCouple';
 import Button from '@/components/common/Button';
-import AppointmentCalendar from '@/components/appointment/AppointmentCalendar';
 import AppointmentFriend from '@/components/appointment/AppointmentFriend';
 import AppointmentPlace from '@/components/appointment/AppointmentPlace';
+import AppointmentCalendar from '@/components/appointment/AppointmentCalendar';
 import AppointmentPenalty from '@/components/appointment/AppointmentPenalty';
 import AppointmentCheck from '@/components/appointment/AppointmentCheck';
 import {AppointmentData} from './type';
@@ -26,7 +26,7 @@ const AppointmentForm = () => {
   });
   const [nowStep, setNowStep] = useState(1);
   const totalStep = 5;
-  const {resetAppointmentForm} = useAppointmentForm();
+  const {appointmentForm, resetAppointmentForm} = useAppointmentForm();
 
   useFocusEffect(
     useCallback(() => {
@@ -76,6 +76,22 @@ const AppointmentForm = () => {
     }
   };
 
+  const disable = () => {
+    if (
+      (!appointmentForm.subject ||
+        !appointmentForm?.appointment_participants_list?.length) &&
+      nowStep === 1
+    ) {
+      return true;
+    }
+
+    if (!appointmentForm.latitude && nowStep === 2) {
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <SafeAreaView style={commonStyle.CONTAINER}>
       <View style={{height: screenHeight * 0.72}}>{getCurrentComponent()}</View>
@@ -83,8 +99,14 @@ const AppointmentForm = () => {
         <View style={style.progressBar}>
           <ProgressBar totalStep={totalStep} nowStep={nowStep} />
         </View>
+
         {nowStep === 1 ? (
-          <Button text={'다음'} onPress={handleNext} style={style.button} />
+          <Button
+            text={'다음'}
+            onPress={handleNext}
+            style={style.button}
+            disable={disable()}
+          />
         ) : (
           <ButtonCouple
             onPressLeft={handlePrevious}
@@ -93,6 +115,7 @@ const AppointmentForm = () => {
             textLeft={'이전'}
             textRight={nowStep === 5 ? '생성' : '다음'}
             style={style.button}
+            disableRight={disable()}
           />
         )}
       </View>
