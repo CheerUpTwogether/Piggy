@@ -46,6 +46,22 @@ export const getUsersSpb = async (id: string, keyword: string) => {
   }
 };
 
+// 친구 리스트 검새
+export const getFriendsSpb = async (id: string, keyword: string) => {
+  try {
+    const {data, error} = await supabase.rpc('select_friends_list', {
+      user_uuid: id,
+      keyword: keyword,
+    });
+    if (error) {
+      throw error;
+    }
+    return data;
+  } catch (e) {
+    console.error('Error appeared in getFriendsSpb : ', e);
+  }
+};
+
 // 친구 추가
 export const setFriendshipAddSpb = async (id: string, friend_id: string) => {
   try {
