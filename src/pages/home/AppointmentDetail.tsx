@@ -72,7 +72,7 @@ const AppointmentDetail = () => {
               ref={webViewRef}
               originWhitelist={['*']}
               source={{
-                uri: 'http://211.44.208.27:3000/mapHtml',
+                uri: 'https://piggy-server-eta.vercel.app/mapHtml',
               }}
               onLoadEnd={() => {
                 sendPlacePosition();
