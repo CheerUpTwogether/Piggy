@@ -20,6 +20,9 @@ const AppointmentFriend = () => {
     appointmentForm,
   } = useAppointmentFriend();
 
+  const height = appointmentForm.appointment_participants_list?.length
+    ? 160
+    : 0;
   return (
     <View style={{flex: 1}}>
       {/* 제목 */}
@@ -45,11 +48,7 @@ const AppointmentFriend = () => {
         )}
         keyExtractor={item => item.id}
         showsHorizontalScrollIndicator={false}
-        style={{
-          height: appointmentForm.appointment_participants_list?.length
-            ? 160
-            : 0,
-        }}
+        style={{height}}
       />
 
       {/* 검색 */}

@@ -103,6 +103,7 @@ const useAppointmentFormHooks = () => {
       appointment_date: `${String(date)} ${timeString}`,
       deal_piggy_count,
     });
+    console.log(error);
     if (error) {
       throw Error;
     }
@@ -125,6 +126,7 @@ const useAppointmentFormHooks = () => {
       participants_uuid,
     );
 
+    console.log(error);
     if (error) {
       throw Error;
     }
@@ -137,6 +139,7 @@ const useAppointmentFormHooks = () => {
     appointmentId: string,
   ) => {
     const {error} = await setAppointmentProposerSpb(userId, appointmentId);
+    console.log(error);
     if (error) {
       throw Error;
     }
