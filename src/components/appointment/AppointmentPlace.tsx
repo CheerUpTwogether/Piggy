@@ -10,8 +10,6 @@ import PlaceSvg from '@/assets/icons/location.svg';
 import SearchSvg from '@/assets/icons/search.svg';
 import {color_ef, commonStyle} from '@/styles/common';
 
-const {height: screenHeight} = Dimensions.get('screen');
-
 const AppointmentPlace = () => {
   const {
     keyword,
@@ -35,12 +33,8 @@ const AppointmentPlace = () => {
     ? '올바른 장소 또는 주소를 입력해주세요!'
     : '원하시는 장소 또는 주소를 입력해주세요!';
 
-  const height = keywordHistories.length
-    ? {height: screenHeight * 0.28 + 45 * (5 - keywordHistories.length)}
-    : {height: screenHeight * 0.56};
-
   return (
-    <View>
+    <View style={{flex: 1}}>
       {/* 설정된 장소 */}
       <View style={styles.selectLocation}>
         <PlaceSvg

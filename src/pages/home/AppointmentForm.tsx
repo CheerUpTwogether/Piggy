@@ -40,8 +40,10 @@ const AppointmentForm = () => {
 
   return (
     <SafeAreaView style={commonStyle.CONTAINER}>
-      <View style={{height: screenHeight * 0.72}}>{getCurrentComponent()}</View>
-      <View>
+      <View style={{height: screenHeight - 80, flex: 1}}>
+        {getCurrentComponent()}
+      </View>
+      <View style={{height: 80}}>
         <View style={style.progressBar}>
           <ProgressBar totalStep={totalStep} nowStep={nowStep} />
         </View>
