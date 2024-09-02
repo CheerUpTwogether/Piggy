@@ -1,18 +1,39 @@
 import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {RootStackParamList} from '@/types/Router';
-import {useRoute, RouteProp} from '@react-navigation/native';
+import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
 import Button from '../common/Button';
 import InputBox from '../common/InputBox';
 import NickNameSvg from '@/assets/icons/nickname.svg';
 import CameraSvg from '@/assets/icons/camera.svg';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {deleteItemSession} from '@/utils/auth';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY} from '@env';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
   const [iserror, setIsError] = useState(true);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'EditProfile'>>();
   const {nickname, profile_img_url} = route.params;
+
+  const googleLogOut = async () => {
+    GoogleSignin.configure({
+      scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+      webClientId: GOOGLE_WEB_API_KEY,
+      iosClientId: GOOGLE_IOS_API_KEY,
+    });
+    await GoogleSignin.signOut();
+  };
+
+  const handleLogout = async () => {
+    await deleteItemSession();
+    await googleLogOut();
+    navigation.replace('Login');
+  };
 
   useEffect(() => {
     setNickNameValue(nickname);
@@ -55,11 +76,7 @@ const EditProfile = () => {
       </View>
       <View style={{marginTop: 232, gap: 14, marginHorizontal: 8}}>
         <Button text="저장" onPress={() => console.log('저장')} />
-        <Button
-          text="로그 아웃"
-          theme="sub"
-          onPress={() => console.log('로그 아웃')}
-        />
+        <Button text="로그 아웃" theme="sub" onPress={() => handleLogout()} />
         <TouchableOpacity>
           <Text style={{...commonStyle.REGULAR_AA_14, textAlign: 'center'}}>
             회원탈퇴

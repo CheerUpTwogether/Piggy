@@ -11,6 +11,7 @@ import {GOOGLE_WEB_API_KEY, GOOGLE_IOS_API_KEY} from '@env';
 import KakaoSvg from '@/assets/icons/kakao.svg';
 import GoogleSvg from '@/assets/icons/google.svg';
 import EmailSvg from '@/assets/icons/email.svg';
+import {setItemSession} from '@/utils/auth';
 const logo = require('@/assets/icons/logo.png');
 
 const Login = () => {
@@ -24,9 +25,13 @@ const Login = () => {
       webClientId: GOOGLE_WEB_API_KEY,
       iosClientId: GOOGLE_IOS_API_KEY,
     });
-    await GoogleSignin.hasPlayServices();
-    const {idToken} = await GoogleSignin.signIn();
-    return idToken || null;
+    try {
+      await GoogleSignin.hasPlayServices();
+      const {idToken} = await GoogleSignin.signIn();
+      return idToken || null;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const socialLogin = async (provider: string) => {
@@ -77,6 +82,10 @@ const Login = () => {
           phone_number,
         );
 
+        await setItemSession(
+          authData.session.access_token,
+          authData.session.refresh_token,
+        );
         navigation.replace('Main', {screen: 'Home'});
 
         return;
