@@ -53,11 +53,11 @@ export type Database = {
           longitude?: number | null;
           appointment_agreement_deadline_date?: string | null;
           appointment_date: string;
-          appointment_status: string;
+          appointment_status?: string;
           contents?: string | null;
           created_at?: string | null;
           deal_piggy_count: number;
-          id?: never;
+          id?: string;
           participant_count?: number;
           place_name: string;
           proposer_id?: string | null;
