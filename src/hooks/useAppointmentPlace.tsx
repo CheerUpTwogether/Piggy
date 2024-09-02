@@ -2,9 +2,10 @@ import {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useDebounce from './useDebounce';
 import uuid from 'react-native-uuid';
-import {Location, Search} from '@/types/place';
+import {Search} from '@/types/place';
 import {SearchAddressPlace, SearchKeywordPlace} from '@/types/Common';
 import {searchAddress, searchLocation} from '@/api/kakao/map';
+import {useLocation} from './useLocation';
 
 const place = {
   id: '',
@@ -20,15 +21,15 @@ const place = {
   category_group_name: '',
   category_name: '',
 };
-const useAppointmentPlace = (location: Location) => {
+const useAppointmentPlace = () => {
   const [keyword, setKeyword] = useState('');
   const [prevKeyword, setPrevKeyword] = useState<Search[]>([]); //전에 검색했던 키워드
   const [isStartSearch, setIsStartSearch] = useState(false); // 검색 서치 한번이라이도 했을때 변경
   const [isShow, setIsShow] = useState(false);
   const [places, setPlaces] = useState<SearchKeywordPlace[]>([]);
-  const debouncedKeyword = useDebounce(keyword, 100);
   const [selectPlace, setSelectPlace] = useState<SearchKeywordPlace>(place);
-
+  const debouncedKeyword = useDebounce(keyword, 100);
+  const {location} = useLocation(); // 커스텀 훅 호출
   useEffect(() => {
     getkeywordHistories();
     setIsShow(keywordHistories.length > 0);
@@ -45,7 +46,7 @@ const useAppointmentPlace = (location: Location) => {
 
   // 검색어기반 장소검색
   const searchPlace = async (keyword: string) => {
-    setKeyword('');
+    setKeyword(keyword);
     setIsShow(false);
     setIsStartSearch(true);
     if (!location) {
@@ -104,6 +105,7 @@ const useAppointmentPlace = (location: Location) => {
       await searchPlace(keyword);
       // 검색어 로컬 스토리지에 저장
       await handleSaveSearchKeyword();
+      setKeyword(keyword);
     }
   };
 
@@ -149,6 +151,7 @@ const useAppointmentPlace = (location: Location) => {
     handlePlacePress,
     selectPlace,
     handleSubmitEditing,
+    location,
   };
 };
 
