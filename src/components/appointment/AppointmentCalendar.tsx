@@ -82,6 +82,13 @@ const AppointmentCalendar = () => {
             scrollEnabled={true}
             showScrollIndicator={true}
             style={{marginLeft: -16}}
+            markedDates={{
+              [appointmentForm.date]: {
+                selected: true,
+                disableTouchEvent: true,
+                selectedDotColor: 'orange',
+              },
+            }}
           />
         </Animated.View>
       )}
