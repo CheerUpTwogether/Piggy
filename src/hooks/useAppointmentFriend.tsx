@@ -25,19 +25,18 @@ const useAppointmentFriend = () => {
   );
 
   const getUsers = async () => {
-    const {data, error} = await getUsersSpb(
-      '8b9f1998-084e-447f-b586-d18c72cf1db4',
-      keyword,
-    );
-    if (error) {
+    try {
+      const data = await getUsersSpb(
+        '8b9f1998-084e-447f-b586-d18c72cf1db4',
+        keyword,
+      );
+      setUsers(data);
+    } catch {
       addToast({
         success: false,
         text: '친구리스트를 불러오지 못했어요',
       });
-      return;
     }
-
-    setUsers(data.filter((el: FriendProp) => el.is_friend));
   };
 
   const handleFriendPress = (friend: FriendProp) => {
