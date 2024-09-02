@@ -1,5 +1,6 @@
 import {GestureResponderEvent, KeyboardTypeOptions} from 'react-native';
 import {SvgProps} from 'react-native-svg';
+import {AppointmentInsert} from './appointment';
 
 export interface CheckBoxProps {
   isChecked: boolean;
@@ -244,4 +245,12 @@ export interface ButtonBottomSheetProps {
     theme?: 'sub' | 'primary' | 'outline' | undefined;
     onPress: () => void | Promise<void>;
   }>;
+}
+
+export interface AppointmentFormStore {
+  appointmentForm: AppointmentInsert;
+  setAppointmentForm: (
+    key: keyof AppointmentInsert,
+    value: string | number,
+  ) => void;
 }

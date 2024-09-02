@@ -1,5 +1,10 @@
 import {create} from 'zustand';
-import {ModalStore, ToastStore, UserStore} from '@/types/common';
+import {
+  AppointmentFormStore,
+  ModalStore,
+  ToastStore,
+  UserStore,
+} from '@/types/common';
 import {ModalProps} from 'react-native';
 // import {setServiceTermsAgreeSpb} from '@/supabase/AuthSpb';
 
@@ -136,6 +141,32 @@ export const useModalStore = create<ModalStore>(set => ({
         title: '',
         isOpen: false,
         content: '',
+      },
+    })),
+}));
+
+export const useAppointmentForm = create<AppointmentFormStore>(set => ({
+  appointmentForm: {
+    address: '',
+    appointment_agreement_deadline_date: null,
+    appointment_date: '',
+    appointment_status: '',
+    contents: '',
+    created_at: null,
+    deal_piggy_count: 0,
+    id: 0,
+    latitude: null,
+    longitude: null,
+    participant_count: 0,
+    place_name: '',
+    proposer_id: '',
+    subject: '',
+  },
+  setAppointmentForm: (key, value) =>
+    set(state => ({
+      appointmentForm: {
+        ...state.appointmentForm,
+        [key]: value,
       },
     })),
 }));

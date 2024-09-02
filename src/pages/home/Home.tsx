@@ -1,12 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useFocusEffect} from '@react-navigation/native';
-import {useToastStore} from '@/store/store';
-import {useButtonBottomSheet} from '@/hooks/useButtonBottomSheet';
-import {AppointmentStatus, AppointmentTabStatus} from '@/types/appointment';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
-import {getAppointmentsSpb} from '@/supabase/appointmentSpb';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
@@ -16,42 +11,18 @@ import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import useHomeAppointments from '@/hooks/useHomeAppointments';
 
 const Home = () => {
-  const {createButtonList, bottomSheetShow, setBottomSheetShow} =
-    useButtonBottomSheet();
   const {
     categories,
-    handleMoveToAppointmentForm,
-    handleMoveToAppointmentDetail,
+    appointments,
+    sort,
+    changeSort,
+    goAppointmentForm,
+    onPressMore,
+    onPressFix,
+    createButtonList,
+    bottomSheetShow,
+    setBottomSheetShow,
   } = useHomeAppointments();
-  const addToast = useToastStore(state => state.addToast);
-  const [appointments, setAppointments] = useState([]);
-  const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      getAppointment(sort);
-    }, []),
-  );
-
-  const changeSort = (sortValue: AppointmentTabStatus) => {
-    setSort(sortValue);
-    getAppointment(sortValue);
-  };
-  const getAppointment = async (sortValue: AppointmentStatus) => {
-    const {data, error} = await getAppointmentsSpb(
-      '8b9f1998-084e-447f-b586-d18c72cf1db4',
-      categories.filter(el => el.value === sortValue)[0].status,
-    );
-    if (error) {
-      addToast({
-        success: false,
-        text: '약속 정보를 불러오지 못했어요.',
-      });
-      return;
-    }
-    console.log(data);
-    setAppointments(data);
-  };
 
   return (
     <View style={commonStyle.CONTAINER}>
@@ -64,38 +35,36 @@ const Home = () => {
       </View>
 
       {/* 약속 리스트 */}
-      {appointments.length ? (
-        <FlatList
-          data={appointments}
-          keyExtractor={item => String(item.appointment_id)}
-          renderItem={({item}) => (
-            <TouchableOpacity
-              onPress={() => handleMoveToAppointmentDetail(item)}>
-              <AppointmentItem
-                item={item}
-                onPressMore={() => setBottomSheetShow(true)}
-              />
-            </TouchableOpacity>
-          )}
-          style={{marginHorizontal: -16}}
-        />
-      ) : (
-        <View style={{flex: 1, paddingTop: 40}}>
-          <EmptyResult
-            reason={'아직 약속이 없어요'}
-            solution={'친구들과의 약속을 등록해보세요!'}
+      <FlatList
+        data={appointments}
+        keyExtractor={item => String(item.appointment_id)}
+        renderItem={({item}) => (
+          <AppointmentItem
+            item={item}
+            onPressMore={onPressMore}
+            onPressFix={onPressFix}
           />
-        </View>
-      )}
+        )}
+        style={{marginHorizontal: -16}}
+        ListEmptyComponent={
+          <View style={{flex: 1, paddingTop: 40}}>
+            <EmptyResult
+              reason={'아직 약속이 없어요'}
+              solution={'친구들과의 약속을 등록해보세요!'}
+            />
+          </View>
+        }
+      />
 
       {/* 약속 추가 버튼 */}
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.plusBtn}
-        onPress={handleMoveToAppointmentForm}>
+        onPress={goAppointmentForm}>
         <PulsSvg color="#FFF" />
       </TouchableOpacity>
 
+      {/* 더보기 버튼 클릭 시 나타나는 바텀 시트 */}
       <ButtonBottomSheet
         isShow={bottomSheetShow}
         setIsShow={setBottomSheetShow}
