@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   Text,
   View,
@@ -8,13 +8,16 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import EmptyResult from '@/components/common/EmptyResult';
 import BottomSheet from '@/components/common/BottomSheet';
-import ProfileDetail from './ProfileDetail';
-import {commonStyle} from '@/styles/common';
-import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
-import {Friend, User} from '@/mock/Friends/type';
+import ProfileDetailComponent from '@/components/setting/ProfileDetailComponent';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
+import {useUserStore, useToastStore, useModalStore} from '@/store/store';
+import {useFriendActions} from '@/hooks/useFriendActions';
+import {getFriendsSpb, deleteFriendshipSpb} from '@/supabase/FriendsSpb';
+import {Friend, User} from '@/types/friends';
+import {commonStyle} from '@/styles/common';
 
 import MoreSvg from '@/assets/icons/more.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
@@ -23,32 +26,52 @@ const Friends = () => {
   const [isShow, setIsShow] = useState(false);
   const [moreShow, setMoreShow] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Friend | User>({
-    uuid: '',
-    nick_name: '',
-    total_appointments: 0,
-    completed_appointments: 0,
-    profile_image_path: '',
-    friend: false,
+    id: '',
+    nickname: '',
+    total_appointment: 0,
+    completed_appointment: 0,
+    profile_img_url: '',
+    is_friend: false,
   });
+  const userData = useUserStore(state => state.userData);
+  const addToast = useToastStore(state => state.addToast);
+  const {openModal, closeModal: closeConfirmModal} = useModalStore();
+  const {friendsList, onFriendAdded, onFriendRemoved, setFriendsList} =
+    useFriendActions([]);
 
-  // 친구 목록을 이름순으로 정렬
-  const sortedFriends = dummy_friends_data.sort((a, b) => {
-    const nameA = a.nick_name.toLowerCase();
-    const nameB = b.nick_name.toLowerCase();
+  useFocusEffect(
+    useCallback(() => {
+      fetchFriends();
+    }, []),
+  );
+
+  const fetchFriends = async () => {
+    const friends = await getFriendsSpb(userData.id);
+    if (friends) {
+      // 각 친구 객체에 is_friend 속성을 추가하는 로직 추가
+      const friendsWithStatus = friends.map(friend => ({
+        ...friend,
+        is_friend: true,
+      }));
+      setFriendsList(friendsWithStatus);
+    } else {
+      addToast({
+        success: false,
+        text: '친구 목록을 불러오지 못했습니다.',
+        multiText: '다시 시도해주세요.',
+      });
+    }
+  };
+
+  const sortedFriends = friendsList.sort((a, b) => {
+    const nameA = a.nickname ? a.nickname.toLowerCase() : '';
+    const nameB = b.nickname ? b.nickname.toLowerCase() : '';
     return nameA.localeCompare(nameB, 'ko');
   });
 
-  // 프로필 클릭 처리
   const handleProfilePress = (user: Friend) => {
+    setSelectedUser(user);
     setIsShow(true);
-    setSelectedUser({
-      uuid: user.uuid,
-      nick_name: user.nick_name,
-      total_appointments: user.total_appointments,
-      completed_appointments: user.completed_appointments,
-      profile_image_path: user.profile_image_path,
-      friend: user.friend,
-    });
   };
 
   const handleMorePress = (user: Friend) => {
@@ -57,45 +80,88 @@ const Friends = () => {
   };
 
   const handleDeleteUser = () => {
-    console.log('TODO: 친구 삭제 모달 -> 삭제 api 호출');
-    setMoreShow(false);
+    openModal({
+      title: '친구를 삭제하시겠습니까?',
+      content: '삭제할 경우 해당 친구와 약속을 생성할 수 없습니다.',
+      text: '삭제하기',
+      onPress: async () => {
+        try {
+          const res = await deleteFriendshipSpb(userData.id, selectedUser.id);
+          if (!res) {
+            addToast({
+              success: false,
+              text: '친구 삭제에 실패했습니다.',
+              multiText: '다시 시도해주세요.',
+            });
+            return;
+          }
+
+          addToast({
+            success: true,
+            text: '친구가 성공적으로 삭제되었습니다.',
+          });
+
+          onFriendRemoved(selectedUser.id);
+
+          setFriendsList(prevFriends =>
+            prevFriends.filter(friend => friend.id !== selectedUser.id),
+          );
+        } catch (error) {
+          addToast({
+            success: false,
+            text: '친구 삭제에 실패했습니다.',
+            multiText: '다시 시도해주세요.',
+          });
+        } finally {
+          closeConfirmModal();
+          setMoreShow(false);
+        }
+      },
+      textCancel: '취소',
+    });
   };
 
-  const createButtonList = () => {
-    const buttons: Array<{
-      text: string;
-      theme?: 'sub' | 'primary' | 'outline' | undefined;
-      onPress: () => void | Promise<void>;
-    }> = [
-      {
-        text: '삭제',
-        onPress: handleDeleteUser,
-      },
-    ];
+  const createButtonList = () => [
+    {
+      text: '삭제',
+      onPress: handleDeleteUser,
+    },
+  ];
 
-    return buttons;
+  const renderProfileDetailModal = ({closeModal}: {closeModal: () => void}) => {
+    return (
+      <ProfileDetailComponent
+        selectedUser={selectedUser}
+        closeModal={closeModal}
+        onFriendAdded={onFriendAdded}
+        onFriendRemoved={onFriendRemoved}
+      />
+    );
   };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
       <ScrollView style={commonStyle.CONTAINER}>
-        <View style={styles.profileSection}>
+        <View style={{marginBottom: 30}}>
           <TouchableOpacity
             style={styles.profileWrapper}
             activeOpacity={0.8}
-            onPress={() => handleProfilePress(dummy_profile)}>
-            <Image
-              source={{uri: dummy_profile.profile_image_path}}
-              style={styles.profile}
-              alt="profile"
-            />
+            onPress={() => handleProfilePress(userData)}>
+            {userData.profile_img_url ? (
+              <Image
+                source={{uri: userData.profile_img_url}}
+                style={styles.profile}
+                alt="profile"
+              />
+            ) : (
+              <View style={[styles.basicProfileWrapper, styles.profile]}>
+                <BasicProfileSvg width={40} height={40} />
+              </View>
+            )}
+
             <View style={styles.myData}>
-              <Text style={commonStyle.MEDIUM_33_20}>
-                {dummy_profile.nick_name}
-              </Text>
-              <Text style={commonStyle.REGULAR_AA_14}>
-                {dummy_profile.email}
-              </Text>
+              <Text style={commonStyle.MEDIUM_33_20}>{userData.nickname}</Text>
+              <Text style={commonStyle.REGULAR_AA_14}>{userData.email}</Text>
             </View>
           </TouchableOpacity>
 
@@ -104,7 +170,7 @@ const Friends = () => {
               친구 {sortedFriends.length}명
             </Text>
             {sortedFriends.length === 0 ? (
-              <View style={styles.emptyWrapper}>
+              <View style={{marginTop: 60}}>
                 <EmptyResult
                   reason="추가된 친구가 없어요."
                   solution="친구를 추가하고 약속을 잡아보세요!"
@@ -113,67 +179,52 @@ const Friends = () => {
             ) : (
               <View style={styles.friendList}>
                 {sortedFriends.map(item => (
-                  <View key={item.uuid} style={styles.swipeContainer}>
-                    <View style={styles.friendContainer}>
-                      <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() => handleProfilePress(item)}
-                        style={styles.friendWrapper}>
-                        {item.profile_image_path ? (
-                          <Image
-                            source={{uri: item.profile_image_path}}
-                            style={styles.friendProfile}
-                            alt="profile"
+                  <View key={item.id} style={styles.friendContainer}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => handleProfilePress(item)}
+                      style={styles.friendWrapper}>
+                      {item.profile_img_url ? (
+                        <Image
+                          source={{uri: item.profile_img_url}}
+                          style={styles.friendProfile}
+                          alt="profile"
+                        />
+                      ) : (
+                        <View
+                          style={[
+                            styles.friendEmptyProfile,
+                            styles.friendProfile,
+                          ]}>
+                          <BasicProfileSvg
+                            width={24}
+                            height={24}
+                            color={'#555'}
                           />
-                        ) : (
-                          <View
-                            style={[
-                              styles.friendEmptyProfile,
-                              styles.friendProfile,
-                            ]}>
-                            <BasicProfileSvg width={24} height={24} />
-                          </View>
-                        )}
-                        <Text style={commonStyle.MEDIUM_33_16}>
-                          {item.nick_name}
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.moreButton}
-                        activeOpacity={0.8}
-                        onPress={() => handleMorePress(item)}>
-                        <MoreSvg width={20} height={20} color={'#555'} />
-                      </TouchableOpacity>
-                    </View>
+                        </View>
+                      )}
+                      <Text style={commonStyle.MEDIUM_33_16}>
+                        {item.nickname}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.moreButton}
+                      activeOpacity={0.8}
+                      onPress={() => handleMorePress(item)}>
+                      <MoreSvg width={20} height={20} color={'#555'} />
+                    </TouchableOpacity>
                   </View>
                 ))}
               </View>
             )}
           </View>
         </View>
-        {/* ProfileDetail 모달 */}
         <BottomSheet
           isShow={isShow}
           setIsShow={setIsShow}
           size={0.6}
-          component={({closeModal}) =>
-            selectedUser && (
-              <ProfileDetail
-                uuid={selectedUser.uuid}
-                nick_name={selectedUser.nick_name}
-                total_appointments={selectedUser.total_appointments ?? 0}
-                completed_appointments={
-                  selectedUser.completed_appointments ?? 0
-                }
-                profile_image_path={selectedUser.profile_image_path}
-                friend={selectedUser.friend ?? false}
-                closeModal={closeModal}
-              />
-            )
-          }
+          component={renderProfileDetailModal}
         />
-
-        {/* more 버튼 모달 */}
         <ButtonBottomSheet
           isShow={moreShow}
           setIsShow={setMoreShow}
@@ -185,11 +236,6 @@ const Friends = () => {
 };
 
 const styles = StyleSheet.create({
-  profileSection: {marginBottom: 30},
-  swipeContainer: {
-    position: 'relative',
-    overflow: 'hidden',
-  },
   profileWrapper: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -198,6 +244,12 @@ const styles = StyleSheet.create({
     gap: 14,
     height: 90,
     paddingHorizontal: 14,
+  },
+  basicProfileWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#DDD',
   },
   profile: {
     width: 60,
@@ -238,19 +290,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
-  deleteButton: {
-    backgroundColor: '#ED423F',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 60,
-    height: '100%',
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    zIndex: 0,
-  },
-  emptyWrapper: {marginTop: 60},
 });
 
 export default Friends;

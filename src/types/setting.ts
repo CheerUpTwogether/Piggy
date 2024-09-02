@@ -35,3 +35,11 @@ export interface Inquiry {
   response_date: string | null;
 }
 
+export interface MyProfileData {
+  id: string;
+  nickname: string;
+  email: string;
+  friend_count: number;
+  total_appointment: number;
+  completed_appointments: number;
+}

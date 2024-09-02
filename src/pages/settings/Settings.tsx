@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   Image,
   StyleSheet,
@@ -7,67 +7,87 @@ import {
   View,
   Platform,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
-import {dummy_friends_data, dummy_profile} from '@/mock/Friends/Friends';
 import ToggleButton from '@/components/common/ToggleButton';
 import {useUserStore} from '@/store/store';
+import {getMySettingsSpb} from '@/supabase/SettingSpb';
+import {MyProfileData} from '@/types/setting';
+
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const Settings = () => {
+  const [myData, setMyData] = useState<MyProfileData | null>(null);
   const [isOn, setIsOn] = useState(false);
   const {setGotoProfile} = useUserStore();
+  const userData = useUserStore(state => state.userData);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const numberStyle =
     Platform.OS === 'ios' ? commonStyle.BOLD_33_18 : commonStyle.BOLD_33_22;
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+      setGotoProfile(gotoProfile);
+    }, []),
+  );
+
   const handleToggle = () => {
     setIsOn(!isOn);
   };
 
-  useEffect(() => {
-    setGotoProfile(gotoProfile);
-  }, []);
+  const fetchData = async () => {
+    try {
+      const res = await getMySettingsSpb(userData.id);
+      setMyData(res[0] as MyProfileData);
+    } catch (error) {
+      console.error('Failed to fetch settings data: ', error);
+    }
+  };
 
   const gotoProfile = () => {
-    navigation.navigate('EditProfile', {...dummy_profile});
+    navigation.navigate('EditProfile', {...userData});
   };
+
   return (
     <View style={commonStyle.CONTAINER}>
       <View style={{flexDirection: 'row', gap: 18, alignItems: 'center'}}>
         <TouchableOpacity activeOpacity={0.8} onPress={() => gotoProfile()}>
-          <Image
-            source={{uri: dummy_profile.profile_image_path}}
-            style={{width: 80, height: 80, borderRadius: 80}}
-            alt="profile"
-          />
+          {userData.profile_img_url ? (
+            <Image
+              source={{uri: userData.profile_img_url}}
+              style={styles.profileImage}
+              alt="profile"
+            />
+          ) : (
+            <View style={styles.profileImageWrapper}>
+              <BasicProfileSvg width={45} height={45} color={'#555'} />
+            </View>
+          )}
         </TouchableOpacity>
 
         <View style={{gap: 6}}>
-          <Text style={commonStyle.MEDIUM_33_20}>
-            {dummy_profile.nick_name}
-          </Text>
-          <Text style={commonStyle.REGULAR_AA_16}>{dummy_profile.email}</Text>
+          <Text style={commonStyle.MEDIUM_33_20}>{userData.nickname}</Text>
+          <Text style={commonStyle.REGULAR_AA_16}>{userData.email}</Text>
         </View>
       </View>
 
       <View style={styles.dashBoardContainer}>
         <View style={styles.boxWrapper}>
           <Text style={commonStyle.REGULAR_77_14}>친구</Text>
-          <Text style={numberStyle}>{dummy_friends_data.length}</Text>
+          <Text style={numberStyle}>{myData?.friend_count ?? 0}</Text>
         </View>
         <View style={[styles.boxWrapper, styles.totalAppointment]}>
           <Text style={commonStyle.REGULAR_77_14}>전체 약속</Text>
-          <Text style={numberStyle}>{dummy_profile.total_appointments}</Text>
+          <Text style={numberStyle}>{myData?.total_appointment ?? 0}</Text>
         </View>
         <View style={styles.boxWrapper}>
           <Text style={commonStyle.REGULAR_77_14}>이행 횟수</Text>
-          <Text style={numberStyle}>
-            {dummy_profile.completed_appointments}
-          </Text>
+          <Text style={numberStyle}>{myData?.completed_appointments ?? 0}</Text>
         </View>
       </View>
 
@@ -146,6 +166,17 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderLeftWidth: 1,
   },
+  profileImageWrapper: {
+    width: 80,
+    height: 80,
+    borderWidth: 1,
+    borderColor: '#DDD',
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  profileImage: {width: 80, height: 80, borderRadius: 30},
 });
 
 export default Settings;

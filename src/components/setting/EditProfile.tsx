@@ -12,10 +12,10 @@ const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
   const [iserror, setIsError] = useState(true);
   const route = useRoute<RouteProp<RootStackParamList, 'EditProfile'>>();
-  const {nick_name, profile_image_path} = route.params;
+  const {nickname, profile_img_url} = route.params;
 
   useEffect(() => {
-    setNickNameValue(nick_name);
+    setNickNameValue(nickname);
   }, []);
 
   return (
@@ -26,7 +26,7 @@ const EditProfile = () => {
             activeOpacity={0.8}
             style={styles.profileImgContainer}>
             <Image
-              source={{uri: profile_image_path}}
+              source={{uri: profile_img_url}}
               style={styles.profileImg}
               alt="profileImage"
             />

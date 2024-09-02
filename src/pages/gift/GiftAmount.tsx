@@ -10,11 +10,11 @@ const STYLE = Platform.OS === 'ios';
 
 const GiftAmount = () => {
   const route = useRoute<GiftAmountRouteProp>();
-  const {uuid, nick_name, profile_image_path} = route.params;
+  const {id, nickname, profile_img_url} = route.params;
   const {inputValue, handlePress} = useKeyPad();
 
   const handleSubmit = () => {
-    console.log('TODO: 선물하기', uuid);
+    console.log('TODO: 선물하기', id);
   };
 
   return (
@@ -23,7 +23,7 @@ const GiftAmount = () => {
         <View style={styles.profileWrapper}>
           <Image
             style={styles.Profile}
-            source={{uri: profile_image_path}}
+            source={{uri: profile_img_url}}
             alt="profile"
           />
         </View>
@@ -33,7 +33,7 @@ const GiftAmount = () => {
               STYLE ? commonStyle.MEDIUM_33_16 : commonStyle.MEDIUM_33_20,
               styles.text,
             ]}>
-            {nick_name}님에게
+            {nickname}님에게
           </Text>
           <Text
             style={[

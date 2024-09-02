@@ -1,4 +1,26 @@
-// 아래 interface 모두 '@/types/fiend' 에 넣어놨습니다. 사용하시던 파일들에서 이 경로로 수정부탁드립니다.
+import {RootStackParamList} from '@/types/Router';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
+
+export interface FriendSearchParams {
+  previousScreen: keyof RootStackParamList;
+}
+
+export type FriendSearchRouteProp = RouteProp<
+  RootStackParamList,
+  'FriendSearch'
+>;
+export type FriendSearchNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'FriendSearch'
+>;
+
+// 프로필 상세 보기
+export type ProfileDetailNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'GiftAmount'
+>;
+
 export interface User {
   id: string;
   profile_img_url: string;

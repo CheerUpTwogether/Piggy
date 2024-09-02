@@ -11,4 +11,7 @@ declare module '@env' {
   export const SUPABASE_KEY: string;
   export const KAKAO_API_KEY: string;
   export const KAKAO_BIZ_API_KEY: string;
+  export const GOOGLE_WEB_API_KEY: string;
+  export const GOOGLE_ANDROID_API_KEY: string;
+  export const GOOGLE_IOS_API_KEY: string;
 }

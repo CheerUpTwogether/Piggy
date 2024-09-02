@@ -9,6 +9,14 @@ export const kakaoLoginSpb = (idToken: string, accessToken: string) => {
   });
 };
 
+// 구글 로그인
+export const googleLoginSpb = (idToken: string) => {
+  return supabase.auth.signInWithIdToken({
+    provider: 'google',
+    token: idToken,
+  });
+};
+
 // 닉네임 중복 확인
 export const checkNicknameDuplicateSpb = (nickname: string) => {
   return supabase.from('users_nickname').select('*').eq('nickname', nickname);
