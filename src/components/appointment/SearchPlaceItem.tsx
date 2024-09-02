@@ -2,6 +2,7 @@ import React from 'react';
 import {Search} from '@/types/place';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {commonStyle} from '@/styles/common';
+
 import SearchSvg from '@/assets/icons/search.svg';
 
 const SearchPlaceItem = ({

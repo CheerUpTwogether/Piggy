@@ -6,6 +6,7 @@ import {Search} from '@/types/place';
 import {SearchAddressPlace, SearchKeywordPlace} from '@/types/Common';
 import {searchAddress, searchLocation} from '@/api/kakao/map';
 import {useLocation} from './useLocation';
+import {useAppointmentForm} from '@/store/store';
 
 const place = {
   id: '',
@@ -30,6 +31,7 @@ const useAppointmentPlace = () => {
   const [selectPlace, setSelectPlace] = useState<SearchKeywordPlace>(place);
   const debouncedKeyword = useDebounce(keyword, 100);
   const {location} = useLocation(); // 커스텀 훅 호출
+  const {appointmentForm, setAppointmentForm} = useAppointmentForm();
   useEffect(() => {
     getkeywordHistories();
     setIsShow(keywordHistories.length > 0);
@@ -96,6 +98,18 @@ const useAppointmentPlace = () => {
   // 지금 검색어 저장
   const handlePlacePress = (item: SearchKeywordPlace) => {
     setSelectPlace(item);
+    if (item.x) {
+      setAppointmentForm('longitude', item.x);
+    }
+    if (item.y) {
+      setAppointmentForm('latitude', item.y);
+    }
+    if (item.address_name) {
+      setAppointmentForm('address', item.address_name);
+    }
+    if (item.place_name) {
+      setAppointmentForm('place_name', item.place_name);
+    }
   };
 
   const handleSubmitEditing = async () => {
@@ -152,6 +166,7 @@ const useAppointmentPlace = () => {
     selectPlace,
     handleSubmitEditing,
     location,
+    appointmentForm,
   };
 };
 
