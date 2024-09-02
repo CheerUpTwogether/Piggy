@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {commonStyle} from '@/styles/common';
-import {AppointmentData, FriendsProps} from '@/pages/home/type';
+import {FriendsProps} from '@/pages/home/type';
 
 import LocationSvg from '@/assets/icons/location.svg';
 import DateSvg from '@/assets/icons/calendar.svg';
@@ -16,10 +16,14 @@ import TimeSvg from '@/assets/icons/clock.svg';
 import PeopleSvg from '@/assets/icons/people.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
+import {useAppointmentForm} from '@/store/store';
+import {changeDateText} from '@/utils/timePicker';
 
-const AppointmentCheck: React.FC<{data: AppointmentData}> = ({data}) => {
+const AppointmentCheck = () => {
+  const {appointmentForm} = useAppointmentForm();
   const totalAmount =
-    Number(data.penalty.replace(/,/g, '')) * (data.friends.length + 1);
+    Number(appointmentForm.deal_piggy_count) *
+    ((appointmentForm?.appointment_participants_list?.length || 0) + 1);
 
   const renderItem = ({item}: {item: FriendsProps}) => (
     <View style={styles.friendWrapper}>
@@ -38,7 +42,7 @@ const AppointmentCheck: React.FC<{data: AppointmentData}> = ({data}) => {
         style={[commonStyle.REGULAR_33_12, styles.nickName]}
         numberOfLines={1}
         ellipsizeMode="tail">
-        {item.nick_name}
+        {item.nickname}
       </Text>
     </View>
   );
@@ -46,7 +50,7 @@ const AppointmentCheck: React.FC<{data: AppointmentData}> = ({data}) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.HeaderWrapper}>
-        <Text style={commonStyle.BOLD_33_18}>{data.subject}</Text>
+        <Text style={commonStyle.BOLD_33_24}>{appointmentForm.subject}</Text>
       </View>
 
       <View style={styles.wrapper}>
@@ -55,21 +59,29 @@ const AppointmentCheck: React.FC<{data: AppointmentData}> = ({data}) => {
             <LocationSvg width={20} height={20} color={'#AAA'} />
             <Text style={commonStyle.MEDIUM_33_16}>장소</Text>
           </View>
-          <Text style={commonStyle.BOLD_33_16}>{data.location}</Text>
+          <Text style={commonStyle.BOLD_33_16}>
+            {appointmentForm.place_name || appointmentForm.address}
+          </Text>
         </View>
         <View style={styles.row}>
           <View style={styles.rowTitle}>
             <DateSvg width={20} height={20} color={'#AAA'} />
             <Text style={commonStyle.MEDIUM_33_16}>날짜</Text>
           </View>
-          <Text style={commonStyle.BOLD_33_16}>{data.date}</Text>
+          <Text style={commonStyle.BOLD_33_16}>
+            {String(appointmentForm.date)}
+          </Text>
         </View>
         <View style={styles.row}>
           <View style={styles.rowTitle}>
             <TimeSvg width={20} height={20} color={'#AAA'} />
             <Text style={commonStyle.MEDIUM_33_16}>시간</Text>
           </View>
-          <Text style={commonStyle.BOLD_PRIMARY_16}>{data.time}</Text>
+          <Text style={commonStyle.BOLD_PRIMARY_16}>
+            {`${changeDateText(
+              appointmentForm.time.getHours(),
+            )} : ${changeDateText(appointmentForm.time.getMinutes())}`}
+          </Text>
         </View>
       </View>
 
@@ -83,7 +95,7 @@ const AppointmentCheck: React.FC<{data: AppointmentData}> = ({data}) => {
         <FlatList
           keyExtractor={item => String(item.uuid)}
           renderItem={renderItem}
-          data={data.friends}
+          data={appointmentForm.appointment_participants_list}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         />
@@ -99,7 +111,9 @@ const AppointmentCheck: React.FC<{data: AppointmentData}> = ({data}) => {
         <View style={styles.penaltyRow}>
           <Text style={commonStyle.REGULAR_33_16}>벌칙금</Text>
           <View style={styles.penalty}>
-            <Text style={commonStyle.REGULAR_33_16}>{data.penalty}</Text>
+            <Text style={commonStyle.REGULAR_33_16}>
+              {appointmentForm.deal_piggy_count}
+            </Text>
             <Text style={commonStyle.REGULAR_PRIMARY_16}>Piggy</Text>
           </View>
         </View>
@@ -107,7 +121,8 @@ const AppointmentCheck: React.FC<{data: AppointmentData}> = ({data}) => {
           <Text style={commonStyle.REGULAR_33_16}>모집 인원</Text>
           <View style={styles.penalty}>
             <Text style={commonStyle.REGULAR_33_16}>
-              {data.friends.length + 1}
+              {(appointmentForm?.appointment_participants_list?.length || 0) +
+                1}
             </Text>
             <Text style={commonStyle.REGULAR_33_16}>명</Text>
           </View>

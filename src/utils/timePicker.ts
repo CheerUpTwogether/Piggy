@@ -117,10 +117,10 @@ export const fillEmpty = (visibleCount, [...values]) => {
   return values;
 };
 
-export const asPickerFormat = (date: Date) => {
-  const _date = new Date(date.getTime());
+export const asPickerFormat = () => {
+  const _date = new Date();
   _date.setTime(Date.now());
-  _date.setHours(1);
+  _date.setHours(0);
   _date.setMinutes(0);
   _date.setSeconds(0);
   _date.setMilliseconds(0);
@@ -132,4 +132,24 @@ export const changeDateText = (text: number) => {
     return `0${text}`;
   }
   return text;
+};
+
+export const localeConfigKr = {
+  monthNames: [
+    '1월',
+    '2월',
+    '3월',
+    '4월',
+    '5월',
+    '6월',
+    '7월',
+    '8월',
+    '9월',
+    '10월',
+    '11월',
+    '12월',
+  ],
+  dayNames: ['월', '화', '수', '목', '금', '토', '일'],
+  dayNamesShort: ['월', '화', '수', '목', '금', '토', '일'],
+  today: '오늘',
 };

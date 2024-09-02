@@ -10,20 +10,11 @@ import AppointmentPlace from '@/components/appointment/AppointmentPlace';
 import AppointmentCalendar from '@/components/appointment/AppointmentCalendar';
 import AppointmentPenalty from '@/components/appointment/AppointmentPenalty';
 import AppointmentCheck from '@/components/appointment/AppointmentCheck';
-import {AppointmentData} from './type';
 import {useAppointmentForm} from '@/store/store';
 
 const {height: screenHeight} = Dimensions.get('screen');
 
 const AppointmentForm = () => {
-  const [data, setData] = useState<AppointmentData>({
-    friends: [],
-    subject: '',
-    location: '',
-    date: '',
-    time: '',
-    penalty: '',
-  });
   const [nowStep, setNowStep] = useState(1);
   const totalStep = 5;
   const {appointmentForm, resetAppointmentForm} = useAppointmentForm();
@@ -33,14 +24,6 @@ const AppointmentForm = () => {
       resetAppointmentForm();
     }, []),
   );
-
-  // 주어진 이름(name)에 해당하는 상태 값을 업데이트
-  const onUpdate = (name: string, value: [] | string | number) => {
-    setData(prevData => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
 
   const handleNext = () => {
     if (nowStep === 5) {
@@ -62,11 +45,9 @@ const AppointmentForm = () => {
       case 3:
         return <AppointmentCalendar />;
       case 4:
-        return (
-          <AppointmentPenalty penalty={data.penalty} onUpdate={onUpdate} />
-        );
+        return <AppointmentPenalty />;
       case 5:
-        return <AppointmentCheck data={data} />;
+        return <AppointmentCheck />;
       default:
         return (
           <View>
@@ -86,6 +67,10 @@ const AppointmentForm = () => {
     }
 
     if (!appointmentForm.latitude && nowStep === 2) {
+      return true;
+    }
+
+    if (!appointmentForm.date && nowStep === 3) {
       return true;
     }
 
