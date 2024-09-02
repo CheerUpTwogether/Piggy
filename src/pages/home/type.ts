@@ -29,7 +29,4 @@ export interface FriendsProps {
   url?: string;
 }
 
-export interface AppointmentPenaltyProps {
-  penalty: string;
-  onUpdate: (key: string, value: any) => void;
-}
+export interface AppointmentPenaltyProps {}

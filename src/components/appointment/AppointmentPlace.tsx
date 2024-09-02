@@ -106,7 +106,6 @@ const AppointmentPlace = () => {
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={<EmptyResult reason={reason} solution={solution} />}
-        style={height}
       />
     </View>
   );

@@ -2,41 +2,20 @@ import React, {useRef, useState} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {CalendarList, LocaleConfig} from 'react-native-calendars';
-import {asPickerFormat, changeDateText} from '@/utils/timePicker';
+import {changeDateText, localeConfigKr} from '@/utils/timePicker';
 import {BUTTON_HEIGHT, VIEW_WIDTH} from '@/utils/timePicker';
-
+import {commonStyle} from '@/styles/common';
 import ClockSvg from '@/assets/icons/clock.svg';
 import CalendarSvg from '@/assets/icons/calendar.svg';
-
-import {commonStyle} from '@/styles/common';
 import TimePicker from './TimePicker';
+import {useAppointmentForm} from '@/store/store';
 
-LocaleConfig.locales.ko = {
-  monthNames: [
-    '1월',
-    '2월',
-    '3월',
-    '4월',
-    '5월',
-    '6월',
-    '7월',
-    '8월',
-    '9월',
-    '10월',
-    '11월',
-    '12월',
-  ],
-  dayNames: ['월', '화', '수', '목', '금', '토', '일'],
-  dayNamesShort: ['월', '화', '수', '목', '금', '토', '일'],
-  today: '오늘',
-};
+LocaleConfig.locales.ko = localeConfigKr;
 LocaleConfig.defaultLocale = 'ko';
 
 const AppointmentCalendar = () => {
   const [showCalendar, setShowCalendar] = useState(true);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [time, setTime] = useState(asPickerFormat(new Date()));
-
+  const {appointmentForm, setAppointmentForm} = useAppointmentForm();
   const fadeAnimCalendar = useRef(new Animated.Value(1)).current;
   const fadeAnimInput = useRef(new Animated.Value(1)).current;
 
@@ -72,7 +51,8 @@ const AppointmentCalendar = () => {
   };
 
   const handleDateSelect = date => {
-    setSelectedDate(date.dateString);
+    console.log(date);
+    setAppointmentForm('date', date.dateString);
     handleInput();
   };
 
@@ -86,9 +66,11 @@ const AppointmentCalendar = () => {
         <CalendarSvg style={styles.svg} />
         <Text
           style={
-            selectedDate ? commonStyle.MEDIUM_33_16 : commonStyle.MEDIUM_AA_16
+            appointmentForm.date
+              ? commonStyle.MEDIUM_33_16
+              : commonStyle.MEDIUM_AA_16
           }>
-          {selectedDate ? selectedDate : '날짜를 선택해주세요'}
+          {appointmentForm.date ? appointmentForm.date : '날짜를 선택해주세요'}
         </Text>
       </TouchableOpacity>
       {showCalendar && (
@@ -109,15 +91,15 @@ const AppointmentCalendar = () => {
           <View style={styles.input}>
             <ClockSvg style={styles.svg} />
             <Text style={commonStyle.MEDIUM_33_16}>
-              {`${changeDateText(time.getHours())} : ${changeDateText(
-                time.getMinutes(),
-              )}`}
+              {`${changeDateText(
+                appointmentForm.time.getHours(),
+              )} : ${changeDateText(appointmentForm.time.getMinutes())}`}
             </Text>
           </View>
 
           <TimePicker
-            value={time}
-            onChange={setTime}
+            value={appointmentForm.time}
+            onChange={date => setAppointmentForm('time', date)}
             width={VIEW_WIDTH}
             buttonHeight={BUTTON_HEIGHT}
             visibleCount={3}

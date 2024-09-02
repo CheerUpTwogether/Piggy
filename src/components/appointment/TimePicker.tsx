@@ -166,7 +166,7 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
                 <AnimatedPressable
                   style={{opacity}}
                   onPress={props.getOnPress(item)}
-                  key={item}>
+                  key={`${item}`}>
                   <View style={styles.button}>
                     <Text style={commonStyle.BOLD_33_16}>{item}</Text>
                   </View>
