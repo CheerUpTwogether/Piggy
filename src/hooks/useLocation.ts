@@ -1,10 +1,11 @@
+import {Location} from '@/types/place';
 import {requestLocationPermission} from '@/utils/permission';
-import {useState, useEffect, lazy} from 'react';
+import {useState, useEffect} from 'react';
 import {Alert} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 export const useLocation = () => {
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState<Location>();
   const [error, setError] = useState(null);
 
   // 현재 위치 정보 받아오기
