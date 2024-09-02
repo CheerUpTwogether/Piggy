@@ -6,7 +6,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useToastStore, useUserStore} from '@/store/store';
-import {googleSignInAPI, kakaoSignInAPI} from '@/api/auth';
+import {googleSignInAPI, kakaoSignInAPI, setFcmTokenAPI} from '@/api/auth';
 import {GOOGLE_WEB_API_KEY, GOOGLE_IOS_API_KEY} from '@env';
 import KakaoSvg from '@/assets/icons/kakao.svg';
 import GoogleSvg from '@/assets/icons/google.svg';
@@ -86,8 +86,19 @@ const Login = () => {
           authData.session.access_token,
           authData.session.refresh_token,
         );
-        navigation.replace('Main', {screen: 'Home'});
 
+        const isSuccess = await setFcmTokenAPI(id);
+
+        if (!isSuccess) {
+          addToast({
+            success: false,
+            text: '디바이스 토큰 저장 실패',
+            multiText: '관리자에게 문의해주세요',
+          });
+          return;
+        }
+
+        navigation.replace('Main', {screen: 'Home'});
         return;
       }
 

@@ -25,6 +25,7 @@ import {set} from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setItemSession} from '@/utils/auth';
 import RightArrowSvg from '@/assets/icons/rightArrow.svg';
+import {setFcmTokenAPI} from '@/api/auth';
 const logo = require('@/assets/icons/topLogo.png');
 
 const LoginDetail = () => {
@@ -135,6 +136,16 @@ const LoginDetail = () => {
       authData.session.access_token,
       authData.session.refresh_token,
     );
+    const isSuccess = await setFcmTokenAPI(profileInsertData.id);
+
+    if (!isSuccess) {
+      addToast({
+        success: false,
+        text: '디바이스 토큰 저장 실패',
+        multiText: '관리자에게 문의해주세요',
+      });
+      return;
+    }
     navigation.replace('Main', {screen: 'Home'});
   };
 
