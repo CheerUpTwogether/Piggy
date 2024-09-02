@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, Text, Dimensions, SafeAreaView} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
 import ProgressBar from '@/components/common/ProgressBar';
 import ButtonCouple from '@/components/common/ButtonCouple';
@@ -10,8 +11,9 @@ import AppointmentPlace from '@/components/appointment/AppointmentPlace';
 import AppointmentPenalty from '@/components/appointment/AppointmentPenalty';
 import AppointmentCheck from '@/components/appointment/AppointmentCheck';
 import {AppointmentData} from './type';
+import {useAppointmentForm} from '@/store/store';
 
-const {width: screenWidth, height: screenHeight} = Dimensions.get('screen');
+const {height: screenHeight} = Dimensions.get('screen');
 
 const AppointmentForm = () => {
   const [data, setData] = useState<AppointmentData>({
@@ -24,6 +26,13 @@ const AppointmentForm = () => {
   });
   const [nowStep, setNowStep] = useState(1);
   const totalStep = 5;
+  const {resetAppointmentForm} = useAppointmentForm();
+
+  useFocusEffect(
+    useCallback(() => {
+      resetAppointmentForm();
+    }, []),
+  );
 
   // 주어진 이름(name)에 해당하는 상태 값을 업데이트
   const onUpdate = (name: string, value: [] | string | number) => {

@@ -33,11 +33,8 @@ export const searchLocation = async (
 export const searchAddress = async (address: string) => {
   try {
     const response = await axios.get(
-      'https://dapi.kakao.com/v2/local/search/address.json',
+      `https://dapi.kakao.com/v2/local/search/address.json?query=${address}`,
       {
-        params: {
-          query: address,
-        },
         headers: {
           Authorization: `KakaoAK ${KAKAO_API_KEY}`,
         },

@@ -1,4 +1,5 @@
 import {Database} from '@/types/supabase';
+import {FriendProp} from './friend';
 
 export type AppointmentStatus =
   | 'pending'
@@ -20,6 +21,11 @@ export interface AppointmentProps extends AppointmentInsert {
 
 export type AppointmentInsert =
   Database['public']['Tables']['appointment']['Insert'];
+
+export interface AppointmentInsertProps extends AppointmentInsert {
+  appointment_participants_list?: FriendProp[];
+}
+
 export interface AppointmentProps extends AppointmentInsert {
   list_displayed: true;
   pinned: boolean;
