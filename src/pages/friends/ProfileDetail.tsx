@@ -10,9 +10,15 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
-import {ProfileDetailProps} from '@/mock/Friends/type';
+import {ProfileDetailProps} from '@/types/friends';
 import {gradeList, determineGrade} from '@/utils/grade';
-import {ProfileDetailNavigationProp} from './type';
+import {ProfileDetailNavigationProp} from '@/types/friends';
+import {useUserStore, useToastStore, useModalStore} from '@/store/store';
+import {
+  setFriendshipAddSpb,
+  getFriendsSpb,
+  deleteFriendshipSpb,
+} from '@/supabase/FriendsSpb';
 
 import GradeSvg from '@/assets/icons/grade.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
@@ -25,21 +31,26 @@ import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 const {height: screenHeight} = Dimensions.get('window');
 
 const ProfileDetail: React.FC<ProfileDetailProps> = ({
-  uuid,
-  nick_name,
-  total_appointments,
-  completed_appointments,
-  profile_image_path,
-  friend,
+  id,
+  nickname,
+  total_appointment,
+  completed_appointment,
+  profile_img_url,
+  is_friend,
   closeModal,
+  onFriendAdded,
+  onFriendRemoved,
 }) => {
   const [gradeListShow, setGradeListShow] = useState(false);
   const slideAnim = useRef(new Animated.Value(screenHeight)).current;
   const navigation = useNavigation<ProfileDetailNavigationProp>();
+  const addToast = useToastStore(state => state.addToast);
+  const userData = useUserStore(state => state.userData);
+  const {openModal, closeModal: closeConfirmModal} = useModalStore();
 
   const {grade, gradeColor} = determineGrade(
-    total_appointments,
-    completed_appointments,
+    total_appointment,
+    completed_appointment,
   );
 
   useEffect(() => {
@@ -51,15 +62,11 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   }, [gradeListShow, slideAnim]);
 
   const handleMoveToGift = (
-    uuid: string,
-    nick_name: string,
-    profile_image_path: string,
+    id: string,
+    nickname: string,
+    profile_img_url: string,
   ) => {
-    navigation.navigate('GiftAmount', {
-      uuid: uuid,
-      nick_name: nick_name,
-      profile_image_path: profile_image_path,
-    });
+    navigation.navigate('GiftAmount', {id, nickname, profile_img_url});
     closeModal();
   };
 
@@ -68,18 +75,70 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
     closeModal();
   };
 
-  const handleDeleteFriend = () => {
-    console.log('TODO: 친구 삭제 api 호출');
+  const handleAddFriend = async () => {
+    const friends = await getFriendsSpb(userData.id);
+
+    // 이미 친구 목록에 있는지 확인
+    const isAlreadyFriend = friends.some(friend => friend.id === id);
+
+    if (isAlreadyFriend) {
+      addToast({
+        success: false,
+        text: '이미 친구로 추가된 사용자입니다.',
+      });
+      return false;
+    }
+
+    const res = await setFriendshipAddSpb(userData.id, id);
+    if (!res) {
+      addToast({
+        success: false,
+        text: '친구 추가에 실패했습니다.',
+        multiText: '다시 시도해주세요.',
+      });
+      return false;
+    }
+
+    addToast({
+      success: true,
+      text: '친구로 추가되었습니다!',
+    });
+    onFriendAdded(id);
     closeModal();
+    return true;
   };
 
-  const handleAddFriend = () => {
-    console.log('TODO: 친구 추가 api 호출');
-    closeModal();
+  const handleDeleteFriend = () => {
+    openModal({
+      title: '친구를 삭제하시겠습니까?',
+      content: '삭제할 경우 해당 친구와 약속을 생성할 수 없습니다.',
+      text: '삭제하기',
+      onPress: async () => {
+        const res = await deleteFriendshipSpb(userData.id, id);
+        if (!res) {
+          addToast({
+            success: false,
+            text: '친구 삭제에 실패했습니다.',
+            multiText: '다시 시도해주세요.',
+          });
+          return;
+        }
+
+        addToast({
+          success: true,
+          text: '친구가 성공적으로 삭제되었습니다.',
+        });
+
+        onFriendRemoved(id);
+        closeConfirmModal();
+        closeModal();
+      },
+      textCancel: '취소',
+    });
   };
 
   const iconShow = () => {
-    if (uuid === '1000') {
+    if (id === userData.id) {
       return (
         <TouchableOpacity
           style={styles.rightIconWrapper}
@@ -88,15 +147,13 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
           <EditSvg style={styles.rightIcon} />
         </TouchableOpacity>
       );
-    } else if (friend) {
+    } else if (is_friend) {
       return (
         <View style={{flexDirection: 'row', gap: 8}}>
           <TouchableOpacity
             style={styles.rightIconWrapper}
             activeOpacity={0.8}
-            onPress={() =>
-              handleMoveToGift(uuid, nick_name, profile_image_path)
-            }>
+            onPress={() => handleMoveToGift(id, nickname, profile_img_url)}>
             <GiftSvg style={styles.rightIcon} />
           </TouchableOpacity>
           <TouchableOpacity
@@ -125,9 +182,9 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
 
   return (
     <View style={commonStyle.CONTAINER}>
-      {profile_image_path ? (
+      {profile_img_url ? (
         <Image
-          source={{uri: profile_image_path}}
+          source={{uri: profile_img_url}}
           style={styles.profile}
           alt="profile"
         />
@@ -155,7 +212,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
             )}
           </TouchableOpacity>
           <View style={styles.nickNameWrapper}>
-            <Text style={commonStyle.BOLD_33_20}>{nick_name}</Text>
+            <Text style={commonStyle.BOLD_33_20}>{nickname}</Text>
             <Text style={commonStyle.MEDIUM_99_14}>{grade}</Text>
           </View>
         </View>

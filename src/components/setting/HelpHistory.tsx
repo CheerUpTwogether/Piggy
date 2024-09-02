@@ -13,7 +13,7 @@ import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
 import ButtonBottomSheet from '../common/ButtonBottomSheet';
 import EmptyResult from '../common/EmptyResult';
-import {useToastStore, useModalStore} from '@/store/store';
+import {useToastStore, useModalStore, useUserStore} from '@/store/store';
 import {getMyInquirysSpb, deleteInquirySpb} from '@/supabase/SettingSpb';
 import {Inquiry} from '@/types/setting';
 
@@ -28,6 +28,7 @@ const HelpHistory = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const addToast = useToastStore(state => state.addToast);
   const {openModal, closeModal} = useModalStore();
+  const userData = useUserStore(state => state.userData);
 
   // 화면이 포커스될 때마다 데이터 새로고침
   useFocusEffect(
@@ -38,14 +39,22 @@ const HelpHistory = () => {
 
   // 문의 리스트 조회
   const fetchInquirys = async () => {
-    const res = await getMyInquirysSpb('7b4a9f58-028f-40cb-9600-7dbf8f3744b3');
-    if (res) {
-      const sortedList = res.sort(
-        (a, b) =>
-          new Date(b.inquiry_date).getTime() -
-          new Date(a.inquiry_date).getTime(),
-      );
-      setInquiryList(sortedList);
+    if (userData.id) {
+      const res = await getMyInquirysSpb(userData.id);
+
+      if (res) {
+        const sortedList = res.sort(
+          (a, b) =>
+            new Date(b.inquiry_date).getTime() -
+            new Date(a.inquiry_date).getTime(),
+        );
+        setInquiryList(sortedList);
+      } else {
+        addToast({
+          success: false,
+          text: '문의 내역을 불러오지 못했습니다.',
+        });
+      }
     }
   };
 
@@ -67,7 +76,7 @@ const HelpHistory = () => {
         multiText: '문의 내역이 성공적으로 삭제되었습니다.',
       });
       fetchInquirys();
-      closeModal(); // 삭제 후 모달을 닫습니다.
+      closeModal();
     } else {
       addToast({
         success: false,
@@ -98,7 +107,7 @@ const HelpHistory = () => {
         title: '문의 내역을 정말 삭제하시겠습니까?',
         content: '삭제할 경우 다시 확인할 수 없습니다.',
         text: '삭제하기',
-        onPress: removeInquiry,
+        onPress: () => removeInquiry(),
         textCancel: '취소',
       });
     }
