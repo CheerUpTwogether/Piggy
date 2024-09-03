@@ -248,6 +248,6 @@ export const getPiggySpb = async id => {
 
     return data;
   } catch (e) {
-    console.error('Error appeared in getPiggySpb : ', e);
+    throw e;
   }
 };

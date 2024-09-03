@@ -1,13 +1,16 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {commonStyle} from '@/styles/common';
+import {useFocusEffect} from '@react-navigation/native';
 import KeyPad, {useKeyPad} from '../common/Keypad';
-import {useAppointmentForm} from '@/store/store';
+import {useAppointmentForm, useUserStore} from '@/store/store';
+import {getPiggySpb} from '@/supabase/AuthSpb';
+import {commonStyle} from '@/styles/common';
 
 const AppointmentPenalty = () => {
   const {inputValue, setInputValue, handlePress} = useKeyPad();
   const {appointmentForm, setAppointmentForm} = useAppointmentForm();
-
+  const {userData} = useUserStore();
+  const [piggy, setPiggy] = useState(0);
   useEffect(() => {
     setInputValue(String(appointmentForm.deal_piggy_count));
   }, []);
@@ -16,6 +19,20 @@ const AppointmentPenalty = () => {
   useEffect(() => {
     setAppointmentForm('deal_piggy_count', inputValue);
   }, [inputValue]);
+
+  // 화면이 포커스될 때마다 피기 새로고침
+  useFocusEffect(
+    useCallback(() => {
+      getPiggy();
+    }, []),
+  );
+
+  // 피기 정보 불러오기
+  const getPiggy = async () => {
+    const res = await getPiggySpb(userData.id);
+    setPiggy(res?.[0]?.latest_piggy_count);
+    console.log(res);
+  };
 
   return (
     <View>
