@@ -67,6 +67,17 @@ export const getAppointmentsSpb = (
   });
 };
 
+// 약속 참여자 상태 정보 조회
+export const getAppointmentParticipantsSpb = (
+  user_uuid: string,
+  appointment_id: number,
+) => {
+  return supabase.rpc('select_participants_list_detail', {
+    user_uuid: user_uuid,
+    appointment_id: appointment_id,
+  });
+};
+
 // 약속 인증 상태 확인 - 자기 자신의 인증 상태만
 export const getCertificationStatusSpb = (
   id: string,
