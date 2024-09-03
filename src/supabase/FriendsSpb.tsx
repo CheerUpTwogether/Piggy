@@ -3,7 +3,7 @@ import supabase from '@/supabase/supabase';
 // 친구 목록 불러오기
 export const getFriendsSpb = async (userId: string) => {
   try {
-    const {data: friendsData, error: friendsError} = await supabase
+    /* const {data: friendsData, error: friendsError} = await supabase
       .from('user_friend_relationship')
       .select('id_to')
       .eq('id_from', userId);
@@ -22,7 +22,17 @@ export const getFriendsSpb = async (userId: string) => {
     if (userDetailsError) {
       throw userDetailsError;
     }
+    */
 
+    const {data: userDetails, error: friendsError} = await supabase.rpc(
+      'select_my_friend_list',
+      {
+        user_uuid: userId,
+      },
+    );
+    if (friendsError || !userDetails) {
+      throw friendsError || new Error('No friends found');
+    }
     return userDetails;
   } catch (error) {
     console.error('Error in getFriendsSpb:', error);
