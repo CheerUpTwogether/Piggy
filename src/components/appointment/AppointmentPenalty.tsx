@@ -2,12 +2,13 @@ import React, {useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
 import KeyPad, {useKeyPad} from '../common/Keypad';
-import {useAppointmentForm} from '@/store/store';
+import {useAppointmentForm, useUserStore} from '@/store/store';
 import {commonStyle} from '@/styles/common';
 
 const AppointmentPenalty = () => {
   const {inputValue, setInputValue, handlePress} = useKeyPad();
   const {appointmentForm, setAppointmentForm} = useAppointmentForm();
+  const {userData} = useUserStore();
 
   useEffect(() => {
     setInputValue(String(appointmentForm.deal_piggy_count));
@@ -27,7 +28,11 @@ const AppointmentPenalty = () => {
       <Text style={[commonStyle.REGULAR_PRIMARY_12, {marginTop: 8}]}>
         * 벌금을 사용하고 싶지 않다면 0원으로 설정해주세요.
       </Text>
+
       <View style={styles.wrapper}>
+        <Text style={commonStyle.REGULAR_77_16}>
+          현재 내 피기 {userData.piggy}P
+        </Text>
         <View style={styles.amountTextWrapper}>
           <Text style={styles.text}>벌금</Text>
 
@@ -68,8 +73,8 @@ const styles = StyleSheet.create({
   },
   button: {width: '40%'},
   textWrapper: {marginTop: 30, gap: 4},
-  text: {textAlign: 'center', marginBottom: 10, ...commonStyle.MEDIUM_77_16},
-  amountTextWrapper: {marginTop: 30, gap: 8},
+  text: {textAlign: 'center', marginBottom: 10, ...commonStyle.MEDIUM_33_20},
+  amountTextWrapper: {marginTop: 20, gap: 8},
   amountWrapper: {
     flexDirection: 'row',
     gap: 4,
