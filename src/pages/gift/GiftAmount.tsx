@@ -144,7 +144,7 @@ const GiftAmount = () => {
         onPress={handleSubmit}
         theme={'primary'}
         style={styles.button}
-        disable={inputValue ? false : true}
+        disable={!inputValue || inputValue === '0'}
       />
     </View>
   );
