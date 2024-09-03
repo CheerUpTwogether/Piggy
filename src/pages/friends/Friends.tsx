@@ -48,12 +48,7 @@ const Friends = () => {
   const fetchFriends = async () => {
     const friends = await getFriendsSpb(userData.id);
     if (friends) {
-      // 각 친구 객체에 is_friend 속성을 추가하는 로직 추가
-      const friendsWithStatus = friends.map(friend => ({
-        ...friend,
-        is_friend: true,
-      }));
-      setFriendsList(friendsWithStatus);
+      setFriendsList(friends);
     } else {
       addToast({
         success: false,
@@ -62,12 +57,6 @@ const Friends = () => {
       });
     }
   };
-
-  const sortedFriends = friendsList.sort((a, b) => {
-    const nameA = a.nickname ? a.nickname.toLowerCase() : '';
-    const nameB = b.nickname ? b.nickname.toLowerCase() : '';
-    return nameA.localeCompare(nameB, 'ko');
-  });
 
   const handleProfilePress = (user: Friend) => {
     setSelectedUser(user);
@@ -167,9 +156,9 @@ const Friends = () => {
 
           <View style={styles.friendListWrapper}>
             <Text style={commonStyle.MEDIUM_33_16}>
-              친구 {sortedFriends.length}명
+              친구 {friendsList.length}명
             </Text>
-            {sortedFriends.length === 0 ? (
+            {friendsList.length === 0 ? (
               <View style={{marginTop: 60}}>
                 <EmptyResult
                   reason="추가된 친구가 없어요."
@@ -178,7 +167,7 @@ const Friends = () => {
               </View>
             ) : (
               <View style={styles.friendList}>
-                {sortedFriends.map(item => (
+                {friendsList.map(item => (
                   <View key={item.id} style={styles.friendContainer}>
                     <TouchableOpacity
                       activeOpacity={0.8}
