@@ -20,9 +20,6 @@ const AppointmentFriend = () => {
     appointmentForm,
   } = useAppointmentFriendHooks();
 
-  const height = appointmentForm.appointment_participants_list?.length
-    ? 160
-    : 0;
   return (
     <View style={{flex: 1}}>
       {/* 제목 */}
@@ -37,19 +34,24 @@ const AppointmentFriend = () => {
       {/* 친구 검색 Input */}
       <Text style={commonStyle.MEDIUM_33_16}>함께할 친구</Text>
       {/* 선택한 친구 */}
-      <FlatList
-        data={appointmentForm.appointment_participants_list}
-        horizontal
-        renderItem={({item}) => (
-          <SelectFriendItem
-            handleFriendDelete={handleFriendDelete}
-            item={item}
+      {appointmentForm.appointment_participants_list.length ? (
+        <View style={{height: 100}}>
+          <FlatList
+            data={appointmentForm.appointment_participants_list}
+            horizontal
+            renderItem={({item}) => (
+              <SelectFriendItem
+                handleFriendDelete={handleFriendDelete}
+                item={item}
+              />
+            )}
+            keyExtractor={item => item.id}
+            showsHorizontalScrollIndicator={false}
           />
-        )}
-        keyExtractor={item => item.id}
-        showsHorizontalScrollIndicator={false}
-        style={{height}}
-      />
+        </View>
+      ) : (
+        <></>
+      )}
 
       {/* 검색 */}
       <InputBox
