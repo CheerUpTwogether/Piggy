@@ -92,7 +92,7 @@ const Login = () => {
         if (!isSuccess) {
           addToast({
             success: false,
-            text: '디바이스 토큰 저장 실패',
+            text: '로그인 실패',
             multiText: '관리자에게 문의해주세요',
           });
           return;
