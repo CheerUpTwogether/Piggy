@@ -104,25 +104,23 @@ const AppointmentDetail = () => {
         <Text style={[commonStyle.BOLD_33_20, styles.subject]}>
           {item.subject}
         </Text>
+        {item.place_name && (
+          <View>
+            <View style={styles.infoSentence}>
+              <LocationSvg color="#777" style={styles.svg} />
+              <Text style={textColor}>{item.place_name}</Text>
+            </View>
+            <Text style={[textColor, {paddingLeft: 22}]}>{item.address}</Text>
+          </View>
+        )}
+        {!item.place_name && (
+          <View style={styles.infoSentence}>
+            <LocationSvg color="#777" style={styles.svg} />
+            <Text style={textColor}>{item.address}</Text>
+          </View>
+        )}
         <View style={styles.contentWrapper}>
           <View>
-            {item.place_name && (
-              <View>
-                <View style={styles.infoSentence}>
-                  <LocationSvg color="#777" style={styles.svg} />
-                  <Text style={textColor}>{item.place_name}</Text>
-                </View>
-                <Text style={[textColor, {paddingLeft: 22}]}>
-                  {item.address}
-                </Text>
-              </View>
-            )}
-            {!item.place_name && (
-              <View style={styles.infoSentence}>
-                <LocationSvg color="#777" style={styles.svg} />
-                <Text style={textColor}>{item.address}</Text>
-              </View>
-            )}
             <View style={styles.infoSentence}>
               <DateSvg color="#777" style={styles.svg} />
               <Text style={textColor}>
