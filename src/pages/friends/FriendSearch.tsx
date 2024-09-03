@@ -20,7 +20,7 @@ import useDebounce from '@/hooks/useDebounce';
 import InputBox from '@/components/common/InputBox';
 import BottomSheet from '@/components/common/BottomSheet';
 import {useUserStore} from '@/store/store';
-import {getUsersSpb} from '@/supabase/FriendsSpb';
+import {getUsersSpb, getSearchFriendsSpb} from '@/supabase/FriendsSpb';
 import {useFriendActions} from '@/hooks/useFriendActions';
 import ProfileDetailComponent from '@/components/setting/ProfileDetailComponent';
 
@@ -57,7 +57,14 @@ const FriendSearch = () => {
   const fetchUsers = async () => {
     if (debouncedKeyword) {
       try {
-        const data = await getUsersSpb(currentUserId, debouncedKeyword);
+        let data;
+        if (previousScreen === 'Friends') {
+          // 이전 페이지가 Friends일 때 호출
+          data = await getUsersSpb(currentUserId, debouncedKeyword);
+        } else {
+          // 이전 페이지가 선물하기일 때 호출
+          data = await getSearchFriendsSpb(currentUserId, debouncedKeyword);
+        }
         setFriendsList(data || []);
       } catch (e) {
         console.error(e);
@@ -67,17 +74,6 @@ const FriendSearch = () => {
       setFriendsList([]);
     }
   };
-
-  const filterFriend = friendsList.sort((a, b) => {
-    const nameA = a.nickname.toLowerCase();
-    const nameB = b.nickname.toLowerCase();
-    return nameA.localeCompare(nameB, 'ko');
-  });
-
-  const friends = filterFriend.filter(friend => friend.is_friend);
-  const nonFriends = filterFriend.filter(friend => !friend.is_friend);
-
-  const sortedData = [...friends, ...nonFriends];
 
   const handleProfilePress = (user: Friend) => {
     if (previousScreen === 'Friends') {
@@ -149,7 +145,7 @@ const FriendSearch = () => {
           goBack={true}
         />
         <FlatList
-          data={sortedData}
+          data={friendsList}
           renderItem={renderItem}
           keyExtractor={item => item.id}
           ListEmptyComponent={
