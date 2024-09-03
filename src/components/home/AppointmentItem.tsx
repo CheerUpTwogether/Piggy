@@ -61,6 +61,7 @@ const AppointmentItem = ({
           <View style={styles.subject}>
             <Text style={titleFontColor}>{item.subject}</Text>
             <View style={styles.svgContainer}>
+              {/* 핀 아이콘 */}
               {item.pinned && (
                 <TouchableOpacity
                   style={styles.svgBtn}
@@ -68,7 +69,7 @@ const AppointmentItem = ({
                   <PinSvg color="#777" style={styles.svg} />
                 </TouchableOpacity>
               )}
-
+              {/* 더보기 아이콘 */}
               <TouchableOpacity
                 style={styles.svgBtn}
                 onPress={() => onPressMore(item)}>
@@ -76,6 +77,7 @@ const AppointmentItem = ({
               </TouchableOpacity>
             </View>
           </View>
+
           {/* 모임 정보 */}
           <View style={styles.flexRow}>
             <View>
@@ -88,6 +90,7 @@ const AppointmentItem = ({
               </Text>
             </View>
 
+            {/* 카운터 */}
             {item.appointment_id === 1 && (
               <Text style={[styles.timer, commonStyle.REGULAR_PRIMARY_14]}>
                 09:59
