@@ -1,38 +1,25 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
+
 import KeyPad, {useKeyPad} from '../common/Keypad';
-import {useAppointmentForm, useUserStore} from '@/store/store';
-import {getPiggySpb} from '@/supabase/AuthSpb';
+import {useAppointmentForm} from '@/store/store';
 import {commonStyle} from '@/styles/common';
 
 const AppointmentPenalty = () => {
   const {inputValue, setInputValue, handlePress} = useKeyPad();
   const {appointmentForm, setAppointmentForm} = useAppointmentForm();
-  const {userData} = useUserStore();
-  const [piggy, setPiggy] = useState(0);
+
   useEffect(() => {
     setInputValue(String(appointmentForm.deal_piggy_count));
   }, []);
 
   // inputValue가 변경될 때마다 부모 컴포넌트로 업데이트
   useEffect(() => {
-    setAppointmentForm('deal_piggy_count', inputValue);
+    setAppointmentForm(
+      'deal_piggy_count',
+      Number(inputValue.split(',').join('')),
+    );
   }, [inputValue]);
-
-  // 화면이 포커스될 때마다 피기 새로고침
-  useFocusEffect(
-    useCallback(() => {
-      getPiggy();
-    }, []),
-  );
-
-  // 피기 정보 불러오기
-  const getPiggy = async () => {
-    const res = await getPiggySpb(userData.id);
-    setPiggy(res?.[0]?.latest_piggy_count);
-    console.log(res);
-  };
 
   return (
     <View>
@@ -42,7 +29,7 @@ const AppointmentPenalty = () => {
       </Text>
       <View style={styles.wrapper}>
         <View style={styles.amountTextWrapper}>
-          <Text style={[commonStyle.REGULAR_77_16, styles.text]}>벌금</Text>
+          <Text style={styles.text}>벌금</Text>
 
           <View style={styles.amountWrapper}>
             {inputValue ? (
@@ -81,7 +68,7 @@ const styles = StyleSheet.create({
   },
   button: {width: '40%'},
   textWrapper: {marginTop: 30, gap: 4},
-  text: {textAlign: 'center', marginBottom: 10},
+  text: {textAlign: 'center', marginBottom: 10, ...commonStyle.MEDIUM_77_16},
   amountTextWrapper: {marginTop: 30, gap: 8},
   amountWrapper: {
     flexDirection: 'row',

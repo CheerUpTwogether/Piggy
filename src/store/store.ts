@@ -22,6 +22,7 @@ export const useUserStore = create<UserStore>(set => ({
     profile_img_url: '',
     phone_number: '',
     isAgree: {service: false, payment: false},
+    piggy: 0,
   },
 
   setLoginProfile: (
@@ -103,6 +104,13 @@ export const useUserStore = create<UserStore>(set => ({
   gotoProfile: () => {},
 
   setGotoProfile: func => set(() => ({gotoProfile: func})),
+  setUserDataByKey: (key, value) =>
+    set(state => ({
+      userData: {
+        ...state.userData,
+        [key]: value,
+      },
+    })),
 }));
 
 export const useToastStore = create<ToastStore>(set => ({
