@@ -36,7 +36,6 @@ export const getFriendsSpb = async (userId: string) => {
     return userDetails;
   } catch (error) {
     console.error('Error in getFriendsSpb:', error);
-    throw error;
   }
 };
 
