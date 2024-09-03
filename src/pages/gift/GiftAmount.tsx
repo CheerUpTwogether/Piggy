@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Text, View, Image, StyleSheet, Platform} from 'react-native';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, useFocusEffect} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
 import {GiftAmountRouteProp} from './type';
 import KeyPad, {useKeyPad} from '@/components/common/Keypad';
 import Button from '@/components/common/Button';
+import {useUserStore} from '@/store/store';
+import {getPiggySpb} from '@/supabase/AuthSpb';
 
 const STYLE = Platform.OS === 'ios';
 
@@ -12,10 +14,20 @@ const GiftAmount = () => {
   const route = useRoute<GiftAmountRouteProp>();
   const {id, nickname, profile_img_url} = route.params;
   const {inputValue, handlePress} = useKeyPad();
+  const userData = useUserStore(state => state.userData);
+  const [myPiggy, setMyPiggy] = useState(0);
 
-  const handleSubmit = () => {
-    console.log('TODO: 선물하기', id);
+  useFocusEffect(
+    useCallback(() => {
+      fetchPiggyData();
+    }, []),
+  );
+
+  const fetchPiggyData = async () => {
+    const res = await getPiggySpb(userData.id);
+    setMyPiggy(res?.latest_piggy_count || 0);
   };
+  const handleSubmit = async () => {};
 
   return (
     <View style={commonStyle.CONTAINER}>
