@@ -10,7 +10,7 @@ const GiftFriend = () => {
   const navigation = useNavigation<GiftNavigationProp>();
 
   const handleMoveToFriendSearch = () => {
-    navigation.navigate('FriendSearch', {previousScreen: 'GiftFriend'});
+    navigation.replace('FriendSearch', {previousScreen: 'GiftFriend'});
   };
 
   return (
