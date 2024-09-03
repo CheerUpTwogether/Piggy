@@ -37,6 +37,7 @@ import PiggyShop from '@/components/piggy/PiggyShop';
 import AppointmentForm from '@/pages/home/AppointmentForm';
 import Regist from '@/pages/auth/Regist';
 import LoginEmail from '@/pages/auth/LoginEmail';
+import RedirectKakaoMap from '@/components/home/RedirectKaKaoMap';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -283,6 +284,14 @@ const Router = () => {
       <Stack.Screen
         name="Regist"
         component={Regist}
+        options={{
+          header: Header,
+          headerLeftLabelVisible: true,
+        }}
+      />
+      <Stack.Screen
+        name="RedirectKakaoMap"
+        component={RedirectKakaoMap}
         options={{
           header: Header,
           headerLeftLabelVisible: true,

@@ -1,4 +1,5 @@
 import {PermissionsAndroid, Platform} from 'react-native';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 // 위치 권한 요청 함수
 export const requestLocationPermission = async () => {
@@ -15,6 +16,19 @@ export const requestLocationPermission = async () => {
         },
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
+    } // ios는 테스트 필요
+    else if (Platform.OS === 'ios') {
+      const permission = PERMISSIONS.IOS.LOCATION_WHEN_IN_USE;
+
+      const result = await check(permission);
+      if (result === RESULTS.DENIED) {
+        const requestResult = await request(permission);
+        return requestResult === RESULTS.GRANTED;
+      } else if (result === RESULTS.GRANTED) {
+        return true;
+      } else {
+        return false;
+      }
     }
   } catch (err) {
     console.log(err);

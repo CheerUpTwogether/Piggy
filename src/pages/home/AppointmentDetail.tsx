@@ -1,38 +1,99 @@
-import React, {useState} from 'react';
-import {Image, StyleSheet, Text, View, Dimensions} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {StyleSheet, Text, View, Dimensions} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {color_primary, commonStyle} from '@/styles/common';
 import {AppointmentProps} from '@/types/appointment';
 import FlatItemsFriends from '@/components/common/FlatItemsFriends';
 import Button from '@/components/common/Button';
 import SideSlideModal from '@/components/common/SideSlideModal';
-
+import FriendItem from '@/components/home/FriendItem';
+import WebView from 'react-native-webview';
+import {useLocation} from '@/hooks/useLocation';
+import {useUserStore} from '@/store/store';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '@/types/Router';
 import CalendarCancelSvg from '@/assets/icons/cancelCalendar.svg';
 import LocationSvg from '@/assets/icons/location.svg';
 import DateSvg from '@/assets/icons/calendar.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
-import FriendItem from '@/components/home/FriendItem';
 
 const AppointmentDetail = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute();
+  const {userData} = useUserStore();
   const [isShow, setIsShow] = useState(false);
   const item = route.params as AppointmentProps;
   const cancelStatus = ['cancelled', 'expired'];
   const textColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.REGULAR_AA_16
     : commonStyle.REGULAR_33_16;
+  const {location, error} = useLocation();
+  let webViewRef = useRef(null);
+
+  const sendPlacePosition = () => {
+    if (webViewRef.current) {
+      webViewRef.current.postMessage(
+        JSON.stringify({
+          placeData: {
+            latitude: item.latitude,
+            longitude: item.longitude,
+          },
+        }),
+      );
+    }
+  };
+  const sendMyMetaData = () => {
+    if (webViewRef.current) {
+      webViewRef.current.postMessage(
+        JSON.stringify({
+          myMetaData: {
+            nickname: userData.nickname,
+            profileImgUrl: userData.profile_img_url,
+          },
+          myLocationData: {
+            latitude: location.latitude,
+            longitude: location.longitude,
+          },
+        }),
+      );
+    }
+  };
+
   return (
     <View style={commonStyle.CONTAINER}>
-      <Image
-        style={styles.mapImg}
-        source={{
-          uri: 'https://www.100news.kr/imgdata/100news_kr/202405/2024050916458352.png',
-        }}
-        alt="mapImage"
-      />
+      <View style={styles.mapImg}>
+        {location && (
+          <>
+            <WebView
+              ref={webViewRef}
+              originWhitelist={['*']}
+              source={{
+                uri: 'https://piggy-server-eta.vercel.app/mapHtml',
+              }}
+              onLoadEnd={() => {
+                sendPlacePosition();
+              }}
+              onMessage={event => {
+                const parseData = JSON.parse(event.nativeEvent.data);
+                // switch로 분기처리
+              }}
+            />
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => {
+                sendMyMetaData();
+              }}
+              style={styles.mapCurrentLocationIcon}>
+              <LocationSvg color="#777" width={24} height={24} />
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+
       {cancelStatus.includes(item.appointment_status) && (
         <View style={styles.mapWrapper}>
           <CalendarCancelSvg color={color_primary} width={100} height={100} />
@@ -111,9 +172,17 @@ const AppointmentDetail = () => {
 
       <View style={styles.btnArea}>
         <Button
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('RedirectKakaoMap', {
+              myLatitude: location.latitude,
+              myLongitude: location.longitude,
+              placeLatitude: item.latitude,
+              placeLongitude: item.longitude,
+            });
+          }}
           text={'경로찾기'}
           theme="outline"
+          disable={location ? false : true}
           style={{marginBottom: 8}}
         />
 
@@ -141,6 +210,19 @@ const styles = StyleSheet.create({
     marginHorizontal: -16,
     height: 320,
     marginTop: -16,
+  },
+  mapCurrentLocationIcon: {
+    position: 'absolute',
+    bottom: 12,
+    left: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#777',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
   },
   mapWrapper: {
     position: 'absolute',
@@ -171,6 +253,10 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     marginRight: 8,
+  },
+  currentLocationSvg: {
+    width: 32,
+    height: 32,
   },
   infoSentence: {
     flexDirection: 'row',
