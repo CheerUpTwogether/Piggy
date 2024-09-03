@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import {useNavigation} from '@react-navigation/native';
-import {GiftNavigationProp} from './type';
+import {GiftNavigationProp} from '@/types/gift';
 
 import SearchFriend from '@/assets/icons/searchFriend.svg';
 
