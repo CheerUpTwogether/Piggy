@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: '#FFF',
     zIndex: 1,
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1,
     borderColor: '#EFEFEF',
   },
   friendWrapper: {

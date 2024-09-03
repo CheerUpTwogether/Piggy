@@ -6,6 +6,7 @@ import {
   UserStore,
 } from '@/types/common';
 import {ModalProps} from 'react-native';
+import {asPickerFormat} from '@/utils/timePicker';
 
 export const useUserStore = create<UserStore>(set => ({
   userData: {
@@ -160,6 +161,8 @@ export const useAppointmentForm = create<AppointmentFormStore>(set => ({
     proposer_id: '',
     subject: '',
     appointment_participants_list: [],
+    date: null,
+    time: asPickerFormat(),
   },
   appointmentParticipants: [],
   resetAppointmentForm: () => {
@@ -179,6 +182,8 @@ export const useAppointmentForm = create<AppointmentFormStore>(set => ({
         proposer_id: '',
         subject: '',
         appointment_participants_list: [],
+        date: null,
+        time: asPickerFormat(),
       },
     }));
   },

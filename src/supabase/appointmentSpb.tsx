@@ -34,6 +34,28 @@ export const setAppointmentSpb = ({
   // appointment_participants에 추가된 row중에 id가 proposer_id랑 같은거 찾아서 status를 수락상태로 변경 필요
 };
 
+// 약속 참여자 업데이트
+export const setAppointmentParticipantsSpb = (
+  appointment_id,
+  participants_uuid,
+) => {
+  return supabase.rpc('insert_appointment_participants', {
+    appointment_id,
+    participants_uuid,
+  });
+};
+
+// 약속 생성자 상태 변경
+export const setAppointmentProposerSpb = (userId, appointmentId) => {
+  return supabase
+    .from('appointment_participants')
+    .update({
+      agreement_status: 'confirmed',
+    })
+    .eq('appointment_id', appointmentId)
+    .eq('user_id', userId);
+};
+
 // 약속 리스트 불러오기
 export const getAppointmentsSpb = (
   user_uuid: string,

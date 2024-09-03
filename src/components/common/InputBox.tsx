@@ -46,8 +46,8 @@ const InputBox: React.FC<InputBoxProps> = ({
   };
 
   return (
-    <View>
-      {label && <Text style={[styles.label, style]}>{label}</Text>}
+    <View style={style}>
+      {label && <Text style={[styles.label]}>{label}</Text>}
 
       <View style={styles.View}>
         <View

@@ -2,23 +2,19 @@ import React, {useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import KeyPad, {useKeyPad} from '../common/Keypad';
-import {AppointmentPenaltyProps} from '@/pages/home/type';
+import {useAppointmentForm} from '@/store/store';
 
-const AppointmentPenalty: React.FC<AppointmentPenaltyProps> = ({
-  penalty,
-  onUpdate,
-}) => {
+const AppointmentPenalty = () => {
   const {inputValue, setInputValue, handlePress} = useKeyPad();
+  const {appointmentForm, setAppointmentForm} = useAppointmentForm();
 
   useEffect(() => {
-    if (penalty) {
-      setInputValue(penalty);
-    }
-  }, [penalty]);
+    setInputValue(String(appointmentForm.deal_piggy_count));
+  }, []);
 
   // inputValue가 변경될 때마다 부모 컴포넌트로 업데이트
   useEffect(() => {
-    onUpdate('penalty', inputValue);
+    setAppointmentForm('deal_piggy_count', inputValue);
   }, [inputValue]);
 
   return (
@@ -34,7 +30,7 @@ const AppointmentPenalty: React.FC<AppointmentPenaltyProps> = ({
           <View style={styles.amountWrapper}>
             {inputValue ? (
               <Text style={[commonStyle.BOLD_33_24, styles.amount]}>
-                {penalty}
+                {appointmentForm.deal_piggy_count}
               </Text>
             ) : (
               <Text style={commonStyle.BOLD_33_24}>0</Text>
