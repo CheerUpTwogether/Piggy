@@ -1,5 +1,11 @@
 import * as kakao from '@react-native-seoul/kakao-login';
-import {getProfileSpb, googleLoginSpb, kakaoLoginSpb} from '@/supabase/auth';
+import {
+  getProfileSpb,
+  googleLoginSpb,
+  kakaoLoginSpb,
+  setFcmTokenSpb,
+} from '@/supabase/auth';
+import messaging from '@react-native-firebase/messaging';
 // 카카오 로그인
 export const kakaoSignInAPI = async () => {
   try {
@@ -58,5 +64,24 @@ export const googleSignInAPI = async (idToken: string) => {
     return res;
   } catch (e) {
     console.log(e);
+  }
+};
+
+// Fcm 토큰 업데이트 API
+export const setFcmTokenAPI = async (id: string) => {
+  try {
+    const device_token = await messaging().getToken();
+    if (device_token) {
+      const {error} = await setFcmTokenSpb(id, device_token);
+
+      if (error) {
+        console.log(error);
+        return false;
+      }
+
+      return true;
+    }
+  } catch (error) {
+    console.error('토큰 불러오기 실패:', error);
   }
 };

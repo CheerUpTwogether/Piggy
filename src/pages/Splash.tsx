@@ -6,6 +6,7 @@ import {RootStackParamList} from '@/types/Router';
 import {getItemSession} from '@/utils/auth';
 import {getProfileSpb, loginSessionSpb} from '@/supabase/auth';
 import {useToastStore, useUserStore} from '@/store/store';
+import {setFcmTokenAPI} from '@/api/auth';
 const logo = require('@/assets/icons/logo.png');
 
 const Splash = () => {
@@ -71,6 +72,16 @@ const Splash = () => {
         profile_img_url,
         phone_number,
       );
+      const isSuccess = await setFcmTokenAPI(id);
+
+      if (!isSuccess) {
+        addToast({
+          success: false,
+          text: '로그인 실패',
+          multiText: '관리자에게 문의해주세요',
+        });
+        return;
+      }
       navigation.replace('Main', {screen: 'Home'});
     } else {
       navigation.replace('Login');

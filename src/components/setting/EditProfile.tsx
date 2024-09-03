@@ -11,6 +11,8 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {deleteItemSession} from '@/utils/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY} from '@env';
+import {initFcmTokenSpb} from '@/supabase/auth';
+import {useUserStore} from '@/store/store';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
@@ -19,6 +21,7 @@ const EditProfile = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'EditProfile'>>();
   const {nickname, profile_img_url} = route.params;
+  const {userData} = useUserStore();
 
   const googleLogOut = async () => {
     GoogleSignin.configure({
@@ -32,6 +35,7 @@ const EditProfile = () => {
   const handleLogout = async () => {
     await deleteItemSession();
     await googleLogOut();
+    await initFcmTokenSpb(userData.id);
     navigation.replace('Login');
   };
 
