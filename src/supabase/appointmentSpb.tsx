@@ -67,11 +67,11 @@ export const getAppointmentsSpb = (
 // 약속 참여자 상태 정보 조회
 export const getAppointmentParticipantsSpb = (
   user_uuid: string,
-  appointment_id: number,
+  appointment_number: number,
 ) => {
   return supabase.rpc('select_participants_list_detail', {
-    user_uuid: user_uuid,
-    appointment_id: appointment_id,
+    user_uuid,
+    appointment_number,
   });
 };
 

@@ -4,7 +4,6 @@ import {color_ef, commonStyle} from '@/styles/common';
 import {FriendsProps} from '@/mock/Home/type';
 import ProfileSvg from '@/assets/icons/basicProfile.svg';
 import ArriveCheck from '@/assets/icons/arriveCheck.svg';
-
 const FriendItem = ({item}: {item: FriendsProps}) => {
   return (
     <View style={styles.container}>
@@ -24,12 +23,14 @@ const FriendItem = ({item}: {item: FriendsProps}) => {
         )}
         <Text
           style={
-            item.isJoin ? commonStyle.MEDIUM_33_16 : commonStyle.MEDIUM_AA_16
+            item.agreement_status === 'confirmed'
+              ? commonStyle.MEDIUM_33_16
+              : commonStyle.MEDIUM_AA_16
           }>
-          {item.nick_name}
+          {item.nickname}
         </Text>
       </View>
-      {item.isProof && <ArriveCheck />}
+      {item.certification_status && <ArriveCheck />}
     </View>
   );
 };
