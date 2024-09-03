@@ -25,7 +25,7 @@ const Home = () => {
   } = useHomeAppointments();
 
   return (
-    <View style={commonStyle.CONTAINER}>
+    <View style={styles.container}>
       {/* 사용자 프로필 */}
       <Profile />
 
@@ -75,6 +75,10 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    ...commonStyle.CONTAINER,
+    paddingBottom: 0,
+  },
   tab: {
     marginTop: 40,
     borderBlockColor: color_ef,
