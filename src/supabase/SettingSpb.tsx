@@ -132,15 +132,47 @@ export const getAnnouncementSpb = async () => {
   }
 };
 
-// 프로필 수정
-export const setMyProfileSpb = async id => {
+// 프로필 수정 - 이름
+export const setMyProfileNicknameSpb = async (id, nickname) => {
   try {
     const {data, error} = await supabase
       .from('users_nickname')
-      .update('nickname') // TODO: profile_img_url 추가
-      .where('id', id);
+      .update({nickname: nickname})
+      .eq('id', id);
   } catch (e) {
     console.error('Error appeared in setMyProfileSpb : ', e);
+  }
+};
+
+// 프로필 수정 - 프로필 사진
+export const setMyProfileImageSpb = async (id, img_file) => {
+  try {
+    const uploadFileName = `uploaded_${id}_${Date.now()}_${img_file.name}`;
+    const uploadFolder = 'profile_image';
+    const filePath = `${uploadFolder}/${uploadFileName}`;
+
+    //1. 이미지 버킷 업로드
+    const {data, error} = await supabase.storage
+      .from('image_bucket')
+      .upload(filePath, img_file);
+    if (error) {
+      throw error;
+    }
+
+    //2. img_url Get
+    const imgUrl = supabase.storage.from('image_bucket').getPublicUrl(filePath);
+
+    //3. users_nickname 테이블 , profile_img_url 컬럼 업데이트
+    const {data: uploadData, error: uploadError} = await supabase
+      .from('users_nickname')
+      .update({profile_img_url: imgUrl})
+      .select();
+    if (uploadError) {
+      throw uploadError;
+    }
+    return uploadData;
+  } catch (e) {
+    console.error('Error appeared in setProfileImageSpb : ', e);
   }
 };
 
