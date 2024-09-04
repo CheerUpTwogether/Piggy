@@ -8,6 +8,7 @@ import PiggyUsageItem from '@/components/piggy/PiggyUsageItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import {getPiggySpb, getPiggyLogSpb} from '@/supabase/AuthSpb';
 import {useUserStore} from '@/store/store';
+import {PiggyLog} from '@/types/gift';
 
 const PiggyUsage = () => {
   const options = [
@@ -19,7 +20,7 @@ const PiggyUsage = () => {
   const [items, setItems] = useState(options);
   const [open, setOpen] = useState(false);
   const [piggy, setPiggy] = useState<number>(0);
-  const [piggyLog, setPiggyLog] = useState([]);
+  const [piggyLog, setPiggyLog] = useState<PiggyLog[]>([]);
   const userData = useUserStore(state => state.userData);
 
   useFocusEffect(
@@ -37,6 +38,21 @@ const PiggyUsage = () => {
   const fetchPiggyLogData = async () => {
     const res = await getPiggyLogSpb(userData.id);
     setPiggyLog(res);
+  };
+
+  const filterPiggyLog = () => {
+    if (value === 'total') {
+      return piggyLog;
+    }
+
+    return piggyLog.filter(item => {
+      if (value === 'input') {
+        return item.diff_piggy_count > 0;
+      } else if (value === 'output') {
+        return item.diff_piggy_count < 0;
+      }
+      return false;
+    });
   };
 
   return (
@@ -77,17 +93,14 @@ const PiggyUsage = () => {
         }}
       />
 
-      {piggyLog.length ? (
+      {filterPiggyLog().length ? (
         <FlatList
-          data={piggyLog}
+          data={filterPiggyLog()}
           keyExtractor={item => String(item.id)}
           renderItem={PiggyUsageItem}
         />
       ) : (
-        <EmptyResult
-          reason={'아직 피기 사용내역이 없어요'}
-          solution={'피기를 충전하고 약속을 잡아볼까요?'}
-        />
+        <EmptyResult reason={'아직 피기 사용 내역이 없어요.'} solution={''} />
       )}
     </View>
   );

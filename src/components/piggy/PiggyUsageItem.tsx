@@ -8,7 +8,7 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
   const title = () => {
     switch (item.changed_category) {
       case '선물줌' || '선물받음':
-        return item.nick_name;
+        return item.nickname;
       case '벌금(+)' || '벌금(-)':
         return item.appointment_title;
       default:
@@ -17,7 +17,9 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
   };
 
   const uri =
-    item?.changed_category === '벌금(+)' || '벌금(-)' ? item.image_url : '';
+    item?.changed_category === '벌금(+)' || '벌금(-)'
+      ? item.profile_img_url
+      : '';
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -46,7 +48,7 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
               style={styles.img}
               alt="topLogo"
             />
-          ) : item.image_url ? (
+          ) : item.profile_img_url ? (
             <Image
               source={{uri: uri}}
               style={styles.img}
