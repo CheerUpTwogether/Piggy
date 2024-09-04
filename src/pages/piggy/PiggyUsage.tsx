@@ -1,11 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {FlatList} from 'react-native-gesture-handler';
 import {color_ef, commonStyle} from '@/styles/common';
-import {piggyUsageHistories} from '@/mock/Piggy/Piggy';
 import DropDownPicker from 'react-native-dropdown-picker';
 import PiggyUsageItem from '@/components/piggy/PiggyUsageItem';
 import EmptyResult from '@/components/common/EmptyResult';
+import {getPiggySpb, getPiggyLogSpb} from '@/supabase/AuthSpb';
+import {useUserStore} from '@/store/store';
 
 const PiggyUsage = () => {
   const options = [
@@ -16,6 +18,27 @@ const PiggyUsage = () => {
   const [value, setValue] = useState(options[0].value);
   const [items, setItems] = useState(options);
   const [open, setOpen] = useState(false);
+  const [piggy, setPiggy] = useState<number>(0);
+  const [piggyLog, setPiggyLog] = useState([]);
+  const userData = useUserStore(state => state.userData);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPiggyData();
+      fetchPiggyLogData();
+    }, []),
+  );
+
+  const fetchPiggyData = async () => {
+    const res = await getPiggySpb(userData.id);
+    setPiggy(res?.latest_piggy_count);
+  };
+
+  const fetchPiggyLogData = async () => {
+    const res = await getPiggyLogSpb(userData.id);
+    setPiggyLog(res);
+  };
+
   return (
     <View style={commonStyle.CONTAINER}>
       <Text
@@ -27,7 +50,7 @@ const PiggyUsage = () => {
       </Text>
 
       <View style={styles.piggyContainer}>
-        <Text style={commonStyle.MEDIUM_33_20}>50000</Text>
+        <Text style={commonStyle.MEDIUM_33_20}>{piggy}</Text>
         <Text style={commonStyle.MEDIUM_PRIMARY_20}>Piggy</Text>
       </View>
 
@@ -54,10 +77,10 @@ const PiggyUsage = () => {
         }}
       />
 
-      {piggyUsageHistories.length ? (
+      {piggyLog.length ? (
         <FlatList
-          data={piggyUsageHistories}
-          keyExtractor={item => String(item.usage_history_id)}
+          data={piggyLog}
+          keyExtractor={item => String(item.id)}
           renderItem={PiggyUsageItem}
         />
       ) : (

@@ -252,3 +252,23 @@ export const getPiggySpb = async (id: string) => {
     throw e;
   }
 };
+
+// 10. piggy 사용내역 -
+export const getPiggyLogSpb = async (id: string) => {
+  try {
+    const {data, error} = await supabase
+      .from('piggy_changed_log')
+      .select(
+        'id, present_piggy_count, diff_piggy_count, diff_piggy_date, changed_category',
+      )
+      .eq('user_id', id);
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (err) {
+    throw err;
+  }
+};
