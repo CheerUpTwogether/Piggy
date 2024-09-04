@@ -272,3 +272,18 @@ export const getPiggyLogSpb = async (id: string) => {
     throw err;
   }
 };
+
+// 10-1. 피기 사용내역 re
+export const getPiggyLogSpb_re = async (id: string) => {
+  try {
+    const {data, error} = await supabase.rpc('select_piggy_usage', {
+      user_uuid: id,
+    });
+    if (error) {
+      throw error;
+    }
+    return data;
+  } catch (e) {
+    throw e;
+  }
+};
