@@ -249,6 +249,7 @@ export interface ButtonBottomSheetProps {
     text: string;
     theme?: 'sub' | 'primary' | 'outline' | undefined;
     onPress: () => void | Promise<void>;
+    disable?: boolean;
   }>;
 }
 
