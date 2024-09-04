@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Text, View, Image, StyleSheet, Platform} from 'react-native';
 import {
   useRoute,
@@ -32,8 +32,6 @@ const GiftAmount = () => {
       fetchPiggyData();
     }, []),
   );
-
-  useEffect(() => {}, []);
 
   const fetchPiggyData = async () => {
     const res = await getPiggySpb(myId);
