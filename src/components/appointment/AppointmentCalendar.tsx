@@ -51,7 +51,6 @@ const AppointmentCalendar = () => {
   };
 
   const handleDateSelect = date => {
-    console.log(date);
     setAppointmentForm('date', date.dateString);
     handleInput();
   };
@@ -73,6 +72,9 @@ const AppointmentCalendar = () => {
           {appointmentForm.date ? appointmentForm.date : '날짜를 선택해주세요'}
         </Text>
       </TouchableOpacity>
+      <Text style={[commonStyle.REGULAR_PRIMARY_12, {marginTop: 8}]}>
+        *현재보다 최소 2시간 이후의 약속만 생성할 수 있어요
+      </Text>
       {showCalendar && (
         <Animated.View style={{...styles.calendar, opacity: fadeAnimCalendar}}>
           <CalendarList
