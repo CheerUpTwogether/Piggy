@@ -100,7 +100,10 @@ const PiggyUsage = () => {
           renderItem={PiggyUsageItem}
         />
       ) : (
-        <EmptyResult reason={'아직 피기 사용 내역이 없어요.'} solution={''} />
+        <EmptyResult
+          reason={'아직 피기 사용 내역이 없어요.'}
+          solution={'약속을 잡고 피기를 사용해보세요!'}
+        />
       )}
     </View>
   );

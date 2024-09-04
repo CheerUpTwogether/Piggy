@@ -69,7 +69,12 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
 
       {/* 사용피기 */}
       <View style={styles.piggy}>
-        <Text style={commonStyle.MEDIUM_PRIMARY_18}>
+        <Text
+          style={
+            item.diff_piggy_count < 0
+              ? commonStyle.MEDIUM_PRIMARY_18
+              : commonStyle.MEDIUM_33_18
+          }>
           {new Intl.NumberFormat('ko-KR').format(item.diff_piggy_count)}
         </Text>
         <Text style={commonStyle.REGULAR_77_14}>
