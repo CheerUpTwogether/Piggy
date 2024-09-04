@@ -15,7 +15,6 @@ import {getPiggySpb} from '@/supabase/AuthSpb';
 import {setGiftPiggySpb} from '@/supabase/FriendsSpb';
 
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
-import {pick} from 'lodash';
 
 const STYLE = Platform.OS === 'ios';
 
@@ -40,11 +39,20 @@ const GiftAmount = () => {
   };
 
   const handleSubmit = async () => {
-    if (Number(inputValue) > myPiggy) {
+    // 문자열 금액의 쉼표 제거 후 숫자로 변환
+    const numericValue = Number(inputValue.replace(/,/g, ''));
+    if (numericValue > myPiggy) {
       addToast({
         success: false,
         text: '소유한 피기보다',
         multiText: '많은 피기를 선물할 수 없어요.',
+      });
+      return;
+    }
+    if (numericValue < 500) {
+      addToast({
+        success: false,
+        text: '500피기부터 선물할 수 있어요.',
       });
       return;
     }
