@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigation} from '@/types/Router';
 import {commonStyle, color_primary, color_ef} from '@/styles/common';
 import {AppointmentProps} from '@/types/appointment';
+import useAppointmentTimer from '@/hooks/useAppointmentTimer';
 import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
@@ -24,6 +25,7 @@ const AppointmentItem = ({
 }) => {
   const navigation = useNavigation<StackNavigation>();
   const cancelStatus = ['cancelled', 'expired'];
+
   const titleFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.BOLD_AA_20
     : commonStyle.BOLD_33_20;
@@ -35,6 +37,17 @@ const AppointmentItem = ({
     cancelStatus.includes(item.appointment_status) ||
     (item.appointment_status === 'pending' &&
       item.agreement_status === 'pending');
+
+  // useAppointmentTimer 타이머 훅 호출
+  const {remainingTime, formattedTime} = useAppointmentTimer(
+    item.appointment_date,
+  );
+
+  // 타이머를 표시할지 결정
+  const shouldShowTimer =
+    item.agreement_status === 'confirmed' &&
+    remainingTime !== null &&
+    remainingTime > 0;
 
   return (
     <TouchableOpacity
@@ -118,9 +131,11 @@ const AppointmentItem = ({
             </View>
 
             {/* 타이머 */}
-            {item.appointment_id === 1 && (
-              <Text style={[styles.timer, commonStyle.REGULAR_PRIMARY_14]}>
-                09:59
+            {/* confirmd */}
+            {/* {item.appointment_status === 'pending' && ( */}
+            {shouldShowTimer && (
+              <Text style={[styles.timer, commonStyle.BOLD_PRIMARY_14]}>
+                {formattedTime}
               </Text>
             )}
           </View>
@@ -193,9 +208,9 @@ const styles = StyleSheet.create({
     right: 4,
     borderRadius: 100,
     borderColor: color_primary,
-    borderWidth: 1,
+    borderWidth: 2,
     textAlign: 'center',
-    height: 24,
+    height: 30,
     width: 64,
     textAlignVertical: 'center',
   },
