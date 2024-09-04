@@ -1,11 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
-import {RootStackParamList} from '@/types/Router';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useUserStore} from '@/store/store';
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {dummyAgreementItem} from '@/mock/UserAgreement/type';
 import {dummyServiceAgreementData} from '@/mock/UserAgreement/UserAgreement';
+import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
 import {splitStringByDot} from '@/utils/splitStringByDot';
 import Button from '@/components/common/Button';
@@ -17,10 +16,7 @@ const ServiceAgreement = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'PaymentAgreement'>>();
   const param = route.params;
-  const {userData, setIsAgree} = useUserStore();
-  const [isServiceAgree, setIsServiceAgree] = useState(
-    userData?.isAgree.service || false,
-  );
+
   const renderServiceAgreementItem = ({item}: {item: dummyAgreementItem}) => {
     const sentenceArray = splitStringByDot(item.content);
     return (
@@ -58,9 +54,9 @@ const ServiceAgreement = () => {
           renderItem={renderServiceAgreementItem}
           keyExtractor={item => item.id.toString()}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={() => (
+          ListFooterComponent={
             <AgreementBtn authData={param.authData} type={'service'} />
-          )}
+          }
         />
       </View>
       {!param?.authData && (
