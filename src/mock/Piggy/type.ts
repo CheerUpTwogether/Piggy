@@ -1,3 +1,4 @@
+// mockData에서 사용중 -> mockData 삭제 시 같이 삭제
 export interface PiggyUsageHistoryProps {
   usage_history_id: number;
   type: 'charge' | 'gift' | 'panalty';
@@ -10,7 +11,7 @@ export interface PiggyUsageHistoryProps {
   image_url?: string;
 }
 
-// 이동 완료
+// 이동 완료 -> types/gift.ts
 export interface PiggyUsageHistoryProps2 {
   id: number;
   changed_category: string;

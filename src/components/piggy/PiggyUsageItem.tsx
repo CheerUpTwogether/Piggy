@@ -5,19 +5,29 @@ import {PiggyUsageHistoryProps} from '@/types/gift';
 import ProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
+  const getShortTitle = (title?: string) => {
+    return title && title.length > 9 ? `${title.slice(0, 10)}...` : title || '';
+  };
   const title = () => {
     switch (item.changed_category) {
-      case '선물줌' || '선물받음':
+      case '선물줌':
+      case '선물받음':
         return item.nickname;
-      case '벌금(+)' || '벌금(-)':
-        return item.appointment_title;
+      case '벌금(+)':
+        return `${getShortTitle(item.appointment_title)} 획득`;
+      case '벌금(-)':
+        return `${getShortTitle(item.appointment_title)} 벌금`;
+      case '약속생성을 위한 선 지급':
+        return `${getShortTitle(item.appointment_title)}`;
+      case '약속이 생성되지 않음 - 반환':
+        return `${getShortTitle(item.appointment_title)} 취소`;
       default:
-        return '약속';
+        return '상점 구매';
     }
   };
 
   const uri =
-    item?.changed_category === '벌금(+)' || '벌금(-)'
+    item?.changed_category === '선물줌' || '선물받음'
       ? item.profile_img_url
       : '';
 

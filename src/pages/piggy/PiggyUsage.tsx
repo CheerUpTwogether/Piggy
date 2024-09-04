@@ -21,8 +21,7 @@ const PiggyUsage = () => {
   const [open, setOpen] = useState(false);
   const [piggy, setPiggy] = useState<number>(0);
   const [piggyLog, setPiggyLog] = useState<PiggyLog[]>([]);
-  const userData = useUserStore(state => state.userData);
-
+  const {userData, setUserDataByKey} = useUserStore();
   useFocusEffect(
     useCallback(() => {
       fetchPiggyData();
@@ -33,6 +32,8 @@ const PiggyUsage = () => {
   const fetchPiggyData = async () => {
     const res = await getPiggySpb(userData.id);
     setPiggy(res?.latest_piggy_count);
+    setUserDataByKey('piggy', res?.latest_piggy_count);
+    console.log(userData);
   };
 
   const fetchPiggyLogData = async () => {
@@ -98,6 +99,7 @@ const PiggyUsage = () => {
           data={filterPiggyLog()}
           keyExtractor={item => String(item.id)}
           renderItem={PiggyUsageItem}
+          showsVerticalScrollIndicator={false}
         />
       ) : (
         <EmptyResult
