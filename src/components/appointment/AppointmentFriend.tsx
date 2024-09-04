@@ -1,28 +1,25 @@
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Text, View} from 'react-native';
 import InputBox from '@/components/common/InputBox';
 import EmptyResult from '@/components/common/EmptyResult';
 import FreindsItem from '@/components/appointment/FriendsItem';
 import SelectFriendItem from './SelectFriendItem';
 import RoundHandShakeSvg from '@/assets/icons/roundHandshake.svg';
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
-import useAppointmentFriend from '@/hooks/useAppointmentFriend';
+import useAppointmentFriendHooks from '@/hooks/useAppointmentFriendHooks';
 import {commonStyle} from '@/styles/common';
 
 const AppointmentFriend = () => {
   const {
-    users,
+    friends,
     changeTitle,
     keyword,
     setKeyword,
     handleFriendPress,
     handleFriendDelete,
     appointmentForm,
-  } = useAppointmentFriend();
+  } = useAppointmentFriendHooks();
 
-  const height = appointmentForm.appointment_participants_list?.length
-    ? 160
-    : 0;
   return (
     <View style={{flex: 1}}>
       {/* 제목 */}
@@ -37,19 +34,24 @@ const AppointmentFriend = () => {
       {/* 친구 검색 Input */}
       <Text style={commonStyle.MEDIUM_33_16}>함께할 친구</Text>
       {/* 선택한 친구 */}
-      <FlatList
-        data={appointmentForm.appointment_participants_list}
-        horizontal
-        renderItem={({item}) => (
-          <SelectFriendItem
-            handleFriendDelete={handleFriendDelete}
-            item={item}
+      {appointmentForm.appointment_participants_list.length ? (
+        <View style={{height: 100}}>
+          <FlatList
+            data={appointmentForm.appointment_participants_list}
+            horizontal
+            renderItem={({item}) => (
+              <SelectFriendItem
+                handleFriendDelete={handleFriendDelete}
+                item={item}
+              />
+            )}
+            keyExtractor={item => item.id}
+            showsHorizontalScrollIndicator={false}
           />
-        )}
-        keyExtractor={item => item.id}
-        showsHorizontalScrollIndicator={false}
-        style={{height}}
-      />
+        </View>
+      ) : (
+        <></>
+      )}
 
       {/* 검색 */}
       <InputBox
@@ -62,7 +64,7 @@ const AppointmentFriend = () => {
 
       {/* 친구 검색 결과 리스트 */}
       <FlatList
-        data={users}
+        data={friends}
         renderItem={({item}) => (
           <FreindsItem
             handleFriendPress={handleFriendPress}
@@ -85,14 +87,5 @@ const AppointmentFriend = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  firendSelectWrapper: {
-    marginRight: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 4,
-  },
-});
 
 export default AppointmentFriend;

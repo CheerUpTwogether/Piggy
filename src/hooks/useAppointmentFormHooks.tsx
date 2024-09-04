@@ -8,21 +8,29 @@ import {
 } from '@/supabase/appointmentSpb';
 import {changeDateText} from '@/utils/timePicker';
 import {sendInviteNotificationAPI} from '@/api/fcm';
+import {getPiggySpb} from '@/supabase/AuthSpb';
 
 const useAppointmentFormHooks = () => {
   const [nowStep, setNowStep] = useState(1);
   const navigation = useNavigation();
   const addToast = useToastStore(state => state.addToast);
   const {appointmentForm, resetAppointmentForm} = useAppointmentForm();
-  const {userData} = useUserStore();
+  const {userData, setUserDataByKey} = useUserStore();
   const totalStep = 5;
 
   // 전역 상태 폼 reset
   useFocusEffect(
     useCallback(() => {
       resetAppointmentForm();
+      getPiggy();
     }, []),
   );
+
+  // 피기 정보 불러오기
+  const getPiggy = async () => {
+    const res = await getPiggySpb(userData.id);
+    setUserDataByKey('piggy', res?.[0]?.latest_piggy_count);
+  };
 
   // 이전 버튼 클릭
   const handlePrevious = () => {
@@ -52,6 +60,10 @@ const useAppointmentFormHooks = () => {
     }
 
     if (!appointmentForm.date && nowStep === 3) {
+      return true;
+    }
+
+    if (appointmentForm.deal_piggy_count > userData.piggy && nowStep === 4) {
       return true;
     }
 

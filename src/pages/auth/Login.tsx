@@ -10,7 +10,6 @@ import {googleSignInAPI, kakaoSignInAPI, setFcmTokenAPI} from '@/api/auth';
 import {GOOGLE_WEB_API_KEY, GOOGLE_IOS_API_KEY} from '@env';
 import KakaoSvg from '@/assets/icons/kakao.svg';
 import GoogleSvg from '@/assets/icons/google.svg';
-import EmailSvg from '@/assets/icons/email.svg';
 import {setItemSession} from '@/utils/auth';
 const logo = require('@/assets/icons/logo.png');
 
@@ -130,15 +129,6 @@ const Login = () => {
           </Text>
         </View>
         <View style={style.loginWrapper}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={style.email}
-            onPress={() => {
-              navigation.navigate('LoginEmail');
-            }}>
-            <EmailSvg width={24} height={24} color={'#333'} />
-            <Text style={style.socialText}>이메일로 로그인</Text>
-          </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
             style={style.socialKakao}

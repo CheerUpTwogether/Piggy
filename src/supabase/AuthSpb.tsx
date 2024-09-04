@@ -235,7 +235,7 @@ export const setServiceTermsAgreeSpb = async id => {
 };
 
 // 9.piggy 정보 - 완
-export const getPiggySpb = async id => {
+export const getPiggySpb = async (id: string) => {
   try {
     const {data, error} = await supabase
       .from('piggy')
@@ -246,8 +246,9 @@ export const getPiggySpb = async id => {
       throw error;
     }
 
-    return data;
+    // return data;
+    return data ? data[0] : null;
   } catch (e) {
-    console.error('Error appeared in getPiggySpb : ', e);
+    throw e;
   }
 };

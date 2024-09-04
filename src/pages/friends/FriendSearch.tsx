@@ -88,7 +88,7 @@ const FriendSearch = () => {
       });
       setIsShow(true);
     } else {
-      navigation.navigate('GiftAmount', {
+      navigation.replace('GiftAmount', {
         id: user.id,
         nickname: user.nickname,
         profile_img_url: user.profile_img_url,

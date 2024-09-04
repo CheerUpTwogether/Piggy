@@ -29,9 +29,6 @@ export const setAppointmentSpb = ({
       },
     ])
     .select('id');
-
-  // appointment_participants 추가 로직 필요
-  // appointment_participants에 추가된 row중에 id가 proposer_id랑 같은거 찾아서 status를 수락상태로 변경 필요
 };
 
 // 약속 참여자 업데이트
@@ -70,11 +67,11 @@ export const getAppointmentsSpb = (
 // 약속 참여자 상태 정보 조회
 export const getAppointmentParticipantsSpb = (
   user_uuid: string,
-  appointment_id: number,
+  appointment_number: number,
 ) => {
   return supabase.rpc('select_participants_list_detail', {
-    user_uuid: user_uuid,
-    appointment_id: appointment_id,
+    user_uuid,
+    appointment_number,
   });
 };
 
@@ -157,4 +154,15 @@ export const setAppointmentCancellationSpb = async (
     throw error;
   }
   return data;
+};
+
+// 약속 display 조정
+export const setListDisplaySpb = async (id: string, appointment_id: number) => {
+  return supabase
+    .from('appointment_participants')
+    .update({
+      list_displayed: false,
+    })
+    .eq('appointment_id', appointment_id)
+    .eq('user_id', id);
 };
