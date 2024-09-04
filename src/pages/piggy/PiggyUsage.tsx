@@ -27,6 +27,7 @@ const PiggyUsage = () => {
     useCallback(() => {
       fetchPiggyData();
       fetchPiggyLogData();
+      console.log('res', piggyLog);
     }, []),
   );
 
@@ -70,14 +71,6 @@ const PiggyUsage = () => {
         <Text style={commonStyle.MEDIUM_33_20}>{piggy}</Text>
         <Text style={commonStyle.MEDIUM_PRIMARY_20}>Piggy</Text>
       </View>
-
-      {/* <ButtonCouple
-        onPressLeft={() => navigation.navigate('PiggyShop')}
-        onPressRight={() => {}}
-        textLeft={'충전하기'}
-        textRight={'선물하기'}
-        theme="outline"
-      /> */}
 
       <DropDownPicker
         open={open}

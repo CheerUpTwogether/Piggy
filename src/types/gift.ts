@@ -32,13 +32,17 @@ export type GoodsList = GoodsItem[];
 export interface PiggyLog {
   id: number;
   diff_piggy_count: number;
+  diff_piggy_date: string;
   present_piggy_count: number;
   changed_category: string;
-  diff_piggy_date: string;
 }
 
 export interface PiggyUsageHistoryProps extends PiggyLog {
-  nickname?: string;
   appointment_title?: string;
-  profile_img_url?: string;
+  contents?: PiggyHistoryContent;
+}
+
+interface PiggyHistoryContent {
+  f1: string; // 약속 제목 || 선물대상
+  f2: string | null; // profile_img
 }

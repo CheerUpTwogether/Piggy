@@ -12,23 +12,23 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
     switch (item.changed_category) {
       case '선물줌':
       case '선물받음':
-        return item.nickname;
+        return item.contents?.f1;
       case '벌금(+)':
-        return `${getShortTitle(item.appointment_title)} 획득`;
+        return `${getShortTitle(item.contents?.f1)} 획득`;
       case '벌금(-)':
-        return `${getShortTitle(item.appointment_title)} 벌금`;
+        return `${getShortTitle(item.contents?.f1)} 벌금`;
       case '약속생성을 위한 선 지급':
-        return `${getShortTitle(item.appointment_title)}`;
+        return `${getShortTitle(item.contents?.f1)}`;
       case '약속이 생성되지 않음 - 반환':
-        return `${getShortTitle(item.appointment_title)} 취소`;
+        return `${getShortTitle(item.contents?.f1)} 취소`;
       default:
         return '상점 구매';
     }
   };
 
   const uri =
-    item?.changed_category === '선물줌' || '선물받음'
-      ? item.profile_img_url
+    item?.changed_category === '선물줌' || item?.changed_category === '선물받음'
+      ? item.contents?.f2
       : '';
 
   const formatDate = (dateString: string): string => {
@@ -52,21 +52,24 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
             ...styles.imgArea,
             borderColor: color_ef,
           }}>
-          {item?.changed_category !== '선물줌' || '선물받음' ? (
+          {item?.changed_category === '선물줌' ||
+          item?.changed_category === '선물받음' ? (
+            uri ? (
+              <Image
+                source={{uri: uri}}
+                style={styles.img}
+                resizeMode="cover"
+                alt="freindsProfile"
+              />
+            ) : (
+              <ProfileSvg style={styles.img} width={28} height={28} />
+            )
+          ) : (
             <Image
               source={require('@/assets/icons/topLogo.png')}
               style={styles.img}
               alt="topLogo"
             />
-          ) : item.profile_img_url ? (
-            <Image
-              source={{uri: uri}}
-              style={styles.img}
-              resizeMode="cover"
-              alt="freindsProfile"
-            />
-          ) : (
-            <ProfileSvg style={styles.img} width={28} height={28} />
           )}
         </View>
 

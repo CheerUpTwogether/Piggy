@@ -15,6 +15,7 @@ import {getPiggySpb} from '@/supabase/AuthSpb';
 import {setGiftPiggySpb} from '@/supabase/FriendsSpb';
 
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+import {pick} from 'lodash';
 
 const STYLE = Platform.OS === 'ios';
 
@@ -36,7 +37,6 @@ const GiftAmount = () => {
   const fetchPiggyData = async () => {
     const res = await getPiggySpb(userData.id);
     setMyPiggy(res?.latest_piggy_count || 0);
-    setUserDataByKey('piggy', res?.latest_piggy_count);
   };
 
   const handleSubmit = async () => {
@@ -57,6 +57,7 @@ const GiftAmount = () => {
         text: `${nickname}님께`,
         multiText: `${inputValue} 피기를 선물했어요!`,
       });
+      setUserDataByKey('piggy', myPiggy);
       navigation.replace('PiggyUsage');
     } else {
       addToast({
