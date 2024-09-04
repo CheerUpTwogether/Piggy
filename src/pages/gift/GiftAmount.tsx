@@ -1,31 +1,84 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import {Text, View, Image, StyleSheet, Platform} from 'react-native';
-import {useRoute} from '@react-navigation/native';
+import {
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+} from '@react-navigation/native';
+import {GiftAmountNavigationProp} from '@/types/gift';
 import {commonStyle} from '@/styles/common';
-import {GiftAmountRouteProp} from './type';
+import {GiftAmountRouteProp} from '@/types/gift';
 import KeyPad, {useKeyPad} from '@/components/common/Keypad';
 import Button from '@/components/common/Button';
+import {useUserStore, useToastStore} from '@/store/store';
+import {getPiggySpb} from '@/supabase/AuthSpb';
+import {setGiftPiggySpb} from '@/supabase/FriendsSpb';
+
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const STYLE = Platform.OS === 'ios';
 
 const GiftAmount = () => {
+  const [myPiggy, setMyPiggy] = useState(0);
   const route = useRoute<GiftAmountRouteProp>();
   const {id, nickname, profile_img_url} = route.params;
   const {inputValue, handlePress} = useKeyPad();
+  const myId = useUserStore(state => state.userData.id);
+  const addToast = useToastStore(state => state.addToast);
+  const navigation = useNavigation<GiftAmountNavigationProp>();
 
-  const handleSubmit = () => {
-    console.log('TODO: 선물하기', id);
+  useFocusEffect(
+    useCallback(() => {
+      fetchPiggyData();
+    }, []),
+  );
+
+  const fetchPiggyData = async () => {
+    const res = await getPiggySpb(myId);
+    setMyPiggy(res?.latest_piggy_count || 0);
+  };
+
+  const handleSubmit = async () => {
+    if (Number(inputValue) > myPiggy) {
+      addToast({
+        success: false,
+        text: '소유한 피기보다',
+        multiText: '많은 피기를 선물할 수 없어요.',
+      });
+      return;
+    }
+
+    const isSuccess = await setGiftPiggySpb(myId, id, inputValue);
+
+    if (isSuccess) {
+      addToast({
+        success: true,
+        text: `${nickname}님께`,
+        multiText: `${inputValue} 피기를 선물했어요!`,
+      });
+      navigation.replace('PiggyUsage');
+    } else {
+      addToast({
+        success: false,
+        text: '선물하기에 실패했습니다.',
+        multiText: '다시 시도해주세요.',
+      });
+    }
   };
 
   return (
     <View style={commonStyle.CONTAINER}>
       <View style={styles.wrapper}>
         <View style={styles.profileWrapper}>
-          <Image
-            style={styles.Profile}
-            source={{uri: profile_img_url}}
-            alt="profile"
-          />
+          {profile_img_url ? (
+            <Image
+              style={styles.Profile}
+              source={{uri: profile_img_url}}
+              alt="profile"
+            />
+          ) : (
+            <BasicProfileSvg width={80} height={80} />
+          )}
         </View>
         <View style={styles.textWrapper}>
           <Text
@@ -89,7 +142,7 @@ const GiftAmount = () => {
         onPress={handleSubmit}
         theme={'primary'}
         style={styles.button}
-        disable={inputValue ? false : true}
+        disable={!inputValue || inputValue === '0'}
       />
     </View>
   );
@@ -98,12 +151,14 @@ const GiftAmount = () => {
 const styles = StyleSheet.create({
   wrapper: {alignItems: 'center', marginTop: STYLE ? 20 : 40},
   profileWrapper: {
-    width: STYLE ? 120 : 160,
-    height: STYLE ? 120 : 160,
+    width: 120,
+    height: 120,
     borderRadius: 90,
     borderWidth: 1,
     borderColor: '#DDD',
     overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   Profile: {width: 160, height: 160},
   textWrapper: {marginTop: 30, gap: 4},
@@ -120,11 +175,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
     width: 100,
   },
-  keypadWrapper: {marginTop: STYLE ? 50 : 80},
+  keypadWrapper: {marginTop: STYLE ? 50 : 50},
   button: {
     width: '100%',
     justifyContent: 'center',
-    marginTop: STYLE ? 60 : 80,
+    marginTop: STYLE ? 60 : 70,
   },
 });
 
