@@ -63,6 +63,29 @@ const useAppointmentFormHooks = () => {
       return true;
     }
 
+    if (appointmentForm.date && nowStep === 3) {
+      const newDate = new Date(appointmentForm.date);
+      newDate.setHours(appointmentForm.time?.getHours() + 9);
+      newDate.setMinutes(appointmentForm.time?.getMinutes());
+
+      const today = new Date();
+      today.setHours(today.getHours() + 9);
+
+      // 오늘보다 이전 날짜 필터
+      if (newDate < today) {
+        return true;
+      }
+      // 시간 차이를 밀리초 단위로 계산
+      const timeDifference = Math.abs(newDate - today);
+
+      // 밀리초를 시간으로 변환
+      const differenceInHours = timeDifference / (1000 * 60 * 60);
+
+      if (differenceInHours <= 2) {
+        return true;
+      }
+    }
+
     if (appointmentForm.deal_piggy_count > userData.piggy && nowStep === 4) {
       return true;
     }
