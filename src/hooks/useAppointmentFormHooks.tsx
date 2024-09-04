@@ -29,7 +29,7 @@ const useAppointmentFormHooks = () => {
   // 피기 정보 불러오기
   const getPiggy = async () => {
     const res = await getPiggySpb(userData.id);
-    setUserDataByKey('piggy', res?.[0]?.latest_piggy_count);
+    setUserDataByKey('piggy', res?.latest_piggy_count);
   };
 
   // 이전 버튼 클릭

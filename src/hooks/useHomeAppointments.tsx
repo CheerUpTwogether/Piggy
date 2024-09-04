@@ -3,6 +3,7 @@ import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {useToastStore, useUserStore} from '@/store/store';
 import {
   getAppointmentsSpb,
+  setAppointmentCancellationSpb,
   setListDisplaySpb,
   setPinnedSpb,
 } from '@/supabase/appointmentSpb';
@@ -14,6 +15,7 @@ import {
 } from '@/types/appointment';
 import {StackNavigation} from '@/types/Router';
 import {useButtonBottomSheet} from './useButtonBottomSheet';
+import {getPiggySpb} from '@/supabase/AuthSpb';
 
 const categories: AppointmentTabCategory[] = [
   {label: '대기', value: 'pending', status: ['pending']},
@@ -26,7 +28,7 @@ const categories: AppointmentTabCategory[] = [
 ];
 const useHomeAppointments = () => {
   const addToast = useToastStore(state => state.addToast);
-  const {userData} = useUserStore();
+  const {userData, setUserDataByKey} = useUserStore();
   const navigation = useNavigation<StackNavigation>();
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
@@ -35,14 +37,24 @@ const useHomeAppointments = () => {
     useButtonBottomSheet(
       () => onPressFix(selectedId),
       () => onPressDelete(selectedId),
+      sort === 'fulfilled' ? '삭제' : '취소 요청',
     );
 
   useFocusEffect(
     useCallback(() => {
       getAppointment(sort);
+      getPiggy();
     }, []),
   );
 
+  // 피기 정보 불러오기
+  const getPiggy = async () => {
+    const res = await getPiggySpb(userData.id);
+    setUserDataByKey('piggy', res?.latest_piggy_count);
+    console.log(userData);
+  };
+
+  //appointments.find(el => el.appointment_id === selectedId);
   // 약속 더보기 버튼 클릭
   const onPressMore = (item: AppointmentProps) => {
     setSelectedId(item.appointment_id);
@@ -89,11 +101,35 @@ const useHomeAppointments = () => {
     }
   };
 
-  // 약속 삭제
-  const onPressDelete = async (appointmentId: number) => {
+  // ButtonBottomSheet 2번째 버튼 클릭 이벤트
+  const onPressDelete = (appointmentId: number) => {
+    if (sort === 'fulfilled') {
+      deleteAppointment(appointmentId);
+    } else {
+      cancelAppointment(appointmentId);
+    }
+  };
+
+  // 약속 취소 요청
+  const cancelAppointment = async (appointmentId: number) => {
+    try {
+      await setAppointmentCancellationSpb(userData.id, appointmentId);
+      addToast({
+        success: false,
+        text: '약속 취소 요청을 보냈어요.',
+      });
+    } catch (e) {
+      addToast({
+        success: false,
+        text: '약속 취소 요청에 실패했어요.',
+      });
+    }
+  };
+
+  // 약속 리스트에서 display 삭제
+  const deleteAppointment = async (appointmentId: number) => {
     try {
       const {error} = await setListDisplaySpb(userData.id, appointmentId);
-
       if (error) {
         addToast({
           success: false,
