@@ -15,7 +15,7 @@ const topLogo = require('@/assets/icons/topLogo.png');
 const ServiceAgreement = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'PaymentAgreement'>>();
-  const {authData} = route.params;
+  const param = route.params;
   const {userData, setIsAgree} = useUserStore();
   const [isServiceAgree, setIsServiceAgree] = useState(
     userData?.isAgree.service || false,
@@ -48,26 +48,31 @@ const ServiceAgreement = () => {
   const renderAgreementButton = () => {
     return (
       <View style={{marginVertical: 20, gap: 20}}>
-        {isServiceAgree ? (
-          <Button
-            disable
-            text="동의함"
-            onPress={() => console.log('비활성화')}
-          />
-        ) : (
-          <Button
-            text="동의하기"
-            onPress={() => {
-              setIsAgree('service');
-              navigation.replace('LoginDetail', {authData: authData});
-            }}
-          />
+        {param?.authData && (
+          <View>
+            {isServiceAgree ? (
+              <Button
+                disable
+                text="동의함"
+                onPress={() => console.log('비활성화')}
+              />
+            ) : (
+              <Button
+                text="동의하기"
+                onPress={() => {
+                  setIsAgree('service');
+                  navigation.replace('LoginDetail', {authData: param.authData});
+                }}
+              />
+            )}
+            <Button
+              style={{marginTop: 8}}
+              text="뒤로가기"
+              theme="outline"
+              onPress={() => navigation.goBack()}
+            />
+          </View>
         )}
-        <Button
-          text="뒤로가기"
-          theme="outline"
-          onPress={() => navigation.goBack()}
-        />
       </View>
     );
   };
@@ -87,6 +92,13 @@ const ServiceAgreement = () => {
           ListFooterComponent={renderAgreementButton}
         />
       </View>
+      {!param?.authData && (
+        <Button
+          text="뒤로가기"
+          theme="outline"
+          onPress={() => navigation.goBack()}
+        />
+      )}
     </View>
   );
 };

@@ -96,10 +96,10 @@ const useAppointmentFormHooks = () => {
         success: false,
         text: '약속을 생성했어요',
       });
-    } catch {
+    } catch (e) {
       addToast({
         success: false,
-        text: '약속 생성에 실패했어요',
+        text: e.message || '약속 생성에 실패했어요',
       });
     }
   };
@@ -131,9 +131,9 @@ const useAppointmentFormHooks = () => {
       appointment_date: `${String(date)} ${timeString}`,
       deal_piggy_count,
     });
-    console.log(error);
+
     if (error) {
-      throw Error;
+      throw error;
     }
     return data;
   };
