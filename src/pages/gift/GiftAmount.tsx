@@ -23,7 +23,7 @@ const GiftAmount = () => {
   const route = useRoute<GiftAmountRouteProp>();
   const {id, nickname, profile_img_url} = route.params;
   const {inputValue, handlePress} = useKeyPad();
-  const myId = useUserStore(state => state.userData.id);
+  const {userData, setUserDataByKey} = useUserStore();
   const addToast = useToastStore(state => state.addToast);
   const navigation = useNavigation<GiftAmountNavigationProp>();
 
@@ -34,8 +34,9 @@ const GiftAmount = () => {
   );
 
   const fetchPiggyData = async () => {
-    const res = await getPiggySpb(myId);
+    const res = await getPiggySpb(userData.id);
     setMyPiggy(res?.latest_piggy_count || 0);
+    setUserDataByKey('piggy', res?.latest_piggy_count);
   };
 
   const handleSubmit = async () => {
@@ -48,7 +49,7 @@ const GiftAmount = () => {
       return;
     }
 
-    const isSuccess = await setGiftPiggySpb(myId, id, inputValue);
+    const isSuccess = await setGiftPiggySpb(userData.id, id, inputValue);
 
     if (isSuccess) {
       addToast({
