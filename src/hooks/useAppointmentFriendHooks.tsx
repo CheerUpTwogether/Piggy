@@ -1,12 +1,12 @@
 import {useCallback, useEffect, useState} from 'react';
 import {FriendProp} from '@/types/friend';
 import {useFocusEffect} from '@react-navigation/native';
-import {getUsersSpb} from '@/supabase/FriendsSpb';
+import {getSearchFriendsSpb} from '@/supabase/FriendsSpb';
 import {useAppointmentForm, useToastStore} from '@/store/store';
 import useDebounce from '@/hooks/useDebounce';
 
-const useAppointmentFriend = () => {
-  const [users, setUsers] = useState<FriendProp[]>([]);
+const useAppointmentFriendHooks = () => {
+  const [friends, setFriends] = useState<FriendProp[]>([]);
   const [keyword, setKeyword] = useState('');
   const debouncedKeyword = useDebounce(keyword, 100);
   const {appointmentForm, setAppointmentForm} = useAppointmentForm();
@@ -15,22 +15,22 @@ const useAppointmentFriend = () => {
   // debouncedKeyword가 변경될 때 라디오 상태 초기화 (선택된 친구는 유지)
   useEffect(() => {
     setKeyword(debouncedKeyword);
-    getUsers();
+    getFriends();
   }, [debouncedKeyword]);
 
   useFocusEffect(
     useCallback(() => {
-      getUsers();
+      getFriends();
     }, []),
   );
 
-  const getUsers = async () => {
+  const getFriends = async () => {
     try {
-      const data = await getUsersSpb(
+      const data = await getSearchFriendsSpb(
         '8b9f1998-084e-447f-b586-d18c72cf1db4',
         keyword,
       );
-      setUsers(data);
+      setFriends(data);
     } catch {
       addToast({
         success: false,
@@ -71,15 +71,14 @@ const useAppointmentFriend = () => {
   };
 
   return {
-    users,
-    getUsers,
+    friends,
+    changeTitle,
     keyword,
     setKeyword,
     handleFriendPress,
     handleFriendDelete,
-    changeTitle,
     appointmentForm,
   };
 };
 
-export default useAppointmentFriend;
+export default useAppointmentFriendHooks;

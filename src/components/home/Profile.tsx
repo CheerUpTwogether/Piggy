@@ -1,12 +1,12 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import Button from '../common/Button';
-import {dummy_profile} from '@/mock/Friends/Friends';
 import {color_primary, commonStyle} from '@/styles/common';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '@/types/Router';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useUserStore} from '@/store/store';
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const Profile = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -14,18 +14,21 @@ const Profile = () => {
   return (
     <View style={styles.myInfoBox}>
       <View style={styles.flexRow}>
-        <Image
-          source={{
-            uri: 'https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250',
-          }}
-          style={styles.profileImg}
-          alt="peofileImage"
-        />
+        {userData.profile_img_url ? (
+          <Image
+            source={{uri: userData.profile_img_url}}
+            style={styles.profileImg}
+            alt="peofileImage"
+          />
+        ) : (
+          <View style={styles.emptyProfileImg}>
+            <BasicProfileSvg width={40} height={40} />
+          </View>
+        )}
+
         <View>
           <Text style={commonStyle.REGULAR_FF_16}>{userData.nickname}</Text>
-          <Text style={commonStyle.MEDIUM_FF_20}>
-            {dummy_profile.piggy} Piggy
-          </Text>
+          <Text style={commonStyle.MEDIUM_FF_20}>{userData.piggy} Piggy</Text>
         </View>
       </View>
       <View style={styles.btnArea}>
@@ -49,6 +52,15 @@ const styles = StyleSheet.create({
   },
   flexRow: {
     flexDirection: 'row',
+  },
+  emptyProfileImg: {
+    borderRadius: 100,
+    backgroundColor: '#fff',
+    width: 52,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
   },
   profileImg: {
     width: 52,

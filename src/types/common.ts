@@ -60,6 +60,10 @@ export interface UserStore {
   setIsAgree: (key: keyof UserStore['userData']['isAgree']) => void;
   gotoProfile: () => void;
   setGotoProfile: (func: () => void) => void;
+  setUserDataByKey: (
+    key: keyof UserStore['userData'],
+    value: string | boolean | number,
+  ) => void;
 }
 
 export interface ToastStore {

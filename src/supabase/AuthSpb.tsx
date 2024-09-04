@@ -249,6 +249,6 @@ export const getPiggySpb = async (id: string) => {
     // return data;
     return data ? data[0] : null;
   } catch (e) {
-    console.error('Error appeared in getPiggySpb : ', e);
+    throw e;
   }
 };

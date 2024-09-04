@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View, Dimensions} from 'react-native';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 
@@ -11,7 +11,7 @@ import SideSlideModal from '@/components/common/SideSlideModal';
 import FriendItem from '@/components/home/FriendItem';
 import WebView from 'react-native-webview';
 import {useLocation} from '@/hooks/useLocation';
-import {useUserStore} from '@/store/store';
+import {useUserStore, useToastStore} from '@/store/store';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '@/types/Router';
 import CalendarCancelSvg from '@/assets/icons/cancelCalendar.svg';
@@ -19,6 +19,7 @@ import LocationSvg from '@/assets/icons/location.svg';
 import DateSvg from '@/assets/icons/calendar.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
+import {getAppointmentParticipantsSpb} from '@/supabase/appointmentSpb';
 
 const AppointmentDetail = () => {
   const navigation =
@@ -26,6 +27,7 @@ const AppointmentDetail = () => {
   const route = useRoute();
   const {userData} = useUserStore();
   const [isShow, setIsShow] = useState(false);
+  const [friends, setFriends] = useState([]);
   const item = route.params as AppointmentProps;
   const cancelStatus = ['cancelled', 'expired'];
   const textColor = cancelStatus.includes(item.appointment_status)
@@ -60,6 +62,32 @@ const AppointmentDetail = () => {
           },
         }),
       );
+    }
+  };
+
+  const addToast = useToastStore(state => state.addToast);
+  useEffect(() => {
+    if (isShow) {
+      getFriends();
+    }
+  }, [isShow]);
+
+  const getFriends = async () => {
+    try {
+      const {data, error} = await getAppointmentParticipantsSpb(
+        userData.id,
+        item.appointment_id,
+      );
+
+      if (error) {
+        throw error;
+      }
+      setFriends(data);
+    } catch {
+      addToast({
+        success: false,
+        text: '친구들의 정보를 가져오지 못했어요.',
+      });
     }
   };
 
@@ -104,25 +132,23 @@ const AppointmentDetail = () => {
         <Text style={[commonStyle.BOLD_33_20, styles.subject]}>
           {item.subject}
         </Text>
+        {item.place_name && (
+          <View>
+            <View style={styles.infoSentence}>
+              <LocationSvg color="#777" style={styles.svg} />
+              <Text style={textColor}>{item.place_name}</Text>
+            </View>
+            <Text style={[textColor, {paddingLeft: 22}]}>{item.address}</Text>
+          </View>
+        )}
+        {!item.place_name && (
+          <View style={styles.infoSentence}>
+            <LocationSvg color="#777" style={styles.svg} />
+            <Text style={textColor}>{item.address}</Text>
+          </View>
+        )}
         <View style={styles.contentWrapper}>
           <View>
-            {item.place_name && (
-              <View>
-                <View style={styles.infoSentence}>
-                  <LocationSvg color="#777" style={styles.svg} />
-                  <Text style={textColor}>{item.place_name}</Text>
-                </View>
-                <Text style={[textColor, {paddingLeft: 22}]}>
-                  {item.address}
-                </Text>
-              </View>
-            )}
-            {!item.place_name && (
-              <View style={styles.infoSentence}>
-                <LocationSvg color="#777" style={styles.svg} />
-                <Text style={textColor}>{item.address}</Text>
-              </View>
-            )}
             <View style={styles.infoSentence}>
               <DateSvg color="#777" style={styles.svg} />
               <Text style={textColor}>
@@ -195,9 +221,9 @@ const AppointmentDetail = () => {
 
       <SideSlideModal isShow={isShow} setIsShow={setIsShow} title="참석자">
         <FlatList
-          data={item.appointment_participants_list}
-          keyExtractor={item => String(item.uid)}
-          renderItem={FriendItem}
+          data={friends}
+          keyExtractor={item => item.user_id}
+          renderItem={({item}) => <FriendItem item={item} />}
         />
       </SideSlideModal>
     </View>

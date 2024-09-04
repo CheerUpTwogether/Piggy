@@ -4,12 +4,14 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigation} from '@/types/Router';
 import {commonStyle, color_primary, color_ef} from '@/styles/common';
+import {AppointmentProps} from '@/types/appointment';
 import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
 import PendingSvg from '@/assets/icons/pending.svg';
 import CancelCalendarSvg from '@/assets/icons/cancelCalendar.svg';
-import {AppointmentProps} from '@/types/appointment';
+import LocationSvg from '@/assets/icons/location.svg';
+import TimeSvg from '@/assets/icons/clock.svg';
 
 const AppointmentItem = ({
   item,
@@ -26,8 +28,8 @@ const AppointmentItem = ({
     ? commonStyle.MEDIUM_AA_18
     : commonStyle.MEDIUM_33_18;
   const contentFontColor = cancelStatus.includes(item.appointment_status)
-    ? commonStyle.REGULAR_AA_14
-    : commonStyle.REGULAR_77_14;
+    ? commonStyle.REGULAR_AA_16
+    : commonStyle.REGULAR_77_16;
 
   const notUseFreindsIcon =
     cancelStatus.includes(item.appointment_status) ||
@@ -61,6 +63,7 @@ const AppointmentItem = ({
           <View style={styles.subject}>
             <Text style={titleFontColor}>{item.subject}</Text>
             <View style={styles.svgContainer}>
+              {/* 핀 아이콘 */}
               {item.pinned && (
                 <TouchableOpacity
                   style={styles.svgBtn}
@@ -68,7 +71,7 @@ const AppointmentItem = ({
                   <PinSvg color="#777" style={styles.svg} />
                 </TouchableOpacity>
               )}
-
+              {/* 더보기 아이콘 */}
               <TouchableOpacity
                 style={styles.svgBtn}
                 onPress={() => onPressMore(item)}>
@@ -76,18 +79,39 @@ const AppointmentItem = ({
               </TouchableOpacity>
             </View>
           </View>
+
           {/* 모임 정보 */}
           <View style={styles.flexRow}>
+            {/* 위치 정보 */}
             <View>
-              <Text style={contentFontColor}>
-                {item?.place_name || item.address}
-              </Text>
-              <Text style={contentFontColor}>
-                {`${item.appointment_date.split('T')[0]} `}
-                {item.appointment_date.split('T')[1].substring(0, 5)}
-              </Text>
+              <View style={styles.flexRow}>
+                <LocationSvg
+                  width={14}
+                  height={14}
+                  color={'#777'}
+                  style={{marginRight: 4}}
+                />
+                <Text style={contentFontColor}>
+                  {item?.place_name || item.address}
+                </Text>
+              </View>
+
+              {/* 시간 정보 */}
+              <View style={styles.flexRow}>
+                <TimeSvg
+                  width={14}
+                  height={14}
+                  color={'#777'}
+                  style={{marginRight: 4}}
+                />
+                <Text style={contentFontColor}>
+                  {`${item.appointment_date.split('T')[0]} `}
+                  {item.appointment_date.split('T')[1].substring(0, 5)}
+                </Text>
+              </View>
             </View>
 
+            {/* 타이머 */}
             {item.appointment_id === 1 && (
               <Text style={[styles.timer, commonStyle.REGULAR_PRIMARY_14]}>
                 09:59
@@ -144,7 +168,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   svgBtn: {
-    padding: 6,
+    paddingHorizontal: 6,
+    marginBottom: 8,
   },
   svg: {
     width: 16,
@@ -154,6 +179,7 @@ const styles = StyleSheet.create({
   },
   flexRow: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   timer: {
     position: 'absolute',

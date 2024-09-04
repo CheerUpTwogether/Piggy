@@ -1,7 +1,11 @@
 import {useCallback, useState} from 'react';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {useToastStore, useUserStore} from '@/store/store';
-import {getAppointmentsSpb, setPinnedSpb} from '@/supabase/appointmentSpb';
+import {
+  getAppointmentsSpb,
+  setListDisplaySpb,
+  setPinnedSpb,
+} from '@/supabase/appointmentSpb';
 import {
   AppointmentProps,
   AppointmentStatus,
@@ -30,7 +34,7 @@ const useHomeAppointments = () => {
   const {createButtonList, bottomSheetShow, setBottomSheetShow} =
     useButtonBottomSheet(
       () => onPressFix(selectedId),
-      () => onPressDelete(),
+      () => onPressDelete(selectedId),
     );
 
   useFocusEffect(
@@ -73,9 +77,9 @@ const useHomeAppointments = () => {
   };
 
   // 약속 고정/해제
-  const onPressFix = async (selectedId: number) => {
+  const onPressFix = async (appointmentId: number) => {
     try {
-      await setPinnedSpb(userData.id, selectedId);
+      await setPinnedSpb(userData.id, appointmentId);
       getAppointment(sort);
     } catch {
       addToast({
@@ -86,8 +90,26 @@ const useHomeAppointments = () => {
   };
 
   // 약속 삭제
-  const onPressDelete = () => {
-    console.log();
+  const onPressDelete = async (appointmentId: number) => {
+    try {
+      const {error} = await setListDisplaySpb(userData.id, appointmentId);
+
+      if (error) {
+        addToast({
+          success: false,
+          text: '약속 삭제에 실패했어요.',
+        });
+        return;
+      }
+      setAppointments(prev =>
+        prev.filter(el => el.appointment_id !== appointmentId),
+      );
+    } catch {
+      addToast({
+        success: false,
+        text: '인터넷 연결이 되어있지 않아요',
+      });
+    }
   };
 
   return {
