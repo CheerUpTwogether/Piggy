@@ -8,7 +8,8 @@ import {dummyAgreementItem} from '@/mock/UserAgreement/type';
 import {dummyServiceAgreementData} from '@/mock/UserAgreement/UserAgreement';
 import {commonStyle} from '@/styles/common';
 import {splitStringByDot} from '@/utils/splitStringByDot';
-import Button from '../common/Button';
+import Button from '@/components/common/Button';
+import AgreementBtn from '@/components/userAgreement/AgreementBtn';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
@@ -45,38 +46,6 @@ const ServiceAgreement = () => {
     );
   };
 
-  const renderAgreementButton = () => {
-    return (
-      <View style={{marginVertical: 20, gap: 20}}>
-        {param?.authData && (
-          <View>
-            {isServiceAgree ? (
-              <Button
-                disable
-                text="동의함"
-                onPress={() => console.log('비활성화')}
-              />
-            ) : (
-              <Button
-                text="동의하기"
-                onPress={() => {
-                  setIsAgree('service');
-                  navigation.replace('LoginDetail', {authData: param.authData});
-                }}
-              />
-            )}
-            <Button
-              style={{marginTop: 8}}
-              text="뒤로가기"
-              theme="outline"
-              onPress={() => navigation.goBack()}
-            />
-          </View>
-        )}
-      </View>
-    );
-  };
-
   return (
     <View style={commonStyle.CONTAINER}>
       <Image source={topLogo} style={styles.logo} alt="logo" />
@@ -89,7 +58,9 @@ const ServiceAgreement = () => {
           renderItem={renderServiceAgreementItem}
           keyExtractor={item => item.id.toString()}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={renderAgreementButton}
+          ListFooterComponent={() => (
+            <AgreementBtn authData={param.authData} type={'service'} />
+          )}
         />
       </View>
       {!param?.authData && (
