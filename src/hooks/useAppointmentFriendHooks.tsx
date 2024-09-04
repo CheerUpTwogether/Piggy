@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {FriendProp} from '@/types/friend';
 import {useFocusEffect} from '@react-navigation/native';
 import {getSearchFriendsSpb} from '@/supabase/FriendsSpb';
-import {useAppointmentForm, useToastStore} from '@/store/store';
+import {useAppointmentForm, useToastStore, useUserStore} from '@/store/store';
 import useDebounce from '@/hooks/useDebounce';
 
 const useAppointmentFriendHooks = () => {
@@ -11,6 +11,7 @@ const useAppointmentFriendHooks = () => {
   const debouncedKeyword = useDebounce(keyword, 100);
   const {appointmentForm, setAppointmentForm} = useAppointmentForm();
   const addToast = useToastStore(state => state.addToast);
+  const {userData} = useUserStore();
 
   // debouncedKeyword가 변경될 때 라디오 상태 초기화 (선택된 친구는 유지)
   useEffect(() => {
@@ -26,10 +27,7 @@ const useAppointmentFriendHooks = () => {
 
   const getFriends = async () => {
     try {
-      const data = await getSearchFriendsSpb(
-        '8b9f1998-084e-447f-b586-d18c72cf1db4',
-        keyword,
-      );
+      const data = await getSearchFriendsSpb(userData.id, keyword);
       setFriends(data);
     } catch {
       addToast({
