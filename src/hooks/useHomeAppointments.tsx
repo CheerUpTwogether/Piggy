@@ -2,6 +2,7 @@ import {useCallback, useState} from 'react';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {useToastStore, useUserStore} from '@/store/store';
 import {
+  getAppointmentCancellationStatusSpb,
   getAppointmentsSpb,
   setAppointmentCancellationSpb,
   setListDisplaySpb,
@@ -33,11 +34,14 @@ const useHomeAppointments = () => {
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
+  const [disable, setDisable] = useState(false);
+
   const {createButtonList, bottomSheetShow, setBottomSheetShow} =
     useButtonBottomSheet(
       () => onPressFix(selectedId),
       () => onPressDelete(selectedId),
       sort === 'fulfilled' ? '삭제' : '취소 요청',
+      disable,
     );
 
   useFocusEffect(
@@ -58,6 +62,7 @@ const useHomeAppointments = () => {
   // 약속 더보기 버튼 클릭
   const onPressMore = (item: AppointmentProps) => {
     setSelectedId(item.appointment_id);
+    getAppointmentCancellationStatus(item.appointment_id);
     setBottomSheetShow(true);
   };
 
@@ -146,6 +151,21 @@ const useHomeAppointments = () => {
         text: '인터넷 연결이 되어있지 않아요',
       });
     }
+  };
+
+  // 약속 취소 요청 했는지 체크
+  const getAppointmentCancellationStatus = async (appointmentId: number) => {
+    const res = await getAppointmentCancellationStatusSpb(
+      userData.id,
+      appointmentId,
+    );
+    // 빈 배열이면 요청이 없음
+    if (res?.length) {
+      setDisable(true);
+    } else {
+      setDisable(false);
+    }
+    console.log(res);
   };
 
   return {
