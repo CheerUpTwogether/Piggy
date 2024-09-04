@@ -25,11 +25,11 @@ const AppointmentItem = ({
   const navigation = useNavigation<StackNavigation>();
   const cancelStatus = ['cancelled', 'expired'];
   const titleFontColor = cancelStatus.includes(item.appointment_status)
-    ? commonStyle.MEDIUM_AA_18
-    : commonStyle.MEDIUM_33_18;
+    ? commonStyle.BOLD_AA_20
+    : commonStyle.BOLD_33_20;
   const contentFontColor = cancelStatus.includes(item.appointment_status)
-    ? commonStyle.REGULAR_AA_16
-    : commonStyle.REGULAR_77_16;
+    ? commonStyle.MEDIUM_AA_14
+    : commonStyle.MEDIUM_33_14;
 
   const notUseFreindsIcon =
     cancelStatus.includes(item.appointment_status) ||
@@ -81,16 +81,19 @@ const AppointmentItem = ({
           </View>
 
           {/* 모임 정보 */}
-          <View style={styles.flexRow}>
+          <View style={{...styles.flexRow, paddingTop: 4}}>
             {/* 위치 정보 */}
             <View>
               <View style={styles.flexRow}>
                 <LocationSvg
-                  width={14}
-                  height={14}
+                  width={12}
+                  height={12}
                   color={'#777'}
-                  style={{marginRight: 4}}
+                  style={{marginRight: 2}}
                 />
+                <Text style={{marginRight: 8, ...commonStyle.REGULAR_77_14}}>
+                  장소
+                </Text>
                 <Text style={contentFontColor}>
                   {item?.place_name || item.address}
                 </Text>
@@ -99,11 +102,14 @@ const AppointmentItem = ({
               {/* 시간 정보 */}
               <View style={styles.flexRow}>
                 <TimeSvg
-                  width={14}
-                  height={14}
+                  width={12}
+                  height={12}
                   color={'#777'}
-                  style={{marginRight: 4}}
+                  style={{marginRight: 2}}
                 />
+                <Text style={{marginRight: 8, ...commonStyle.REGULAR_77_14}}>
+                  시간
+                </Text>
                 <Text style={contentFontColor}>
                   {`${item.appointment_date.split('T')[0]} `}
                   {item.appointment_date.split('T')[1].substring(0, 5)}

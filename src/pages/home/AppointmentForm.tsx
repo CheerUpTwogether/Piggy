@@ -14,7 +14,7 @@ import AppointmentCheck from '@/components/appointment/AppointmentCheck';
 const {height: screenHeight} = Dimensions.get('screen');
 
 const AppointmentForm = () => {
-  const {nowStep, totalStep, disable, handlePrevious, handleNext, piggy} =
+  const {nowStep, totalStep, disable, handlePrevious, handleNext} =
     useAppointmentFormHooks();
 
   const getCurrentComponent = () => {

@@ -1,8 +1,11 @@
 import {useState} from 'react';
+import {Bold} from '@/styles/font';
 
 export const useButtonBottomSheet = (
   onPressFix: () => void,
   onPressDelete: () => void,
+  text?: string,
+  disable?: boolean,
 ) => {
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   // 고정 event
@@ -22,6 +25,7 @@ export const useButtonBottomSheet = (
       text: string;
       theme?: 'sub' | 'primary' | 'outline' | undefined;
       onPress: () => void | Promise<void>;
+      disable?: boolean;
     }> = [
       {
         text: '고정',
@@ -29,8 +33,9 @@ export const useButtonBottomSheet = (
         theme: 'outline',
       },
       {
-        text: '삭제',
+        text: text || '삭제',
         onPress: handleDelete,
+        disable,
       },
     ];
 

@@ -1,25 +1,22 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
-import {RootStackParamList} from '@/types/Router';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useUserStore} from '@/store/store';
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {dummyAgreementItem} from '@/mock/UserAgreement/type';
 import {dummyServiceAgreementData} from '@/mock/UserAgreement/UserAgreement';
+import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
 import {splitStringByDot} from '@/utils/splitStringByDot';
-import Button from '../common/Button';
+import Button from '@/components/common/Button';
+import AgreementBtn from '@/components/userAgreement/AgreementBtn';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
 const ServiceAgreement = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'PaymentAgreement'>>();
-  const {authData} = route.params;
-  const {userData, setIsAgree} = useUserStore();
-  const [isServiceAgree, setIsServiceAgree] = useState(
-    userData?.isAgree.service || false,
-  );
+  const param = route.params;
+
   const renderServiceAgreementItem = ({item}: {item: dummyAgreementItem}) => {
     const sentenceArray = splitStringByDot(item.content);
     return (
@@ -45,33 +42,6 @@ const ServiceAgreement = () => {
     );
   };
 
-  const renderAgreementButton = () => {
-    return (
-      <View style={{marginVertical: 20, gap: 20}}>
-        {isServiceAgree ? (
-          <Button
-            disable
-            text="동의함"
-            onPress={() => console.log('비활성화')}
-          />
-        ) : (
-          <Button
-            text="동의하기"
-            onPress={() => {
-              setIsAgree('service');
-              navigation.replace('LoginDetail', {authData: authData});
-            }}
-          />
-        )}
-        <Button
-          text="뒤로가기"
-          theme="outline"
-          onPress={() => navigation.goBack()}
-        />
-      </View>
-    );
-  };
-
   return (
     <View style={commonStyle.CONTAINER}>
       <Image source={topLogo} style={styles.logo} alt="logo" />
@@ -84,9 +54,18 @@ const ServiceAgreement = () => {
           renderItem={renderServiceAgreementItem}
           keyExtractor={item => item.id.toString()}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={renderAgreementButton}
+          ListFooterComponent={
+            <AgreementBtn authData={param.authData} type={'service'} />
+          }
         />
       </View>
+      {!param?.authData && (
+        <Button
+          text="뒤로가기"
+          theme="outline"
+          onPress={() => navigation.goBack()}
+        />
+      )}
     </View>
   );
 };

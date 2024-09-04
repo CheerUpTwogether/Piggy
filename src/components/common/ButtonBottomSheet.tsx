@@ -42,6 +42,7 @@ const ButtonsComponent = ({
         theme={button.theme}
         onPress={button.onPress}
         key={button.text}
+        disable={button.disable}
       />
     ))}
     <Button text="취소" theme="sub" onPress={() => setIsShow(false)} />
