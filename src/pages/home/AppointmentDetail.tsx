@@ -22,9 +22,7 @@ const AppointmentDetail = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (appointmentForm.appointment_status === 'confirmed') {
-      getAppointmentCancellationStatus();
-    }
+    getAppointmentCancellationStatus();
   }, []);
 
   // 약속 취소 요청 했는지 체크
@@ -34,6 +32,7 @@ const AppointmentDetail = () => {
         userData.id,
         appointmentForm.id,
       );
+      console.log(res);
       if (res?.[0]?.cancellation_status) {
         setCancelStatus(res?.[0]?.cancellation_status);
       }
@@ -48,7 +47,6 @@ const AppointmentDetail = () => {
   // 약속 취소 요청
   const cancelAppointment = async () => {
     try {
-      console.log(appointmentForm.id);
       await setAppointmentCancellationSpb(userData.id, appointmentForm.id);
       addToast({
         success: false,

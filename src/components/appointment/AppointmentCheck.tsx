@@ -88,6 +88,36 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
         <Text style={commonStyle.BOLD_33_24}>{appointmentForm.subject}</Text>
       </View>
 
+      <View style={styles.wrapper}>
+        {appointmentForm.id === 0 && (
+          <View style={styles.row}>
+            <View style={styles.rowTitle}>
+              <LocationSvg width={20} height={20} color={'#AAA'} />
+              <Text style={commonStyle.MEDIUM_33_16}>장소</Text>
+            </View>
+            <Text style={commonStyle.BOLD_33_16}>
+              {appointmentForm.place_name || appointmentForm.address}
+            </Text>
+          </View>
+        )}
+        <View style={styles.row}>
+          <View style={styles.rowTitle}>
+            <DateSvg width={20} height={20} color={'#AAA'} />
+            <Text style={commonStyle.MEDIUM_33_16}>날짜</Text>
+          </View>
+          <Text style={commonStyle.BOLD_33_16}>{appointmentForm.date}</Text>
+        </View>
+        <View style={styles.row}>
+          <View style={styles.rowTitle}>
+            <TimeSvg width={20} height={20} color={'#AAA'} />
+            <Text style={commonStyle.MEDIUM_33_16}>시간</Text>
+          </View>
+          <Text style={commonStyle.BOLD_33_16}>
+            {` ${appointmentForm?.time}`}
+          </Text>
+        </View>
+      </View>
+
       {appointmentForm.id !== 0 && (
         <View style={styles.wrapper}>
           <View style={styles.rowTitle}>
@@ -126,36 +156,6 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
           </View>
         </View>
       )}
-
-      <View style={styles.wrapper}>
-        {appointmentForm.id === 0 && (
-          <View style={styles.row}>
-            <View style={styles.rowTitle}>
-              <LocationSvg width={20} height={20} color={'#AAA'} />
-              <Text style={commonStyle.MEDIUM_33_16}>장소</Text>
-            </View>
-            <Text style={commonStyle.BOLD_33_16}>
-              {appointmentForm.place_name || appointmentForm.address}
-            </Text>
-          </View>
-        )}
-        <View style={styles.row}>
-          <View style={styles.rowTitle}>
-            <DateSvg width={20} height={20} color={'#AAA'} />
-            <Text style={commonStyle.MEDIUM_33_16}>날짜</Text>
-          </View>
-          <Text style={commonStyle.BOLD_33_16}>{appointmentForm.date}</Text>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.rowTitle}>
-            <TimeSvg width={20} height={20} color={'#AAA'} />
-            <Text style={commonStyle.MEDIUM_33_16}>시간</Text>
-          </View>
-          <Text style={commonStyle.BOLD_33_16}>
-            {` ${appointmentForm?.time}`}
-          </Text>
-        </View>
-      </View>
 
       <View style={styles.wrapper}>
         <View style={styles.row}>
