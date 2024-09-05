@@ -1,13 +1,19 @@
+import {getItemSession} from '@/utils/auth';
 import axios from 'axios';
 
-export const instance = axios.create({
+export const bakcInstance = axios.create({
   baseURL: 'https://www.piggynative.kro.kr:8080',
 });
 
-const fetchBackEnd = (uid_list: string[], title: string, body: string) => {
+const fetchBackEnd = async (
+  uid_list: string[],
+  title: string,
+  body: string,
+) => {
+  const session = await getItemSession();
   for (const uid of uid_list) {
     try {
-      instance.post(
+      bakcInstance.post(
         '/sendNotification',
         {
           id: uid,
@@ -15,6 +21,7 @@ const fetchBackEnd = (uid_list: string[], title: string, body: string) => {
         },
         {
           headers: {
+            Authorization: session ? `Bearer ${session.access_token}` : '',
             'Content-Type': 'application/json',
           },
         },
