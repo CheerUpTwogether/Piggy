@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
-import {useToastStore, useUserStore, useAppointmentForm} from '@/store/store';
+import {useNavigation} from '@react-navigation/native';
+import {useToastStore, useUserStore} from '@/store/store';
 import {
   getAppointmentsSpb,
   setListDisplaySpb,
@@ -14,7 +14,7 @@ import {
 } from '@/types/appointment';
 import {StackNavigation} from '@/types/Router';
 import {getPiggySpb} from '@/supabase/AuthSpb';
-import dayjs from 'dayjs';
+import {useFocusEffect} from '@react-navigation/native';
 
 const categories: AppointmentTabCategory[] = [
   {label: '대기', value: 'pending', status: ['pending']},
@@ -35,10 +35,12 @@ const useHomeAppointments = () => {
 
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
 
-  useEffect(() => {
-    getPiggy();
-    getAppointment(sort);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getPiggy();
+      getAppointment(sort);
+    }, []),
+  );
 
   const createButtonList = () => {
     const buttons: Array<{
@@ -106,7 +108,6 @@ const useHomeAppointments = () => {
       userData.id,
       categories.filter(el => el.value === sortValue)[0].status,
     );
-    console.log(data);
     if (error) {
       addToast({
         success: false,

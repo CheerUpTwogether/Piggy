@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   Text,
   View,
@@ -12,7 +12,6 @@ import {
   getCenterPositionFromIndex,
   getIndexFromOffset,
   fillEmpty,
-  isPM,
   MERIDIEM_ITEMS,
   MINUTE_ITEMS,
   HOUR_ITEMS,
@@ -25,10 +24,10 @@ import {commonStyle} from '@/styles/common';
 import dayjs from 'dayjs';
 
 const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
+  const [isAm, setIsAm] = useState(true);
   if (visibleCount % 2 === 0) {
     throw new Error('visibleCount must be odd');
   }
-  //const dateString = value.toTimeString();
 
   const refs = React.useRef(
     Array.from({length: 3}).map(() => React.createRef()),
@@ -49,21 +48,22 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
         const itemIdx = getIndexFromOffset(offsetY);
 
         if (key === 'meridiem') {
-          const currValueIsPM = Number(hourValue) > 12;
-          if (currValueIsPM) {
+          const meridiem = MERIDIEM_ITEMS[itemIdx] === '오전';
+          setIsAm(meridiem);
+          if (meridiem && updatedDate.hour() > 12) {
             updatedDate = updatedDate.set('hour', updatedDate.hour() - 12);
           }
-          if (!currValueIsPM) {
+          if (!meridiem && updatedDate.hour() <= 12) {
             updatedDate = updatedDate.set('hour', updatedDate.hour() + 12);
           }
         }
+
         if (key === 'hour') {
           const hour = Number(HOUR_ITEMS[itemIdx]);
-
-          if (hour > 12) {
-            updatedDate = updatedDate.set('hour', hour === 12 ? 12 : hour + 12);
-          } else {
+          if (isAm) {
             updatedDate = updatedDate.set('hour', hour === 12 ? 0 : hour);
+          } else {
+            updatedDate = updatedDate.set('hour', hour === 12 ? 12 : hour + 12);
           }
         }
 
@@ -75,7 +75,7 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
         }
         onChange(updatedDate.format('HH:mm'));
       },
-      200,
+      100,
       {leading: false, trailing: true},
     );
 
@@ -126,12 +126,11 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
     const [hourValue, minuteValue] = value.split(':').map(Number);
     let updatedDate = date.set('hour', hourValue).set('minute', minuteValue);
 
-    const meridiem = Number(hourValue) > 12 ? '오후' : '오전';
+    const meridiem = hourValue >= 12 ? '오후' : '오전';
     if (hourValue >= 12) {
       updatedDate = updatedDate.set('hour', hourValue - 12);
     }
-
-    const hour = updatedDate.format('hh'); // 12시간제 (01-12)
+    const hour = updatedDate.format('HH'); // 12시간제 (01-12)
     const minute = updatedDate.format('mm'); // 분
 
     const matchIndex = [

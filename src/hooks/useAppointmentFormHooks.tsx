@@ -68,7 +68,7 @@ const useAppointmentFormHooks = () => {
       newDate.setMinutes(appointmentForm.time?.split(':')[1]);
 
       const today = new Date();
-      today.setHours(today.getHours() + 9);
+      today.setHours(today.getHours());
 
       // 오늘보다 이전 날짜 필터
       if (newDate < today) {

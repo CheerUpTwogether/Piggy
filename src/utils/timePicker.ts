@@ -118,16 +118,6 @@ export const fillEmpty = (visibleCount, [...values]) => {
   return values;
 };
 
-export const asPickerFormat = () => {
-  const _date = new Date();
-  _date.setTime(Date.now());
-  _date.setHours(0);
-  _date.setMinutes(0);
-  _date.setSeconds(0);
-  _date.setMilliseconds(0);
-  return _date;
-};
-
 export const changeDateText = (text: number) => {
   if (String(text).length === 1) {
     return `0${text}`;

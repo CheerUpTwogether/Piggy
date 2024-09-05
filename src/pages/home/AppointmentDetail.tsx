@@ -1,3 +1,4 @@
+import {View} from 'react-native';
 import AppointmentCheck from '@/components/appointment/AppointmentCheck';
 import Button from '@/components/common/Button';
 import ButtonCouple from '@/components/common/ButtonCouple';
@@ -10,7 +11,7 @@ import {
   setAppointmentCancellationSpb,
 } from '@/supabase/appointmentSpb';
 import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+
 import {useNavigation} from '@react-navigation/native';
 
 const AppointmentDetail = () => {
