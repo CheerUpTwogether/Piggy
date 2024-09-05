@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
-import {useToastStore, useUserStore} from '@/store/store';
+import {useToastStore, useUserStore, useAppointmentForm} from '@/store/store';
 import {
   getAppointmentCancellationStatusSpb,
   getAppointmentsSpb,
@@ -17,6 +17,7 @@ import {
 import {StackNavigation} from '@/types/Router';
 import {useButtonBottomSheet} from './useButtonBottomSheet';
 import {getPiggySpb} from '@/supabase/AuthSpb';
+import dayjs from 'dayjs';
 
 const categories: AppointmentTabCategory[] = [
   {label: '대기', value: 'pending', status: ['pending']},
@@ -35,13 +36,13 @@ const useHomeAppointments = () => {
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
   const [disable, setDisable] = useState(false);
+  const {setAppointmentForm} = useAppointmentForm();
 
   const {createButtonList, bottomSheetShow, setBottomSheetShow} =
     useButtonBottomSheet(
       () => onPressFix(selectedId),
       () => onPressDelete(selectedId),
-      sort === 'fulfilled' ? '삭제' : '취소 요청',
-      disable,
+      sort === 'fulfilled' ? '삭제' : '취소 관리',
     );
 
   useFocusEffect(
@@ -111,7 +112,20 @@ const useHomeAppointments = () => {
     if (sort === 'fulfilled') {
       deleteAppointment(appointmentId);
     } else {
-      cancelAppointment(appointmentId);
+      //cancelAppointment(appointmentId);
+      const appointment = appointments.find(
+        el => el.appointment_id === appointmentId,
+      );
+      if (appointment) {
+        //const test =
+        const calendar = dayjs(appointment.appointment_date);
+        setAppointmentForm({
+          date: calendar.format('YYYY-MM-DD'),
+          time: calendar.format('HH:mm'),
+          ...appointment,
+        });
+      }
+      navigation.navigate('AppointmentCancel');
     }
   };
 

@@ -256,7 +256,8 @@ export interface ButtonBottomSheetProps {
 export interface AppointmentFormStore {
   appointmentForm: AppointmentInsertProps;
   appointmentParticipants: FriendRelationshipRow[];
-  setAppointmentForm: (
+  setAppointmentForm: (appointmentForm: AppointmentInsertProps) => void;
+  setAppointmentFormByKey: (
     key: keyof AppointmentInsertProps,
     value: string | number | FriendProp[],
   ) => void;

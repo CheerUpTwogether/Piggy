@@ -17,7 +17,6 @@ import PeopleSvg from '@/assets/icons/people.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
 import {useAppointmentForm} from '@/store/store';
-import {changeDateText} from '@/utils/timePicker';
 
 const AppointmentCheck = () => {
   const {appointmentForm} = useAppointmentForm();
@@ -27,9 +26,9 @@ const AppointmentCheck = () => {
 
   const renderItem = ({item}: {item: FriendsProps}) => (
     <View style={styles.friendWrapper}>
-      {item.url ? (
+      {item.url || item.profile_img_url ? (
         <Image
-          source={{uri: item.url}}
+          source={{uri: item.url || item.profile_img_url}}
           style={styles.profile}
           alt={`${item.nick_name}프로필사진`}
         />
@@ -42,7 +41,7 @@ const AppointmentCheck = () => {
         style={[commonStyle.REGULAR_33_12, styles.nickName]}
         numberOfLines={1}
         ellipsizeMode="tail">
-        {item.nickname}
+        {item?.nickname}
       </Text>
     </View>
   );
@@ -68,9 +67,7 @@ const AppointmentCheck = () => {
             <DateSvg width={20} height={20} color={'#AAA'} />
             <Text style={commonStyle.MEDIUM_33_16}>날짜</Text>
           </View>
-          <Text style={commonStyle.BOLD_33_16}>
-            {String(appointmentForm.date)}
-          </Text>
+          <Text style={commonStyle.BOLD_33_16}>{appointmentForm.date}</Text>
         </View>
         <View style={styles.row}>
           <View style={styles.rowTitle}>
@@ -78,7 +75,7 @@ const AppointmentCheck = () => {
             <Text style={commonStyle.MEDIUM_33_16}>시간</Text>
           </View>
           <Text style={commonStyle.BOLD_PRIMARY_16}>
-            {`${appointmentForm.date} ${appointmentForm.time}`}
+            {`${appointmentForm?.date} ${appointmentForm?.time}`}
           </Text>
         </View>
       </View>
@@ -91,9 +88,9 @@ const AppointmentCheck = () => {
           </View>
         </View>
         <FlatList
-          keyExtractor={item => String(item.uuid)}
+          keyExtractor={item => item.nickname}
           renderItem={renderItem}
-          data={appointmentForm.appointment_participants_list}
+          data={appointmentForm?.appointment_participants_list}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         />
