@@ -1,12 +1,110 @@
 import AppointmentCheck from '@/components/appointment/AppointmentCheck';
+import Button from '@/components/common/Button';
+import ButtonCouple from '@/components/common/ButtonCouple';
+import {useAppointmentForm, useToastStore, useUserStore} from '@/store/store';
 import {commonStyle} from '@/styles/common';
-import React from 'react';
+import {
+  getAppointmentCancellationStatusSpb,
+  setAppointmentCancellationAcceptanceSpb,
+  setAppointmentCancellationSpb,
+} from '@/supabase/appointmentSpb';
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 
 const AppointmentCancel = () => {
+  const addToast = useToastStore(state => state.addToast);
+  const {userData} = useUserStore();
+  const {appointmentForm} = useAppointmentForm();
+  const [status, setStatus] = useState('nothing');
+
+  useEffect(() => {
+    getAppointmentCancellationStatus();
+  }, []);
+
+  // 약속 취소 요청 했는지 체크
+  const getAppointmentCancellationStatus = async () => {
+    try {
+      const res = await getAppointmentCancellationStatusSpb(
+        userData.id,
+        appointmentForm.id,
+      );
+      if (res?.[0]?.cancellation_status) {
+        setStatus(res?.[0]?.cancellation_status);
+      }
+    } catch {
+      console.log('ds');
+      addToast({
+        success: false,
+        text: '약속 정보를 불러오는데 실패했어요.',
+      });
+    }
+  };
+
+  // 약속 취소 요청
+  const cancelAppointment = async () => {
+    try {
+      console.log(appointmentForm.id);
+      await setAppointmentCancellationSpb(userData.id, appointmentForm.id);
+      addToast({
+        success: false,
+        text: '약속 취소 요청을 보냈어요.',
+      });
+      getAppointmentCancellationStatus();
+    } catch (e) {
+      addToast({
+        success: false,
+        text: '약속 취소 요청에 실패했어요.',
+      });
+    }
+  };
+
+  // 약속 취소 요청 응답
+  const setAppointmentCancellationAcceptance = async type => {
+    try {
+      await setAppointmentCancellationAcceptanceSpb(
+        userData.id,
+        appointmentForm.id,
+        type,
+      );
+    } catch {
+      addToast({
+        success: false,
+        text: '약속 취소 요청에 수락/거절에 실패했어요.',
+      });
+    }
+  };
+
   return (
     <View style={commonStyle.CONTAINER}>
       <AppointmentCheck />
+      {status === 'nothing' && (
+        <Button text={'취소 요청'} onPress={cancelAppointment} />
+      )}
+      {status === 'cancellation-request' && (
+        <Button
+          text={'취소 요청 완료'}
+          onPress={cancelAppointment}
+          disable={true}
+        />
+      )}
+      {status === 'cancellation-rejected' && (
+        <Button text={'취소 거절'} disable={true} />
+      )}
+      {status === 'cancellation-confirm' && (
+        <Button text={'취소 완료'} disable={true} />
+      )}
+      {status === 'cancellation-pending' && (
+        <ButtonCouple
+          onPressLeft={() => {
+            setAppointmentCancellationAcceptance('cancllation-rejected');
+          }}
+          onPressRight={() => {
+            setAppointmentCancellationAcceptance('cancellation-confirmed');
+          }}
+          textLeft={'취소 거절'}
+          textRight={'취소 수락'}
+        />
+      )}
     </View>
   );
 };

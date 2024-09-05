@@ -1,10 +1,8 @@
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {useToastStore, useUserStore, useAppointmentForm} from '@/store/store';
 import {
-  getAppointmentCancellationStatusSpb,
   getAppointmentsSpb,
-  setAppointmentCancellationSpb,
   setListDisplaySpb,
   setPinnedSpb,
 } from '@/supabase/appointmentSpb';
@@ -15,7 +13,6 @@ import {
   AppointmentTabStatus,
 } from '@/types/appointment';
 import {StackNavigation} from '@/types/Router';
-import {useButtonBottomSheet} from './useButtonBottomSheet';
 import {getPiggySpb} from '@/supabase/AuthSpb';
 import dayjs from 'dayjs';
 
@@ -35,35 +32,63 @@ const useHomeAppointments = () => {
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
-  const [disable, setDisable] = useState(false);
   const {setAppointmentForm} = useAppointmentForm();
-
-  const {createButtonList, bottomSheetShow, setBottomSheetShow} =
-    useButtonBottomSheet(
-      () => onPressFix(selectedId),
-      () => onPressDelete(selectedId),
-      sort === 'fulfilled' ? '삭제' : '취소 관리',
-    );
+  const [bottomSheetShow, setBottomSheetShow] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
-      getAppointment(sort);
       getPiggy();
     }, []),
   );
+
+  useEffect(() => {
+    getAppointment(sort);
+  }, []);
+
+  const createButtonList = () => {
+    const buttons: Array<{
+      text: string;
+      theme?: 'sub' | 'primary' | 'outline' | undefined;
+      onPress: () => void | Promise<void>;
+      disable?: boolean;
+    }> = [
+      {
+        text: '고정',
+        onPress: () => {
+          setBottomSheetShow(false);
+          onPressFix(selectedId);
+        },
+        theme: 'outline',
+      },
+    ];
+
+    const appointment = appointments.find(
+      el => el.appointment_id === selectedId,
+    );
+    if (appointment?.appointment_status !== 'pending') {
+      buttons.push({
+        text:
+          appointment?.appointment_status === 'confirmed' ? '취소확인' : '삭제',
+        onPress: () => {
+          setBottomSheetShow(false);
+          onPressDelete(selectedId);
+        },
+      });
+    }
+
+    return buttons;
+  };
 
   // 피기 정보 불러오기
   const getPiggy = async () => {
     const res = await getPiggySpb(userData.id);
     setUserDataByKey('piggy', res?.latest_piggy_count);
-    console.log(userData);
   };
 
   //appointments.find(el => el.appointment_id === selectedId);
   // 약속 더보기 버튼 클릭
   const onPressMore = (item: AppointmentProps) => {
     setSelectedId(item.appointment_id);
-    getAppointmentCancellationStatus(item.appointment_id);
     setBottomSheetShow(true);
   };
 
@@ -80,6 +105,7 @@ const useHomeAppointments = () => {
 
   // 약속 리스트
   const getAppointment = async (sortValue: AppointmentStatus) => {
+    console.log(sort);
     const {data, error} = await getAppointmentsSpb(
       userData.id,
       categories.filter(el => el.value === sortValue)[0].status,
@@ -112,7 +138,6 @@ const useHomeAppointments = () => {
     if (sort === 'fulfilled') {
       deleteAppointment(appointmentId);
     } else {
-      //cancelAppointment(appointmentId);
       const appointment = appointments.find(
         el => el.appointment_id === appointmentId,
       );
@@ -120,28 +145,13 @@ const useHomeAppointments = () => {
         //const test =
         const calendar = dayjs(appointment.appointment_date);
         setAppointmentForm({
+          ...appointment,
           date: calendar.format('YYYY-MM-DD'),
           time: calendar.format('HH:mm'),
-          ...appointment,
+          id: appointment.appointment_id,
         });
       }
       navigation.navigate('AppointmentCancel');
-    }
-  };
-
-  // 약속 취소 요청
-  const cancelAppointment = async (appointmentId: number) => {
-    try {
-      await setAppointmentCancellationSpb(userData.id, appointmentId);
-      addToast({
-        success: false,
-        text: '약속 취소 요청을 보냈어요.',
-      });
-    } catch (e) {
-      addToast({
-        success: false,
-        text: '약속 취소 요청에 실패했어요.',
-      });
     }
   };
 
@@ -165,21 +175,6 @@ const useHomeAppointments = () => {
         text: '인터넷 연결이 되어있지 않아요',
       });
     }
-  };
-
-  // 약속 취소 요청 했는지 체크
-  const getAppointmentCancellationStatus = async (appointmentId: number) => {
-    const res = await getAppointmentCancellationStatusSpb(
-      userData.id,
-      appointmentId,
-    );
-    // 빈 배열이면 요청이 없음
-    if (res?.length) {
-      setDisable(true);
-    } else {
-      setDisable(false);
-    }
-    console.log(res);
   };
 
   return {

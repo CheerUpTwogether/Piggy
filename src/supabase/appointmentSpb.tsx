@@ -211,7 +211,20 @@ export const getAppointmentCancellationStatusSpb = async (
       .eq('appointment_id', appointment_id)
       .or(
         'cancellation_status.eq.cancellation-request,cancellation_status.eq.cancellation-pending',
-      );
+      )
+      .order('user_id', {ascending: false})
+      .limit(1);
+    // const {data, error} = await supabase
+    //   .from('appointment_cancellation_request_log')
+    //   .select('cancellation_status')
+    //   .eq('user_id', id)
+    //   .eq('appointment_id', appointment_id)
+    //   .in('appointment_status', [
+    //     'cancellation-request',
+    //     'cancellation-pending',
+    //   ])
+    //   .order('user_id', {ascending: false})
+    //   .limit(1);
     if (error) {
       throw error;
     }

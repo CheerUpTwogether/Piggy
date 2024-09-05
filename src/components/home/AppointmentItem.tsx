@@ -12,6 +12,8 @@ import PendingSvg from '@/assets/icons/pending.svg';
 import CancelCalendarSvg from '@/assets/icons/cancelCalendar.svg';
 import LocationSvg from '@/assets/icons/location.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
+import {useAppointmentForm} from '@/store/store';
+import dayjs from 'dayjs';
 
 const AppointmentItem = ({
   item,
@@ -23,6 +25,7 @@ const AppointmentItem = ({
   onPressFix: (id: number) => void;
 }) => {
   const navigation = useNavigation<StackNavigation>();
+  const {setAppointmentForm} = useAppointmentForm();
   const cancelStatus = ['cancelled', 'expired'];
   const titleFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.BOLD_AA_20
@@ -36,10 +39,22 @@ const AppointmentItem = ({
     (item.appointment_status === 'pending' &&
       item.agreement_status === 'pending');
 
+  const onPress = item => {
+    if (item.appointment_status === 'pending') {
+      const calendar = dayjs(item.appointment_date);
+      setAppointmentForm({
+        ...item,
+        date: calendar.format('YYYY-MM-DD'),
+        time: calendar.format('HH:mm'),
+        id: item.appointment_id,
+      });
+      navigation.navigate('AppointmentCancel');
+    } else {
+      navigation.navigate('AppointmentDetail', {...item});
+    }
+  };
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => navigation.navigate('AppointmentDetail', {...item})}>
+    <TouchableOpacity style={styles.container} onPress={() => onPress(item)}>
       <View style={styles.contentContainer}>
         {/* 참석자 프로필 */}
         <View style={styles.iconContainer}>
