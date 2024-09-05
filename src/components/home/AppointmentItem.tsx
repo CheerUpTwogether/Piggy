@@ -49,6 +49,9 @@ const AppointmentItem = ({
     remainingTime !== null &&
     remainingTime > 0;
 
+  // 취소 버튼 표시 결정 - 2시간 전 조건 추가
+  const cancellable = item.agreement_status === 'confirmed';
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -133,10 +136,30 @@ const AppointmentItem = ({
             {/* 타이머 */}
             {/* TODO: 인증 상태 확인 후 색상 변경 */}
             {shouldShowTimer && (
-              <Text style={[styles.timer, commonStyle.BOLD_PRIMARY_14]}>
+              <Text
+                style={[
+                  styles.timer,
+                  styles.rightBottomButton,
+                  commonStyle.BOLD_PRIMARY_14,
+                ]}>
                 {formattedTime}
               </Text>
             )}
+            {/* TODO: 취소 요청 - 2시간 전까지만 가능*/}
+            {/* {cancellable && (
+              <TouchableOpacity
+                style={styles.cancelWrapper}
+                activeOpacity={0.9}>
+                <Text
+                  style={[
+                    styles.cancelButton,
+                    styles.rightBottomButton,
+                    commonStyle.REGULAR_PRIMARY_14,
+                  ]}>
+                  취소 요청
+                </Text>
+              </TouchableOpacity>
+            )} */}
           </View>
         </View>
       </View>
@@ -201,17 +224,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  timer: {
-    position: 'absolute',
-    bottom: 0,
-    right: 4,
+  rightBottomButton: {
     borderRadius: 100,
-    borderColor: color_primary,
-    borderWidth: 2,
     textAlign: 'center',
     height: 30,
     width: 64,
     textAlignVertical: 'center',
+  },
+  timer: {
+    position: 'absolute',
+    borderColor: color_primary,
+    borderWidth: 2,
+    bottom: 0,
+    right: 4,
+  },
+  cancelWrapper: {position: 'absolute', bottom: -20, left: 80},
+  cancelButton: {
+    borderColor: color_primary,
+    backgroundColor: '#FFEBEB',
   },
   hiddenBtnContainer: {
     flexDirection: 'row',
