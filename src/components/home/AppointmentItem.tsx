@@ -69,7 +69,9 @@ const AppointmentItem = ({
           )}
           {!notUseFreindsIcon && (
             <FlatItemsFriends
-              images={item.appointment_participants_list.map(el => el.url)}
+              images={item.appointment_participants_list.map(
+                el => el.profile_img_url,
+              )}
             />
           )}
         </View>
@@ -136,30 +138,10 @@ const AppointmentItem = ({
             {/* 타이머 */}
             {/* TODO: 인증 상태 확인 후 색상 변경 */}
             {shouldShowTimer && (
-              <Text
-                style={[
-                  styles.timer,
-                  styles.rightBottomButton,
-                  commonStyle.BOLD_PRIMARY_14,
-                ]}>
+              <Text style={[styles.timer, commonStyle.BOLD_PRIMARY_14]}>
                 {formattedTime}
               </Text>
             )}
-            {/* TODO: 취소 요청 - 2시간 전까지만 가능*/}
-            {/* {cancellable && (
-              <TouchableOpacity
-                style={styles.cancelWrapper}
-                activeOpacity={0.9}>
-                <Text
-                  style={[
-                    styles.cancelButton,
-                    styles.rightBottomButton,
-                    commonStyle.REGULAR_PRIMARY_14,
-                  ]}>
-                  취소 요청
-                </Text>
-              </TouchableOpacity>
-            )} */}
           </View>
         </View>
       </View>
@@ -224,24 +206,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  rightBottomButton: {
-    borderRadius: 100,
-    textAlign: 'center',
-    height: 30,
-    width: 64,
-    textAlignVertical: 'center',
-  },
+  rightBottomButton: {},
   timer: {
     position: 'absolute',
     borderColor: color_primary,
     borderWidth: 2,
     bottom: 0,
     right: 4,
-  },
-  cancelWrapper: {position: 'absolute', bottom: -20, left: 80},
-  cancelButton: {
-    borderColor: color_primary,
-    backgroundColor: '#FFEBEB',
+    borderRadius: 100,
+    textAlign: 'center',
+    height: 30,
+    width: 64,
+    textAlignVertical: 'center',
   },
   hiddenBtnContainer: {
     flexDirection: 'row',

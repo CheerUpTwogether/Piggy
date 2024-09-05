@@ -52,7 +52,6 @@ const FriendSearch = () => {
 
   useEffect(() => {
     fetchUsers();
-    console.log('ddd', friendsList);
   }, [debouncedKeyword]);
 
   const fetchUsers = async () => {
