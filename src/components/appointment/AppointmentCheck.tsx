@@ -78,9 +78,7 @@ const AppointmentCheck = () => {
             <Text style={commonStyle.MEDIUM_33_16}>시간</Text>
           </View>
           <Text style={commonStyle.BOLD_PRIMARY_16}>
-            {`${changeDateText(
-              appointmentForm.time.getHours(),
-            )} : ${changeDateText(appointmentForm.time.getMinutes())}`}
+            {`${appointmentForm.date} ${appointmentForm.time}`}
           </Text>
         </View>
       </View>

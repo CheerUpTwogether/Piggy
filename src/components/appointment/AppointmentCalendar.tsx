@@ -14,7 +14,7 @@ LocaleConfig.locales.ko = localeConfigKr;
 LocaleConfig.defaultLocale = 'ko';
 
 const AppointmentCalendar = () => {
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(true);
   const {appointmentForm, setAppointmentFormByKey} = useAppointmentForm();
   const fadeAnimCalendar = useRef(new Animated.Value(1)).current;
   const fadeAnimInput = useRef(new Animated.Value(1)).current;
@@ -63,6 +63,7 @@ const AppointmentCalendar = () => {
         activeOpacity={0.8}
         style={styles.input}>
         <CalendarSvg style={styles.svg} />
+        <Text style={commonStyle.MEDIUM_33_16}>{appointmentForm.date}</Text>
       </TouchableOpacity>
       {showCalendar && (
         <Animated.View style={{...styles.calendar, opacity: fadeAnimCalendar}}>
