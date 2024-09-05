@@ -5,17 +5,20 @@ import {useAppointmentForm, useToastStore, useUserStore} from '@/store/store';
 import {commonStyle} from '@/styles/common';
 import {
   getAppointmentCancellationStatusSpb,
+  setAppointmentAcceptanceSpb,
   setAppointmentCancellationAcceptanceSpb,
   setAppointmentCancellationSpb,
 } from '@/supabase/appointmentSpb';
 import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const AppointmentDetail = () => {
   const addToast = useToastStore(state => state.addToast);
   const {userData} = useUserStore();
   const {appointmentForm} = useAppointmentForm();
   const [cancelStatus, setCancelStatus] = useState('nothing');
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (appointmentForm.appointment_status === 'confirmed') {
@@ -75,6 +78,22 @@ const AppointmentDetail = () => {
     }
   };
 
+  // 약속 수락/거절
+  const setAppointmentAcceptance = async type => {
+    try {
+      await setAppointmentAcceptanceSpb(userData.id, appointmentForm.id, type);
+      addToast({
+        success: false,
+        text: `약속을 ${type ? '수락' : '거절'}했어요.`,
+      });
+      navigation.goBack();
+    } catch {
+      addToast({
+        success: false,
+        text: `약속 ${type ? '수락' : '거절'}에 실패했어요.`,
+      });
+    }
+  };
   const btn = () => {
     if (
       appointmentForm.appointment_status === 'expired' ||
@@ -86,18 +105,16 @@ const AppointmentDetail = () => {
     if (appointmentForm.agreement_status === 'pending') {
       return (
         <ButtonCouple
-          onPressLeft={() => {}}
-          onPressRight={() => {}}
+          onPressLeft={() => {
+            setAppointmentAcceptance(false);
+          }}
+          onPressRight={() => {
+            setAppointmentAcceptance(true);
+          }}
           textLeft={'약속 거절'}
           textRight={'약속 수락'}
           theme="outline"
         />
-      );
-    }
-
-    if (appointmentForm.appointment_status === 'pending') {
-      return (
-        <Button text={'수락 완료'} onPress={cancelAppointment} disable={true} />
       );
     }
 
@@ -120,54 +137,11 @@ const AppointmentDetail = () => {
     }
 
     if (cancelStatus === 'cancellation-confirm') {
-      <Button text={'취소 완료'} disable={true} />;
+      return <Button text={'취소 완료'} disable={true} />;
     }
 
     if (cancelStatus === 'cancellation-pending') {
-      <ButtonCouple
-        onPressLeft={() => {
-          setAppointmentCancellationAcceptance('cancllation-rejected');
-        }}
-        onPressRight={() => {
-          setAppointmentCancellationAcceptance('cancellation-confirmed');
-        }}
-        textLeft={'취소 거절'}
-        textRight={'취소 수락'}
-      />;
-    }
-  };
-
-  return (
-    <View style={commonStyle.CONTAINER}>
-      <AppointmentCheck>{btn()}</AppointmentCheck>
-
-      {/* {appointmentForm.agreement_status === 'pending' && (
-        <ButtonCouple
-          onPressLeft={() => {}}
-          onPressRight={() => {}}
-          textLeft={'약속 거절'}
-          textRight={'약속 수락'}
-          theme="outline"
-        />
-      )} */}
-
-      {/* {cancelStatus === 'nothing' && (
-        <Button text={'취소 요청'} onPress={cancelAppointment} />
-      )}
-      {cancelStatus === 'cancellation-request' && (
-        <Button
-          text={'취소 요청 완료'}
-          onPress={cancelAppointment}
-          disable={true}
-        />
-      )}
-      {cancelStatus === 'cancellation-rejected' && (
-        <Button text={'취소 거절'} disable={true} />
-      )}
-      {cancelStatus === 'cancellation-confirm' && (
-        <Button text={'취소 완료'} disable={true} />
-      )}
-      {cancelStatus === 'cancellation-pending' && (
+      return (
         <ButtonCouple
           onPressLeft={() => {
             setAppointmentCancellationAcceptance('cancllation-rejected');
@@ -177,8 +151,15 @@ const AppointmentDetail = () => {
           }}
           textLeft={'취소 거절'}
           textRight={'취소 수락'}
+          theme="outline"
         />
-      )} */}
+      );
+    }
+  };
+
+  return (
+    <View style={commonStyle.CONTAINER}>
+      <AppointmentCheck>{btn()}</AppointmentCheck>
     </View>
   );
 };

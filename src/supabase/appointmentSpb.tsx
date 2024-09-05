@@ -179,7 +179,7 @@ export const setAppointmentCancellationAcceptanceSpb = async (
       .update({
         cancellation_status: cancellation_status, // "cancellation-confirmed" || "cancllation-rejected"
       })
-      .eq('id', id)
+      .eq('user_id', id)
       .eq('appointment_id', appointment_id);
     if (error) {
       throw error;
@@ -191,10 +191,7 @@ export const setAppointmentCancellationAcceptanceSpb = async (
       .eq('appointment_id', appointment_id);
     return selectData;
   } catch (e) {
-    console.error(
-      'Error appeared in setAppointmentCancellationAcceptanceSpb : ',
-      e,
-    );
+    throw e;
   }
 };
 
@@ -214,17 +211,6 @@ export const getAppointmentCancellationStatusSpb = async (
       )
       .order('user_id', {ascending: false})
       .limit(1);
-    // const {data, error} = await supabase
-    //   .from('appointment_cancellation_request_log')
-    //   .select('cancellation_status')
-    //   .eq('user_id', id)
-    //   .eq('appointment_id', appointment_id)
-    //   .in('appointment_status', [
-    //     'cancellation-request',
-    //     'cancellation-pending',
-    //   ])
-    //   .order('user_id', {ascending: false})
-    //   .limit(1);
     if (error) {
       throw error;
     }

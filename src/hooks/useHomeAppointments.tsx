@@ -32,16 +32,11 @@ const useHomeAppointments = () => {
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
-  const {setAppointmentForm} = useAppointmentForm();
+
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      getPiggy();
-    }, []),
-  );
-
   useEffect(() => {
+    getPiggy();
     getAppointment(sort);
   }, []);
 
@@ -107,11 +102,11 @@ const useHomeAppointments = () => {
 
   // 약속 리스트
   const getAppointment = async (sortValue: AppointmentStatus) => {
-    console.log(sort);
     const {data, error} = await getAppointmentsSpb(
       userData.id,
       categories.filter(el => el.value === sortValue)[0].status,
     );
+    console.log(data);
     if (error) {
       addToast({
         success: false,

@@ -6,10 +6,8 @@ import {
   setAppointmentProposerSpb,
   setAppointmentSpb,
 } from '@/supabase/appointmentSpb';
-import {changeDateText} from '@/utils/timePicker';
 import {sendInviteNotificationAPI} from '@/api/fcm';
 import {getPiggySpb} from '@/supabase/AuthSpb';
-import dayjs from 'dayjs';
 
 const useAppointmentFormHooks = () => {
   const [nowStep, setNowStep] = useState(1);
@@ -176,7 +174,6 @@ const useAppointmentFormHooks = () => {
       participants_uuid,
     );
 
-    console.log(error);
     if (error) {
       throw Error;
     }
