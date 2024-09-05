@@ -39,22 +39,18 @@ const AppointmentItem = ({
     (item.appointment_status === 'pending' &&
       item.agreement_status === 'pending');
 
-  const onPress = item => {
-    if (item.appointment_status === 'pending') {
-      const calendar = dayjs(item.appointment_date);
-      setAppointmentForm({
-        ...item,
-        date: calendar.format('YYYY-MM-DD'),
-        time: calendar.format('HH:mm'),
-        id: item.appointment_id,
-      });
-      navigation.navigate('AppointmentCancel');
-    } else {
-      navigation.navigate('AppointmentDetail', {...item});
-    }
+  const onPress = () => {
+    const calendar = dayjs(item?.appointment_date);
+    setAppointmentForm({
+      ...item,
+      date: calendar.format('YYYY-MM-DD'),
+      time: calendar.format('HH:mm'),
+      id: item.appointment_id,
+    });
+    navigation.navigate('AppointmentDetail');
   };
   return (
-    <TouchableOpacity style={styles.container} onPress={() => onPress(item)}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.contentContainer}>
         {/* 참석자 프로필 */}
         <View style={styles.iconContainer}>

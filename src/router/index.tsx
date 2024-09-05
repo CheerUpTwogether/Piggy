@@ -38,7 +38,6 @@ import AppointmentForm from '@/pages/home/AppointmentForm';
 import Regist from '@/pages/auth/Regist';
 import LoginEmail from '@/pages/auth/LoginEmail';
 import RedirectKakaoMap from '@/components/home/RedirectKaKaoMap';
-import AppointmentCancel from '@/pages/home/AppointmentCancel';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -111,14 +110,6 @@ const Router = () => {
       <Stack.Screen
         name="AppointmentDetail"
         component={AppointmentDetail}
-        options={{
-          header: Header,
-          headerLeftLabelVisible: true,
-        }}
-      />
-      <Stack.Screen
-        name="AppointmentCancel"
-        component={AppointmentCancel}
         options={{
           header: Header,
           headerLeftLabelVisible: true,

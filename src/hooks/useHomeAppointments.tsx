@@ -58,21 +58,23 @@ const useHomeAppointments = () => {
           setBottomSheetShow(false);
           onPressFix(selectedId);
         },
-        theme: 'outline',
       },
     ];
 
     const appointment = appointments.find(
       el => el.appointment_id === selectedId,
     );
-    if (appointment?.appointment_status !== 'pending') {
+    if (
+      appointment?.appointment_status !== 'pending' &&
+      appointment?.appointment_status !== 'confirmed'
+    ) {
       buttons.push({
-        text:
-          appointment?.appointment_status === 'confirmed' ? '취소확인' : '삭제',
+        text: '삭제',
         onPress: () => {
           setBottomSheetShow(false);
           onPressDelete(selectedId);
         },
+        theme: 'outline',
       });
     }
 
@@ -135,24 +137,7 @@ const useHomeAppointments = () => {
 
   // ButtonBottomSheet 2번째 버튼 클릭 이벤트
   const onPressDelete = (appointmentId: number) => {
-    if (sort === 'fulfilled') {
-      deleteAppointment(appointmentId);
-    } else {
-      const appointment = appointments.find(
-        el => el.appointment_id === appointmentId,
-      );
-      if (appointment) {
-        //const test =
-        const calendar = dayjs(appointment.appointment_date);
-        setAppointmentForm({
-          ...appointment,
-          date: calendar.format('YYYY-MM-DD'),
-          time: calendar.format('HH:mm'),
-          id: appointment.appointment_id,
-        });
-      }
-      navigation.navigate('AppointmentCancel');
-    }
+    deleteAppointment(appointmentId);
   };
 
   // 약속 리스트에서 display 삭제
