@@ -25,6 +25,16 @@ const AppointmentItem = ({
 }) => {
   const navigation = useNavigation<StackNavigation>();
   const cancelStatus = ['cancelled', 'expired'];
+  // useAppointmentTimer 타이머 훅 호출
+  const {remainingTime, formattedTime} = useAppointmentTimer(
+    item.appointment_date,
+  );
+
+  // 10분 타이머를 표시할지 결정
+  const shouldShowTimer =
+    item.agreement_status === 'confirmed' &&
+    remainingTime !== null &&
+    remainingTime > 0;
 
   const titleFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.BOLD_AA_20
@@ -37,20 +47,6 @@ const AppointmentItem = ({
     cancelStatus.includes(item.appointment_status) ||
     (item.appointment_status === 'pending' &&
       item.agreement_status === 'pending');
-
-  // useAppointmentTimer 타이머 훅 호출
-  const {remainingTime, formattedTime} = useAppointmentTimer(
-    item.appointment_date,
-  );
-
-  // 타이머를 표시할지 결정
-  const shouldShowTimer =
-    item.agreement_status === 'confirmed' &&
-    remainingTime !== null &&
-    remainingTime > 0;
-
-  // 취소 버튼 표시 결정 - 2시간 전 조건 추가
-  const cancellable = item.agreement_status === 'confirmed';
 
   return (
     <TouchableOpacity
@@ -135,8 +131,8 @@ const AppointmentItem = ({
               </View>
             </View>
 
-            {/* 타이머 */}
             {/* TODO: 인증 상태 확인 후 색상 변경 */}
+            {/* 타이머 */}
             {shouldShowTimer && (
               <Text style={[styles.timer, commonStyle.BOLD_PRIMARY_14]}>
                 {formattedTime}
