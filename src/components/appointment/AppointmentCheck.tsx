@@ -27,11 +27,11 @@ const AppointmentCheck = () => {
 
   const renderItem = ({item}: {item: FriendsProps}) => (
     <View style={styles.friendWrapper}>
-      {item.url ? (
+      {item.profile_img_url ? (
         <Image
-          source={{uri: item.url}}
+          source={{uri: item.profile_img_url}}
           style={styles.profile}
-          alt={`${item.nick_name}프로필사진`}
+          alt={`${item.nickname}프로필사진`}
         />
       ) : (
         <View style={styles.profileWrapper}>

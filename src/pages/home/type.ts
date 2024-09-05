@@ -25,8 +25,8 @@ export interface Friend {
 
 export interface FriendsProps {
   uuid: number;
-  nick_name: string;
-  url?: string;
+  nickname: string;
+  profile_img_url?: string;
 }
 
 export interface AppointmentPenaltyProps {}
