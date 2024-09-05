@@ -112,7 +112,9 @@ export const getUserSpb = async id => {
     const {data, error} = await supabase
       .from('users_nickname')
       .select(
-        'email, nickname, created_at, updated_at, service_terms_agreement, payment_terms_agreement, notification_agreement','profile_img_url'
+        'email, nickname, created_at, updated_at, service_terms_agreement, payment_terms_agreement, notification_agreement',
+        'profile_img_url',
+      )
       .eq('id', id);
 
     if (error) {
