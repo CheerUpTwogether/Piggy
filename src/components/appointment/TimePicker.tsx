@@ -22,12 +22,13 @@ import {
 } from '@/utils/timePicker';
 import uuid from 'react-native-uuid';
 import {commonStyle} from '@/styles/common';
+import dayjs from 'dayjs';
 
 const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
   if (visibleCount % 2 === 0) {
     throw new Error('visibleCount must be odd');
   }
-  const dateString = value.toTimeString();
+  //const dateString = value.toTimeString();
 
   const refs = React.useRef(
     Array.from({length: 3}).map(() => React.createRef()),
@@ -39,34 +40,40 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
   const getScrollProps = (index, key, items) => {
     const onScrollStop = debounce(
       offsetY => {
-        const date = new Date(value.getTime());
+        const date = dayjs();
+        const [hourValue, minuteValue] = value.split(':').map(Number);
+        let updatedDate = date
+          .set('hour', hourValue)
+          .set('minute', minuteValue);
+
         const itemIdx = getIndexFromOffset(offsetY);
 
         if (key === 'meridiem') {
-          const currValueIsPM = isPM(date);
-          const nextValueIsPM = MERIDIEM_ITEMS[itemIdx] === '오후';
-          if (currValueIsPM && !nextValueIsPM) {
-            date.setHours(date.getHours() - 12);
+          const currValueIsPM = Number(hourValue) > 12;
+          if (currValueIsPM) {
+            updatedDate = updatedDate.set('hour', updatedDate.hour() - 12);
           }
-          if (!currValueIsPM && nextValueIsPM) {
-            date.setHours(date.getHours() + 12);
+          if (!currValueIsPM) {
+            updatedDate = updatedDate.set('hour', updatedDate.hour() + 12);
           }
         }
         if (key === 'hour') {
           const hour = Number(HOUR_ITEMS[itemIdx]);
 
-          if (isPM(date)) {
-            date.setHours(hour === 12 ? 12 : hour + 12);
+          if (hour > 12) {
+            updatedDate = updatedDate.set('hour', hour === 12 ? 12 : hour + 12);
           } else {
-            date.setHours(hour === 12 ? 0 : hour);
+            updatedDate = updatedDate.set('hour', hour === 12 ? 0 : hour);
           }
         }
 
         if (key === 'minute') {
-          date.setMinutes(Number(MINUTE_ITEMS[itemIdx]));
+          updatedDate = updatedDate.set(
+            'minute',
+            Number(MINUTE_ITEMS[itemIdx]),
+          );
         }
-
-        onChange(date);
+        onChange(updatedDate.format('HH:mm'));
       },
       200,
       {leading: false, trailing: true},
@@ -112,14 +119,20 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
     return ITEMS.map(({key, items}, index) =>
       getScrollProps(index, key, items),
     );
-  }, [dateString]);
+  }, [value]);
 
   React.useEffect(() => {
-    const meridiem = isPM(value) ? '오후' : '오전';
-    const hour = String(
-      isPM(value) ? value.getHours() - 12 : value.getHours(),
-    ).padStart(2, '0');
-    const minute = String(value.getMinutes()).padStart(2, '0');
+    const date = dayjs();
+    const [hourValue, minuteValue] = value.split(':').map(Number);
+    let updatedDate = date.set('hour', hourValue).set('minute', minuteValue);
+
+    const meridiem = Number(hourValue) > 12 ? '오후' : '오전';
+    if (hourValue >= 12) {
+      updatedDate = updatedDate.set('hour', hourValue - 12);
+    }
+
+    const hour = updatedDate.format('hh'); // 12시간제 (01-12)
+    const minute = updatedDate.format('mm'); // 분
 
     const matchIndex = [
       MERIDIEM_ITEMS.indexOf(meridiem),
@@ -132,7 +145,7 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
         y: getCenterPositionFromIndex(matchIndex[index]),
       });
     });
-  }, [dateString]);
+  }, [value]);
 
   return (
     <View

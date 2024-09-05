@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {Dimensions} from 'react-native';
 
 const {width} = Dimensions.get('screen');
@@ -97,7 +98,7 @@ export const ITEMS = [
   },
 ];
 
-export const isPM = date => date.getHours() >= 12;
+export const isPM = date => dayjs(date).hour() > 12;
 
 export const getCenterPosition = offsetY => {
   return getIndexFromOffset(offsetY) * BUTTON_HEIGHT;
