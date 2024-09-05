@@ -7,7 +7,7 @@ import {commonStyle} from '@/styles/common';
 
 const AppointmentPenalty = () => {
   const {inputValue, setInputValue, handlePress} = useKeyPad();
-  const {appointmentForm, setAppointmentForm} = useAppointmentForm();
+  const {appointmentForm, setAppointmentFormByKey} = useAppointmentForm();
   const {userData} = useUserStore();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const AppointmentPenalty = () => {
 
   // inputValue가 변경될 때마다 부모 컴포넌트로 업데이트
   useEffect(() => {
-    setAppointmentForm(
+    setAppointmentFormByKey(
       'deal_piggy_count',
       Number(inputValue.split(',').join('')),
     );
