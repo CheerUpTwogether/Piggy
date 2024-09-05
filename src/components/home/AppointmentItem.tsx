@@ -131,8 +131,7 @@ const AppointmentItem = ({
             </View>
 
             {/* 타이머 */}
-            {/* confirmd */}
-            {/* {item.appointment_status === 'pending' && ( */}
+            {/* TODO: 인증 상태 확인 후 색상 변경 */}
             {shouldShowTimer && (
               <Text style={[styles.timer, commonStyle.BOLD_PRIMARY_14]}>
                 {formattedTime}
