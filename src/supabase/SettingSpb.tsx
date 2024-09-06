@@ -133,8 +133,8 @@ export const getAnnouncementSpb = async () => {
 };
 
 // 프로필 수정 - 이름
-export const setMyProfileNicknameSpb = async (id, nickname) => {
-  return await supabase
+export const setMyProfileNicknameSpb = (id, nickname) => {
+  return supabase
     .from('users_nickname')
     .update({nickname: nickname})
     .eq('id', id);
