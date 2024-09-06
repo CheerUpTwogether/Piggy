@@ -32,6 +32,16 @@ export function daysAgo(koreanDate: string) {
 
   const differenceInTime = currentDate.getTime() - targetDate.getTime();
   const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
-
-  return differenceInDays < 31 ? `${differenceInDays}일전` : koreanDate;
+  if (differenceInDays > 30) {
+    return koreanDate;
+  }
+  if (differenceInDays === 0) {
+    const differenceInHours = Math.floor(differenceInTime / (1000 * 3600));
+    if (differenceInHours === 0) {
+      const differenceInMinute = Math.floor(differenceInTime / (1000 * 60));
+      return `${Math.floor(differenceInMinute)}분 전`;
+    }
+    return `${Math.floor(differenceInHours)}시간 전`;
+  }
+  return `${differenceInDays}일전`;
 }

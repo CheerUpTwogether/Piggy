@@ -10,10 +10,10 @@ const SelectFriendItem = ({item, handleFriendDelete}: SelectFriendItemProp) => {
     <TouchableOpacity
       style={styles.firendSelectWrapper}
       onPress={() => handleFriendDelete(item)}>
-      {item.profile_image_path ? (
+      {item.profile_img_url || item.profile_img_path ? (
         <>
           <Image
-            source={{uri: item.profile_image_path}}
+            source={{uri: item.profile_img_url || item.profile_img_path}}
             style={styles.friendSelectProfile}
             alt={`${item.nickname}profile`}
           />
@@ -22,10 +22,16 @@ const SelectFriendItem = ({item, handleFriendDelete}: SelectFriendItemProp) => {
           </View>
         </>
       ) : (
-        <View style={[styles.friendEmptyProfile, styles.friendSelectProfile]}>
-          <BasicProfileSvg width={24} height={24} />
-        </View>
+        <>
+          <View style={[styles.friendSelectProfile, styles.friendEmptyProfile]}>
+            <BasicProfileSvg width={24} height={24} />
+          </View>
+          <View style={styles.friendSelectCancleContainer}>
+            <CancleSvg width={12} height={8} stroke={'#FFF'} />
+          </View>
+        </>
       )}
+
       <Text style={styles.nickname} numberOfLines={1} ellipsizeMode="tail">
         {item.nickname}
       </Text>
@@ -38,11 +44,11 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 30,
+    borderWidth: 1,
   },
   friendEmptyProfile: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
     borderColor: '#DDD',
   },
   friendSelectCancleContainer: {
@@ -53,7 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: 0,
+    top: 12,
     right: 0,
   },
   firendSelectContainer: {
@@ -67,7 +73,7 @@ const styles = StyleSheet.create({
   },
   nickname: {
     ...commonStyle.REGULAR_33_12,
-    maxWidth: 52,
+    maxWidth: 60,
     flexWrap: 'wrap',
   },
 });

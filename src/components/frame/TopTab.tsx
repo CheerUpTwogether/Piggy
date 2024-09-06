@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   Image,
   StyleSheet,
@@ -57,15 +57,28 @@ const Title = ({title}: {title: string}) => {
   );
 };
 
-const Alarm = ({isUnConfirmAlarm}: {isUnConfirmAlarm: {value: boolean}}) => {
+const Alarm = () => {
   const navigation = useNavigation<NavigationProp>();
+  const {userData} = useUserStore();
+  const [isUnConfirmAlarm, setIsUnConfirmAlarm] = useState('init');
+  const handle = async () => {
+    const isUnConfirm = await getUnConfirmNotificationSpb(userData.id);
+    setIsUnConfirmAlarm(isUnConfirm.toString());
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      handle();
+      subcribeUnConfirmNotification(userData.id, handle);
+    }, []),
+  );
 
   return (
     <TouchableOpacity
       style={styles.icon}
       activeOpacity={0.8}
       onPress={() => navigation.navigate('Alarm')}>
-      {isUnConfirmAlarm.value && (
+      {isUnConfirmAlarm === 'true' && (
         <View style={styles.alarmConfirmWrapper}></View>
       )}
       <AlertSvg width={24} height={24} />
@@ -77,15 +90,6 @@ type NavigationProp = StackNavigationProp<RootStackParamList>;
 const RightItems = ({name}: {name: string}) => {
   const navigation = useNavigation<NavigationProp>();
   const {userData, gotoProfile, setUserDataByKey} = useUserStore();
-  const [isUnConfirmAlarm, setIsUnConfirmAlarm] = useState({value: false});
-  const handle = async () => {
-    const isUnConfirm = await getUnConfirmNotificationSpb(userData.id);
-    setIsUnConfirmAlarm({value: isUnConfirm});
-  };
-  useEffect(() => {
-    handle();
-    subcribeUnConfirmNotification(userData.id, handle);
-  }, []);
 
   const updatePiggy = async () => {
     if (userData) {
@@ -117,7 +121,7 @@ const RightItems = ({name}: {name: string}) => {
             <GoodsBoxSvg style={styles.svg} />
           </TouchableOpacity>
 
-          <Alarm isUnConfirmAlarm={isUnConfirmAlarm} />
+          <Alarm />
         </View>
       );
     case 'Friends':
@@ -132,7 +136,7 @@ const RightItems = ({name}: {name: string}) => {
             }>
             <SearchSvg style={styles.svg} />
           </TouchableOpacity>
-          <Alarm isUnConfirmAlarm={isUnConfirmAlarm} />
+          <Alarm />
         </View>
       );
     case 'Goods':
@@ -148,7 +152,7 @@ const RightItems = ({name}: {name: string}) => {
             onPress={() => navigation.navigate('GoodsStorage')}>
             <GoodsBoxSvg style={styles.svg} />
           </TouchableOpacity>
-          <Alarm isUnConfirmAlarm={isUnConfirmAlarm} />
+          <Alarm />
         </View>
       );
     case 'Settings':
@@ -157,13 +161,13 @@ const RightItems = ({name}: {name: string}) => {
           <TouchableOpacity style={styles.icon} onPress={gotoProfile}>
             <EditSvg style={styles.svg} />
           </TouchableOpacity>
-          <Alarm isUnConfirmAlarm={isUnConfirmAlarm} />
+          <Alarm />
         </View>
       );
     case 'Alert':
       return <View style={styles.empty} />;
     default:
-      return <Alarm isUnConfirmAlarm={isUnConfirmAlarm} />;
+      return <Alarm />;
   }
 };
 
