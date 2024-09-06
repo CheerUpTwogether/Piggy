@@ -65,6 +65,9 @@ const AppointmentCalendar = () => {
         <CalendarSvg style={styles.svg} />
         <Text style={commonStyle.MEDIUM_33_16}>{appointmentForm.date}</Text>
       </TouchableOpacity>
+      <Text style={[commonStyle.REGULAR_PRIMARY_12, {marginTop: 8}]}>
+        *현재보다 최소 2시간 이후의 약속만 생성할 수 있어요
+      </Text>
       {showCalendar && (
         <Animated.View style={{...styles.calendar, opacity: fadeAnimCalendar}}>
           <CalendarList
