@@ -10,6 +10,7 @@ import {GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY} from '@env';
 import {initFcmTokenSpb} from '@/supabase/auth';
 import {useToastStore, useUserStore} from '@/store/store';
 import {
+  deleteProfileSpb,
   setMyProfileImageSpb,
   setMyProfileNicknameSpb,
 } from '@/supabase/SettingSpb';
@@ -18,6 +19,7 @@ import Button from '../common/Button';
 import InputBox from '../common/InputBox';
 import NickNameSvg from '@/assets/icons/nickname.svg';
 import CameraSvg from '@/assets/icons/camera.svg';
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
@@ -25,6 +27,10 @@ const EditProfile = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {userData, setUserDataByKey} = useUserStore();
   const addToast = useToastStore(state => state.addToast);
+
+  useEffect(() => {
+    setNickNameValue(userData.nickname);
+  }, []);
 
   const googleLogOut = async () => {
     GoogleSignin.configure({
@@ -42,17 +48,18 @@ const EditProfile = () => {
     navigation.replace('Login');
   };
 
-  useEffect(() => {
-    setNickNameValue(userData.nickname);
-  }, []);
-
+  // 프로필 이미지 선택
   const selectImage = async () => {
-    try {
-      const file = await ImagePicker.openPicker({
-        mediaType: 'photo',
-        multiple: false,
-      });
+    const file = await ImagePicker.openPicker({
+      mediaType: 'photo',
+      multiple: false,
+    });
+    updateImage(file);
+  };
 
+  // 프로필 이미지 업데이트
+  const updateImage = async file => {
+    try {
       const image = {
         uri: file.path,
         type: file.mime,
@@ -68,7 +75,7 @@ const EditProfile = () => {
         success: true,
         text: '프로필 사진을 변경했어요',
       });
-    } catch (e) {
+    } catch {
       addToast({
         success: false,
         text: '프로필 사진 변경에 실패했어요',
@@ -76,6 +83,7 @@ const EditProfile = () => {
     }
   };
 
+  // 닉네임 변경
   const changeNickname = async () => {
     try {
       const {error} = await setMyProfileNicknameSpb(userData.id, nickNameValue);
@@ -99,6 +107,26 @@ const EditProfile = () => {
     }
   };
 
+  // 기본 이미지로 선택
+  const resetImage = async () => {
+    try {
+      const res = await deleteProfileSpb(userData);
+      if (res) {
+        addToast({
+          success: true,
+          text: '프로필 사진을 변경했어요',
+        });
+        setUserDataByKey('profile_img_url', '');
+      }
+    } catch {
+      console.log('test');
+      addToast({
+        success: false,
+        text: '프로필 사진 변경에 실패했어요',
+      });
+    }
+  };
+
   return (
     <View style={commonStyle.CONTAINER}>
       <View>
@@ -114,13 +142,20 @@ const EditProfile = () => {
                 alt="profileImage"
               />
             ) : (
-              <View>
-                <Text>test</Text>
+              <View style={[styles.profileImg, styles.profileEmptyImg]}>
+                <BasicProfileSvg width={60} />
               </View>
             )}
             <View style={styles.cameraContainer}>
               <CameraSvg />
             </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text
+              style={{textDecorationLine: 'underline'}}
+              onPress={resetImage}>
+              기본이미지로 변경
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -177,6 +212,13 @@ const styles = StyleSheet.create({
     right: 10,
     borderRadius: 24,
     backgroundColor: '#333',
+  },
+  profileEmptyImg: {
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

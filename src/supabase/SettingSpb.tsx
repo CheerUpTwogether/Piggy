@@ -156,17 +156,12 @@ export const setMyProfileImageSpb = async (userData, img_file) => {
     }
 
     //2. img_url Get
-    const imgUrl = supabase.storage.from('image_bucket').getPublicUrl(filePath);
+    const imgUrl = await supabase.storage
+      .from('image_bucket')
+      .getPublicUrl(filePath);
 
     //3. 버킷에서 이미지 삭제
-    console.log(userData.profile_img_url);
-    const test = userData.profile_img_url.split(userData.id)[1];
-    const {error: deleteError} = await supabase.storage
-      .from('image_bucket')
-      .remove([`profile_image/${userData.id}${test}`]);
-    if (deleteError) {
-      throw deleteError;
-    }
+    await deleteProfileSpb(userData);
 
     //4. users_nickname 테이블 , profile_img_url 컬럼 업데이트
     const {data: uploadData, error: uploadError} = await supabase
@@ -182,7 +177,7 @@ export const setMyProfileImageSpb = async (userData, img_file) => {
 
     return uploadData;
   } catch (e) {
-    console.error('Error appeared in setProfileImageSpb : ', e);
+    throw e;
   }
 };
 
@@ -199,5 +194,31 @@ export const getMySettingsSpb = async (id: string) => {
     return data;
   } catch (e) {
     console.error('Error appeared in getMySettingsSpb : ', e);
+  }
+};
+
+// 기본 이미지로 변경
+export const deleteProfileSpb = async userData => {
+  try {
+    const pathId = userData.profile_img_url.split(userData.id)[1];
+    const {error: deleteError} = await supabase.storage
+      .from('image_bucket')
+      .remove([`profile_image/${userData.id}${pathId}`]);
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    //4. users_nickname 테이블 , profile_img_url 컬럼 업데이트
+    const {error: uploadError} = await supabase
+      .from('users_nickname')
+      .update({profile_img_url: ''})
+      .eq('id', userData.id);
+    if (deleteError) {
+      throw uploadError;
+    }
+
+    return true;
+  } catch (e) {
+    throw e;
   }
 };
