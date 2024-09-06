@@ -147,14 +147,16 @@ export const setMyProfileNicknameSpb = async (id, nickname) => {
 // 프로필 수정 - 프로필 사진
 export const setMyProfileImageSpb = async (id, img_file) => {
   try {
-    const uploadFileName = `uploaded_${id}_${Date.now()}_${img_file.name}`;
+    const uploadFileName = `${id}`;
     const uploadFolder = 'profile_image';
-    const filePath = `${uploadFolder}/${uploadFileName}`;
+    const filePath = `${uploadFolder}/${uploadFileName}${new Date().getTime()}`;
 
     //1. 이미지 버킷 업로드
     const {data, error} = await supabase.storage
       .from('image_bucket')
-      .upload(filePath, img_file);
+      .upload(filePath, img_file, {
+        upsert: true,
+      });
     if (error) {
       throw error;
     }
@@ -165,11 +167,15 @@ export const setMyProfileImageSpb = async (id, img_file) => {
     //3. users_nickname 테이블 , profile_img_url 컬럼 업데이트
     const {data: uploadData, error: uploadError} = await supabase
       .from('users_nickname')
-      .update({profile_img_url: imgUrl})
-      .select();
+      .update({profile_img_url: imgUrl.data.publicUrl})
+      .eq('id', id)
+      .select()
+      .single();
+
     if (uploadError) {
       throw uploadError;
     }
+
     return uploadData;
   } catch (e) {
     console.error('Error appeared in setProfileImageSpb : ', e);

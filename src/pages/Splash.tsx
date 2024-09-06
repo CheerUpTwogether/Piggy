@@ -59,6 +59,8 @@ const Splash = () => {
         phone_number,
       } = data[0];
 
+      console.log(profile_img_url);
+
       setLoginProfile(
         id,
         email,

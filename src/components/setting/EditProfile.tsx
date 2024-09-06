@@ -3,25 +3,24 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {RootStackParamList} from '@/types/Router';
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
-import Button from '../common/Button';
-import InputBox from '../common/InputBox';
-import NickNameSvg from '@/assets/icons/nickname.svg';
-import CameraSvg from '@/assets/icons/camera.svg';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {deleteItemSession} from '@/utils/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY} from '@env';
 import {initFcmTokenSpb} from '@/supabase/auth';
 import {useUserStore} from '@/store/store';
+import {setMyProfileImageSpb} from '@/supabase/SettingSpb';
+import ImagePicker from 'react-native-image-crop-picker';
+import Button from '../common/Button';
+import InputBox from '../common/InputBox';
+import NickNameSvg from '@/assets/icons/nickname.svg';
+import CameraSvg from '@/assets/icons/camera.svg';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
-  const [iserror, setIsError] = useState(true);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'EditProfile'>>();
-  const {nickname, profile_img_url} = route.params;
-  const {userData} = useUserStore();
+  const {userData, setUserDataByKey} = useUserStore();
 
   const googleLogOut = async () => {
     GoogleSignin.configure({
@@ -40,21 +39,50 @@ const EditProfile = () => {
   };
 
   useEffect(() => {
-    setNickNameValue(nickname);
+    setNickNameValue(userData.nickname);
   }, []);
+
+  const selectImage = async () => {
+    try {
+      const file = await ImagePicker.openPicker({
+        mediaType: 'photo',
+        multiple: false,
+      });
+
+      const image = {
+        uri: file.path,
+        type: file.mime,
+        name: `${file.modificationDate}${file.path.slice(-4)}`,
+      };
+      const profileimagepath = await setMyProfileImageSpb(userData.id, image);
+
+      if (profileimagepath) {
+        setUserDataByKey('profile_img_url', image?.uri);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <View style={commonStyle.CONTAINER}>
       <View>
         <View style={{alignItems: 'center', marginVertical: 48}}>
           <TouchableOpacity
+            onPress={selectImage}
             activeOpacity={0.8}
             style={styles.profileImgContainer}>
-            <Image
-              source={{uri: profile_img_url}}
-              style={styles.profileImg}
-              alt="profileImage"
-            />
+            {userData.profile_img_url ? (
+              <Image
+                source={{uri: userData.profile_img_url}}
+                style={styles.profileImg}
+                alt="profileImage"
+              />
+            ) : (
+              <View>
+                <Text>test</Text>
+              </View>
+            )}
             <View style={styles.cameraContainer}>
               <CameraSvg />
             </View>
@@ -70,13 +98,13 @@ const EditProfile = () => {
             placeholder={'수정하실 닉네임을 입력해주세요.'}
             icon={NickNameSvg}
             isLarge={true}
+            msg={
+              nickNameValue.length > 8
+                ? '*닉네임은 8글자까지 설정할 수 있습니다'
+                : ''
+            }
           />
         </View>
-        {iserror && (
-          <Text style={{...commonStyle.MEDIUM_PRIMARY_12, marginVertical: 8}}>
-            *닉네임은 8글자까지 설정할 수 있습니다
-          </Text>
-        )}
       </View>
       <View style={{marginTop: 232, gap: 14, marginHorizontal: 8}}>
         <Button text="저장" onPress={() => console.log('저장')} />
