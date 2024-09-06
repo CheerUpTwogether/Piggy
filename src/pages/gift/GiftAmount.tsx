@@ -23,7 +23,7 @@ const GiftAmount = () => {
   const route = useRoute<GiftAmountRouteProp>();
   const {id, nickname, profile_img_url} = route.params;
   const {inputValue, handlePress} = useKeyPad();
-  const myId = useUserStore(state => state.userData.id);
+  const {userData, setUserDataByKey} = useUserStore();
   const addToast = useToastStore(state => state.addToast);
   const navigation = useNavigation<GiftAmountNavigationProp>();
 
@@ -34,12 +34,14 @@ const GiftAmount = () => {
   );
 
   const fetchPiggyData = async () => {
-    const res = await getPiggySpb(myId);
+    const res = await getPiggySpb(userData.id);
     setMyPiggy(res?.latest_piggy_count || 0);
   };
 
   const handleSubmit = async () => {
-    if (Number(inputValue) > myPiggy) {
+    // 문자열 금액의 쉼표 제거 후 숫자로 변환
+    const numericValue = Number(inputValue.replace(/,/g, ''));
+    if (numericValue > myPiggy) {
       addToast({
         success: false,
         text: '소유한 피기보다',
@@ -47,8 +49,15 @@ const GiftAmount = () => {
       });
       return;
     }
+    if (numericValue < 500) {
+      addToast({
+        success: false,
+        text: '500피기부터 선물할 수 있어요.',
+      });
+      return;
+    }
 
-    const isSuccess = await setGiftPiggySpb(myId, id, inputValue);
+    const isSuccess = await setGiftPiggySpb(userData.id, id, inputValue);
 
     if (isSuccess) {
       addToast({
@@ -56,6 +65,7 @@ const GiftAmount = () => {
         text: `${nickname}님께`,
         multiText: `${inputValue} 피기를 선물했어요!`,
       });
+      setUserDataByKey('piggy', myPiggy);
       navigation.replace('PiggyUsage');
     } else {
       addToast({

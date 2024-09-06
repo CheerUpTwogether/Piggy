@@ -9,7 +9,7 @@ const useAppointmentFriendHooks = () => {
   const [friends, setFriends] = useState<FriendProp[]>([]);
   const [keyword, setKeyword] = useState('');
   const debouncedKeyword = useDebounce(keyword, 100);
-  const {appointmentForm, setAppointmentForm} = useAppointmentForm();
+  const {appointmentForm, setAppointmentFormByKey} = useAppointmentForm();
   const addToast = useToastStore(state => state.addToast);
   const {userData} = useUserStore();
 
@@ -47,7 +47,7 @@ const useAppointmentFriendHooks = () => {
       handleFriendDelete(friend);
     } else {
       // 새로운 친구 선택
-      setAppointmentForm('appointment_participants_list', [
+      setAppointmentFormByKey('appointment_participants_list', [
         friend,
         ...(appointmentForm?.appointment_participants_list || []),
       ]);
@@ -55,7 +55,7 @@ const useAppointmentFriendHooks = () => {
   };
 
   const handleFriendDelete = (friend: FriendProp) => {
-    setAppointmentForm(
+    setAppointmentFormByKey(
       'appointment_participants_list',
       appointmentForm?.appointment_participants_list?.filter(
         item => item.id !== friend.id,
@@ -65,7 +65,7 @@ const useAppointmentFriendHooks = () => {
 
   // 제목변경
   const changeTitle = (subject: string) => {
-    setAppointmentForm('subject', subject);
+    setAppointmentFormByKey('subject', subject);
   };
 
   return {

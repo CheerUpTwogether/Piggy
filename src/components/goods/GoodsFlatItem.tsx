@@ -9,7 +9,7 @@ const GoodsFlatItem = ({item}: {item: GoodsItem}) => {
   const navigation = useNavigation<GoodsNavigationProp>();
 
   const gotoDetail = () => {
-    navigation.navigate('GoodsDetail', {...item.product});
+    navigation.navigate('GoodsDetail', {...item});
   };
 
   return (

@@ -156,6 +156,7 @@ export const useModalStore = create<ModalStore>(set => ({
 
 export const useAppointmentForm = create<AppointmentFormStore>(set => ({
   appointmentForm: {
+    id: 0,
     address: '',
     appointment_agreement_deadline_date: null,
     appointment_date: '',
@@ -171,12 +172,13 @@ export const useAppointmentForm = create<AppointmentFormStore>(set => ({
     subject: '',
     appointment_participants_list: [],
     date: null,
-    time: asPickerFormat(),
+    time: '00:00',
   },
   appointmentParticipants: [],
   resetAppointmentForm: () => {
     set(() => ({
       appointmentForm: {
+        id: 0,
         address: '',
         appointment_agreement_deadline_date: null,
         appointment_date: '',
@@ -192,15 +194,22 @@ export const useAppointmentForm = create<AppointmentFormStore>(set => ({
         subject: '',
         appointment_participants_list: [],
         date: null,
-        time: asPickerFormat(),
+        time: '00:00',
       },
     }));
   },
-  setAppointmentForm: (key, value) =>
+  setAppointmentFormByKey: (key, value) =>
     set(state => ({
       appointmentForm: {
         ...state.appointmentForm,
         [key]: value,
+      },
+    })),
+  setAppointmentForm: form =>
+    set(state => ({
+      appointmentForm: {
+        ...state.appointmentForm,
+        ...form,
       },
     })),
   setAppointmentParticipants: () =>

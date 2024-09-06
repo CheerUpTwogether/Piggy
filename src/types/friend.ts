@@ -8,7 +8,7 @@ export type FriendProp = {
   nickname: string;
   piggy_grade: string;
   total_appointment: null | number;
-  profile_image_path?: string;
+  profile_img_url?: string;
 };
 
 export type FriendRelationshipRow =

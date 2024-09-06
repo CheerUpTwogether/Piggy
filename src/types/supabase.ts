@@ -57,7 +57,7 @@ export type Database = {
           contents?: string | null;
           created_at?: string | null;
           deal_piggy_count: number;
-          id?: string;
+          id?: number;
           participant_count?: number;
           place_name: string;
           proposer_id?: string | null;

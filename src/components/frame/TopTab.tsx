@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Image,
   StyleSheet,
@@ -7,24 +7,24 @@ import {
   Text,
   SafeAreaView,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {BottomTabHeaderProps} from '@react-navigation/bottom-tabs';
 import {StackHeaderProps, StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {LeftItemProps} from '@/types/Common';
-import {useUserStore} from '@/store/store';
 import {commonStyle} from '@/styles/common';
-
+import {
+  getUnConfirmNotificationSpb,
+  subcribeUnConfirmNotification,
+} from '@/supabase/alarm';
+import {useUserStore} from '@/store/store';
+import {getPiggySpb} from '@/supabase/AuthSpb';
 import AlertSvg from '@/assets/icons/alert.svg';
 import SearchSvg from '@/assets/icons/search.svg';
 import GoodsBoxSvg from '@/assets/icons/goodsBox.svg';
 import BackSvg from '@/assets/icons/leftArrow.svg';
 import EditSvg from '@/assets/icons/edit.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
-import {
-  getUnConfirmNotificationSpb,
-  subcribeUnConfirmNotification,
-} from '@/supabase/alarm';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
@@ -76,7 +76,7 @@ const Alarm = ({isUnConfirmAlarm}: {isUnConfirmAlarm: {value: boolean}}) => {
 type NavigationProp = StackNavigationProp<RootStackParamList>;
 const RightItems = ({name}: {name: string}) => {
   const navigation = useNavigation<NavigationProp>();
-  const {userData, gotoProfile} = useUserStore();
+  const {userData, gotoProfile, setUserDataByKey} = useUserStore();
   const [isUnConfirmAlarm, setIsUnConfirmAlarm] = useState({value: false});
   const handle = async () => {
     const isUnConfirm = await getUnConfirmNotificationSpb(userData.id);
@@ -86,6 +86,24 @@ const RightItems = ({name}: {name: string}) => {
     handle();
     subcribeUnConfirmNotification(userData.id, handle);
   }, []);
+
+  const updatePiggy = async () => {
+    if (userData) {
+      const data = await getPiggySpb(userData.id);
+
+      if (data) {
+        const piggy = data.latest_piggy_count;
+        setUserDataByKey('piggy', piggy);
+      }
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      updatePiggy();
+    }, []),
+  );
+
   switch (name) {
     case 'Home':
       return (
@@ -121,10 +139,10 @@ const RightItems = ({name}: {name: string}) => {
     case 'GoodsDetail':
       return (
         <View style={styles.iconContainer}>
-          <TouchableOpacity style={[styles.directionRow, styles.icon]}>
-            <Text style={styles.text}>500</Text>
+          <View style={[styles.directionRow, styles.icon]}>
+            <Text style={styles.text}>{userData.piggy}</Text>
             <Text style={[styles.text, styles.colorRed]}>P</Text>
-          </TouchableOpacity>
+          </View>
           <TouchableOpacity
             style={styles.icon}
             onPress={() => navigation.navigate('GoodsStorage')}>

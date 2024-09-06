@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, FlatList, Text} from 'react-native';
+import {View, StyleSheet, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
 import AppointmentItem from '@/components/home/AppointmentItem';
@@ -15,13 +15,13 @@ const Home = () => {
     categories,
     appointments,
     sort,
-    changeSort,
     goAppointmentForm,
     onPressMore,
     onPressFix,
     createButtonList,
     bottomSheetShow,
     setBottomSheetShow,
+    changeSort,
   } = useHomeAppointments();
 
   return (

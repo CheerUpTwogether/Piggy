@@ -55,7 +55,7 @@ const ServiceAgreement = () => {
           keyExtractor={item => item.id.toString()}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={
-            <AgreementBtn authData={param.authData} type={'service'} />
+            <AgreementBtn authData={param?.authData} type={'service'} />
           }
         />
       </View>

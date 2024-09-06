@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigation} from '@/types/Router';
 import {commonStyle, color_primary, color_ef} from '@/styles/common';
 import {AppointmentProps} from '@/types/appointment';
+import useAppointmentTimer from '@/hooks/useAppointmentTimer';
 import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
@@ -12,6 +13,8 @@ import PendingSvg from '@/assets/icons/pending.svg';
 import CancelCalendarSvg from '@/assets/icons/cancelCalendar.svg';
 import LocationSvg from '@/assets/icons/location.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
+import {useAppointmentForm} from '@/store/store';
+import dayjs from 'dayjs';
 
 const AppointmentItem = ({
   item,
@@ -23,7 +26,19 @@ const AppointmentItem = ({
   onPressFix: (id: number) => void;
 }) => {
   const navigation = useNavigation<StackNavigation>();
+  const {setAppointmentForm} = useAppointmentForm();
   const cancelStatus = ['cancelled', 'expired'];
+  // useAppointmentTimer 타이머 훅 호출
+  const {remainingTime, formattedTime} = useAppointmentTimer(
+    item.appointment_date,
+  );
+
+  // 10분 타이머를 표시할지 결정
+  const shouldShowTimer =
+    item.agreement_status === 'confirmed' &&
+    remainingTime !== null &&
+    remainingTime > 0;
+
   const titleFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.BOLD_AA_20
     : commonStyle.BOLD_33_20;
@@ -36,10 +51,18 @@ const AppointmentItem = ({
     (item.appointment_status === 'pending' &&
       item.agreement_status === 'pending');
 
+  const onPress = () => {
+    const calendar = dayjs(item?.appointment_date);
+    setAppointmentForm({
+      ...item,
+      date: calendar.format('YYYY-MM-DD'),
+      time: calendar.format('HH:mm'),
+      id: item.appointment_id,
+    });
+    navigation.navigate('AppointmentDetail');
+  };
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => navigation.navigate('AppointmentDetail', {...item})}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.contentContainer}>
         {/* 참석자 프로필 */}
         <View style={styles.iconContainer}>
@@ -53,7 +76,9 @@ const AppointmentItem = ({
           )}
           {!notUseFreindsIcon && (
             <FlatItemsFriends
-              images={item.appointment_participants_list.map(el => el.url)}
+              images={item.appointment_participants_list.map(
+                el => el.profile_img_url,
+              )}
             />
           )}
         </View>
@@ -117,10 +142,11 @@ const AppointmentItem = ({
               </View>
             </View>
 
+            {/* TODO: 인증 상태 확인 후 색상 변경 */}
             {/* 타이머 */}
-            {item.appointment_id === 1 && (
-              <Text style={[styles.timer, commonStyle.REGULAR_PRIMARY_14]}>
-                09:59
+            {shouldShowTimer && (
+              <Text style={[styles.timer, commonStyle.BOLD_PRIMARY_14]}>
+                {formattedTime}
               </Text>
             )}
           </View>
@@ -187,15 +213,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  rightBottomButton: {},
   timer: {
     position: 'absolute',
+    borderColor: color_primary,
+    borderWidth: 2,
     bottom: 0,
     right: 4,
     borderRadius: 100,
-    borderColor: color_primary,
-    borderWidth: 1,
     textAlign: 'center',
-    height: 24,
+    height: 30,
     width: 64,
     textAlignVertical: 'center',
   },

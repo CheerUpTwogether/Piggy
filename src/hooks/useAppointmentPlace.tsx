@@ -31,7 +31,7 @@ const useAppointmentPlace = () => {
   const [selectPlace, setSelectPlace] = useState<SearchKeywordPlace>(place);
   const debouncedKeyword = useDebounce(keyword, 100);
   const {location} = useLocation(); // 커스텀 훅 호출
-  const {appointmentForm, setAppointmentForm} = useAppointmentForm();
+  const {appointmentForm, setAppointmentFormByKey} = useAppointmentForm();
   useEffect(() => {
     getkeywordHistories();
     setIsShow(keywordHistories.length > 0);
@@ -99,16 +99,16 @@ const useAppointmentPlace = () => {
   const handlePlacePress = (item: SearchKeywordPlace) => {
     setSelectPlace(item);
     if (item.x) {
-      setAppointmentForm('longitude', item.x);
+      setAppointmentFormByKey('longitude', item.x);
     }
     if (item.y) {
-      setAppointmentForm('latitude', item.y);
+      setAppointmentFormByKey('latitude', item.y);
     }
     if (item.address_name) {
-      setAppointmentForm('address', item.address_name);
+      setAppointmentFormByKey('address', item.address_name);
     }
     if (item.place_name) {
-      setAppointmentForm('place_name', item.place_name);
+      setAppointmentFormByKey('place_name', item.place_name);
     }
   };
 

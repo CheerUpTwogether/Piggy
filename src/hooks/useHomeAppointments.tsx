@@ -1,9 +1,8 @@
-import {useCallback, useState} from 'react';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {useCallback, useEffect, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {useToastStore, useUserStore} from '@/store/store';
 import {
   getAppointmentsSpb,
-  setAppointmentCancellationSpb,
   setListDisplaySpb,
   setPinnedSpb,
 } from '@/supabase/appointmentSpb';
@@ -14,8 +13,8 @@ import {
   AppointmentTabStatus,
 } from '@/types/appointment';
 import {StackNavigation} from '@/types/Router';
-import {useButtonBottomSheet} from './useButtonBottomSheet';
 import {getPiggySpb} from '@/supabase/AuthSpb';
+import {useFocusEffect} from '@react-navigation/native';
 
 const categories: AppointmentTabCategory[] = [
   {label: '대기', value: 'pending', status: ['pending']},
@@ -33,25 +32,56 @@ const useHomeAppointments = () => {
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
-  const {createButtonList, bottomSheetShow, setBottomSheetShow} =
-    useButtonBottomSheet(
-      () => onPressFix(selectedId),
-      () => onPressDelete(selectedId),
-      sort === 'fulfilled' ? '삭제' : '취소 요청',
-    );
+
+  const [bottomSheetShow, setBottomSheetShow] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
-      getAppointment(sort);
       getPiggy();
+      getAppointment(sort);
     }, []),
   );
+
+  const createButtonList = () => {
+    const buttons: Array<{
+      text: string;
+      theme?: 'sub' | 'primary' | 'outline' | undefined;
+      onPress: () => void | Promise<void>;
+      disable?: boolean;
+    }> = [
+      {
+        text: '고정',
+        onPress: () => {
+          setBottomSheetShow(false);
+          onPressFix(selectedId);
+        },
+      },
+    ];
+
+    const appointment = appointments.find(
+      el => el.appointment_id === selectedId,
+    );
+    if (
+      appointment?.appointment_status !== 'pending' &&
+      appointment?.appointment_status !== 'confirmed'
+    ) {
+      buttons.push({
+        text: '삭제',
+        onPress: () => {
+          setBottomSheetShow(false);
+          onPressDelete(selectedId);
+        },
+        theme: 'outline',
+      });
+    }
+
+    return buttons;
+  };
 
   // 피기 정보 불러오기
   const getPiggy = async () => {
     const res = await getPiggySpb(userData.id);
     setUserDataByKey('piggy', res?.latest_piggy_count);
-    console.log(userData);
   };
 
   //appointments.find(el => el.appointment_id === selectedId);
@@ -103,27 +133,7 @@ const useHomeAppointments = () => {
 
   // ButtonBottomSheet 2번째 버튼 클릭 이벤트
   const onPressDelete = (appointmentId: number) => {
-    if (sort === 'fulfilled') {
-      deleteAppointment(appointmentId);
-    } else {
-      cancelAppointment(appointmentId);
-    }
-  };
-
-  // 약속 취소 요청
-  const cancelAppointment = async (appointmentId: number) => {
-    try {
-      await setAppointmentCancellationSpb(userData.id, appointmentId);
-      addToast({
-        success: false,
-        text: '약속 취소 요청을 보냈어요.',
-      });
-    } catch (e) {
-      addToast({
-        success: false,
-        text: '약속 취소 요청에 실패했어요.',
-      });
-    }
+    deleteAppointment(appointmentId);
   };
 
   // 약속 리스트에서 display 삭제

@@ -167,45 +167,55 @@ export const setListDisplaySpb = async (id: string, appointment_id: number) => {
     .eq('user_id', id);
 };
 
-
 // 약소 취소 요청 수락-거절
-export const setAppointmentCancellationAcceptanceSpb = async (id : string , appointment_id : number , cancellation_status) =>{
-  try{
-  const {data, error} = await supabase.from('appointment_cancellation_request_log')
-  .update({
-    cancellation_status : cancellation_status // "cancellation-confirmed" || "cancllation-rejected"
-  })
-  .eq('id',id)
-  .eq('appointment_id',appointment_id)
-if(error){
-    throw error
-  }
-    const {data:selectData , error:selectError} = await supabase.from('appointment_participants')
+export const setAppointmentCancellationAcceptanceSpb = async (
+  id: string,
+  appointment_id: number,
+  cancellation_status,
+) => {
+  try {
+    const {data, error} = await supabase
+      .from('appointment_cancellation_request_log')
+      .update({
+        cancellation_status: cancellation_status, // "cancellation-confirmed" || "cancllation-rejected"
+      })
+      .eq('user_id', id)
+      .eq('appointment_id', appointment_id);
+    if (error) {
+      throw error;
+    }
+    const {data: selectData, error: selectError} = await supabase
+      .from('appointment_participants')
       .select('agreement_status')
-      .eq('id',id)
-      .eq('appointment_id',appointment_id)
-    return selectData
-  }catch(e){
-    console.error('Error appeared in setAppointmentCancellationAcceptanceSpb : ', e)
+      .eq('id', id)
+      .eq('appointment_id', appointment_id);
+    return selectData;
+  } catch (e) {
+    throw e;
   }
-}
-
+};
 
 // 약속 취소 신청 여부 -> 내가 취소 신청을했는지, 혹은 취소 신청에 대해 처리 해야하는지
-export const getAppointmentCancellationStatus = async(id:string, appointment_id:number)=>{
-
+export const getAppointmentCancellationStatusSpb = async (
+  id: string,
+  appointment_id: number,
+) => {
   try {
-   const {data, error} = await supabase.from('appointment_cancellation_request_log')
-    .select('cancellation_status')
-    .eq('id',id)
-    .eq('appointment_id',id)
-    .eq('appointment_status','cancellation-request')
-    .eq('appointment_status','cancellation-pending')
-  if(error){
-      throw error
+    const {data, error} = await supabase
+      .from('appointment_cancellation_request_log')
+      .select('cancellation_status')
+      .eq('user_id', id)
+      .eq('appointment_id', appointment_id)
+      .or(
+        'cancellation_status.eq.cancellation-request,cancellation_status.eq.cancellation-pending',
+      )
+      .order('user_id', {ascending: false})
+      .limit(1);
+    if (error) {
+      throw error;
     }
-    return data // null -> 취소 신청이 없음
+    return data; // null -> 취소 신청이 없음
   } catch (e) {
-    console.error('Error appeared in getAppointmentCancellationStatus : ',e)
+    console.error('Error appeared in getAppointmentCancellationStatus : ', e);
   }
-}
+};
