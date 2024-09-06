@@ -38,9 +38,12 @@ const useHomeAppointments = () => {
   useFocusEffect(
     useCallback(() => {
       getPiggy();
-      getAppointment(sort);
     }, []),
   );
+
+  useEffect(() => {
+    getAppointment(sort);
+  }, [sort]);
 
   const createButtonList = () => {
     const buttons: Array<{
@@ -94,7 +97,7 @@ const useHomeAppointments = () => {
   // 정렬기준 변경
   const changeSort = (sortValue: AppointmentTabStatus) => {
     setSort(sortValue);
-    getAppointment(sortValue);
+    //getAppointment(sortValue);
   };
 
   // 약속 생성 폼 이동
