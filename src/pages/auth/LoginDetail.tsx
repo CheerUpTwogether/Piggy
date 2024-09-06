@@ -21,8 +21,6 @@ import {
   checkPhoneNumberDuplicateSpb,
   setProfileSpb,
 } from '@/supabase/auth';
-import {set} from 'lodash';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setItemSession} from '@/utils/auth';
 import RightArrowSvg from '@/assets/icons/rightArrow.svg';
 import {setFcmTokenAPI} from '@/api/auth';
@@ -32,6 +30,7 @@ const LoginDetail = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'LoginDetail'>>();
   const {authData} = route.params;
+  const [isVerify, setIsVerify] = useState(false);
   const [email, setEmail] = useState(authData.session.user.email);
   const [nickName, setNickName] = useState(
     authData.session.user.user_metadata.name,
@@ -46,11 +45,27 @@ const LoginDetail = () => {
     userData?.isAgree.payment || false,
   );
 
-  const handleVertifyNickName = () => {
+  const handleDuplicateVerifyNickName = () => {
     addToast({
       success: false,
       text: '닉네임 중복',
       multiText: '다른 닉네임을 사용해주세요',
+    });
+  };
+
+  const handleLengthVerifyNickName = () => {
+    addToast({
+      success: false,
+      text: '닉네임 길이제한',
+      multiText: '8글자 까지 사용가능합니다.',
+    });
+  };
+
+  const handleDuplicateVerifyPhoneNumber = () => {
+    addToast({
+      success: false,
+      text: '이미 가입된 전화번호입니다.',
+      multiText: '다른 번호로 인증해주세요.',
     });
   };
 
@@ -70,11 +85,19 @@ const LoginDetail = () => {
   };
 
   const createAccount = async () => {
+    // 닉네임 길이 유효성 검사
+    if (nickName.length > 8) {
+      handleLengthVerifyNickName();
+      return;
+    }
+
+    // 이용약관 동의 유효성 검사
     if (!isAgreeService || !isAgreePayment) {
       handleAgreeToast();
       return;
     }
 
+    // 닉네임 중복 유효성 검사
     const {data: nickNameSelectData, error: nickNameSelectError} =
       await checkNicknameDuplicateSpb(nickName);
 
@@ -88,10 +111,30 @@ const LoginDetail = () => {
     }
 
     if (nickNameSelectData.length > 0) {
-      handleVertifyNickName();
+      handleDuplicateVerifyNickName();
       return;
     }
 
+    // 전화번호 중복 유효성 검사
+    const {data: phoneSelectData, error: phoneSelectError} =
+      await checkPhoneNumberDuplicateSpb(phone);
+
+    if (phoneSelectError) {
+      addToast({
+        success: false,
+        text: 'DB 조회 오류',
+        multiText: '관리자에게 문의해주세요.',
+      });
+      return;
+    }
+
+    if (phoneSelectData.length > 0) {
+      handleDuplicateVerifyPhoneNumber();
+      setIsVerify(false);
+      return;
+    }
+
+    // 프로필 생성(피기 정보 등록)
     const {data: profileInsertData, error: profileInsertError} =
       await setProfileSpb(
         authData.session.user.id,
@@ -132,10 +175,12 @@ const LoginDetail = () => {
       );
     }
 
+    // 로컬 스토리지에 세션 등록
     await setItemSession(
       authData.session.access_token,
       authData.session.refresh_token,
     );
+    // 성공여부 확인
     const isSuccess = await setFcmTokenAPI(profileInsertData.id);
 
     if (!isSuccess) {
@@ -181,6 +226,8 @@ const LoginDetail = () => {
                 setNickName,
                 phone,
                 setPhone,
+                isVerify,
+                setIsVerify,
               ]}
             />
             <View style={styles.checkBoxContainer}>
@@ -226,7 +273,7 @@ const LoginDetail = () => {
               </TouchableOpacity>
             </View>
 
-            <View style={{marginTop: 60}}>
+            <View style={{marginTop: 20}}>
               <Button text="시작하기" onPress={createAccount} />
             </View>
           </View>
@@ -245,7 +292,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     height: 32,
     width: 80,
-    marginLeft: -24,
+    // marginLeft: -24,
     marginVertical: 8,
   },
   introContainer: {
