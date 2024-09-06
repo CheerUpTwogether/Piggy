@@ -15,6 +15,7 @@ import {
   getAppointmentParticipantsSpb,
 } from '@/supabase/appointmentSpb';
 import AppointmentActionsButton from './AppointmentActionsButton';
+import {Participant} from '@/types/appointment';
 
 const AppointmentDetail = () => {
   const addToast = useToastStore(state => state.addToast);
@@ -22,7 +23,7 @@ const AppointmentDetail = () => {
   const {appointmentForm} = useAppointmentForm();
   const [cancelStatus, setCancelStatus] = useState('nothing');
   const [myAgreementStatus, setMyAgreementStatus] = useState(''); // 약속 동의 상태
-  const [isNearAppointment, setIsNearAppointment] = useState(''); // 약속까지 남은 시간 (10min, 2hr, '')
+  const [isNearAppointment, setIsNearAppointment] = useState<string>(''); // 약속까지 남은 시간 ('10min', '2hr', '')
   const [certification, setCertification] = useState(false); // 도착 인증 상태
   const {location} = useLocation();
   const navigation = useNavigation();
@@ -41,7 +42,9 @@ const AppointmentDetail = () => {
       userData.id,
       appointmentForm.id,
     );
-    const myData = res.data.filter(item => item.nickname === userData.nickname);
+    const myData = (res.data as Participant[]).filter(
+      item => item.nickname === userData.nickname,
+    );
     setMyAgreementStatus(myData[0]?.agreement_status || '');
   };
 
@@ -89,7 +92,7 @@ const AppointmentDetail = () => {
     ) {
       setIsNearAppointment('2hr');
     } else {
-      setIsNearAppointment(false);
+      setIsNearAppointment('');
     }
   };
 

@@ -4,38 +4,7 @@ import AppointmentCheck from '@/components/appointment/AppointmentCheck';
 import Button from '@/components/common/Button';
 import ButtonCouple from '@/components/common/ButtonCouple';
 import {commonStyle} from '@/styles/common';
-
-export interface AppointmentForm {
-  id: number;
-  date: string;
-  time: string;
-  latitude: number;
-  longitude: number;
-  appointment_status: 'pending' | 'fulfilled' | 'expired';
-}
-
-export type CancelStatus =
-  | 'nothing'
-  | 'cancellation-request'
-  | 'cancellation-rejected'
-  | 'cancellation-confirm'
-  | 'cancellation-pending';
-
-export type AgreementStatus = 'confirmed' | 'pending';
-
-interface AppointmentActionsProps {
-  appointmentForm: AppointmentForm;
-  cancelStatus: CancelStatus;
-  myAgreementStatus: AgreementStatus;
-  isNearAppointment: '10min' | '2hr' | false;
-  certification: boolean;
-  handleCertification: () => void;
-  cancelAppointment: () => void;
-  setAppointmentCancellationAcceptance: (
-    type: 'cancellation-rejected' | 'cancellation-confirmed',
-  ) => void;
-  setAppointmentAcceptance: (type: boolean) => void;
-}
+import {AppointmentActionsProps} from '@/types/appointment';
 
 const AppointmentActions: React.FC<AppointmentActionsProps> = ({
   appointmentForm,
