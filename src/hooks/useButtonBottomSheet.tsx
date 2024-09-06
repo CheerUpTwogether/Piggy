@@ -1,5 +1,4 @@
 import {useState} from 'react';
-import {Bold} from '@/styles/font';
 
 export const useButtonBottomSheet = (
   onPressFix: () => void,

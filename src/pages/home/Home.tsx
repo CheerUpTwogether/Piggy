@@ -15,13 +15,13 @@ const Home = () => {
     categories,
     appointments,
     sort,
-    changeSort,
     goAppointmentForm,
     onPressMore,
     onPressFix,
     createButtonList,
     bottomSheetShow,
     setBottomSheetShow,
+    changeSort,
   } = useHomeAppointments();
 
   return (

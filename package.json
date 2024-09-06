@@ -20,6 +20,7 @@
     "@react-navigation/stack": "^6.4.1",
     "@supabase/supabase-js": "^2.45.1",
     "axios": "^1.7.4",
+    "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "react": "18.2.0",
     "react-native": "0.74.5",

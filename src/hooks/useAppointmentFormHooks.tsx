@@ -6,7 +6,6 @@ import {
   setAppointmentProposerSpb,
   setAppointmentSpb,
 } from '@/supabase/appointmentSpb';
-import {changeDateText} from '@/utils/timePicker';
 import {sendInviteNotificationAPI} from '@/api/fcm';
 import {getPiggySpb} from '@/supabase/AuthSpb';
 
@@ -65,11 +64,11 @@ const useAppointmentFormHooks = () => {
 
     if (appointmentForm.date && nowStep === 3) {
       const newDate = new Date(appointmentForm.date);
-      newDate.setHours(appointmentForm.time?.getHours() + 9);
-      newDate.setMinutes(appointmentForm.time?.getMinutes());
+      newDate.setHours(appointmentForm.time?.split(':')[0]);
+      newDate.setMinutes(appointmentForm.time?.split(':')[1]);
 
       const today = new Date();
-      today.setHours(today.getHours() + 9);
+      today.setHours(today.getHours());
 
       // 오늘보다 이전 날짜 필터
       if (newDate < today) {
@@ -141,9 +140,7 @@ const useAppointmentFormHooks = () => {
       date,
       time,
     } = appointmentForm;
-    const hour = changeDateText(time?.getHours() || 0);
-    const minute = changeDateText(time?.getMinutes() || 0);
-    const timeString = `${hour}:${minute}:00`;
+
     const {data, error} = await setAppointmentSpb({
       id: userData.id,
       subject,
@@ -152,7 +149,7 @@ const useAppointmentFormHooks = () => {
       place_name,
       latitude,
       longitude,
-      appointment_date: `${String(date)} ${timeString}`,
+      appointment_date: `${date} ${time}`,
       deal_piggy_count,
     });
 
@@ -178,7 +175,6 @@ const useAppointmentFormHooks = () => {
       participants_uuid,
     );
 
-    console.log(error);
     if (error) {
       throw Error;
     }

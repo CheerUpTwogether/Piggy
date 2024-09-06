@@ -179,7 +179,7 @@ export const setAppointmentCancellationAcceptanceSpb = async (
       .update({
         cancellation_status: cancellation_status, // "cancellation-confirmed" || "cancllation-rejected"
       })
-      .eq('id', id)
+      .eq('user_id', id)
       .eq('appointment_id', appointment_id);
     if (error) {
       throw error;
@@ -191,15 +191,12 @@ export const setAppointmentCancellationAcceptanceSpb = async (
       .eq('appointment_id', appointment_id);
     return selectData;
   } catch (e) {
-    console.error(
-      'Error appeared in setAppointmentCancellationAcceptanceSpb : ',
-      e,
-    );
+    throw e;
   }
 };
 
 // 약속 취소 신청 여부 -> 내가 취소 신청을했는지, 혹은 취소 신청에 대해 처리 해야하는지
-export const getAppointmentCancellationStatus = async (
+export const getAppointmentCancellationStatusSpb = async (
   id: string,
   appointment_id: number,
 ) => {
@@ -207,10 +204,13 @@ export const getAppointmentCancellationStatus = async (
     const {data, error} = await supabase
       .from('appointment_cancellation_request_log')
       .select('cancellation_status')
-      .eq('id', id)
-      .eq('appointment_id', id)
-      .eq('appointment_status', 'cancellation-request')
-      .eq('appointment_status', 'cancellation-pending');
+      .eq('user_id', id)
+      .eq('appointment_id', appointment_id)
+      .or(
+        'cancellation_status.eq.cancellation-request,cancellation_status.eq.cancellation-pending',
+      )
+      .order('user_id', {ascending: false})
+      .limit(1);
     if (error) {
       throw error;
     }

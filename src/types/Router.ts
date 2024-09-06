@@ -50,6 +50,7 @@ export type RootStackParamList = {
   PiggyShop: undefined;
   AppointmentForm: undefined;
   Regist: undefined;
+  AppointmentCancel: {appointmentId: number};
 };
 
 export type StackNavigation = StackNavigationProp<RootStackParamList>;

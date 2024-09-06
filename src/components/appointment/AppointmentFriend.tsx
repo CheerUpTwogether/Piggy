@@ -29,6 +29,12 @@ const AppointmentFriend = () => {
         placeholder="약속 제목을 입력해주세요."
         label="약속 제목"
         icon={RoundHandShakeSvg}
+        maxLength={15}
+        msg={
+          appointmentForm.subject?.length >= 15
+            ? '* 15자 이내로 입력해주세요'
+            : ''
+        }
       />
 
       {/* 친구 검색 Input */}

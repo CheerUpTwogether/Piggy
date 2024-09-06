@@ -24,8 +24,9 @@ export type AppointmentInsert =
 
 export interface AppointmentInsertProps extends AppointmentInsert {
   appointment_participants_list?: FriendProp[];
-  date?: null | Date;
-  time?: Date;
+  date?: string;
+  time?: string;
+  totalAmount?: number;
 }
 
 export interface AppointmentProps extends AppointmentInsert {

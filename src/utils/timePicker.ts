@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {Dimensions} from 'react-native';
 
 const {width} = Dimensions.get('screen');
@@ -97,7 +98,7 @@ export const ITEMS = [
   },
 ];
 
-export const isPM = date => date.getHours() >= 12;
+export const isPM = date => dayjs(date).hour() > 12;
 
 export const getCenterPosition = offsetY => {
   return getIndexFromOffset(offsetY) * BUTTON_HEIGHT;
@@ -115,16 +116,6 @@ export const fillEmpty = (visibleCount, [...values]) => {
     values.push('');
   }
   return values;
-};
-
-export const asPickerFormat = () => {
-  const _date = new Date();
-  _date.setTime(Date.now());
-  _date.setHours(0);
-  _date.setMinutes(0);
-  _date.setSeconds(0);
-  _date.setMilliseconds(0);
-  return _date;
 };
 
 export const changeDateText = (text: number) => {

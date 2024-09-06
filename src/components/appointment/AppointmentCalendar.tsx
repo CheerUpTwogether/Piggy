@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {CalendarList, LocaleConfig} from 'react-native-calendars';
-import {changeDateText, localeConfigKr} from '@/utils/timePicker';
+import {localeConfigKr} from '@/utils/timePicker';
 import {BUTTON_HEIGHT, VIEW_WIDTH} from '@/utils/timePicker';
 import {commonStyle} from '@/styles/common';
 import ClockSvg from '@/assets/icons/clock.svg';
@@ -15,7 +15,7 @@ LocaleConfig.defaultLocale = 'ko';
 
 const AppointmentCalendar = () => {
   const [showCalendar, setShowCalendar] = useState(true);
-  const {appointmentForm, setAppointmentForm} = useAppointmentForm();
+  const {appointmentForm, setAppointmentFormByKey} = useAppointmentForm();
   const fadeAnimCalendar = useRef(new Animated.Value(1)).current;
   const fadeAnimInput = useRef(new Animated.Value(1)).current;
 
@@ -51,7 +51,7 @@ const AppointmentCalendar = () => {
   };
 
   const handleDateSelect = date => {
-    setAppointmentForm('date', date.dateString);
+    setAppointmentFormByKey('date', date.dateString);
     handleInput();
   };
 
@@ -63,14 +63,7 @@ const AppointmentCalendar = () => {
         activeOpacity={0.8}
         style={styles.input}>
         <CalendarSvg style={styles.svg} />
-        <Text
-          style={
-            appointmentForm.date
-              ? commonStyle.MEDIUM_33_16
-              : commonStyle.MEDIUM_AA_16
-          }>
-          {appointmentForm.date ? appointmentForm.date : '날짜를 선택해주세요'}
-        </Text>
+        <Text style={commonStyle.MEDIUM_33_16}>{appointmentForm.date}</Text>
       </TouchableOpacity>
       <Text style={[commonStyle.REGULAR_PRIMARY_12, {marginTop: 8}]}>
         *현재보다 최소 2시간 이후의 약속만 생성할 수 있어요
@@ -99,16 +92,12 @@ const AppointmentCalendar = () => {
           <Text style={styles.label}>시간</Text>
           <View style={styles.input}>
             <ClockSvg style={styles.svg} />
-            <Text style={commonStyle.MEDIUM_33_16}>
-              {`${changeDateText(
-                appointmentForm.time.getHours(),
-              )} : ${changeDateText(appointmentForm.time.getMinutes())}`}
-            </Text>
+            <Text style={commonStyle.MEDIUM_33_16}>{appointmentForm.time}</Text>
           </View>
 
           <TimePicker
             value={appointmentForm.time}
-            onChange={date => setAppointmentForm('time', date)}
+            onChange={date => setAppointmentFormByKey('time', date)}
             width={VIEW_WIDTH}
             buttonHeight={BUTTON_HEIGHT}
             visibleCount={3}

@@ -13,6 +13,8 @@ import PendingSvg from '@/assets/icons/pending.svg';
 import CancelCalendarSvg from '@/assets/icons/cancelCalendar.svg';
 import LocationSvg from '@/assets/icons/location.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
+import {useAppointmentForm} from '@/store/store';
+import dayjs from 'dayjs';
 
 const AppointmentItem = ({
   item,
@@ -24,6 +26,7 @@ const AppointmentItem = ({
   onPressFix: (id: number) => void;
 }) => {
   const navigation = useNavigation<StackNavigation>();
+  const {setAppointmentForm} = useAppointmentForm();
   const cancelStatus = ['cancelled', 'expired'];
   // useAppointmentTimer 타이머 훅 호출
   const {remainingTime, formattedTime} = useAppointmentTimer(
@@ -48,10 +51,18 @@ const AppointmentItem = ({
     (item.appointment_status === 'pending' &&
       item.agreement_status === 'pending');
 
+  const onPress = () => {
+    const calendar = dayjs(item?.appointment_date);
+    setAppointmentForm({
+      ...item,
+      date: calendar.format('YYYY-MM-DD'),
+      time: calendar.format('HH:mm'),
+      id: item.appointment_id,
+    });
+    navigation.navigate('AppointmentDetail');
+  };
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => navigation.navigate('AppointmentDetail', {...item})}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.contentContainer}>
         {/* 참석자 프로필 */}
         <View style={styles.iconContainer}>
