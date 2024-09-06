@@ -54,10 +54,10 @@ const EditProfile = () => {
         type: file.mime,
         name: `${file.modificationDate}${file.path.slice(-4)}`,
       };
-      const profileimagepath = await setMyProfileImageSpb(userData.id, image);
+      const profileimagepath = await setMyProfileImageSpb(userData, image);
 
       if (profileimagepath) {
-        setUserDataByKey('profile_img_url', image?.uri);
+        setUserDataByKey('profile_img_url', profileimagepath?.profile_img_url);
       }
     } catch (e) {
       console.log(e);

@@ -145,18 +145,16 @@ export const setMyProfileNicknameSpb = async (id, nickname) => {
 };
 
 // 프로필 수정 - 프로필 사진
-export const setMyProfileImageSpb = async (id, img_file) => {
+export const setMyProfileImageSpb = async (userData, img_file) => {
   try {
-    const uploadFileName = `${id}`;
+    const uploadFileName = `${userData.id}`;
     const uploadFolder = 'profile_image';
     const filePath = `${uploadFolder}/${uploadFileName}${new Date().getTime()}`;
 
     //1. 이미지 버킷 업로드
     const {data, error} = await supabase.storage
       .from('image_bucket')
-      .upload(filePath, img_file, {
-        upsert: true,
-      });
+      .upload(filePath, img_file);
     if (error) {
       throw error;
     }
@@ -164,11 +162,21 @@ export const setMyProfileImageSpb = async (id, img_file) => {
     //2. img_url Get
     const imgUrl = supabase.storage.from('image_bucket').getPublicUrl(filePath);
 
-    //3. users_nickname 테이블 , profile_img_url 컬럼 업데이트
+    //3. 버킷에서 이미지 삭제
+    console.log(userData.profile_img_url);
+    const test = userData.profile_img_url.split(userData.id)[1];
+    const {error: deleteError} = await supabase.storage
+      .from('image_bucket')
+      .remove([`profile_image/${userData.id}${test}`]);
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    //4. users_nickname 테이블 , profile_img_url 컬럼 업데이트
     const {data: uploadData, error: uploadError} = await supabase
       .from('users_nickname')
       .update({profile_img_url: imgUrl.data.publicUrl})
-      .eq('id', id)
+      .eq('id', userData.id)
       .select()
       .single();
 
