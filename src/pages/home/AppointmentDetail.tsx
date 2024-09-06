@@ -31,7 +31,6 @@ const AppointmentDetail = () => {
     getAppointmentCancellationStatus();
     fetchCertification();
     checkAppointmentTime();
-    console.log('상태 확인', certification);
   }, [appointmentForm]);
 
   // 약속 인증 상태 확인
@@ -50,6 +49,7 @@ const AppointmentDetail = () => {
         });
         throw new Error('인증 상태를 가져오는 데 실패했습니다.');
       }
+
       setCertification(true);
     } catch (err) {
       throw new Error(`인증 상태 불러오기 실패: ${err.message}`);
@@ -209,7 +209,15 @@ const AppointmentDetail = () => {
       return (
         <>
           {isNearAppointment ? (
-            <Button text={'약속 인증'} onPress={handleCertification} />
+            certification ? (
+              <Button
+                text={'인증 완료'}
+                onPress={handleCertification}
+                disable={true}
+              />
+            ) : (
+              <Button text={'약속 인증'} onPress={handleCertification} />
+            )
           ) : (
             <Button text={'취소 요청'} onPress={cancelAppointment} />
           )}
