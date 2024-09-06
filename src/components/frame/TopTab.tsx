@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   Image,
   StyleSheet,
@@ -13,15 +13,18 @@ import {StackHeaderProps, StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {LeftItemProps} from '@/types/Common';
 import {commonStyle} from '@/styles/common';
-
+import {
+  getUnConfirmNotificationSpb,
+  subcribeUnConfirmNotification,
+} from '@/supabase/alarm';
+import {useUserStore} from '@/store/store';
+import {getPiggySpb} from '@/supabase/AuthSpb';
 import AlertSvg from '@/assets/icons/alert.svg';
 import SearchSvg from '@/assets/icons/search.svg';
 import GoodsBoxSvg from '@/assets/icons/goodsBox.svg';
 import BackSvg from '@/assets/icons/leftArrow.svg';
 import EditSvg from '@/assets/icons/edit.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
-import {useUserStore} from '@/store/store';
-import {getPiggySpb} from '@/supabase/AuthSpb';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
@@ -54,13 +57,17 @@ const Title = ({title}: {title: string}) => {
   );
 };
 
-const Alarm = () => {
+const Alarm = ({isUnConfirmAlarm}: {isUnConfirmAlarm: {value: boolean}}) => {
   const navigation = useNavigation<NavigationProp>();
+
   return (
     <TouchableOpacity
       style={styles.icon}
       activeOpacity={0.8}
       onPress={() => navigation.navigate('Alarm')}>
+      {isUnConfirmAlarm.value && (
+        <View style={styles.alarmConfirmWrapper}></View>
+      )}
       <AlertSvg width={24} height={24} />
     </TouchableOpacity>
   );
@@ -69,7 +76,16 @@ const Alarm = () => {
 type NavigationProp = StackNavigationProp<RootStackParamList>;
 const RightItems = ({name}: {name: string}) => {
   const navigation = useNavigation<NavigationProp>();
-  const {userData, setUserDataByKey} = useUserStore();
+  const {userData, gotoProfile, setUserDataByKey} = useUserStore();
+  const [isUnConfirmAlarm, setIsUnConfirmAlarm] = useState({value: false});
+  const handle = async () => {
+    const isUnConfirm = await getUnConfirmNotificationSpb(userData.id);
+    setIsUnConfirmAlarm({value: isUnConfirm});
+  };
+  useEffect(() => {
+    handle();
+    subcribeUnConfirmNotification(userData.id, handle);
+  }, []);
 
   const updatePiggy = async () => {
     if (userData) {
@@ -101,7 +117,7 @@ const RightItems = ({name}: {name: string}) => {
             <GoodsBoxSvg style={styles.svg} />
           </TouchableOpacity>
 
-          <Alarm />
+          <Alarm isUnConfirmAlarm={isUnConfirmAlarm} />
         </View>
       );
     case 'Friends':
@@ -116,7 +132,7 @@ const RightItems = ({name}: {name: string}) => {
             }>
             <SearchSvg style={styles.svg} />
           </TouchableOpacity>
-          <Alarm />
+          <Alarm isUnConfirmAlarm={isUnConfirmAlarm} />
         </View>
       );
     case 'Goods':
@@ -132,7 +148,7 @@ const RightItems = ({name}: {name: string}) => {
             onPress={() => navigation.navigate('GoodsStorage')}>
             <GoodsBoxSvg style={styles.svg} />
           </TouchableOpacity>
-          <Alarm />
+          <Alarm isUnConfirmAlarm={isUnConfirmAlarm} />
         </View>
       );
     case 'Settings':
@@ -141,13 +157,13 @@ const RightItems = ({name}: {name: string}) => {
           <TouchableOpacity style={styles.icon} onPress={gotoProfile}>
             <EditSvg style={styles.svg} />
           </TouchableOpacity>
-          <Alarm />
+          <Alarm isUnConfirmAlarm={isUnConfirmAlarm} />
         </View>
       );
     case 'Alert':
       return <View style={styles.empty} />;
     default:
-      return <Alarm />;
+      return <Alarm isUnConfirmAlarm={isUnConfirmAlarm} />;
   }
 };
 
@@ -211,6 +227,16 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     color: '#555',
+  },
+  alarmConfirmWrapper: {
+    position: 'absolute',
+    zIndex: 2,
+    top: 6,
+    right: 8,
+    width: 10,
+    height: 10,
+    borderRadius: 10,
+    backgroundColor: '#04BF8A',
   },
 });
 export default TopTab;

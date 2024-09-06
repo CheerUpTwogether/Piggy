@@ -23,6 +23,7 @@ export const useUserStore = create<UserStore>(set => ({
     phone_number: '',
     isAgree: {service: false, payment: false},
     piggy: 0,
+    unConfirmAlarm: false,
   },
 
   setLoginProfile: (
