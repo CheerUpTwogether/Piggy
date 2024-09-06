@@ -19,7 +19,7 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
 }) => {
   const getButtonProps = () => {
     if (certification) {
-      return {text: '인증 완료', onPress: handleCertification, disabled: true};
+      return {text: '인증 완료', disabled: true};
     }
 
     switch (isNearAppointment) {
@@ -27,14 +27,18 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
         return {
           text: '약속 인증',
           onPress: handleCertification,
-          disabled: false,
         };
       case '2hr':
         return {
           text: '약속 인증',
-          onPress: handleCertification,
           disabled: true,
         };
+      case 'expired': {
+        return {
+          text: '인증 종료',
+          disabled: true,
+        };
+      }
       default:
         return {text: '취소 요청', onPress: cancelAppointment, disabled: false};
     }

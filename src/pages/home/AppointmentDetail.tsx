@@ -15,15 +15,15 @@ import {
   getAppointmentParticipantsSpb,
 } from '@/supabase/appointmentSpb';
 import AppointmentActionsButton from './AppointmentActionsButton';
-import {Participant} from '@/types/appointment';
+import {Participant, CancelStatus} from '@/types/appointment';
 
 const AppointmentDetail = () => {
   const addToast = useToastStore(state => state.addToast);
   const {userData} = useUserStore();
   const {appointmentForm} = useAppointmentForm();
-  const [cancelStatus, setCancelStatus] = useState('nothing');
+  const [cancelStatus, setCancelStatus] = useState<CancelStatus>('nothing');
   const [myAgreementStatus, setMyAgreementStatus] = useState(''); // 약속 동의 상태
-  const [isNearAppointment, setIsNearAppointment] = useState<string>(''); // 약속까지 남은 시간 ('10min', '2hr', '')
+  const [isNearAppointment, setIsNearAppointment] = useState(''); // 약속까지 남은 시간 ('10min', '2hr', 'expired', '')
   const [certification, setCertification] = useState(false); // 도착 인증 상태
   const {location} = useLocation();
   const navigation = useNavigation();
@@ -81,7 +81,10 @@ const AppointmentDetail = () => {
     const twoHoursBefore = appointmentTime.subtract(2, 'hour');
     const tenMinutesBefore = appointmentTime.subtract(10, 'minute');
 
-    if (
+    if (currentTime.isAfter(appointmentTime)) {
+      // 약속 시간이 지났을 경우
+      setIsNearAppointment('expired');
+    } else if (
       currentTime.isAfter(tenMinutesBefore) &&
       currentTime.isBefore(appointmentTime)
     ) {
