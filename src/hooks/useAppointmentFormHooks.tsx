@@ -184,7 +184,7 @@ const useAppointmentFormHooks = () => {
   // 약속 참석자 중 proporser 상태 변경
   const updateAppointmentProposer = async (
     userId: string,
-    appointmentId: string,
+    appointmentId: number,
   ) => {
     const {error} = await setAppointmentProposerSpb(userId, appointmentId);
     console.log(error);

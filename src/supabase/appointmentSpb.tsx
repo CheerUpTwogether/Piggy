@@ -34,8 +34,8 @@ export const setAppointmentSpb = ({
 
 // 약속 참여자 업데이트
 export const setAppointmentParticipantsSpb = (
-  appointment_id,
-  participants_uuid,
+  appointment_id: number,
+  participants_uuid: string,
 ) => {
   return supabase.rpc('insert_appointment_participants', {
     appointment_id,
@@ -44,7 +44,10 @@ export const setAppointmentParticipantsSpb = (
 };
 
 // 약속 생성자 상태 변경
-export const setAppointmentProposerSpb = (userId, appointmentId) => {
+export const setAppointmentProposerSpb = (
+  userId: string,
+  appointmentId: number,
+) => {
   return supabase
     .from('appointment_participants')
     .update({

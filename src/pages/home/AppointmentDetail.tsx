@@ -22,7 +22,7 @@ const AppointmentDetail = () => {
   const {userData} = useUserStore();
   const {appointmentForm} = useAppointmentForm();
   const [cancelStatus, setCancelStatus] = useState('nothing');
-  const [isNearAppointment, setIsNearAppointment] = useState(false);
+  const [isNearAppointment, setIsNearAppointment] = useState('');
   const [certification, setCertification] = useState(false);
   const {location} = useLocation();
   const navigation = useNavigation();
@@ -31,6 +31,7 @@ const AppointmentDetail = () => {
     getAppointmentCancellationStatus();
     fetchCertification();
     checkAppointmentTime();
+    console.log('상태 확인', certification);
   }, [appointmentForm]);
 
   // 약속 인증 상태 확인
@@ -41,7 +42,9 @@ const AppointmentDetail = () => {
         appointmentForm.id,
       );
 
-      if (!res) {
+      if (res) {
+        setCertification(res?.data[0].certification_status);
+      } else {
         addToast({
           success: false,
           text: '위치 정보를 가져올 수 없습니다.',
@@ -49,14 +52,12 @@ const AppointmentDetail = () => {
         });
         throw new Error('인증 상태를 가져오는 데 실패했습니다.');
       }
-
-      setCertification(true);
     } catch (err) {
       throw new Error(`인증 상태 불러오기 실패: ${err.message}`);
     }
   };
 
-  // 약속 10분 전인지 확인
+  // 약속 2시간 & 10분 전인지 확인
   const checkAppointmentTime = () => {
     if (!appointmentForm?.date || !appointmentForm?.time) return;
 
@@ -65,13 +66,19 @@ const AppointmentDetail = () => {
       'YYYY-MM-DD HH:mm',
     );
     const currentTime = dayjs();
+    const twoHoursBefore = appointmentTime.subtract(2, 'hour');
     const tenMinutesBefore = appointmentTime.subtract(10, 'minute');
 
     if (
       currentTime.isAfter(tenMinutesBefore) &&
       currentTime.isBefore(appointmentTime)
     ) {
-      setIsNearAppointment(true);
+      setIsNearAppointment('10min');
+    } else if (
+      currentTime.isAfter(twoHoursBefore) &&
+      currentTime.isBefore(tenMinutesBefore)
+    ) {
+      setIsNearAppointment('2hr');
     } else {
       setIsNearAppointment(false);
     }
@@ -104,6 +111,7 @@ const AppointmentDetail = () => {
         success: true,
         text: '약속 인증을 완료했어요!',
       });
+      navigation.goBack();
     } catch {
       addToast({
         success: false,
@@ -181,6 +189,30 @@ const AppointmentDetail = () => {
     }
   };
 
+  // nothing일 때 버튼 변경 함수
+  const getButtonProps = () => {
+    if (certification) {
+      return {text: '인증 완료', onPress: handleCertification, disabled: true};
+    }
+
+    switch (isNearAppointment) {
+      case '10min':
+        return {
+          text: '약속 인증',
+          onPress: handleCertification,
+          disabled: false,
+        };
+      case '2hr':
+        return {
+          text: '약속 인증',
+          onPress: handleCertification,
+          disabled: true,
+        };
+      default:
+        return {text: '취소 요청', onPress: cancelAppointment, disabled: false};
+    }
+  };
+
   const btn = () => {
     if (
       appointmentForm.appointment_status === 'expired' ||
@@ -189,7 +221,8 @@ const AppointmentDetail = () => {
       return;
     }
 
-    if (appointmentForm.agreement_status === 'pending') {
+    if (appointmentForm.appointment_status === 'pending') {
+      // TODO: 내 상태 confirmed ? 인증 대기중...
       return (
         <ButtonCouple
           onPressLeft={() => {
@@ -206,23 +239,8 @@ const AppointmentDetail = () => {
     }
 
     if (cancelStatus === 'nothing') {
-      return (
-        <>
-          {isNearAppointment ? (
-            certification ? (
-              <Button
-                text={'인증 완료'}
-                onPress={handleCertification}
-                disable={true}
-              />
-            ) : (
-              <Button text={'약속 인증'} onPress={handleCertification} />
-            )
-          ) : (
-            <Button text={'취소 요청'} onPress={cancelAppointment} />
-          )}
-        </>
-      );
+      const {text, onPress, disabled} = getButtonProps();
+      return <Button text={text} onPress={onPress} disable={disabled} />;
     }
 
     if (cancelStatus === 'cancellation-request') {
