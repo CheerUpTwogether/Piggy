@@ -1,8 +1,8 @@
-import {Location} from '@/types/place';
-import {requestLocationPermission} from '@/utils/permission';
 import {useState, useEffect} from 'react';
 import {Alert} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import {Location} from '@/types/place';
+import {requestLocationPermission} from '@/utils/permission';
 
 export const useLocation = () => {
   const [location, setLocation] = useState<Location>();

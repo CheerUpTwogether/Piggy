@@ -1,5 +1,6 @@
 import supabase from '@/supabase/supabase';
 import {AppointmentInsert} from '@/types/appointment';
+import {calculateDistance} from '@/utils/distance';
 
 // 약속만들기
 export const setAppointmentSpb = ({
@@ -85,6 +86,43 @@ export const getCertificationStatusSpb = (
     .select('certification_status')
     .eq('user_id', id)
     .eq('appointment_id', appointment_id);
+};
+
+// 약속 인증 - 약속 장소 도착 시 인증(10분)
+export const setCertificationStatusSpb = async (
+  userId: string,
+  appointmentId: number,
+  appointmentLat: number,
+  appointmentLon: number,
+  latitude: number,
+  longitude: number,
+  radius: number, // 인증을 위한 반경(km)
+) => {
+  try {
+    // 사용자의 현재 위치와 약속 장소 간의 거리 계산
+    const distance = parseFloat(
+      calculateDistance(appointmentLat, appointmentLon, latitude, longitude),
+    );
+
+    // 인증 범위 내에 있는지 확인
+    if (distance <= radius) {
+      const {error: updateError} = await supabase
+        .from('appointment_participants')
+        .update({certification_status: true})
+        .eq('appointment_id', appointmentId)
+        .eq('user_id', userId);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      console.log('[Spb]인증을 완료했습니다.');
+    } else {
+      console.log('[Spb]사용자가 인증 반경에 없습니다.');
+    }
+  } catch (err) {
+    throw new Error(`[Spb]인증상태 업데이트 오류: ${err.message}`);
+  }
 };
 
 // 약속 고정/해제

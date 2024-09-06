@@ -1,7 +1,11 @@
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import dayjs from 'dayjs';
 import AppointmentCheck from '@/components/appointment/AppointmentCheck';
 import Button from '@/components/common/Button';
 import ButtonCouple from '@/components/common/ButtonCouple';
+import {useLocation} from '@/hooks/useLocation';
 import {useAppointmentForm, useToastStore, useUserStore} from '@/store/store';
 import {commonStyle} from '@/styles/common';
 import {
@@ -9,21 +13,104 @@ import {
   setAppointmentAcceptanceSpb,
   setAppointmentCancellationAcceptanceSpb,
   setAppointmentCancellationSpb,
+  setCertificationStatusSpb,
+  getCertificationStatusSpb,
 } from '@/supabase/appointmentSpb';
-import React, {useEffect, useState} from 'react';
-
-import {useNavigation} from '@react-navigation/native';
 
 const AppointmentDetail = () => {
   const addToast = useToastStore(state => state.addToast);
   const {userData} = useUserStore();
   const {appointmentForm} = useAppointmentForm();
   const [cancelStatus, setCancelStatus] = useState('nothing');
+  const [isNearAppointment, setIsNearAppointment] = useState(false);
+  const [certification, setCertification] = useState(false);
+  const {location} = useLocation();
   const navigation = useNavigation();
 
   useEffect(() => {
     getAppointmentCancellationStatus();
-  }, []);
+    fetchCertification();
+    checkAppointmentTime();
+    console.log('상태 확인', certification);
+  }, [appointmentForm]);
+
+  // 약속 인증 상태 확인
+  const fetchCertification = async () => {
+    try {
+      const res = await getCertificationStatusSpb(
+        userData.id,
+        appointmentForm.id,
+      );
+
+      if (!res) {
+        addToast({
+          success: false,
+          text: '위치 정보를 가져올 수 없습니다.',
+          multiText: '네트워크 연결을 확인해주세요.',
+        });
+        throw new Error('인증 상태를 가져오는 데 실패했습니다.');
+      }
+      setCertification(true);
+    } catch (err) {
+      throw new Error(`인증 상태 불러오기 실패: ${err.message}`);
+    }
+  };
+
+  // 약속 10분 전인지 확인
+  const checkAppointmentTime = () => {
+    if (!appointmentForm?.date || !appointmentForm?.time) return;
+
+    const appointmentTime = dayjs(
+      `${appointmentForm.date} ${appointmentForm.time}`,
+      'YYYY-MM-DD HH:mm',
+    );
+    const currentTime = dayjs();
+    const tenMinutesBefore = appointmentTime.subtract(10, 'minute');
+
+    if (
+      currentTime.isAfter(tenMinutesBefore) &&
+      currentTime.isBefore(appointmentTime)
+    ) {
+      setIsNearAppointment(true);
+    } else {
+      setIsNearAppointment(false);
+    }
+  };
+
+  // 도착 인증 요청
+  const handleCertification = async () => {
+    if (!location) {
+      addToast({
+        success: false,
+        text: '위치 정보를 가져올 수 없습니다.',
+        multiText: '네트워크 연결을 확인해주세요.',
+      });
+      return;
+    }
+    try {
+      const {latitude: userLat, longitude: userLon} = location; // 사용자 위치 좌표
+
+      const radius = 0.15; // 인증 범위(km) - 현재 인증 반경 150m
+      await setCertificationStatusSpb(
+        userData.id,
+        appointmentForm.id,
+        appointmentForm.latitude,
+        appointmentForm.longitude,
+        userLat,
+        userLon,
+        radius,
+      );
+      addToast({
+        success: true,
+        text: '약속 인증을 완료했어요!',
+      });
+    } catch {
+      addToast({
+        success: false,
+        text: '약속 인증에 실패했어요.',
+      });
+    }
+  };
 
   // 약속 취소 요청 했는지 체크
   const getAppointmentCancellationStatus = async () => {
@@ -81,8 +168,7 @@ const AppointmentDetail = () => {
   const setAppointmentAcceptance = async type => {
     try {
       await setAppointmentAcceptanceSpb(userData.id, appointmentForm.id, type);
-      
-      ({
+      addToast({
         success: true,
         text: `약속을 ${type ? '수락' : '거절'}했어요.`,
       });
@@ -94,6 +180,7 @@ const AppointmentDetail = () => {
       });
     }
   };
+
   const btn = () => {
     if (
       appointmentForm.appointment_status === 'expired' ||
@@ -119,7 +206,15 @@ const AppointmentDetail = () => {
     }
 
     if (cancelStatus === 'nothing') {
-      return <Button text={'취소 요청'} onPress={cancelAppointment} />;
+      return (
+        <>
+          {isNearAppointment ? (
+            <Button text={'약속 인증'} onPress={handleCertification} />
+          ) : (
+            <Button text={'취소 요청'} onPress={cancelAppointment} />
+          )}
+        </>
+      );
     }
 
     if (cancelStatus === 'cancellation-request') {
@@ -144,7 +239,7 @@ const AppointmentDetail = () => {
       return (
         <ButtonCouple
           onPressLeft={() => {
-            setAppointmentCancellationAcceptance('cancllation-rejected');
+            setAppointmentCancellationAcceptance('cancellation-rejected');
           }}
           onPressRight={() => {
             setAppointmentCancellationAcceptance('cancellation-confirmed');
