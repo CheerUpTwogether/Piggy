@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   Image,
   StyleSheet,
@@ -7,12 +7,11 @@ import {
   Text,
   SafeAreaView,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {BottomTabHeaderProps} from '@react-navigation/bottom-tabs';
 import {StackHeaderProps, StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {LeftItemProps} from '@/types/Common';
-import {useUserStore} from '@/store/store';
 import {commonStyle} from '@/styles/common';
 
 import AlertSvg from '@/assets/icons/alert.svg';
@@ -21,6 +20,8 @@ import GoodsBoxSvg from '@/assets/icons/goodsBox.svg';
 import BackSvg from '@/assets/icons/leftArrow.svg';
 import EditSvg from '@/assets/icons/edit.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
+import {useUserStore} from '@/store/store';
+import {getPiggySpb} from '@/supabase/AuthSpb';
 
 const topLogo = require('@/assets/icons/topLogo.png');
 
@@ -68,7 +69,24 @@ const Alarm = () => {
 type NavigationProp = StackNavigationProp<RootStackParamList>;
 const RightItems = ({name}: {name: string}) => {
   const navigation = useNavigation<NavigationProp>();
-  const {gotoProfile} = useUserStore();
+  const {userData, setUserDataByKey} = useUserStore();
+
+  const updatePiggy = async () => {
+    if (userData) {
+      const data = await getPiggySpb(userData.id);
+
+      if (data) {
+        const piggy = data.latest_piggy_count;
+        setUserDataByKey('piggy', piggy);
+      }
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      updatePiggy();
+    }, []),
+  );
 
   switch (name) {
     case 'Home':
@@ -105,10 +123,10 @@ const RightItems = ({name}: {name: string}) => {
     case 'GoodsDetail':
       return (
         <View style={styles.iconContainer}>
-          <TouchableOpacity style={[styles.directionRow, styles.icon]}>
-            <Text style={styles.text}>500</Text>
+          <View style={[styles.directionRow, styles.icon]}>
+            <Text style={styles.text}>{userData.piggy}</Text>
             <Text style={[styles.text, styles.colorRed]}>P</Text>
-          </TouchableOpacity>
+          </View>
           <TouchableOpacity
             style={styles.icon}
             onPress={() => navigation.navigate('GoodsStorage')}>
