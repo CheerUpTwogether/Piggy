@@ -57,7 +57,7 @@ const GiftAmount = () => {
       return;
     }
 
-    const isSuccess = await setGiftPiggySpb(userData.id, id, inputValue);
+    const isSuccess = await setGiftPiggySpb(userData.id, id, numericValue);
 
     if (isSuccess) {
       addToast({

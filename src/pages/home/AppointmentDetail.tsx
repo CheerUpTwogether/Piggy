@@ -81,12 +81,12 @@ const AppointmentDetail = () => {
   const setAppointmentAcceptance = async type => {
     try {
       await setAppointmentAcceptanceSpb(userData.id, appointmentForm.id, type);
-      
-      ({
+
+      addToast({
         success: true,
         text: `약속을 ${type ? '수락' : '거절'}했어요.`,
       });
-      navigation.goBack();
+      //navigation.goBack();
     } catch {
       addToast({
         success: false,
