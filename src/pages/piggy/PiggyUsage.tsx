@@ -1,9 +1,8 @@
 import React, {useState, useCallback} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, FlatList} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import {FlatList} from 'react-native-gesture-handler';
-import {color_ef, commonStyle} from '@/styles/common';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {color_ef, commonStyle} from '@/styles/common';
 import PiggyUsageItem from '@/components/piggy/PiggyUsageItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import {getPiggySpb, getPiggyLogSpb} from '@/supabase/AuthSpb';
