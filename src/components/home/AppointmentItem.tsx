@@ -13,7 +13,7 @@ import PendingSvg from '@/assets/icons/pending.svg';
 import CancelCalendarSvg from '@/assets/icons/cancelCalendar.svg';
 import LocationSvg from '@/assets/icons/location.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
-import {useAppointmentForm} from '@/store/store';
+import {useAppointmentForm, useUserStore} from '@/store/store';
 import dayjs from 'dayjs';
 
 const AppointmentItem = ({
@@ -27,6 +27,7 @@ const AppointmentItem = ({
 }) => {
   const navigation = useNavigation<StackNavigation>();
   const {setAppointmentForm} = useAppointmentForm();
+  const {userData} = useUserStore();
   const cancelStatus = ['cancelled', 'expired'];
   // useAppointmentTimer 타이머 훅 호출
   const {remainingTime, formattedTime} = useAppointmentTimer(
@@ -53,11 +54,15 @@ const AppointmentItem = ({
 
   const onPress = () => {
     const calendar = dayjs(item?.appointment_date);
+    console.log(item);
     setAppointmentForm({
       ...item,
       date: calendar.format('YYYY-MM-DD'),
       time: calendar.format('HH:mm'),
       id: item.appointment_id,
+      appointment_participants_list: item.appointment_participants_list.filter(
+        el => el.user_id !== userData.id,
+      ),
     });
     navigation.navigate('AppointmentDetail');
   };

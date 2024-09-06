@@ -115,6 +115,7 @@ const useHomeAppointments = () => {
       });
       return;
     }
+    console.log(data);
     setAppointments(data);
   };
 
@@ -139,7 +140,7 @@ const useHomeAppointments = () => {
   // 약속 리스트에서 display 삭제
   const deleteAppointment = async (appointmentId: number) => {
     try {
-      const {error} = await setListDisplaySpb(userData.id, appointmentId);
+      const {data, error} = await setListDisplaySpb(userData.id, appointmentId);
       if (error) {
         addToast({
           success: false,
@@ -147,6 +148,7 @@ const useHomeAppointments = () => {
         });
         return;
       }
+      console.log(data);
       setAppointments(prev =>
         prev.filter(el => el.appointment_id !== appointmentId),
       );
