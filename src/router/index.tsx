@@ -38,6 +38,7 @@ import AppointmentForm from '@/pages/home/AppointmentForm';
 import Regist from '@/pages/auth/Regist';
 import LoginEmail from '@/pages/auth/LoginEmail';
 import RedirectKakaoMap from '@/components/home/RedirectKaKaoMap';
+import Intro from '@/pages/auth/Intro';
 
 const Stack = createStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -98,6 +99,11 @@ const Router = () => {
       <Stack.Screen
         name="LoginEmail"
         component={LoginEmail}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Intro"
+        component={Intro}
         options={{headerShown: false}}
       />
       <Stack.Screen
