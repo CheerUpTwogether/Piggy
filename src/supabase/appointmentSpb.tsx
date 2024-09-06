@@ -1,6 +1,14 @@
 import supabase from '@/supabase/supabase';
 import {AppointmentInsert} from '@/types/appointment';
 
+// 약속 상세
+export const getAppointmentSpb = appointmentId => {
+  return supabase
+    .from('appointment')
+    .select('*')
+    .eq('id', appointmentId)
+    .single();
+};
 // 약속만들기
 export const setAppointmentSpb = ({
   id,

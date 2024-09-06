@@ -23,7 +23,7 @@ const SelectFriendItem = ({item, handleFriendDelete}: SelectFriendItemProp) => {
         </>
       ) : (
         <>
-          <View style={[styles.friendEmptyProfile, styles.friendSelectProfile]}>
+          <View style={[styles.friendSelectProfile, styles.friendEmptyProfile]}>
             <BasicProfileSvg width={24} height={24} />
           </View>
           <View style={styles.friendSelectCancleContainer}>
@@ -44,11 +44,11 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 30,
+    borderWidth: 1,
   },
   friendEmptyProfile: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
     borderColor: '#DDD',
   },
   friendSelectCancleContainer: {

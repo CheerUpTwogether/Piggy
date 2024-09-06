@@ -106,6 +106,8 @@ const Alarm = () => {
     }
   };
 
+  const goAppointmentForm = () => {};
+
   const handleDeleteAlarm = async (notification_id: number) => {
     const res = await deleteNotificationSpb(notification_id);
     if (!res) {
