@@ -226,18 +226,11 @@ export const getAppointmentSingleSpb = async (
   appointment_id: number,
 ) => {
   try {
-    const {data, error} = await supabase.rpc(
-      'select_appointment_single_detail',
-      {
-        user_uuid: id,
-        appointment_id: appointment_id,
-      },
-    );
-    if (error) {
-      throw error;
-    }
-    return data;
+    return await supabase.rpc('select_appointment_single_detail', {
+      appointment_id_int: appointment_id,
+      user_uuid: id,
+    });
   } catch (e) {
-    console.error(e);
+    throw e;
   }
 };
