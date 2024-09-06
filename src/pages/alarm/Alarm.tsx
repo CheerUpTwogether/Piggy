@@ -106,6 +106,8 @@ const Alarm = () => {
     }
   };
 
+  const goAppointmentForm = () => {};
+
   const handleDeleteAlarm = async (notification_id: number) => {
     const res = await deleteNotificationSpb(notification_id);
     if (!res) {
@@ -149,8 +151,8 @@ const Alarm = () => {
           <Text
             style={
               item.confirmed_status
-                ? commonStyle.REGULAR_77_18
-                : commonStyle.REGULAR_33_18
+                ? commonStyle.MEDIUM_77_18
+                : commonStyle.MEDIUM_33_18
             }>
             {item.notification_subject}
           </Text>
