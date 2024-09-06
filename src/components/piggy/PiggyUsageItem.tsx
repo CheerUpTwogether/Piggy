@@ -1,5 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import dayjs from 'dayjs';
 import {color_ef, commonStyle} from '@/styles/common';
 import {PiggyUsageHistoryProps} from '@/types/gift';
 import ProfileSvg from '@/assets/icons/basicProfile.svg';
@@ -32,15 +33,7 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
       : '';
 
   const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-
-    return `${year}년 ${month}월 ${day}일  ${hours}:${minutes}`;
+    return dayjs(dateString).format('YYYY년 MM월 DD일 HH:mm');
   };
 
   return (

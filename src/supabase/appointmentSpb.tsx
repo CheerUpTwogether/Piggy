@@ -1,5 +1,6 @@
 import supabase from '@/supabase/supabase';
 import {AppointmentInsert} from '@/types/appointment';
+import {calculateDistance} from '@/utils/distance';
 
 // 약속 상세
 export const getAppointmentSpb = appointmentId => {
@@ -41,8 +42,8 @@ export const setAppointmentSpb = ({
 
 // 약속 참여자 업데이트
 export const setAppointmentParticipantsSpb = (
-  appointment_id,
-  participants_uuid,
+  appointment_id: number,
+  participants_uuid: string,
 ) => {
   return supabase.rpc('insert_appointment_participants', {
     appointment_id,
@@ -51,7 +52,10 @@ export const setAppointmentParticipantsSpb = (
 };
 
 // 약속 생성자 상태 변경
-export const setAppointmentProposerSpb = (userId, appointmentId) => {
+export const setAppointmentProposerSpb = (
+  userId: string,
+  appointmentId: number,
+) => {
   return supabase
     .from('appointment_participants')
     .update({
@@ -93,6 +97,53 @@ export const getCertificationStatusSpb = (
     .select('certification_status')
     .eq('user_id', id)
     .eq('appointment_id', appointment_id);
+};
+
+// 약속 인증 - 약속 장소 도착 시 인증(10분)
+export const setCertificationStatusSpb = async (
+  userId: string,
+  appointmentId: number,
+  appointmentLat: number,
+  appointmentLon: number,
+  latitude: number,
+  longitude: number,
+  radius: number, // 인증을 위한 반경(km)
+) => {
+  try {
+    // 사용자의 현재 위치와 약속 장소 간의 거리 계산
+    const distance = parseFloat(
+      calculateDistance(appointmentLat, appointmentLon, latitude, longitude),
+    );
+
+    // 인증 범위 내에 있는지 확인
+    if (distance <= radius) {
+      const currentTime = new Date().toISOString();
+
+      const {error: updateError} = await supabase
+        .from('appointment_participants')
+        .update({
+          // certification - 약속 장소 current - 인증한 위치
+          certification_status: true,
+          certification_latitude: appointmentLat,
+          certification_longitude: appointmentLon,
+          certification_time: currentTime,
+          current_latitude: latitude,
+          current_longitude: longitude,
+        })
+        .eq('appointment_id', appointmentId)
+        .eq('user_id', userId);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      console.log('[Spb]인증을 완료했습니다.');
+    } else {
+      throw new Error('약속된 위치에 도착하지 못했어요.');
+    }
+  } catch (err) {
+    throw new Error(err.message);
+  }
 };
 
 // 약속 고정/해제
