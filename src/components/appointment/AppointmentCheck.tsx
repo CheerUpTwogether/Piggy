@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -18,18 +18,21 @@ import TimeSvg from '@/assets/icons/clock.svg';
 import PeopleSvg from '@/assets/icons/people.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
-import {useAppointmentForm} from '@/store/store';
+import {useAppointmentForm, useUserStore} from '@/store/store';
 import WebView from 'react-native-webview';
 import {useLocation} from '@/hooks/useLocation';
+import {getItemSession} from '@/utils/auth';
 
 const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
   const {appointmentForm} = useAppointmentForm();
+  const {userData} = useUserStore();
   const totalAmount =
     Number(appointmentForm.deal_piggy_count) *
     ((appointmentForm?.appointment_participants_list?.length || 0) + 1);
 
   const {location, error} = useLocation();
   let webViewRef = useRef(null);
+  let accessTokenRef = useRef(null);
 
   const sendPlacePosition = () => {
     if (webViewRef.current) {
@@ -82,6 +85,17 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
     </View>
   );
 
+  const getToken = async () => {
+    const res = await getItemSession();
+    if (res) {
+      accessTokenRef.current = res.access_token;
+    }
+  };
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.HeaderWrapper}>
@@ -127,13 +141,18 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
             </Text>
           </View>
           <View style={styles.mapImg}>
-            {location && (
+            {location && accessTokenRef.current && (
               <>
                 <WebView
                   ref={webViewRef}
                   originWhitelist={['*']}
                   source={{
                     uri: 'https://www.piggynative.kro.kr:8080/mapHtml',
+                    headers: {
+                      Authorization: accessTokenRef.current
+                        ? `Bearer ${accessTokenRef.current}`
+                        : '',
+                    },
                   }}
                   onLoadEnd={() => {
                     sendPlacePosition();
