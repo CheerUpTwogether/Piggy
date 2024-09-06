@@ -23,8 +23,8 @@ const AppointmentDetail = () => {
   const {userData} = useUserStore();
   const {appointmentForm} = useAppointmentForm();
   const [cancelStatus, setCancelStatus] = useState('nothing');
-  const [myAgreementStatus, setMyAgreementStatus] = useState();
-  const [isNearAppointment, setIsNearAppointment] = useState('');
+  const [myAgreementStatus, setMyAgreementStatus] = useState(''); // 나의 인증 상태
+  const [isNearAppointment, setIsNearAppointment] = useState(''); // 약속까지 남은 시간 (10min, 2hr, '')
   const [certification, setCertification] = useState(false);
   const {location} = useLocation();
   const navigation = useNavigation();
@@ -34,7 +34,6 @@ const AppointmentDetail = () => {
     fetchCertification();
     checkAppointmentTime();
     fetchAcceptance();
-    console.log('상태 확인', certification);
   }, [appointmentForm]);
 
   // 나의 약속 수락 상태 확인
@@ -237,7 +236,11 @@ const AppointmentDetail = () => {
 
     if (appointmentForm.appointment_status === 'pending') {
       return myAgreementStatus === 'confirmed' ? (
-        <Button text={'수락 완료'} onPress={() => {}} disable={true} />
+        <Button
+          text={'다른 참여자의 수락 대기중...'}
+          onPress={() => {}}
+          disable={true}
+        />
       ) : (
         <ButtonCouple
           onPressLeft={() => {
