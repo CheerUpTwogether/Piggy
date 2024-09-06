@@ -189,7 +189,9 @@ const AppointmentDetail = () => {
                 setIsShow(true);
               }}>
               <FlatItemsFriends
-                images={item.appointment_participants_list.map(el => el.url)}
+                images={item.appointment_participants_list.map(
+                  el => el.profile_img_url,
+                )}
               />
             </TouchableOpacity>
           </View>

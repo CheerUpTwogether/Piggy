@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigation} from '@/types/Router';
 import {commonStyle, color_primary, color_ef} from '@/styles/common';
 import {AppointmentProps} from '@/types/appointment';
+import useAppointmentTimer from '@/hooks/useAppointmentTimer';
 import FlatItemsFriends from '../common/FlatItemsFriends';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
@@ -24,6 +25,17 @@ const AppointmentItem = ({
 }) => {
   const navigation = useNavigation<StackNavigation>();
   const cancelStatus = ['cancelled', 'expired'];
+  // useAppointmentTimer 타이머 훅 호출
+  const {remainingTime, formattedTime} = useAppointmentTimer(
+    item.appointment_date,
+  );
+
+  // 10분 타이머를 표시할지 결정
+  const shouldShowTimer =
+    item.agreement_status === 'confirmed' &&
+    remainingTime !== null &&
+    remainingTime > 0;
+
   const titleFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.BOLD_AA_20
     : commonStyle.BOLD_33_20;
@@ -53,7 +65,9 @@ const AppointmentItem = ({
           )}
           {!notUseFreindsIcon && (
             <FlatItemsFriends
-              images={item.appointment_participants_list.map(el => el.url)}
+              images={item.appointment_participants_list.map(
+                el => el.profile_img_url,
+              )}
             />
           )}
         </View>
@@ -117,10 +131,11 @@ const AppointmentItem = ({
               </View>
             </View>
 
+            {/* TODO: 인증 상태 확인 후 색상 변경 */}
             {/* 타이머 */}
-            {item.appointment_id === 1 && (
-              <Text style={[styles.timer, commonStyle.REGULAR_PRIMARY_14]}>
-                09:59
+            {shouldShowTimer && (
+              <Text style={[styles.timer, commonStyle.BOLD_PRIMARY_14]}>
+                {formattedTime}
               </Text>
             )}
           </View>
@@ -187,15 +202,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  rightBottomButton: {},
   timer: {
     position: 'absolute',
+    borderColor: color_primary,
+    borderWidth: 2,
     bottom: 0,
     right: 4,
     borderRadius: 100,
-    borderColor: color_primary,
-    borderWidth: 1,
     textAlign: 'center',
-    height: 24,
+    height: 30,
     width: 64,
     textAlignVertical: 'center',
   },
