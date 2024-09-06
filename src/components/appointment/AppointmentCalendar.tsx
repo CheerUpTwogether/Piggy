@@ -84,7 +84,7 @@ const AppointmentCalendar = () => {
   };
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Text style={styles.label}>날짜</Text>
       <TouchableOpacity
         onPress={handleInput}
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 22,
   },
   calendar: {
-    height: '85%',
+    height: '80%',
   },
 });
 export default AppointmentCalendar;
