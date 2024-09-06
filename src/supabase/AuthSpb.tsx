@@ -113,7 +113,8 @@ export const getUserSpb = async id => {
       .from('users_nickname')
       .select(
         'email, nickname, created_at, updated_at, service_terms_agreement, payment_terms_agreement, notification_agreement',
-      ) // TODO: profile_img_url 컬러 추가
+        'profile_img_url',
+      )
       .eq('id', id);
 
     if (error) {
@@ -248,6 +249,21 @@ export const getPiggySpb = async (id: string) => {
 
     // return data;
     return data ? data[0] : null;
+  } catch (e) {
+    throw e;
+  }
+};
+
+// 10. 피기 사용내역
+export const getPiggyLogSpb = async (id: string) => {
+  try {
+    const {data, error} = await supabase.rpc('select_piggy_usage', {
+      user_uuid: id,
+    });
+    if (error) {
+      throw error;
+    }
+    return data;
   } catch (e) {
     throw e;
   }
