@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {Search} from '@/mock/Place/type';
 import useAppointmentPlace from '@/hooks/useAppointmentPlace';
 import SearchPlaceItem from './SearchPlaceItem';

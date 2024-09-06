@@ -4,13 +4,14 @@ import {color_ef, commonStyle} from '@/styles/common';
 import {FriendsProps} from '@/mock/Home/type';
 import ProfileSvg from '@/assets/icons/basicProfile.svg';
 import ArriveCheck from '@/assets/icons/arriveCheck.svg';
+
 const FriendItem = ({item}: {item: FriendsProps}) => {
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
-        {item?.url ? (
+        {item?.profile_img_url ? (
           <Image
-            source={{uri: item.url}}
+            source={{uri: item.profile_img_url}}
             width={40}
             height={40}
             style={styles.img}

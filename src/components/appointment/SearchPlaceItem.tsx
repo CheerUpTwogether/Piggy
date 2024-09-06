@@ -18,7 +18,7 @@ const SearchPlaceItem = ({
       onPress={() => searchPlace(item.content)}>
       <View style={styles.searchWrapper}>
         <SearchSvg width={18} height={18} color={'#333'} />
-        <Text style={commonStyle.REGULAR_33_16}>{item.content}</Text>
+        <Text style={{...commonStyle.REGULAR_33_16}}>{item.content}</Text>
       </View>
     </TouchableOpacity>
   );

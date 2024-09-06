@@ -27,3 +27,22 @@ export interface GoodsItem {
 }
 
 export type GoodsList = GoodsItem[];
+
+// 피기 사용 내역
+export interface PiggyLog {
+  id: number;
+  diff_piggy_count: number;
+  diff_piggy_date: string;
+  present_piggy_count: number;
+  changed_category: string;
+}
+
+export interface PiggyUsageHistoryProps extends PiggyLog {
+  appointment_title?: string;
+  contents?: PiggyHistoryContent;
+}
+
+interface PiggyHistoryContent {
+  f1: string; // 약속 제목 || 선물대상
+  f2: string | null; // profile_img
+}

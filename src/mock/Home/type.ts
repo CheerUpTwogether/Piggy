@@ -1,7 +1,7 @@
 export interface FriendsProps {
   uid: number;
   nick_name: string;
-  url: string;
+  profile_img_url: string;
   isJoin?: boolean;
   isProof?: boolean;
 }

@@ -49,7 +49,7 @@ const AppointmentDetail = () => {
     try {
       await setAppointmentCancellationSpb(userData.id, appointmentForm.id);
       addToast({
-        success: false,
+        success: true,
         text: '약속 취소 요청을 보냈어요.',
       });
       getAppointmentCancellationStatus();
@@ -81,8 +81,9 @@ const AppointmentDetail = () => {
   const setAppointmentAcceptance = async type => {
     try {
       await setAppointmentAcceptanceSpb(userData.id, appointmentForm.id, type);
-      addToast({
-        success: false,
+      
+      ({
+        success: true,
         text: `약속을 ${type ? '수락' : '거절'}했어요.`,
       });
       navigation.goBack();

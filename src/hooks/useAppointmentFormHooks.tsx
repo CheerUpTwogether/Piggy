@@ -115,8 +115,9 @@ const useAppointmentFormHooks = () => {
       );
       navigation.goBack();
       addToast({
-        success: false,
+        success: true,
         text: '약속을 생성했어요',
+        multiText: '약속을 잊지 마세요!',
       });
     } catch (e) {
       addToast({

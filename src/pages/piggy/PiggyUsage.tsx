@@ -1,11 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {FlatList} from 'react-native-gesture-handler';
 import {color_ef, commonStyle} from '@/styles/common';
-import {piggyUsageHistories} from '@/mock/Piggy/Piggy';
 import DropDownPicker from 'react-native-dropdown-picker';
 import PiggyUsageItem from '@/components/piggy/PiggyUsageItem';
 import EmptyResult from '@/components/common/EmptyResult';
+import {getPiggySpb, getPiggyLogSpb} from '@/supabase/AuthSpb';
+import {useUserStore} from '@/store/store';
+import {PiggyLog} from '@/types/gift';
 
 const PiggyUsage = () => {
   const options = [
@@ -16,6 +19,44 @@ const PiggyUsage = () => {
   const [value, setValue] = useState(options[0].value);
   const [items, setItems] = useState(options);
   const [open, setOpen] = useState(false);
+  const [piggy, setPiggy] = useState<number>(0);
+  const [piggyLog, setPiggyLog] = useState<PiggyLog[]>([]);
+  const {userData, setUserDataByKey} = useUserStore();
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPiggyData();
+      fetchPiggyLogData();
+      console.log('res', piggyLog);
+    }, []),
+  );
+
+  const fetchPiggyData = async () => {
+    const res = await getPiggySpb(userData.id);
+    setPiggy(res?.latest_piggy_count);
+    setUserDataByKey('piggy', res?.latest_piggy_count);
+  };
+
+  const fetchPiggyLogData = async () => {
+    const res = await getPiggyLogSpb(userData.id);
+    setPiggyLog(res);
+  };
+
+  const filterPiggyLog = () => {
+    if (value === 'total') {
+      return piggyLog;
+    }
+
+    return piggyLog.filter(item => {
+      if (value === 'input') {
+        return item.diff_piggy_count > 0;
+      } else if (value === 'output') {
+        return item.diff_piggy_count < 0;
+      }
+      return false;
+    });
+  };
+
   return (
     <View style={commonStyle.CONTAINER}>
       <Text
@@ -27,17 +68,9 @@ const PiggyUsage = () => {
       </Text>
 
       <View style={styles.piggyContainer}>
-        <Text style={commonStyle.MEDIUM_33_20}>50000</Text>
+        <Text style={commonStyle.MEDIUM_33_20}>{piggy}</Text>
         <Text style={commonStyle.MEDIUM_PRIMARY_20}>Piggy</Text>
       </View>
-
-      {/* <ButtonCouple
-        onPressLeft={() => navigation.navigate('PiggyShop')}
-        onPressRight={() => {}}
-        textLeft={'충전하기'}
-        textRight={'선물하기'}
-        theme="outline"
-      /> */}
 
       <DropDownPicker
         open={open}
@@ -54,16 +87,17 @@ const PiggyUsage = () => {
         }}
       />
 
-      {piggyUsageHistories.length ? (
+      {filterPiggyLog().length ? (
         <FlatList
-          data={piggyUsageHistories}
-          keyExtractor={item => String(item.usage_history_id)}
+          data={filterPiggyLog()}
+          keyExtractor={item => String(item.id)}
           renderItem={PiggyUsageItem}
+          showsVerticalScrollIndicator={false}
         />
       ) : (
         <EmptyResult
-          reason={'아직 피기 사용내역이 없어요'}
-          solution={'피기를 충전하고 약속을 잡아볼까요?'}
+          reason={'아직 피기 사용 내역이 없어요.'}
+          solution={'약속을 잡고 피기를 사용해보세요!'}
         />
       )}
     </View>

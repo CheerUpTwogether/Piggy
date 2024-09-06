@@ -16,9 +16,9 @@ const FriendsItem = ({
       style={[styles.friendContainer, active && {borderColor: '#ED423F'}]}
       onPress={() => handleFriendPress(item)}>
       <View style={styles.friendWrapper}>
-        {item.profile_image_path ? (
+        {item.profile_img_url ? (
           <Image
-            source={{uri: item.profile_image_path}}
+            source={{uri: item.profile_img_url}}
             style={styles.friendProfile}
             alt={`${item.nickname}profile`}
           />
