@@ -7,7 +7,7 @@ import PiggyUsageItem from '@/components/piggy/PiggyUsageItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import {getPiggySpb, getPiggyLogSpb} from '@/supabase/AuthSpb';
 import {useUserStore} from '@/store/store';
-import {PiggyLog} from '@/types/gift';
+import {PiggyLog, PiggyLogItem} from '@/types/gift';
 
 const PiggyUsage = () => {
   const options = [
@@ -26,7 +26,6 @@ const PiggyUsage = () => {
     useCallback(() => {
       fetchPiggyData();
       fetchPiggyLogData();
-      console.log('res', piggyLog);
     }, []),
   );
 
@@ -37,8 +36,11 @@ const PiggyUsage = () => {
   };
 
   const fetchPiggyLogData = async () => {
-    const res = await getPiggyLogSpb(userData.id);
-    setPiggyLog(res);
+    const res: PiggyLogItem[] = await getPiggyLogSpb(userData.id);
+    const filterSubZero = res.filter(
+      (item: PiggyLogItem) => item.diff_piggy_count !== 0,
+    );
+    setPiggyLog(filterSubZero);
   };
 
   const filterPiggyLog = () => {

@@ -46,3 +46,15 @@ interface PiggyHistoryContent {
   f1: string; // 약속 제목 || 선물대상
   f2: string | null; // profile_img
 }
+
+export interface PiggyLogItem {
+  changed_category: string;
+  contents: {
+    f1: string | null;
+    f2: string | null;
+  };
+  diff_piggy_count: number;
+  diff_piggy_date: string;
+  id: number;
+  present_piggy_count: number;
+}
