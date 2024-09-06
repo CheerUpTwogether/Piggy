@@ -15,6 +15,7 @@ import {
   setAppointmentCancellationSpb,
   setCertificationStatusSpb,
   getCertificationStatusSpb,
+  getAppointmentParticipantsSpb,
 } from '@/supabase/appointmentSpb';
 
 const AppointmentDetail = () => {
@@ -22,6 +23,7 @@ const AppointmentDetail = () => {
   const {userData} = useUserStore();
   const {appointmentForm} = useAppointmentForm();
   const [cancelStatus, setCancelStatus] = useState('nothing');
+  const [myAgreementStatus, setMyAgreementStatus] = useState();
   const [isNearAppointment, setIsNearAppointment] = useState('');
   const [certification, setCertification] = useState(false);
   const {location} = useLocation();
@@ -31,8 +33,20 @@ const AppointmentDetail = () => {
     getAppointmentCancellationStatus();
     fetchCertification();
     checkAppointmentTime();
+    fetchAcceptance();
     console.log('상태 확인', certification);
   }, [appointmentForm]);
+
+  // 나의 약속 수락 상태 확인
+  const fetchAcceptance = async () => {
+    const res = await getAppointmentParticipantsSpb(
+      userData.id,
+      appointmentForm.id,
+    );
+
+    const myData = res.data.filter(item => item.nickname === userData.nickname);
+    setMyAgreementStatus(myData[0].agreement_status);
+  };
 
   // 약속 인증 상태 확인
   const fetchCertification = async () => {
@@ -222,8 +236,9 @@ const AppointmentDetail = () => {
     }
 
     if (appointmentForm.appointment_status === 'pending') {
-      // TODO: 내 상태 confirmed ? 인증 대기중...
-      return (
+      return myAgreementStatus === 'confirmed' ? (
+        <Button text={'수락 완료'} onPress={() => {}} disable={true} />
+      ) : (
         <ButtonCouple
           onPressLeft={() => {
             setAppointmentAcceptance(false);
