@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {commonStyle} from '@/styles/common';
 import {daysAgo, formatKoreanDate} from '@/utils/date';
-import {useToastStore, useUserStore} from '@/store/store';
+import {useAppointmentForm, useToastStore, useUserStore} from '@/store/store';
 import {Alaram, AlarmType} from '@/types/alarm';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -23,6 +23,8 @@ import AppointmentSvg from '@/assets/icons/appointment.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
 import GradeSvg from '@/assets/icons/grade.svg';
 import XSvg from '@/assets/icons/X.svg';
+import {getAppointmentSingleSpb} from '@/supabase/appointmentSpb';
+import dayjs from 'dayjs';
 
 const categories = [
   {
@@ -75,6 +77,7 @@ const Alarm = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [notification, setNotification] = useState<Alaram[]>([]);
   const {userData} = useUserStore();
+  const {setAppointmentForm} = useAppointmentForm();
 
   const handleClickAlarm = async (
     notification_id: number,
@@ -97,7 +100,7 @@ const Alarm = () => {
       case 'created_notice':
       case 'reminder':
         // 약속 상세 로직 추가 필요
-        return;
+        return goAppointmentForm(redirect_key_id_value);
       case 'piggy_changed_appointment':
       case 'piggy_changed_gift':
       case 'piggy_changed_charge':
@@ -106,7 +109,38 @@ const Alarm = () => {
     }
   };
 
-  const goAppointmentForm = () => {};
+
+  const goAppointmentForm = async appointmentId => {
+    try {
+      const {data, error} = await getAppointmentSingleSpb(
+        userData.id,
+        appointmentId,
+      );
+
+      if (error) {
+        addToast({
+          success: false,
+          text: '읽음 처리 문제 발생.',
+          multiText: '관리자에게 문의해주세요.',
+        });
+      }
+
+      const calendar = dayjs(data[0]?.appointment_date);
+      setAppointmentForm({
+        ...data[0],
+        date: calendar.format('YYYY-MM-DD'),
+        time: calendar.format('HH:mm'),
+        id: data[0].appointment_id,
+      });
+      navigation.navigate('AppointmentDetail');
+    } catch {
+      addToast({
+        success: false,
+        text: '네트워크를 확인해주세요.',
+      });
+    }
+  };
+
 
   const handleDeleteAlarm = async (notification_id: number) => {
     const res = await deleteNotificationSpb(notification_id);
@@ -114,7 +148,7 @@ const Alarm = () => {
       addToast({
         success: false,
         text: '삭제 실패',
-        multiText: '알림 내역을 삭제하지 못했습니다.',
+        multiText: '알림 내역을 삭제하지 못했어요.',
       });
     }
   };

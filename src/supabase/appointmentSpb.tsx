@@ -278,3 +278,18 @@ export const getAppointmentCancellationStatusSpb = async (
     console.error('Error appeared in getAppointmentCancellationStatus : ', e);
   }
 };
+
+// 약속 단일 상세 내용
+export const getAppointmentSingleSpb = async (
+  id: string,
+  appointment_id: number,
+) => {
+  try {
+    return await supabase.rpc('select_appointment_single_detail', {
+      appointment_id_int: appointment_id,
+      user_uuid: id,
+    });
+  } catch (e) {
+    throw e;
+  }
+};
