@@ -20,8 +20,7 @@ const AppointmentForm = () => {
   const getCurrentComponent = () => {
     switch (nowStep) {
       case 1:
-        // return <AppointmentFriend />;
-        return <AppointmentCalendar />;
+        return <AppointmentFriend />;
       case 2:
         return <AppointmentPlace />;
       case 3:
