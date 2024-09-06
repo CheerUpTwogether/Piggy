@@ -221,7 +221,7 @@ export const getAppointmentCancellationStatusSpb = async (
 };
 
 // 약속 단일 상세 내용
-export const getAppointmentSigleSpb = async (
+export const getAppointmentSingleSpb = async (
   id: string,
   appointment_id: number,
 ) => {
