@@ -134,14 +134,10 @@ export const getAnnouncementSpb = async () => {
 
 // 프로필 수정 - 이름
 export const setMyProfileNicknameSpb = async (id, nickname) => {
-  try {
-    const {data, error} = await supabase
-      .from('users_nickname')
-      .update({nickname: nickname})
-      .eq('id', id);
-  } catch (e) {
-    console.error('Error appeared in setMyProfileSpb : ', e);
-  }
+  return await supabase
+    .from('users_nickname')
+    .update({nickname: nickname})
+    .eq('id', id);
 };
 
 // 프로필 수정 - 프로필 사진

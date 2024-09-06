@@ -8,8 +8,11 @@ import {deleteItemSession} from '@/utils/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY} from '@env';
 import {initFcmTokenSpb} from '@/supabase/auth';
-import {useUserStore} from '@/store/store';
-import {setMyProfileImageSpb} from '@/supabase/SettingSpb';
+import {useToastStore, useUserStore} from '@/store/store';
+import {
+  setMyProfileImageSpb,
+  setMyProfileNicknameSpb,
+} from '@/supabase/SettingSpb';
 import ImagePicker from 'react-native-image-crop-picker';
 import Button from '../common/Button';
 import InputBox from '../common/InputBox';
@@ -21,6 +24,7 @@ const EditProfile = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {userData, setUserDataByKey} = useUserStore();
+  const addToast = useToastStore(state => state.addToast);
 
   const googleLogOut = async () => {
     GoogleSignin.configure({
@@ -59,8 +63,39 @@ const EditProfile = () => {
       if (profileimagepath) {
         setUserDataByKey('profile_img_url', profileimagepath?.profile_img_url);
       }
+
+      addToast({
+        success: true,
+        text: '프로필 사진을 변경했어요',
+      });
     } catch (e) {
-      console.log(e);
+      addToast({
+        success: false,
+        text: '프로필 사진 변경에 실패했어요',
+      });
+    }
+  };
+
+  const changeNickname = async () => {
+    try {
+      const {error} = await setMyProfileNicknameSpb(userData.id, nickNameValue);
+      if (error) {
+        addToast({
+          success: false,
+          text: '닉네임 변경에 실패했어요',
+        });
+      }
+
+      addToast({
+        success: true,
+        text: '닉네임을 변경했어요',
+      });
+      setUserDataByKey('nickname', nickNameValue);
+    } catch (e) {
+      addToast({
+        success: false,
+        text: '네트워크를 확인해주세요',
+      });
     }
   };
 
@@ -107,7 +142,7 @@ const EditProfile = () => {
         </View>
       </View>
       <View style={{marginTop: 232, gap: 14, marginHorizontal: 8}}>
-        <Button text="저장" onPress={() => console.log('저장')} />
+        <Button text="저장" onPress={changeNickname} />
         <Button text="로그 아웃" theme="sub" onPress={() => handleLogout()} />
         <TouchableOpacity>
           <Text style={{...commonStyle.REGULAR_AA_14, textAlign: 'center'}}>
