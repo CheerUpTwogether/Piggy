@@ -109,9 +109,19 @@ export const setCertificationStatusSpb = async (
 
     // 인증 범위 내에 있는지 확인
     if (distance <= radius) {
+      const currentTime = new Date().toISOString();
+
       const {error: updateError} = await supabase
         .from('appointment_participants')
-        .update({certification_status: true})
+        .update({
+          // certification - 약속 장소 current - 인증한 위치
+          certification_status: true,
+          certification_latitude: appointmentLat,
+          certification_longitude: appointmentLon,
+          certification_time: currentTime,
+          current_latitude: latitude,
+          current_longitude: longitude,
+        })
         .eq('appointment_id', appointmentId)
         .eq('user_id', userId);
 
