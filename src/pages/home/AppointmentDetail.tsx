@@ -2,9 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
-import AppointmentCheck from '@/components/appointment/AppointmentCheck';
-import Button from '@/components/common/Button';
-import ButtonCouple from '@/components/common/ButtonCouple';
 import {useLocation} from '@/hooks/useLocation';
 import {useAppointmentForm, useToastStore, useUserStore} from '@/store/store';
 import {commonStyle} from '@/styles/common';
@@ -17,15 +14,16 @@ import {
   getCertificationStatusSpb,
   getAppointmentParticipantsSpb,
 } from '@/supabase/appointmentSpb';
+import AppointmentActionsButton from './AppointmentActionsButton';
 
 const AppointmentDetail = () => {
   const addToast = useToastStore(state => state.addToast);
   const {userData} = useUserStore();
   const {appointmentForm} = useAppointmentForm();
   const [cancelStatus, setCancelStatus] = useState('nothing');
-  const [myAgreementStatus, setMyAgreementStatus] = useState(''); // 나의 인증 상태
+  const [myAgreementStatus, setMyAgreementStatus] = useState(''); // 약속 동의 상태
   const [isNearAppointment, setIsNearAppointment] = useState(''); // 약속까지 남은 시간 (10min, 2hr, '')
-  const [certification, setCertification] = useState(false);
+  const [certification, setCertification] = useState(false); // 도착 인증 상태
   const {location} = useLocation();
   const navigation = useNavigation();
 
@@ -34,6 +32,7 @@ const AppointmentDetail = () => {
     fetchCertification();
     checkAppointmentTime();
     fetchAcceptance();
+    console.log(certification);
   }, [appointmentForm]);
 
   // 나의 약속 수락 상태 확인
@@ -42,21 +41,18 @@ const AppointmentDetail = () => {
       userData.id,
       appointmentForm.id,
     );
-
     const myData = res.data.filter(item => item.nickname === userData.nickname);
-    setMyAgreementStatus(myData[0].agreement_status);
+    setMyAgreementStatus(myData[0]?.agreement_status || '');
   };
 
-  // 약속 인증 상태 확인
   const fetchCertification = async () => {
     try {
       const res = await getCertificationStatusSpb(
         userData.id,
         appointmentForm.id,
       );
-
       if (res) {
-        setCertification(res?.data[0].certification_status);
+        setCertification(res?.data[0]?.certification_status || false);
       } else {
         addToast({
           success: false,
@@ -133,14 +129,13 @@ const AppointmentDetail = () => {
     }
   };
 
-  // 약속 취소 요청 했는지 체크
+  // 약속 취소 상태 확인
   const getAppointmentCancellationStatus = async () => {
     try {
       const res = await getAppointmentCancellationStatusSpb(
         userData.id,
         appointmentForm.id,
       );
-      console.log(res);
       if (res?.[0]?.cancellation_status) {
         setCancelStatus(res?.[0]?.cancellation_status);
       }
@@ -152,7 +147,6 @@ const AppointmentDetail = () => {
     }
   };
 
-  // 약속 취소 요청
   const cancelAppointment = async () => {
     try {
       await setAppointmentCancellationSpb(userData.id, appointmentForm.id);
@@ -161,7 +155,7 @@ const AppointmentDetail = () => {
         text: '약속 취소 요청을 보냈어요.',
       });
       getAppointmentCancellationStatus();
-    } catch (e) {
+    } catch {
       addToast({
         success: false,
         text: '약속 취소 요청에 실패했어요.',
@@ -169,8 +163,7 @@ const AppointmentDetail = () => {
     }
   };
 
-  // 약속 취소 요청 응답
-  const setAppointmentCancellationAcceptance = async type => {
+  const setAppointmentCancellationAcceptance = async (type: string) => {
     try {
       await setAppointmentCancellationAcceptanceSpb(
         userData.id,
@@ -185,8 +178,7 @@ const AppointmentDetail = () => {
     }
   };
 
-  // 약속 수락/거절
-  const setAppointmentAcceptance = async type => {
+  const setAppointmentAcceptance = async (type: boolean) => {
     try {
       await setAppointmentAcceptanceSpb(userData.id, appointmentForm.id, type);
       addToast({
@@ -202,103 +194,21 @@ const AppointmentDetail = () => {
     }
   };
 
-  // nothing일 때 버튼 변경 함수
-  const getButtonProps = () => {
-    if (certification) {
-      return {text: '인증 완료', onPress: handleCertification, disabled: true};
-    }
-
-    switch (isNearAppointment) {
-      case '10min':
-        return {
-          text: '약속 인증',
-          onPress: handleCertification,
-          disabled: false,
-        };
-      case '2hr':
-        return {
-          text: '약속 인증',
-          onPress: handleCertification,
-          disabled: true,
-        };
-      default:
-        return {text: '취소 요청', onPress: cancelAppointment, disabled: false};
-    }
-  };
-
-  const btn = () => {
-    if (
-      appointmentForm.appointment_status === 'expired' ||
-      appointmentForm.appointment_status === 'fulfilled'
-    ) {
-      return;
-    }
-
-    if (appointmentForm.appointment_status === 'pending') {
-      return myAgreementStatus === 'confirmed' ? (
-        <Button
-          text={'다른 참여자의 수락 대기중...'}
-          onPress={() => {}}
-          disable={true}
-        />
-      ) : (
-        <ButtonCouple
-          onPressLeft={() => {
-            setAppointmentAcceptance(false);
-          }}
-          onPressRight={() => {
-            setAppointmentAcceptance(true);
-          }}
-          textLeft={'약속 거절'}
-          textRight={'약속 수락'}
-          theme="outline"
-        />
-      );
-    }
-
-    if (cancelStatus === 'nothing') {
-      const {text, onPress, disabled} = getButtonProps();
-      return <Button text={text} onPress={onPress} disable={disabled} />;
-    }
-
-    if (cancelStatus === 'cancellation-request') {
-      return (
-        <Button
-          text={'취소 요청 완료'}
-          onPress={cancelAppointment}
-          disable={true}
-        />
-      );
-    }
-
-    if (cancelStatus === 'cancellation-rejected') {
-      return <Button text={'취소 거절'} disable={true} />;
-    }
-
-    if (cancelStatus === 'cancellation-confirm') {
-      return <Button text={'취소 완료'} disable={true} />;
-    }
-
-    if (cancelStatus === 'cancellation-pending') {
-      return (
-        <ButtonCouple
-          onPressLeft={() => {
-            setAppointmentCancellationAcceptance('cancellation-rejected');
-          }}
-          onPressRight={() => {
-            setAppointmentCancellationAcceptance('cancellation-confirmed');
-          }}
-          textLeft={'취소 거절'}
-          textRight={'취소 수락'}
-          theme="outline"
-        />
-      );
-    }
-  };
-
   return (
     <View style={commonStyle.CONTAINER}>
-      <AppointmentCheck>{btn()}</AppointmentCheck>
+      <AppointmentActionsButton
+        appointmentForm={appointmentForm}
+        cancelStatus={cancelStatus}
+        myAgreementStatus={myAgreementStatus}
+        isNearAppointment={isNearAppointment}
+        certification={certification}
+        handleCertification={handleCertification}
+        cancelAppointment={cancelAppointment}
+        setAppointmentCancellationAcceptance={
+          setAppointmentCancellationAcceptance
+        }
+        setAppointmentAcceptance={setAppointmentAcceptance}
+      />
     </View>
   );
 };

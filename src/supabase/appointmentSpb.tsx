@@ -121,10 +121,10 @@ export const setCertificationStatusSpb = async (
 
       console.log('[Spb]인증을 완료했습니다.');
     } else {
-      throw new Error('약속된 위치에 도착하지 못했어요');
+      throw new Error('약속된 위치에 도착하지 못했어요.');
     }
   } catch (err) {
-    throw new Error(`[Spb]인증상태 업데이트 오류: ${err.message}`);
+    throw new Error(err.message);
   }
 };
 
