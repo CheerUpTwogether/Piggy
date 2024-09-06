@@ -125,10 +125,10 @@ const AppointmentDetail = () => {
         text: '약속 인증을 완료했어요!',
       });
       navigation.goBack();
-    } catch {
+    } catch (err) {
       addToast({
         success: false,
-        text: '약속 인증에 실패했어요.',
+        text: err.message || '약속 인증에 실패했어요.',
       });
     }
   };
