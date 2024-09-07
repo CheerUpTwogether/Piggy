@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
   startImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'contain',
   },
   skipWrapper: {
     flexDirection: 'row',
