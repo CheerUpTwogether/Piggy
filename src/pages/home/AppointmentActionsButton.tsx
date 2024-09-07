@@ -79,7 +79,7 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
       );
     }
 
-    if (cancelStatus === 'nothing') {
+    if (cancelStatus === 'nothing' || cancelStatus === 'cancellation-pending') {
       const {text, onPress, disabled} = getButtonProps();
       return <Button text={text} onPress={onPress} disable={disabled} />;
     }
