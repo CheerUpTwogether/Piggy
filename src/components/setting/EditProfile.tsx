@@ -88,10 +88,19 @@ const EditProfile = () => {
     try {
       const {error} = await setMyProfileNicknameSpb(userData.id, nickNameValue);
       if (error) {
-        addToast({
-          success: false,
-          text: '닉네임 변경에 실패했어요',
-        });
+        if (error.code === '23505') {
+          addToast({
+            success: false,
+            text: '이미 등록되어 있는 닉네임이에요',
+          });
+        } else {
+          addToast({
+            success: false,
+            text: '닉네임 변경에 실패했어요',
+          });
+        }
+
+        return;
       }
 
       addToast({
@@ -119,7 +128,6 @@ const EditProfile = () => {
         setUserDataByKey('profile_img_url', '');
       }
     } catch {
-      console.log('test');
       addToast({
         success: false,
         text: '프로필 사진 변경에 실패했어요',
