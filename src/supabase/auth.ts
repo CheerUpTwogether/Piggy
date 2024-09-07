@@ -96,18 +96,38 @@ export const loginSessionSpb = async (
 
 // 해당 유저의 디바이스 토큰 업데이트
 export const setFcmTokenSpb = async (id: string, device_token: string) => {
-  return await supabase
-    .from('users_nickname')
-    .update({device_token})
-    .eq('id', id);
+  try {
+    return await supabase
+      .from('users_nickname')
+      .update({device_token})
+      .eq('id', id);
+  } catch (e) {
+    throw e;
+  }
+};
+
+// 해당 유저의 디바이스 토큰 초기화
+export const getFcmTokenSpb = async (id: string) => {
+  try {
+    return await supabase
+      .from('users_nickname')
+      .select('device_token')
+      .eq('id', id);
+  } catch (e) {
+    throw e;
+  }
 };
 
 // 해당 유저의 디바이스 토큰 초기화
 export const initFcmTokenSpb = async (id: string) => {
-  return await supabase
-    .from('users_nickname')
-    .update({device_token: ''})
-    .eq('id', id);
+  try {
+    return await supabase
+      .from('users_nickname')
+      .update({device_token: ''})
+      .eq('id', id);
+  } catch (e) {
+    throw e;
+  }
 };
 // ====================== 밑에 로직들은 deprecated 예정.
 // 이메일 회원가입

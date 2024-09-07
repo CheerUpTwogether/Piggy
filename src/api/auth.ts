@@ -82,6 +82,6 @@ export const setFcmTokenAPI = async (id: string) => {
       return true;
     }
   } catch (error) {
-    console.error('토큰 불러오기 실패:', error);
+    throw error;
   }
 };

@@ -6,23 +6,23 @@ import {
   TouchableOpacity,
   View,
   Platform,
+  Linking,
 } from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
-import ToggleButton from '@/components/common/ToggleButton';
-import {useUserStore} from '@/store/store';
+import {useToastStore, useUserStore} from '@/store/store';
 import {getMySettingsSpb} from '@/supabase/SettingSpb';
 import {MyProfileData} from '@/types/setting';
-
+import DeviceInfo from 'react-native-device-info';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const Settings = () => {
   const [myData, setMyData] = useState<MyProfileData | null>(null);
-  const [isOn, setIsOn] = useState(false);
   const {setGotoProfile} = useUserStore();
   const userData = useUserStore(state => state.userData);
+  const {addToast} = useToastStore();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -36,8 +36,42 @@ const Settings = () => {
     }, []),
   );
 
-  const handleToggle = () => {
-    setIsOn(!isOn);
+  const handleAlarmSetting = () => {
+    if (Platform.OS === 'android') {
+      const androidVersion = parseInt(DeviceInfo.getSystemVersion(), 10);
+      const packageName = 'com.piggy'; // 안드로이드 패키지 이름
+
+      if (androidVersion >= 8) {
+        // Android 8.0 이상이면 앱의 설정으로 이동
+        Linking.openSettings().catch(() =>
+          addToast({
+            success: false,
+            text: '설정으로 이동 할 수 없습니다.',
+          }),
+        );
+      } else {
+        // Android 8.0 미만이면 시스템 설정 화면으로 이동
+        Linking.openURL(`package:${packageName}`).catch(() =>
+          addToast({
+            success: false,
+            text: '설정으로 이동 할 수 없습니다.',
+          }),
+        );
+      }
+    } else if (Platform.OS === 'ios') {
+      // iOS 설정 화면으로 이동
+      Linking.openURL('app-settings:').catch(() =>
+        addToast({
+          success: false,
+          text: '설정으로 이동 할 수 없습니다.',
+        }),
+      );
+    } else {
+      addToast({
+        success: false,
+        text: '알림 설정 이동을 지원하지 않는 플랫폼입니다.',
+      });
+    }
   };
 
   const fetchData = async () => {
@@ -132,10 +166,11 @@ const Settings = () => {
 
         <View style={{gap: 16}}>
           <Text style={commonStyle.MEDIUM_AA_14}>알림 센터</Text>
-          <View style={styles.alertContainer}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => handleAlarmSetting()}>
             <Text style={commonStyle.MEDIUM_33_16}>알림설정</Text>
-            <ToggleButton initialState={isOn} onToggle={handleToggle} />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -149,7 +184,7 @@ const styles = StyleSheet.create({
     marginTop: 26,
     marginLeft: -16,
     marginRight: -16,
-    marginBottom: 30,
+    marginBottom: 18,
     paddingVertical: 20,
     borderTopWidth: 1,
     borderBottomWidth: 1,
