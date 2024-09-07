@@ -84,8 +84,7 @@ const Splash = () => {
         });
         return;
       }
-      navigation.replace('Intro');
-      // navigation.replace('Main', {screen: 'Home'});
+      navigation.replace('Main', {screen: 'Home'});
     } else {
       navigation.replace('Login');
     }
