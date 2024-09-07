@@ -112,7 +112,6 @@ const AppointmentDetail = () => {
     try {
       const {latitude: userLat, longitude: userLon} = location; // 사용자 위치 좌표
 
-      const radius = 0.15; // 인증 범위(km) - 현재 인증 반경 150m
       await setCertificationStatusSpb(
         userData.id,
         appointmentForm.id,
@@ -120,7 +119,6 @@ const AppointmentDetail = () => {
         appointmentForm.longitude,
         userLat,
         userLon,
-        radius,
       );
       addToast({
         success: true,
@@ -176,10 +174,14 @@ const AppointmentDetail = () => {
         appointmentForm.id,
         type,
       );
+      addToast({
+        success: true,
+        text: '약속 취소 요청 수락/거절에 성공했어요.',
+      });
     } catch {
       addToast({
         success: false,
-        text: '약속 취소 요청에 수락/거절에 실패했어요.',
+        text: '약속 취소 요청 수락/거절에 실패했어요.',
       });
     }
   };

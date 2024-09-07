@@ -107,7 +107,7 @@ export const setCertificationStatusSpb = async (
   appointmentLon: number,
   latitude: number,
   longitude: number,
-  radius: number, // 인증을 위한 반경(km)
+  radius: number = 0.1, // 인증을 위한 반경(km) - 현재 100m로 설정
 ) => {
   try {
     // 사용자의 현재 위치와 약속 장소 간의 거리 계산
