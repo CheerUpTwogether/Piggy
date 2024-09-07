@@ -122,13 +122,11 @@ export const setCertificationStatusSpb = async (
       const {error: updateError} = await supabase
         .from('appointment_participants')
         .update({
-          // certification - 약속 장소 current - 인증한 위치
+          // certification - 사용자 인증 위치 current - 실시간 연동 컬럼(현재 사용x)
           certification_status: true,
-          certification_latitude: appointmentLat,
-          certification_longitude: appointmentLon,
+          certification_latitude: latitude,
+          certification_longitude: longitude,
           certification_time: currentTime,
-          current_latitude: latitude,
-          current_longitude: longitude,
         })
         .eq('appointment_id', appointmentId)
         .eq('user_id', userId);
