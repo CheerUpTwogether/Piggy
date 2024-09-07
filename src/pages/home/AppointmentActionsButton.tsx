@@ -34,14 +34,15 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
       return {text: '인증 완료', disabled: true};
     }
 
+    const isCertificationPossible = formattedTime && remainingTime > 0;
     switch (isNearAppointment) {
       case '10min':
         return {
-          text:
-            formattedTime && remainingTime > 0
-              ? `약속 인증 ${formattedTime}`
-              : '인증 종료',
-          onPress: handleCertification,
+          text: isCertificationPossible
+            ? `약속 인증 ${formattedTime}`
+            : '인증 종료',
+          onPress: isCertificationPossible ? handleCertification : undefined,
+          disabled: !isCertificationPossible,
         };
       case '2hr':
         return {
