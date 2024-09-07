@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {commonStyle, color_ef, color_primary} from '@/styles/common';
@@ -9,6 +9,7 @@ import TabBar from '@/components/common/TabBar';
 import PulsSvg from '@/assets/icons/plus.svg';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import useHomeAppointments from '@/hooks/useHomeAppointments';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
   const {
@@ -23,6 +24,19 @@ const Home = () => {
     setBottomSheetShow,
     changeSort,
   } = useHomeAppointments();
+
+  const checkAlarmModal = async () => {
+    const device_token = await AsyncStorage.getItem('device_token');
+    if (!device_token) {
+      openModal({
+        title: '문의 내역을 정말 삭제하시겠습니까?',
+        content: '삭제할 경우 다시 확인할 수 없습니다.',
+        text: '삭제하기',
+        textCancel: '취소',
+      });
+    }
+  };
+  useEffect(() => {}, []);
 
   return (
     <View style={styles.container}>
