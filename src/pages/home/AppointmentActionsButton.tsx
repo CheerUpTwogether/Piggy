@@ -6,6 +6,7 @@ import Button from '@/components/common/Button';
 import ButtonCouple from '@/components/common/ButtonCouple';
 import {commonStyle} from '@/styles/common';
 import {AppointmentActionsProps} from '@/types/appointment';
+import useAppointmentTimer from '@/hooks/useAppointmentTimer'; //
 
 const AppointmentActions: React.FC<AppointmentActionsProps> = ({
   appointmentForm,
@@ -13,14 +14,22 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
   myAgreementStatus,
   isNearAppointment,
   certification,
+  appointmentTimeCheck, //
   handleCertification,
   cancelAppointment,
   setAppointmentCancellationAcceptance,
   setAppointmentAcceptance,
 }) => {
+  const {remainingTime, formattedTime} =
+    useAppointmentTimer(appointmentTimeCheck); //
+
   const navigation = useNavigation();
 
   const getButtonProps = () => {
+    if (remainingTime !== null && remainingTime <= 0) {
+      return {text: '인증 종료', disabled: true};
+    }
+
     if (certification) {
       return {text: '인증 완료', disabled: true};
     }
@@ -28,7 +37,10 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
     switch (isNearAppointment) {
       case '10min':
         return {
-          text: '약속 인증',
+          text:
+            formattedTime && remainingTime > 0
+              ? `약속 인증 ${formattedTime}`
+              : '인증 종료',
           onPress: handleCertification,
         };
       case '2hr':
@@ -79,7 +91,7 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
       );
     }
 
-    if (cancelStatus === 'nothing' || cancelStatus === 'cancellation-pending') {
+    if (cancelStatus === 'nothing') {
       const {text, onPress, disabled} = getButtonProps();
       return <Button text={text} onPress={onPress} disable={disabled} />;
     }

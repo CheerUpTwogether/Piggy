@@ -33,7 +33,6 @@ const AppointmentDetail = () => {
     fetchCertification();
     checkAppointmentTime();
     fetchAcceptance();
-    console.log(certification);
   }, [appointmentForm]);
 
   // 나의 약속 수락 상태 확인
@@ -153,6 +152,9 @@ const AppointmentDetail = () => {
 
   const cancelAppointment = async () => {
     try {
+      if (myAgreementStatus !== 'cancellation_pending') {
+        console.log('pending');
+      }
       await setAppointmentCancellationSpb(userData.id, appointmentForm.id);
       addToast({
         success: true,
@@ -210,6 +212,7 @@ const AppointmentDetail = () => {
         myAgreementStatus={myAgreementStatus}
         isNearAppointment={isNearAppointment}
         certification={certification}
+        appointmentTimeCheck={`${appointmentForm.date}T${appointmentForm.time}:00`}
         handleCertification={handleCertification}
         cancelAppointment={cancelAppointment}
         setAppointmentCancellationAcceptance={
