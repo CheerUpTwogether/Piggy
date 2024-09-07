@@ -54,20 +54,6 @@ const LoginDetail = () => {
     });
   };
 
-  const checkNewbie = async () => {
-    try {
-      const isNewbie = await AsyncStorage.getItem('isFirstTimeUser');
-      if (!isNewbie) {
-        await AsyncStorage.setItem('isFirstTimeUser', 'false');
-        navigation.replace('Intro');
-      } else {
-        navigation.replace('Main', {screen: 'Home'});
-      }
-    } catch (error) {
-      console.error('Error checking first time user status:', error);
-    }
-  };
-
   const handleAgreeToast = () =>
     addToast({
       success: false,
@@ -161,7 +147,7 @@ const LoginDetail = () => {
       return;
     }
     // navigation.replace('Main', {screen: 'Home'});
-    await checkNewbie();
+    navigation.replace('Intro');
   };
 
   const hadnleAgreeService = () => {
