@@ -14,14 +14,14 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
   myAgreementStatus,
   isNearAppointment,
   certification,
-  appointmentTimeCheck, //
+  appointmentTimeCheck,
   handleCertification,
   cancelAppointment,
   setAppointmentCancellationAcceptance,
   setAppointmentAcceptance,
 }) => {
   const {remainingTime, formattedTime} =
-    useAppointmentTimer(appointmentTimeCheck); //
+    useAppointmentTimer(appointmentTimeCheck);
 
   const navigation = useNavigation();
 
@@ -35,6 +35,7 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
     }
 
     const isCertificationPossible = formattedTime && remainingTime > 0;
+
     switch (isNearAppointment) {
       case '10min':
         return {
@@ -92,6 +93,16 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
       );
     }
 
+    // 취소 요청 후 2시간 전일 때 약속 정상 실행
+    if (
+      isNearAppointment === '2hr' &&
+      appointmentForm.appointment_status === 'confirmed'
+    ) {
+      const {text, onPress, disabled} = getButtonProps();
+      return <Button text={text} onPress={onPress} disable={disabled} />;
+    }
+
+    // 취소 요청 상태 처리
     if (cancelStatus === 'nothing') {
       const {text, onPress, disabled} = getButtonProps();
       return <Button text={text} onPress={onPress} disable={disabled} />;

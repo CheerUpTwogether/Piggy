@@ -191,14 +191,15 @@ const AppointmentDetail = () => {
         appointmentForm.id,
         type,
       );
+      console.log('type', type);
       addToast({
         success: true,
-        text: `약속 취소 요청을 ${type ? '거절' : '수락'}했어요.`,
+        text: '약속 취소 요청 응답에 성공했어요.',
       });
     } catch {
       addToast({
         success: false,
-        text: `약속 취소 요청 ${type ? '거절' : '수락'}에 실패했어요.`,
+        text: '약속 취소 요청 응답에 실패했어요.',
         multiText: '다시 시도해주세요.',
       });
     }
