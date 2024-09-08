@@ -178,12 +178,12 @@ const AppointmentDetail = () => {
       );
       addToast({
         success: true,
-        text: '약속 취소 요청 수락/거절에 성공했어요.',
+        text: `약속 취소 요청 ${type ? '거절' : '수락'}에 성공했어요.`,
       });
     } catch {
       addToast({
         success: false,
-        text: '약속 취소 요청 수락/거절에 실패했어요.',
+        text: `약속 취소 요청 ${type ? '거절' : '수락'}에 성공했어요.`,
       });
     }
   };
