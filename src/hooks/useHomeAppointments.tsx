@@ -111,7 +111,7 @@ const useHomeAppointments = () => {
       userData.id,
       categories.filter(el => el.value === sortValue)[0].status,
     );
-    console.log(data[0]);
+
     if (error) {
       addToast({
         success: false,
@@ -119,7 +119,7 @@ const useHomeAppointments = () => {
       });
       return;
     }
-    console.log(data);
+    console.log(data[0].appointment_participants_list);
     setAppointments(data);
   };
 
