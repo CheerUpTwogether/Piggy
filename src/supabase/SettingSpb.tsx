@@ -97,7 +97,7 @@ export const getInquiryDetailSpb = async (id: string) => {
     const {data, error} = await supabase
       .from('inquiry_log')
       .select(
-        'id, user_id, subject, contents, email, inquiry_date, response, response_date',
+        'id, user_id, subject, contents, email, inquiry_date, response, response_date, img_url',
       )
       .eq('id', id)
       .single();

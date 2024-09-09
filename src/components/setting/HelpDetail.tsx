@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
 import {useRoute, RouteProp} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
 import {HelpDetailRouteParams} from '@/types/setting';
@@ -14,6 +21,7 @@ const HelpDetail = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getInquiryDetailSpb(id);
+      console.log(data);
       setHelpItem(data);
     };
 
@@ -21,7 +29,7 @@ const HelpDetail = () => {
   }, [id]);
 
   return (
-    <View style={commonStyle.CONTAINER}>
+    <ScrollView style={commonStyle.CONTAINER}>
       <View style={styles.subjectWrapper}>
         <Text style={commonStyle.MEDIUM_33_18}>{helpItem?.subject}</Text>
         <Text style={commonStyle.REGULAR_77_14}>{helpItem?.contents}</Text>
@@ -63,7 +71,7 @@ const HelpDetail = () => {
           </Text>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -80,6 +88,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#EFEFEF',
     borderBottomWidth: 1,
     gap: 20,
+    minHeight: 200,
   },
   contentText: {lineHeight: 24},
   imageContainer: {
