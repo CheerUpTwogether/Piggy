@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {commonStyle} from '@/styles/common';
 import {daysAgo, formatKoreanDate} from '@/utils/date';
@@ -109,7 +115,6 @@ const Alarm = () => {
     }
   };
 
-
   const goAppointmentForm = async appointmentId => {
     try {
       const {data, error} = await getAppointmentSingleSpb(
@@ -141,7 +146,6 @@ const Alarm = () => {
     }
   };
 
-
   const handleDeleteAlarm = async (notification_id: number) => {
     const res = await deleteNotificationSpb(notification_id);
     if (!res) {
@@ -164,13 +168,6 @@ const Alarm = () => {
             item.redirect_key_id_value,
           );
         }}>
-        <TouchableOpacity
-          onPress={() => {
-            handleDeleteAlarm(item.id);
-          }}
-          style={styles.deleteAlarmWrapper}>
-          <XSvg color={'#777'} width={10} height={10} />
-        </TouchableOpacity>
         <View
           style={[
             styles.iconContainer,
@@ -181,7 +178,7 @@ const Alarm = () => {
             isConfirm={item.confirmed_status}
           />
         </View>
-        <View>
+        <View style={{width: Dimensions.get('screen').width - 112}}>
           <Text
             style={
               item.confirmed_status
@@ -196,6 +193,13 @@ const Alarm = () => {
           <Text style={[commonStyle.REGULAR_AA_12, styles.date]}>
             {daysAgo(formatKoreanDate(item.created_at))}
           </Text>
+        </View>
+        <View style={styles.deleteAlarmWrapper}>
+          <TouchableOpacity
+            style={styles.deleteAlarmBtn}
+            onPress={() => handleDeleteAlarm(item.id)}>
+            <XSvg color={'#777'} width={10} height={10} />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
@@ -281,11 +285,15 @@ const styles = StyleSheet.create({
     paddingTop: 2,
   },
   deleteAlarmWrapper: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    width: 30,
-    height: 30,
+    //width: 72,
+    //height: 72,
+    justifyContent: 'center',
+    //alignItems: 'flex-end',
+    alignItems: 'center',
+  },
+  deleteAlarmBtn: {
+    width: 32,
+    height: 32,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#777',
