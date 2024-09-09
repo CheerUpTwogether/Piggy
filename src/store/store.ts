@@ -6,7 +6,6 @@ import {
   UserStore,
 } from '@/types/common';
 import {ModalProps} from 'react-native';
-import {asPickerFormat} from '@/utils/timePicker';
 
 export const useUserStore = create<UserStore>(set => ({
   userData: {

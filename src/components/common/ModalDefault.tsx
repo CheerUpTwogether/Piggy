@@ -1,8 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, View, Modal} from 'react-native';
+import {StyleSheet, Text, View, Modal, TouchableOpacity} from 'react-native';
 import {useModalStore} from '@/store/store';
 import Button from './Button';
-import ButtonCouple from './ButtonCouple';
 import {commonStyle} from '@/styles/common';
 
 const ModalDefault = () => {
@@ -12,25 +11,33 @@ const ModalDefault = () => {
     <Modal animationType="slide" visible={modal.isOpen} transparent={true}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
-          <Text style={{...commonStyle.BOLD_33_18, paddingBottom: 12}}>
-            {modal.title}
-          </Text>
+          <Text style={styles.title}>{modal.title}</Text>
           {modal.content ? (
-            <Text style={{...commonStyle.REGULAR_77_14, paddingBottom: 28}}>
-              {modal.content}
-            </Text>
+            <Text style={styles.content}>{modal.content}</Text>
           ) : (
             <View style={{paddingBottom: 12}} />
           )}
           {modal.textCancel ? (
-            <ButtonCouple
-              onPressRight={modal.onPress || closeModal}
-              textRight={modal.text}
-              onPressLeft={modal.onPressCancel || closeModal}
-              textLeft={modal.textCancel}
-              disableRight={modal.disable}
-              theme="sub"
-            />
+            <View style={{flexDirection: 'row', height: 60}}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={modal.onPressCancel || closeModal}
+                style={[
+                  styles.buttonWrapper,
+                  {backgroundColor: '#EFEFEF', borderBottomLeftRadius: 10},
+                ]}>
+                <Text style={commonStyle.MEDIUM_77_16}>{modal.textCancel}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={modal.onPress || closeModal}
+                style={[
+                  styles.buttonWrapper,
+                  {backgroundColor: '#ED423F', borderBottomRightRadius: 10},
+                ]}>
+                <Text style={commonStyle.MEDIUM_FF_16}>{modal.text}</Text>
+              </TouchableOpacity>
+            </View>
           ) : (
             <Button onPress={closeModal} text={modal.text} theme="sub" />
           )}
@@ -52,7 +59,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#fff',
     margin: 28,
-    padding: 20,
+  },
+  title: {
+    ...commonStyle.BOLD_33_18,
+    marginTop: 36,
+    paddingHorizontal: 40,
+    textAlign: 'center',
+  },
+  content: {
+    ...commonStyle.REGULAR_77_14,
+    textAlign: 'center',
+    marginTop: 18,
+    paddingHorizontal: 42,
+    paddingBottom: 28,
+  },
+  buttonWrapper: {
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
