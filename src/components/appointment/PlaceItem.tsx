@@ -4,7 +4,7 @@ import {calculateDistance} from '@/utils/distance';
 import {SearchKeywordPlace} from '@/types/Common';
 import {Location} from '@/types/place';
 import {commonStyle} from '@/styles/common';
-import LocationRoad from '@/assets/icons/locationRoad.svg';
+import LocationRoadSvg from '@/assets/icons/locationRoad.svg';
 
 const PlaceItem = ({
   item,
@@ -22,7 +22,7 @@ const PlaceItem = ({
     <TouchableOpacity
       style={styles.placeContainer}
       onPress={() => handlePlacePress(item)}>
-      <LocationRoad
+      <LocationRoadSvg
         width={18}
         height={18}
         color={isSelected ? '#ED423F' : '#333'}

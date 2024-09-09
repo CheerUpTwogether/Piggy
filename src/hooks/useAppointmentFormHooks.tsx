@@ -11,6 +11,7 @@ import {getPiggySpb} from '@/supabase/AuthSpb';
 
 const useAppointmentFormHooks = () => {
   const [nowStep, setNowStep] = useState(1);
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigation = useNavigation();
   const addToast = useToastStore(state => state.addToast);
   const {appointmentForm, resetAppointmentForm} = useAppointmentForm();
@@ -46,6 +47,10 @@ const useAppointmentFormHooks = () => {
 
   // next 버튼 비활성화 여부
   const disable = () => {
+    // 약속 생성 중일 때 버튼 비활성화
+    if (isProcessing) {
+      return true;
+    }
     if (
       (!appointmentForm.subject ||
         !appointmentForm?.appointment_participants_list?.length) &&
@@ -94,7 +99,12 @@ const useAppointmentFormHooks = () => {
 
   // 약속 생성
   const handleAddAppointment = async () => {
+    // 이미 처리 중일 경우 추가로 약속 생성 막음
+    if (isProcessing) {
+      return;
+    }
     try {
+      setIsProcessing(true);
       if (
         !appointmentForm.appointment_participants_list ||
         !appointmentForm.subject

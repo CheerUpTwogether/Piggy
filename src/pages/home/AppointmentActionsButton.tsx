@@ -20,6 +20,7 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
   setAppointmentCancellationAcceptance,
   setAppointmentAcceptance,
 }) => {
+
   const {remainingTime, formattedTime} =
     useAppointmentTimer(appointmentTimeCheck);
 

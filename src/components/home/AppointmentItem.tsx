@@ -52,7 +52,6 @@ const AppointmentItem = ({
 
   const onPress = () => {
     const calendar = dayjs(item?.appointment_date);
-    console.log(item);
     setAppointmentForm({
       ...item,
       date: calendar.format('YYYY-MM-DD'),
