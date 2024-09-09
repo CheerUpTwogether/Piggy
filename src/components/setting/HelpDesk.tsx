@@ -163,6 +163,10 @@ const HelpDesk = () => {
     }
   };
 
+  const deleteImage = uri => {
+    setImageList(prev => prev.filter(el => el.uri !== uri));
+  };
+
   return (
     <ScrollView style={commonStyle.CONTAINER}>
       <View style={{marginVertical: 14, gap: 20}}>
@@ -216,7 +220,9 @@ const HelpDesk = () => {
               </TouchableOpacity>
             )}
             {imageList.map(item => (
-              <View key={item.name}>
+              <TouchableOpacity
+                key={item.name}
+                onPress={() => deleteImage(item.uri)}>
                 {item.uri && (
                   <Image
                     source={{uri: item.uri}}
@@ -224,7 +230,10 @@ const HelpDesk = () => {
                     alt="helpDeskImage"
                   />
                 )}
-              </View>
+                <View style={styles.deleteBtn}>
+                  <PlusSvg width={12} height={12} color="#333" />
+                </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -261,6 +270,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     borderColor: '#AAA',
+  },
+  deleteBtn: {
+    backgroundColor: '#ddd',
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+    position: 'absolute',
+    right: -4,
+    top: -4,
   },
 });
 
