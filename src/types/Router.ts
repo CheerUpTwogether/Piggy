@@ -51,6 +51,7 @@ export type RootStackParamList = {
   AppointmentForm: undefined;
   Regist: undefined;
   AppointmentCancel: {appointmentId: number};
+  Intro: undefined;
 };
 
 export type StackNavigation = StackNavigationProp<RootStackParamList>;

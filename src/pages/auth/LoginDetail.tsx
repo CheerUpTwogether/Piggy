@@ -191,7 +191,8 @@ const LoginDetail = () => {
       });
       return;
     }
-    navigation.replace('Main', {screen: 'Home'});
+    // navigation.replace('Main', {screen: 'Home'});
+    navigation.replace('Intro');
   };
 
   const hadnleAgreeService = () => {
