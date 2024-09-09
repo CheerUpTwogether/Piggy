@@ -17,6 +17,7 @@ import {getMySettingsSpb} from '@/supabase/SettingSpb';
 import {MyProfileData} from '@/types/setting';
 import DeviceInfo from 'react-native-device-info';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const Settings = () => {
   const [myData, setMyData] = useState<MyProfileData | null>(null);
@@ -88,7 +89,7 @@ const Settings = () => {
   };
 
   return (
-    <View style={commonStyle.CONTAINER}>
+    <ScrollView style={commonStyle.CONTAINER}>
       <View style={{flexDirection: 'row', gap: 18, alignItems: 'center'}}>
         <TouchableOpacity activeOpacity={0.8} onPress={() => gotoProfile()}>
           {userData.profile_img_url ? (
@@ -173,7 +174,7 @@ const Settings = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
