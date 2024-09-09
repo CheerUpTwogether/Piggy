@@ -342,13 +342,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginRight: 20,
-    width: 60,
   },
-  findRouteContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
+
   findRouteWrapper: {
     flexDirection: 'row',
     height: 48,
