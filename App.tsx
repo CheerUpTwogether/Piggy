@@ -6,6 +6,7 @@ import ModalDefault from '@/components/common/ModalDefault';
 import Toast from '@/components/common/Toast';
 import 'react-native-url-polyfill/auto';
 
+import BootSplash from 'react-native-bootsplash';
 import messaging from '@react-native-firebase/messaging';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -24,6 +25,7 @@ const App = () => {
       console.log('[Remote Message', JSON.stringify(remoteMessage));
       return unsubscribe;
     });
+    BootSplash.hide({fade: true});
   }, []);
 
   return (
