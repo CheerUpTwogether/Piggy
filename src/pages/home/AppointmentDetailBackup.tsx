@@ -21,7 +21,7 @@ import TimeSvg from '@/assets/icons/clock.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
 import {getAppointmentParticipantsSpb} from '@/supabase/appointmentSpb';
 
-const AppointmentDetail = () => {
+const AppointmentDetailBackup = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute();
@@ -301,4 +301,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppointmentDetail;
+export default AppointmentDetailBackup;

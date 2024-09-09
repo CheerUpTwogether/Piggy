@@ -9,8 +9,13 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import WebView from 'react-native-webview';
 import {commonStyle} from '@/styles/common';
 import {FriendsProps} from '@/pages/home/type';
+import {useAppointmentForm, useUserStore} from '@/store/store';
+import {useLocation} from '@/hooks/useLocation';
+import {getItemSession} from '@/utils/auth';
 
 import LocationSvg from '@/assets/icons/location.svg';
 import DateSvg from '@/assets/icons/calendar.svg';
@@ -18,14 +23,12 @@ import TimeSvg from '@/assets/icons/clock.svg';
 import PeopleSvg from '@/assets/icons/people.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
-import {useAppointmentForm, useUserStore} from '@/store/store';
-import WebView from 'react-native-webview';
-import {useLocation} from '@/hooks/useLocation';
-import {getItemSession} from '@/utils/auth';
+import LocationRoadSvg from '@/assets/icons/locationRoad.svg';
 
 const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
   const {appointmentForm} = useAppointmentForm();
   const {userData} = useUserStore();
+  const navigation = useNavigation();
   const totalAmount =
     Number(appointmentForm.deal_piggy_count) *
     ((appointmentForm?.appointment_participants_list?.length || 0) + 1);
@@ -46,6 +49,7 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
       );
     }
   };
+
   const sendMyMetaData = () => {
     if (webViewRef.current) {
       webViewRef.current.postMessage(
@@ -55,8 +59,8 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
             profileImgUrl: userData.profile_img_url,
           },
           myLocationData: {
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: location?.latitude,
+            longitude: location?.longitude,
           },
         }),
       );
@@ -90,6 +94,15 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
     if (res) {
       accessTokenRef.current = res.access_token;
     }
+  };
+
+  const handleFindRoute = () => {
+    navigation.navigate('RedirectKakaoMap', {
+      myLatitude: location.latitude,
+      myLongitude: location.longitude,
+      placeLatitude: appointmentForm.latitude,
+      placeLongitude: appointmentForm.longitude,
+    });
   };
 
   useEffect(() => {
@@ -172,6 +185,15 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
                 </TouchableOpacity>
               </>
             )}
+          </View>
+          <View style={styles.findRouteContainer}>
+            <TouchableOpacity
+              style={styles.findRouteWrapper}
+              activeOpacity={0.7}
+              onPress={handleFindRoute}>
+              <LocationRoadSvg color="#777" width={20} height={20} />
+              <Text style={commonStyle.REGULAR_77_16}>경로 찾기</Text>
+            </TouchableOpacity>
           </View>
         </View>
       )}
@@ -314,6 +336,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginRight: 20,
+    width: 60,
+  },
+  findRouteContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  findRouteWrapper: {
+    flexDirection: 'row',
+    height: 48,
+    alignItems: 'center',
+    gap: 12,
   },
 });
 
