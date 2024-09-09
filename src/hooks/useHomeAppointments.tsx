@@ -119,7 +119,6 @@ const useHomeAppointments = () => {
       });
       return;
     }
-    console.log(data[0].appointment_participants_list);
     setAppointments(data);
   };
 
