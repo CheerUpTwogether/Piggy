@@ -1,7 +1,7 @@
 import {getItemSession} from '@/utils/auth';
 import axios from 'axios';
 
-export const bakcInstance = axios.create({
+export const backInstance = axios.create({
   baseURL: 'https://www.piggynative.kro.kr:8080',
 });
 
@@ -11,9 +11,10 @@ const fetchBackEnd = async (
   body: string,
 ) => {
   const session = await getItemSession();
+  console.log(session);
   for (const uid of uid_list) {
     try {
-      bakcInstance.post(
+      backInstance.post(
         '/sendNotification',
         {
           id: uid,

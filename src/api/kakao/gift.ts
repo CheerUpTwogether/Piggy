@@ -1,6 +1,6 @@
 import {KAKAO_API_KEY} from '@env';
 import axios from 'axios';
-import {bakcInstance} from '../fcm';
+import {backInstance} from '../fcm';
 import {getItemSession} from '@/utils/auth';
 
 export const instance = axios.create({
@@ -33,7 +33,7 @@ export const sendGoodAPI = async (
 ) => {
   const session = await getItemSession();
 
-  const res = await bakcInstance.post(
+  const res = await backInstance.post(
     '/sendGift',
     {
       phone_number,
