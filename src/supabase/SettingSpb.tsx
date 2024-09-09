@@ -1,4 +1,6 @@
 import supabase from '@/supabase/supabase';
+import {Image} from 'react-native-image-crop-picker';
+import {uuid} from 'react-native-uuid';
 
 // faq 리스트
 export const getFaqSpb = async () => {
@@ -16,25 +18,43 @@ export const getFaqSpb = async () => {
   }
 };
 
+// 문의 하기 이미지
+export const setInquiryImages = async img_file => {
+  try {
+    const filePath = `help_desk/${img_file.name}`;
+
+    //1. 이미지 버킷 업로드
+    const {error} = await supabase.storage
+      .from('image_bucket')
+      .upload(filePath, img_file);
+    if (error) {
+      console.log(error);
+      return null;
+    }
+
+    //2. img_url Get
+    const imgUrl = await supabase.storage
+      .from('image_bucket')
+      .getPublicUrl(filePath);
+    return imgUrl;
+  } catch (e) {
+    throw e;
+  }
+};
+
 // 문의하기
 // TODO: img_url 추가
 export const setInquirySpb = async (
-  id: string,
+  user_id: string,
   subject: string,
   contents: string,
   email: string,
+  img_url: string[],
 ) => {
   try {
     const {data, error} = await supabase
       .from('inquiry_log')
-      .insert([
-        {
-          user_id: id,
-          subject: subject,
-          contents: contents,
-          email: email,
-        },
-      ])
+      .insert([{user_id, subject, contents, email, img_url}])
       .select();
 
     if (error) {

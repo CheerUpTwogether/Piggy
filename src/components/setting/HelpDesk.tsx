@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 
 import {
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -12,8 +13,10 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
-import {setInquirySpb} from '@/supabase/SettingSpb';
+import {setInquiryImages, setInquirySpb} from '@/supabase/SettingSpb';
 import {useToastStore, useUserStore} from '@/store/store';
+import ImagePicker from 'react-native-image-crop-picker';
+import uuid from 'react-native-uuid';
 
 import InputBox from '../common/InputBox';
 import NickNameSvg from '@/assets/icons/nickname.svg';
@@ -25,7 +28,14 @@ const HelpDesk = () => {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
-  const [imageList, setImageList] = useState(['https://i.pravatar.cc/250']);
+  const [imageList, setImageList] = useState<
+    {
+      uri: string;
+      type: string;
+      name: string;
+    }[]
+  >([]);
+
   const addToast = useToastStore(state => state.addToast);
   const userData = useUserStore(state => state.userData);
 
@@ -59,7 +69,7 @@ const HelpDesk = () => {
     return true;
   };
 
-  const handleAddInquiry = async () => {
+  const checkValid = async () => {
     const validateEmail = (emailAddress: string) =>
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
     const validateSubject = (subjectText: string) => subjectText.length >= 5;
@@ -81,7 +91,61 @@ const HelpDesk = () => {
     ) {
       return;
     }
-    const res = await setInquirySpb(userData.id, subject, content, email);
+
+    addImages();
+  };
+
+  // 이미지 선택
+  const selectImage = async () => {
+    const images = [...imageList];
+    const res = await ImagePicker.openPicker({
+      mediaType: 'photo',
+      multiple: true,
+      maxFiles: 3 - imageList.length,
+    });
+
+    res.forEach(el => {
+      images.push({
+        uri: el.path,
+        type: el.mime,
+        name: `${uuid.v4()}`,
+      });
+    });
+
+    setImageList(images);
+  };
+
+  // 이미지 생성
+  const addImages = async () => {
+    try {
+      const list: string[] = [];
+      for (const image of imageList) {
+        const result = await setInquiryImages(image);
+        if (result?.data?.publicUrl) {
+          list.push(result?.data?.publicUrl);
+        }
+      }
+
+      addInquiry(list);
+    } catch {
+      addToast({
+        success: true,
+        text: '네트워크를',
+        multiText: '확인해주세요.',
+      });
+      return;
+    }
+  };
+
+  // 문의 생성
+  const addInquiry = async (imageUrlList: string[]) => {
+    const res = await setInquirySpb(
+      userData.id,
+      subject,
+      content,
+      email,
+      imageUrlList,
+    );
 
     if (res) {
       addToast({
@@ -100,7 +164,7 @@ const HelpDesk = () => {
   };
 
   return (
-    <View style={commonStyle.CONTAINER}>
+    <ScrollView style={commonStyle.CONTAINER}>
       <View style={{marginVertical: 14, gap: 20}}>
         <View style={{gap: 8}}>
           <Text style={commonStyle.MEDIUM_33_16}>이메일</Text>
@@ -147,26 +211,28 @@ const HelpDesk = () => {
             {imageList.length < 3 && (
               <TouchableOpacity
                 style={styles.imgAddContainer}
-                onPress={() =>
-                  setImageList([...imageList, 'https://i.pravatar.cc/250'])
-                }>
-                <PlusSvg width={24} height={24} rotation={45} />
+                onPress={selectImage}>
+                <PlusSvg width={24} height={24} rotation={45} color="#777" />
               </TouchableOpacity>
             )}
             {imageList.map(item => (
-              <Image
-                source={{uri: item}}
-                style={styles.itemContainer}
-                alt="helpDeskImage"
-              />
+              <View key={item.name}>
+                {item.uri && (
+                  <Image
+                    source={{uri: item.uri}}
+                    style={styles.itemContainer}
+                    alt="helpDeskImage"
+                  />
+                )}
+              </View>
             ))}
           </View>
         </View>
         <View style={{marginVertical: 50}}>
-          <Button text="보내기" onPress={handleAddInquiry} />
+          <Button text="보내기" onPress={checkValid} />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
