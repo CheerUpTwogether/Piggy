@@ -15,13 +15,13 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
       case '선물받음':
         return item.contents?.f1;
       case '벌금(+)':
-        return `${getShortTitle(item.contents?.f1)} 획득`;
+        return `${getShortTitle(item.contents?.f1)} 인증 성공`;
       case '벌금(-)':
         return `${getShortTitle(item.contents?.f1)} 벌금`;
       case '약속생성을 위한 선 지급':
-        return `${getShortTitle(item.contents?.f1)}`;
+        return `${getShortTitle(item.contents?.f1)} 약속`;
       case '약속이 생성되지 않음 - 반환':
-        return `${getShortTitle(item.contents?.f1)} 취소`;
+        return `${getShortTitle(item.contents?.f1)} 약속 취소`;
       default:
         return '상점 구매';
     }
