@@ -228,16 +228,18 @@ export const setListDisplaySpb = async (id: string, appointment_id: number) => {
 export const setAppointmentCancellationAcceptanceSpb = async (
   id: string,
   appointment_id: number,
-  cancellation_status,
+  cancellation_status: string,
 ) => {
   try {
     const {data, error} = await supabase
       .from('appointment_cancellation_request_log')
       .update({
-        cancellation_status: cancellation_status, // "cancellation-confirmed" || "cancllation-rejected"
+        cancellation_status: cancellation_status, // "cancellation-confirmed" || "cancellation-rejected"
       })
       .eq('user_id', id)
-      .eq('appointment_id', appointment_id);
+      .eq('appointment_id', appointment_id)
+      .order('id', {ascending: false}) // 정렬 후
+      .limit(1); // 전체가 아닌 업데이트 할 대상 하나만 업데이트
     if (error) {
       throw error;
     }
