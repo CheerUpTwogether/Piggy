@@ -65,6 +65,7 @@ export interface AppointmentActionsProps {
   appointmentForm: AppointmentForm;
   cancelStatus: CancelStatus;
   myAgreementStatus: AppointmentTabStatus;
+  appointmentTimeCheck: string;
   isNearAppointment: '10min' | '2hr' | 'expired' | '';
   certification: boolean;
   handleCertification: () => void;

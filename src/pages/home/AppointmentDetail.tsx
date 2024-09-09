@@ -33,7 +33,6 @@ const AppointmentDetail = () => {
     fetchCertification();
     checkAppointmentTime();
     fetchAcceptance();
-    console.log(certification);
   }, [appointmentForm]);
 
   // 나의 약속 수락 상태 확인
@@ -112,7 +111,6 @@ const AppointmentDetail = () => {
     try {
       const {latitude: userLat, longitude: userLon} = location; // 사용자 위치 좌표
 
-      const radius = 0.15; // 인증 범위(km) - 현재 인증 반경 150m
       await setCertificationStatusSpb(
         userData.id,
         appointmentForm.id,
@@ -120,7 +118,6 @@ const AppointmentDetail = () => {
         appointmentForm.longitude,
         userLat,
         userLon,
-        radius,
       );
       addToast({
         success: true,
@@ -144,23 +141,41 @@ const AppointmentDetail = () => {
       );
       if (res?.[0]?.cancellation_status) {
         setCancelStatus(res?.[0]?.cancellation_status);
+      } else {
+        // 동시 취소 요청 방지를 위해 반환
+        return 'nothing';
       }
     } catch {
       addToast({
         success: false,
         text: '약속 정보를 불러오는데 실패했어요.',
       });
+      return '';
     }
   };
 
   const cancelAppointment = async () => {
     try {
-      await setAppointmentCancellationSpb(userData.id, appointmentForm.id);
-      addToast({
-        success: true,
-        text: '약속 취소 요청을 보냈어요.',
-      });
-      getAppointmentCancellationStatus();
+      // 버튼을 눌렀을 때 최신 취소 상태 호출
+      const currentCancelStatus = await getAppointmentCancellationStatus();
+      console.log('button', currentCancelStatus);
+
+      // 최신 상태를 바탕으로 취소 요청 진행
+      if (currentCancelStatus === 'nothing') {
+        await setAppointmentCancellationSpb(userData.id, appointmentForm.id);
+        addToast({
+          success: true,
+          text: '약속 취소 요청을 보냈어요.',
+        });
+        navigation.goBack();
+      } else {
+        addToast({
+          success: false,
+          text: '이미 취소 요청이 있어요',
+          multiText: '약속 상태를 확인하세요!',
+        });
+        return;
+      }
     } catch {
       addToast({
         success: false,
@@ -176,14 +191,20 @@ const AppointmentDetail = () => {
         appointmentForm.id,
         type,
       );
+      addToast({
+        success: true,
+        text: '약속 취소 요청 응답에 성공했어요.',
+      });
     } catch {
       addToast({
         success: false,
-        text: '약속 취소 요청에 수락/거절에 실패했어요.',
+        text: '약속 취소 요청 응답에 실패했어요.',
+        multiText: '다시 시도해주세요.',
       });
     }
   };
 
+  // 취소 수락 확인
   const setAppointmentAcceptance = async (type: boolean) => {
     try {
       await setAppointmentAcceptanceSpb(userData.id, appointmentForm.id, type);
@@ -208,6 +229,7 @@ const AppointmentDetail = () => {
         myAgreementStatus={myAgreementStatus}
         isNearAppointment={isNearAppointment}
         certification={certification}
+        appointmentTimeCheck={`${appointmentForm.date}T${appointmentForm.time}:00`}
         handleCertification={handleCertification}
         cancelAppointment={cancelAppointment}
         setAppointmentCancellationAcceptance={

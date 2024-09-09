@@ -1,7 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from 'react-native';
 import {RootStackParamList} from '@/types/Router';
-import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {deleteItemSession} from '@/utils/auth';
@@ -136,8 +143,8 @@ const EditProfile = () => {
   };
 
   return (
-    <View style={commonStyle.CONTAINER}>
-      <View>
+    <ScrollView style={commonStyle.CONTAINER}>
+      <View style={{marginBottom: 30}}>
         <View style={{alignItems: 'center', marginVertical: 48}}>
           <TouchableOpacity
             onPress={selectImage}
@@ -193,7 +200,7 @@ const EditProfile = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
