@@ -1,5 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import AppointmentCheck from '@/components/appointment/AppointmentCheck';
 import Button from '@/components/common/Button';
 import ButtonCouple from '@/components/common/ButtonCouple';
@@ -17,6 +18,8 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
   setAppointmentCancellationAcceptance,
   setAppointmentAcceptance,
 }) => {
+  const navigation = useNavigation();
+
   const getButtonProps = () => {
     if (certification) {
       return {text: '인증 완료', disabled: true};
@@ -63,9 +66,11 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
         <ButtonCouple
           onPressLeft={() => {
             setAppointmentAcceptance(false);
+            navigation.goBack();
           }}
           onPressRight={() => {
             setAppointmentAcceptance(true);
+            navigation.goBack();
           }}
           textLeft={'약속 거절'}
           textRight={'약속 수락'}
