@@ -1,8 +1,7 @@
 import React from 'react';
-import {Image, Text, View} from 'react-native';
+import {Image, Text, View, ScrollView} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import {useRoute, RouteProp} from '@react-navigation/native';
-import {ScrollView} from 'react-native-gesture-handler';
 import {splitStringByDot} from '@/utils/splitStringByDot';
 import {RootStackParamList} from '@/types/Router';
 

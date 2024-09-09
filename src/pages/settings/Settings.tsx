@@ -7,6 +7,7 @@ import {
   View,
   Platform,
   Linking,
+  ScrollView,
 } from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -17,7 +18,6 @@ import {getMySettingsSpb} from '@/supabase/SettingSpb';
 import {MyProfileData} from '@/types/setting';
 import DeviceInfo from 'react-native-device-info';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
-import {ScrollView} from 'react-native-gesture-handler';
 
 const Settings = () => {
   const [myData, setMyData] = useState<MyProfileData | null>(null);
