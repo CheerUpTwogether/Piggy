@@ -191,7 +191,6 @@ const AppointmentDetail = () => {
         appointmentForm.id,
         type,
       );
-      console.log('type', type);
       addToast({
         success: true,
         text: '약속 취소 요청 응답에 성공했어요.',
@@ -205,6 +204,7 @@ const AppointmentDetail = () => {
     }
   };
 
+  // 취소 수락 확인
   const setAppointmentAcceptance = async (type: boolean) => {
     try {
       await setAppointmentAcceptanceSpb(userData.id, appointmentForm.id, type);
