@@ -105,24 +105,9 @@ const useAppointmentFormHooks = () => {
     }
     try {
       setIsProcessing(true);
-      if (
-        !appointmentForm.appointment_participants_list ||
-        !appointmentForm.subject
-      ) {
-        return;
-      }
-      const participants_uuid = [
-        ...appointmentForm.appointment_participants_list.map(el => el.id),
-        userData.id,
-      ];
       const data = await addAppointment();
       await addAppointmentParticipants(data?.[0].id);
       await updateAppointmentProposer(userData.id, data?.[0].id);
-      // 백 그라운드 알림(약속 초대)
-      await sendInviteNotificationAPI(
-        participants_uuid,
-        appointmentForm.subject,
-      );
       navigation.goBack();
       addToast({
         success: true,

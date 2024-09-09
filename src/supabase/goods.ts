@@ -1,21 +1,12 @@
 import supabase from '@/supabase/supabase';
 import {getPiggySpb} from './AuthSpb';
-export const buyGoodSpb = async (id: string, goodsPrice: string) => {
-  const piggyData = await getPiggySpb(id);
-  if (!piggyData) {
-    return null;
-  }
 
+// 템플릿 정보 조회 (토큰 x)
+export const getTemplateInfoSpb = async (template_trace_id: string) => {
   const {data, error} = await supabase
-    .from('piggy')
-    .update({
-      latest_piggy_count:
-        parseInt(piggyData.latest_piggy_count) - parseInt(goodsPrice),
-    })
-    .eq('user_id', id)
-    .select('latest_piggy_count');
-  console.log(data);
-
+    .from('gift_template_info')
+    .select('id, template_trace_id, template_name, template_description, price')
+    .eq('template_trace_id', template_trace_id);
   if (error) {
     return null;
   }

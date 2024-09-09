@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {commonStyle} from '@/styles/common';
 import {useRoute, RouteProp} from '@react-navigation/native';
@@ -6,7 +6,6 @@ import Button from '@/components/common/Button';
 import {RootStackParamList} from '@/types/Router';
 import {useToastStore, useUserStore} from '@/store/store';
 import {sendGoodAPI} from '@/api/kakao/gift';
-import {buyGoodSpb} from '@/supabase/goods';
 
 const GoodsDetail = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'GoodsDetail'>>();
@@ -19,38 +18,32 @@ const GoodsDetail = () => {
     product_thumb_image_url,
     brand_image_url,
   } = product;
-  console.log();
   const {userData, setUserDataByKey} = useUserStore();
 
   const handleBuyGood = async () => {
-    if (userData) {
-      const data = await buyGoodSpb(userData.id, product_price);
-      if (!data) {
-        // 수파베이스 요청 실패
-        addToast({
-          success: false,
-          text: '구매에 실패했습니다.',
-          multiText: '관리자에게 문의해주세요.',
-        });
-        return;
-      }
+    try {
       const res = await sendGoodAPI(userData.phone_number, template_trace_id);
       if (res.status === 200) {
         // 피기 전역 정보 업데이트
-        setUserDataByKey('piggy', data.latest_piggy_count);
+        setUserDataByKey('piggy', res.data.latest_piggy_count);
         addToast({
           success: true,
           text: '성공적으로 구매하셨습니다.',
           multiText: '휴대전화를 확인해주세요!.',
         });
       } else {
-        // 노드 서버 요청 실패
         addToast({
           success: false,
           text: '구매에 실패했습니다.',
           multiText: '관리자에게 문의해주세요.',
         });
       }
+    } catch (e) {
+      addToast({
+        success: false,
+        text: '구매에 실패했습니다.',
+        multiText: '관리자에게 문의해주세요.',
+      });
     }
   };
 
