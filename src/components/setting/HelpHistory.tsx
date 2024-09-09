@@ -130,7 +130,7 @@ const HelpHistory = () => {
 
   return (
     <View style={{flex: 1}}>
-      <ScrollView style={commonStyle.CONTAINER}>
+      <ScrollView style={[commonStyle.CONTAINER, {paddingVertical: 0}]}>
         {inquiryList && inquiryList.length > 0 ? (
           inquiryList.map(item => (
             <TouchableOpacity
