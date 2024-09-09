@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -26,6 +26,7 @@ import CoinSvg from '@/assets/icons/coin.svg';
 import LocationRoadSvg from '@/assets/icons/locationRoad.svg';
 
 const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
+  const [scrollEnabled, setScrollEnabled] = useState(true); // 스크롤 제어 상태
   const {appointmentForm} = useAppointmentForm();
   const {userData} = useUserStore();
   const navigation = useNavigation();
@@ -110,7 +111,9 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
   }, []);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView
+      scrollEnabled={scrollEnabled} // 스크롤 제어
+      showsVerticalScrollIndicator={false}>
       <View style={styles.HeaderWrapper}>
         <Text style={commonStyle.BOLD_33_24}>{appointmentForm.subject}</Text>
       </View>
@@ -174,6 +177,9 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
                     const parseData = JSON.parse(event.nativeEvent.data);
                     // switch로 분기처리
                   }}
+                  scrollEnabled={false} // WebView 자체 스크롤 비활성화
+                  onTouchStart={() => setScrollEnabled(false)} // 지도 터치 시 ScrollView 비활성화
+                  onTouchEnd={() => setScrollEnabled(true)} // 터치 종료 시 ScrollView 활성화
                 />
                 <TouchableOpacity
                   activeOpacity={0.7}
