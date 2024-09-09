@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {RootStackParamList} from '@/types/Router';
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
@@ -136,7 +143,7 @@ const EditProfile = () => {
   };
 
   return (
-    <View style={commonStyle.CONTAINER}>
+    <ScrollView style={[commonStyle.CONTAINER, {flex: 1}]}>
       <View>
         <View style={{alignItems: 'center', marginVertical: 48}}>
           <TouchableOpacity
@@ -184,7 +191,7 @@ const EditProfile = () => {
           />
         </View>
       </View>
-      <View style={{marginTop: 232, gap: 14, marginHorizontal: 8}}>
+      <View style={{flex: 1, gap: 8, justifyContent: 'flex-end'}}>
         <Button text="저장" onPress={changeNickname} />
         <Button text="로그 아웃" theme="sub" onPress={() => handleLogout()} />
         <TouchableOpacity>
@@ -193,7 +200,7 @@ const EditProfile = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
