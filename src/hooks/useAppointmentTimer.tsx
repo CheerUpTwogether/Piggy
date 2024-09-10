@@ -1,5 +1,5 @@
 import {useCallback} from 'react';
-import useIntervalValue from './useIntervalValue'; // 실제 파일 경로에 맞게 수정
+import useIntervalValue from './useIntervalValue';
 
 const useAppointmentTimer = (appointmentDate: string) => {
   const appointmentTime = new Date(appointmentDate);

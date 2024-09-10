@@ -107,7 +107,7 @@ export const setCertificationStatusSpb = async (
   appointmentLon: number,
   latitude: number,
   longitude: number,
-  radius: number, // 인증을 위한 반경(km)
+  radius: number = 0.05, // 인증을 위한 반경(km) - 현재 50m로 설정
 ) => {
   try {
     // 사용자의 현재 위치와 약속 장소 간의 거리 계산
@@ -122,13 +122,11 @@ export const setCertificationStatusSpb = async (
       const {error: updateError} = await supabase
         .from('appointment_participants')
         .update({
-          // certification - 약속 장소 current - 인증한 위치
+          // certification - 사용자 인증 위치 current - 실시간 연동 컬럼(현재 사용x)
           certification_status: true,
-          certification_latitude: appointmentLat,
-          certification_longitude: appointmentLon,
+          certification_latitude: latitude,
+          certification_longitude: longitude,
           certification_time: currentTime,
-          current_latitude: latitude,
-          current_longitude: longitude,
         })
         .eq('appointment_id', appointmentId)
         .eq('user_id', userId);
@@ -230,16 +228,18 @@ export const setListDisplaySpb = async (id: string, appointment_id: number) => {
 export const setAppointmentCancellationAcceptanceSpb = async (
   id: string,
   appointment_id: number,
-  cancellation_status,
+  cancellation_status: string,
 ) => {
   try {
     const {data, error} = await supabase
       .from('appointment_cancellation_request_log')
       .update({
-        cancellation_status: cancellation_status, // "cancellation-confirmed" || "cancllation-rejected"
+        cancellation_status: cancellation_status, // "cancellation-confirmed" || "cancellation-rejected"
       })
       .eq('user_id', id)
-      .eq('appointment_id', appointment_id);
+      .eq('appointment_id', appointment_id)
+      .order('id', {ascending: false}) // 정렬 후
+      .limit(1); // 전체가 아닌 업데이트 할 대상 하나만 업데이트
     if (error) {
       throw error;
     }

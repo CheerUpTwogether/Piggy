@@ -36,9 +36,7 @@ const AppointmentItem = ({
 
   // 10분 타이머를 표시할지 결정
   const shouldShowTimer =
-    item.agreement_status === 'confirmed' &&
-    remainingTime !== null &&
-    remainingTime > 0;
+    item.agreement_status === 'confirmed' && remainingTime && remainingTime > 0;
 
   const titleFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.BOLD_AA_20
@@ -54,7 +52,6 @@ const AppointmentItem = ({
 
   const onPress = () => {
     const calendar = dayjs(item?.appointment_date);
-    console.log(item);
     setAppointmentForm({
       ...item,
       date: calendar.format('YYYY-MM-DD'),
