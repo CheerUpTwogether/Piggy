@@ -19,6 +19,8 @@
 		A8082A948074015905B1B9D6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A7FD109974A420F6688C2BB9 /* PrivacyInfo.xcprivacy */; };
 		B382174F4A4941DE953CD69E /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6EF81AA714004494BA7C2ADF /* Pretendard-Regular.otf */; };
 		C0F619BA182655673571DF29 /* libPods-piggy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C6FBB16C62F5B961F666E6B7 /* libPods-piggy.a */; };
+		233F2E8737DF49E282EA06A3 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF5A1F85654F40C0B0844A1D /* BootSplash.storyboard */; };
+		4B78A4187AD8415CB5706E43 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51B01FC6BE9E4348AD24F71C /* Colors.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		CA168B4E8FEC4680BBB7A692 /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-SemiBold.otf"; path = "../src/assets/fonts/Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
 		D47BAE11C7D66A0050EA59A5 /* libPods-piggy-piggyTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-piggy-piggyTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		BF5A1F85654F40C0B0844A1D /* BootSplash.storyboard */ = {isa = PBXFileReference; name = "BootSplash.storyboard"; path = "piggy/BootSplash.storyboard"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		51B01FC6BE9E4348AD24F71C /* Colors.xcassets */ = {isa = PBXFileReference; name = "Colors.xcassets"; path = "piggy/Colors.xcassets"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = folder.assetcatalog; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +109,8 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				A7FD109974A420F6688C2BB9 /* PrivacyInfo.xcprivacy */,
+				BF5A1F85654F40C0B0844A1D /* BootSplash.storyboard */,
+				51B01FC6BE9E4348AD24F71C /* Colors.xcassets */,
 			);
 			name = piggy;
 			sourceTree = "<group>";
@@ -273,6 +279,8 @@
 				11963DFBDB604DAEB7DB2FE2 /* Pretendard-Medium.otf in Resources */,
 				B382174F4A4941DE953CD69E /* Pretendard-Regular.otf in Resources */,
 				9A79F76A015F492A9652C3EB /* Pretendard-SemiBold.otf in Resources */,
+				233F2E8737DF49E282EA06A3 /* BootSplash.storyboard in Resources */,
+				4B78A4187AD8415CB5706E43 /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

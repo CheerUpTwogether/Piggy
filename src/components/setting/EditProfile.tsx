@@ -143,8 +143,8 @@ const EditProfile = () => {
   };
 
   return (
-    <ScrollView style={commonStyle.CONTAINER}>
-      <View style={{marginBottom: 30}}>
+    <ScrollView style={[commonStyle.CONTAINER, {flex: 1}]}>
+      <View>
         <View style={{alignItems: 'center', marginVertical: 48}}>
           <TouchableOpacity
             onPress={selectImage}
@@ -191,7 +191,7 @@ const EditProfile = () => {
           />
         </View>
       </View>
-      <View style={{marginTop: 232, gap: 14, marginHorizontal: 8}}>
+      <View style={{flex: 1, gap: 8, justifyContent: 'flex-end'}}>
         <Button text="저장" onPress={changeNickname} />
         <Button text="로그 아웃" theme="sub" onPress={() => handleLogout()} />
         <TouchableOpacity>

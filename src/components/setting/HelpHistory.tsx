@@ -85,12 +85,6 @@ const HelpHistory = () => {
     }
   };
 
-  const gotoDetail = () => {
-    if (selectedId) {
-      navigation.navigate('HelpDetail', {id: selectedId});
-    }
-  };
-
   const gotoDesk = () => {
     navigation.navigate('HelpDesk');
   };
@@ -130,14 +124,16 @@ const HelpHistory = () => {
 
   return (
     <View style={{flex: 1}}>
-      <ScrollView style={commonStyle.CONTAINER}>
+      <ScrollView style={[commonStyle.CONTAINER, {paddingVertical: 0}]}>
         {inquiryList && inquiryList.length > 0 ? (
           inquiryList.map(item => (
             <TouchableOpacity
               key={item.id}
               activeOpacity={0.8}
               style={styles.itemWrapper}
-              onPress={gotoDetail}>
+              onPress={() =>
+                navigation.navigate('HelpDetail', {id: String(item.id)})
+              }>
               <View style={styles.subjectWrapper}>
                 <Text style={commonStyle.REGULAR_33_18}>
                   {item.subject

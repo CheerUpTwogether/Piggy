@@ -7,6 +7,7 @@ import {
   View,
   Platform,
   Linking,
+  ScrollView,
 } from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -88,7 +89,7 @@ const Settings = () => {
   };
 
   return (
-    <View style={commonStyle.CONTAINER}>
+    <ScrollView style={[commonStyle.CONTAINER, {paddingVertical: 0}]}>
       <View style={{flexDirection: 'row', gap: 18, alignItems: 'center'}}>
         <TouchableOpacity activeOpacity={0.8} onPress={() => gotoProfile()}>
           {userData.profile_img_url ? (
@@ -151,7 +152,6 @@ const Settings = () => {
 
         <View style={{gap: 16}}>
           <Text style={commonStyle.MEDIUM_AA_14}>이용약관</Text>
-
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => navigation.navigate('ServiceAgreement')}>
@@ -164,7 +164,7 @@ const Settings = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={{gap: 16}}>
+        <View style={{gap: 16, marginBottom: 16}}>
           <Text style={commonStyle.MEDIUM_AA_14}>알림 센터</Text>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -173,7 +173,7 @@ const Settings = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
