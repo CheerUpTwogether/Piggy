@@ -12,6 +12,8 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
 
   const title = () => {
     switch (item.changed_category) {
+      case '가입':
+        return `${item.contents?.f1}!`;
       case '선물줌':
         return `${item.contents?.f1}님에게 선물`;
       case '선물받음':
