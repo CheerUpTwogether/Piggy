@@ -35,7 +35,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>앱이 실행되는 동안 위치에 접근할 수 있도록 허용해 주세요.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>항상 위치에 접근할 수 있도록 허용해 주세요.</string>
 	<key>KAKAO_APP_KEY</key>
@@ -54,6 +54,8 @@
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
+		<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 	</dict>
 	<key>UIAppFonts</key>
 	<array>
