@@ -136,6 +136,10 @@ const Alarm = () => {
         date: calendar.format('YYYY-MM-DD'),
         time: calendar.format('HH:mm'),
         id: data[0].appointment_id,
+        appointment_participants_list:
+          data[0].appointment_participants_list.filter(
+            el => el.user_id !== userData.id,
+          ),
       });
       navigation.navigate('AppointmentDetail');
     } catch {
