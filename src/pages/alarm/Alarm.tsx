@@ -109,7 +109,6 @@ const Alarm = () => {
     }
   };
 
-
   const goAppointmentForm = async appointmentId => {
     try {
       const {data, error} = await getAppointmentSingleSpb(
@@ -131,6 +130,10 @@ const Alarm = () => {
         date: calendar.format('YYYY-MM-DD'),
         time: calendar.format('HH:mm'),
         id: data[0].appointment_id,
+        appointment_participants_list:
+          data[0].appointment_participants_list.filter(
+            el => el.user_id !== userData.id,
+          ),
       });
       navigation.navigate('AppointmentDetail');
     } catch {
@@ -140,7 +143,6 @@ const Alarm = () => {
       });
     }
   };
-
 
   const handleDeleteAlarm = async (notification_id: number) => {
     const res = await deleteNotificationSpb(notification_id);
