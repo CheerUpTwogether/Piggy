@@ -9,21 +9,25 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
   const getShortTitle = (title?: string) => {
     return title && title.length > 9 ? `${title.slice(0, 10)}...` : title || '';
   };
+
   const title = () => {
     switch (item.changed_category) {
       case '선물줌':
+        return `${item.contents?.f1}님에게 선물`;
       case '선물받음':
-        return item.contents?.f1;
+        return `${item.contents?.f1}님의 선물`;
       case '벌금(+)':
         return `${getShortTitle(item.contents?.f1)} 인증 성공`;
       case '벌금(-)':
         return `${getShortTitle(item.contents?.f1)} 벌금`;
       case '약속생성을 위한 선 지급':
-        return `${getShortTitle(item.contents?.f1)} 약속`;
+        return `${getShortTitle(item.contents?.f1)} 약속 보증금`;
       case '약속이 생성되지 않음 - 반환':
         return `${getShortTitle(item.contents?.f1)} 약속 취소`;
+      case '구매':
+        return `${item.contents?.f3} 구매`;
       default:
-        return '상점 구매';
+        return '알수없음';
     }
   };
 

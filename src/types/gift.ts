@@ -45,6 +45,8 @@ export interface PiggyUsageHistoryProps extends PiggyLog {
 interface PiggyHistoryContent {
   f1: string; // 약속 제목 || 선물대상
   f2: string | null; // profile_img
+  f3?: string;
+  f4?: string;
 }
 
 export interface PiggyLogItem {
