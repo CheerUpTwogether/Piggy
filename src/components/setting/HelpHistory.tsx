@@ -85,12 +85,6 @@ const HelpHistory = () => {
     }
   };
 
-  // const gotoDetail = () => {
-  //   if (selectedId) {
-  //     navigation.navigate('HelpDetail', {id: id});
-  //   }
-  // };
-
   const gotoDesk = () => {
     navigation.navigate('HelpDesk');
   };
