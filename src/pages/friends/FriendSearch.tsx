@@ -65,7 +65,10 @@ const FriendSearch = () => {
           // 이전 페이지가 선물하기일 때 호출
           data = await getSearchFriendsSpb(currentUserId, debouncedKeyword);
         }
-        setFriendsList(data || []);
+        // 현재 사용자 제외
+        setFriendsList(
+          data?.filter((user: Friend) => user.id !== currentUserId) || [],
+        );
       } catch (e) {
         console.error(e);
         setFriendsList([]);
