@@ -17,15 +17,15 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
       case '선물받음':
         return `${item.contents?.f1}님의 선물`;
       case '벌금(+)':
-        return `${getShortTitle(item.contents?.f1)} 인증 성공`;
+        return `인증 성공) ${getShortTitle(item.contents?.f1)}`;
       case '벌금(-)':
-        return `${getShortTitle(item.contents?.f1)} 벌금`;
+        return `벌금) ${getShortTitle(item.contents?.f1)}`;
       case '약속생성을 위한 선 지급':
-        return `${getShortTitle(item.contents?.f1)} 약속 보증금`;
+        return `약속 보증금) ${getShortTitle(item.contents?.f1)}`;
       case '약속이 생성되지 않음 - 반환':
-        return `${getShortTitle(item.contents?.f1)} 약속 취소`;
+        return `약속 취소) ${getShortTitle(item.contents?.f1)}`;
       case '구매':
-        return `${item.contents?.f3} 구매`;
+        return `상점 구매) ${item.contents?.f3}`;
       default:
         return '알수없음';
     }
