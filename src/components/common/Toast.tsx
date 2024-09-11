@@ -125,12 +125,16 @@ const ToastItem: React.FC<ToastItemProps> = ({
           opacity: fadeAnim,
           transform: [
             {translateY: Animated.add(translateY, pan.y)},
-            //{translateX: index * 10}, // 우측으로 조금 이동
+            {translateX: index * 6},
           ],
           marginTop: index * 10,
         },
       ]}>
-      <View style={styles.wrapper}>
+      <View
+        style={[
+          styles.wrapper,
+          {borderLeftColor: success ? '#04BF8A' : '#FEE583'},
+        ]}>
         {success ? (
           <SuccessIconSvg width={20} height={20} color={'#04BF8A'} />
         ) : (
@@ -172,9 +176,11 @@ const styles = StyleSheet.create({
     width: 300,
     height: 65,
     alignItems: 'center',
-    borderRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomRightRadius: 12,
     paddingHorizontal: 12,
     gap: 12,
+    borderLeftWidth: 5,
   },
   textWrapper: {gap: 2},
 });
