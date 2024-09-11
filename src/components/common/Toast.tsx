@@ -74,7 +74,11 @@ const ToastItem: React.FC<ToastItemProps> = ({
     <Animated.View
       style={[
         styles.toast,
-        {opacity: fadeAnim, transform: [{translateY}], marginTop: index * 67},
+        {
+          opacity: fadeAnim,
+          transform: [{translateY}, {translateX: index * 10}],
+          marginTop: index * 10,
+        },
       ]}>
       <View style={styles.wrapper}>
         {success ? (
