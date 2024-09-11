@@ -112,7 +112,7 @@ PIGGY는 시간 관리와 약속의 중요성을 강조하면서도, 이를 게�
 
 ## ⚙️ ERD
 
- <img src="./assets/readme/erd.png">
+![image](https://github.com/user-attachments/assets/f925896c-821b-4c35-b7a2-fe577d76eddf)
 <br/>
 <br/>
 
@@ -147,11 +147,20 @@ PIGGY는 시간 관리와 약속의 중요성을 강조하면서도, 이를 게�
 <br/> 
 
 ### 약속 인증
+<img src="https://github.com/user-attachments/assets/c1d4c764-5eab-432b-925e-36d76a922213" width="200px"><img src="https://github.com/user-attachments/assets/7b2b378d-a82b-484e-9992-17340657fdf7" width="200px">
 <br/> 
 
 ### 문의하기 & FAQ
 <img src="https://github.com/user-attachments/assets/3d06c96c-02d8-4661-9193-0e687573e7f0" width="200px"><img src="https://github.com/user-attachments/assets/b2329374-4c52-418f-8e1b-1e177735d6a6" width="200px">
+<br/> 
 
+### 이용약관 & 알림설정
+<img src="https://github.com/user-attachments/assets/e991c6d1-b745-4c52-8654-24470000f7cf" width="200px"><img src="https://github.com/user-attachments/assets/b4b055d5-4953-4516-b966-ddae37bd3910" width="200px"><img src="https://github.com/user-attachments/assets/f923b0b0-2d42-45a8-a240-7146f2f04d4c" width="200px">
+<br/> 
 
+### 프로필 관리
+<img src="https://github.com/user-attachments/assets/a2b402d4-3fd4-4b22-8cfc-c8bac87c4ec8" width="200px"><img src="https://github.com/user-attachments/assets/7597b73c-2010-4dc4-9625-3de75dd86f5e" width="200px">
+<br/> 
 
+### 프로필 관리
 
