@@ -126,11 +126,8 @@ PIGGY는 시간 관리와 약속의 중요성을 강조하면서도, 이를 게�
 - 회원 가입 후 온보딩 화면을 넣어 사용자에세 가이드를 제공하도록 만들었습니다.
 - fcm을 사용한 시스템 알람을 보내기 위해 알람 사용 여부 모달을 활용하였습니다.
 
-<img src="./assets/readme/regist.gif" width="200px">
-![registInfo](https://github.com/user-attachments/assets/3a8a6ca2-1f58-4c43-ad98-035425b11b81)  
-![verify_number](https://github.com/user-attachments/assets/b44a107f-3a35-417b-b351-9920a3e16265)  
-![onboarding](https://github.com/user-attachments/assets/b8f0ee44-9cba-4f5e-98ee-f3dd8c78d826)  
-![alarm](https://github.com/user-attachments/assets/da5b61ba-9342-4c05-99c9-735407962751)  
+<img src="./assets/readme/regist.gif" width="200px"><img src="https://github.com/user-attachments/assets/3a8a6ca2-1f58-4c43-ad98-035425b11b81" width="200px"><img src="https://github.com/user-attachments/assets/b44a107f-3a35-417b-b351-9920a3e16265" width="200px"><img src="https://github.com/user-attachments/assets/b8f0ee44-9cba-4f5e-98ee-f3dd8c78d826" width="200px">
+<img src="https://github.com/user-attachments/assets/da5b61ba-9342-4c05-99c9-735407962751" width="200px">
 <br/> 
 
 ### 친구 관리
@@ -139,5 +136,22 @@ PIGGY는 시간 관리와 약속의 중요성을 강조하면서도, 이를 게�
   있도록 설계하였습니다.(단방향)
 - 상세 정보에 해당 친구의 약속 등급을 확인할 수 있습니다.
 
-<img src="./assets/readme/addfriend.gif" width="200px">
-<img src="./assets/readme/deletefriend.gif" width="200px">
+<img src="./assets/readme/addfriend.gif" width="200px"><img src="https://github.com/user-attachments/assets/680cb08e-e681-49ad-91cf-232a564f4872" width="200px">
+<br/> 
+
+### 약속 생성
+- 긴 폼을 단계별로 나누어 입력하는 멀티스텝 폼을 사용하여 사용자 경험을 개선하였습니다.
+- 하단에 프로그래스바를 배치하여 현재 진행 상황을 파악할 수 있도록 하였습니다.
+
+<img src="https://github.com/user-attachments/assets/91f458be-a241-4dfc-9dba-cf4e00eba1d0" width="200px"><img src="https://github.com/user-attachments/assets/7550fd7c-a337-46a0-8758-c086f72e052d" width="200px"><img src="https://github.com/user-attachments/assets/0396a09d-719d-45f4-86f5-3166a2ddeb6f" width="200px"><img src="https://github.com/user-attachments/assets/7b12eec2-68c7-44ad-90ba-2e3f2c56d653" width="200px"><img src="https://github.com/user-attachments/assets/b1a5fbcd-3bed-4498-8929-a0eab974b728" width="200px">
+<br/> 
+
+### 약속 인증
+<br/> 
+
+### 문의하기 & FAQ
+<img src="https://github.com/user-attachments/assets/3d06c96c-02d8-4661-9193-0e687573e7f0" width="200px"><img src="https://github.com/user-attachments/assets/b2329374-4c52-418f-8e1b-1e177735d6a6" width="200px">
+
+
+
+
