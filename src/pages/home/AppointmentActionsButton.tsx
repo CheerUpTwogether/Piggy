@@ -80,7 +80,6 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
         <ButtonCouple
           onPressLeft={() => {
             setAppointmentAcceptance(false);
-            navigation.goBack();
           }}
           onPressRight={() => {
             setAppointmentAcceptance(true);
