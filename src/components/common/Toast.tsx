@@ -18,7 +18,7 @@ const Toast = () => {
   const {toasts, removeToast} = useToastStore();
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} pointerEvents="box-none">
       {toasts.map((toast, index) => (
         <ToastItem
           key={toast.id}
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    zIndex: 9999,
+    zIndex: 10,
     marginTop: Platform.OS === 'ios' ? 50 : 20,
   },
   toast: {
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 9999,
+    zIndex: 10,
   },
   wrapper: {
     flexDirection: 'row',
