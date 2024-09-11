@@ -1,4 +1,4 @@
-# 🐽 PIGGY
+![step4](https://github.com/user-attachments/assets/833ee955-d677-4fd1-ae2e-2ce50f19ede1)# 🐽 PIGGY
 
 PIGGY는 사용자가 다른 사용자와 약속을 생성하고 해당 약속의 정보를 함께 관리할 수 있는 커뮤니티 앱입니다.  
 친구들과 함께 약속을 세우고, 그 약속을 잊지 않고 성실히 이행할 수 있도록 **동기부여**와 **보상**을 결합한 시스템을 제공하고 있습니다.  
@@ -126,8 +126,8 @@ PIGGY는 시간 관리와 약속의 중요성을 강조하면서도, 이를 게�
 - 회원 가입 후 온보딩 화면을 넣어 사용자에세 가이드를 제공하도록 만들었습니다.
 - fcm을 사용한 시스템 알람을 보내기 위해 알람 사용 여부 모달을 활용하였습니다.
 
-<img src="./assets/readme/regist.gif" width="200px"><img src="https://github.com/user-attachments/assets/3a8a6ca2-1f58-4c43-ad98-035425b11b81" width="200px"><img src="https://github.com/user-attachments/assets/b44a107f-3a35-417b-b351-9920a3e16265" width="200px"><img src="https://github.com/user-attachments/assets/b8f0ee44-9cba-4f5e-98ee-f3dd8c78d826" width="200px">
-<img src="https://github.com/user-attachments/assets/da5b61ba-9342-4c05-99c9-735407962751" width="200px">
+<img src="https://github.com/user-attachments/assets/6d9d92fb-4df0-406f-96dd-56974d2cee9d" width="200px"><img src="https://github.com/user-attachments/assets/0de0a689-2a96-409b-b328-7659105c22ea" width="200px"><img src="https://github.com/user-attachments/assets/b44a107f-3a35-417b-b351-9920a3e16265" width="200px"><img src="https://github.com/user-attachments/assets/40b98c0d-a51a-4d63-85bb-d6704b3e6ba9" width="200px">
+<img src="https://github.com/user-attachments/assets/767d99c2-b66c-4f5a-875a-5d5ce8490a3a" width="200px">
 <br/> 
 
 ### 친구 관리
@@ -136,31 +136,30 @@ PIGGY는 시간 관리와 약속의 중요성을 강조하면서도, 이를 게�
   있도록 설계하였습니다.(단방향)
 - 상세 정보에 해당 친구의 약속 등급을 확인할 수 있습니다.
 
-<img src="./assets/readme/addfriend.gif" width="200px"><img src="https://github.com/user-attachments/assets/680cb08e-e681-49ad-91cf-232a564f4872" width="200px">
+<img src="https://github.com/user-attachments/assets/c3e1deb1-22e1-4d13-af14-7de13743de4c" width="200px"><img src="https://github.com/user-attachments/assets/be71ae60-1a4a-4fc6-bb37-6c67075a2dc7" width="200px">
 <br/> 
 
 ### 약속 생성
 - 긴 폼을 단계별로 나누어 입력하는 멀티스텝 폼을 사용하여 사용자 경험을 개선하였습니다.
 - 하단에 프로그래스바를 배치하여 현재 진행 상황을 파악할 수 있도록 하였습니다.
-
-<img src="https://github.com/user-attachments/assets/91f458be-a241-4dfc-9dba-cf4e00eba1d0" width="200px"><img src="https://github.com/user-attachments/assets/7550fd7c-a337-46a0-8758-c086f72e052d" width="200px"><img src="https://github.com/user-attachments/assets/0396a09d-719d-45f4-86f5-3166a2ddeb6f" width="200px"><img src="https://github.com/user-attachments/assets/7b12eec2-68c7-44ad-90ba-2e3f2c56d653" width="200px"><img src="https://github.com/user-attachments/assets/b1a5fbcd-3bed-4498-8929-a0eab974b728" width="200px">
+  
+<img src="https://github.com/user-attachments/assets/203930de-3566-4dc0-b201-71311239444a" width="200px"><img src="https://github.com/user-attachments/assets/efb9c264-57de-4127-b58b-eada5bf9e7e3" width="200px"><img src="https://github.com/user-attachments/assets/33c30da8-c3d1-4d47-ab32-bedfe50bf214" width="200px"><img src="https://github.com/user-attachments/assets/fae77415-46b3-43b6-9079-ac19ff5f030b" width="200px"><img src="https://github.com/user-attachments/assets/31c5384c-f303-4c9a-b48c-0897f407d4db" width="200px">
 <br/> 
 
 ### 약속 인증
-<img src="https://github.com/user-attachments/assets/c1d4c764-5eab-432b-925e-36d76a922213" width="200px"><img src="https://github.com/user-attachments/assets/7b2b378d-a82b-484e-9992-17340657fdf7" width="200px">
+<img src="https://github.com/user-attachments/assets/bfb80753-a0ef-49d8-946c-bf93c838df04" width="200px"><img src="https://github.com/user-attachments/assets/b29c3930-ed68-4d4a-8ccf-00e96b1404f8" width="200px">
 <br/> 
 
 ### 문의하기 & FAQ
-<img src="https://github.com/user-attachments/assets/3d06c96c-02d8-4661-9193-0e687573e7f0" width="200px"><img src="https://github.com/user-attachments/assets/b2329374-4c52-418f-8e1b-1e177735d6a6" width="200px">
+<img src="https://github.com/user-attachments/assets/2edc64c1-9e9b-4d35-afd4-2c5f08a9911a" width="200px"><img src="https://github.com/user-attachments/assets/49df3707-7abf-4a6b-8c1f-c2c29965fcb5" width="200px"><img src="https://github.com/user-attachments/assets/214251d4-749b-4ec5-a822-c81207e58fa8" width="200px">
 <br/> 
 
 ### 이용약관 & 알림설정
-<img src="https://github.com/user-attachments/assets/e991c6d1-b745-4c52-8654-24470000f7cf" width="200px"><img src="https://github.com/user-attachments/assets/b4b055d5-4953-4516-b966-ddae37bd3910" width="200px"><img src="https://github.com/user-attachments/assets/f923b0b0-2d42-45a8-a240-7146f2f04d4c" width="200px">
+<img src="https://github.com/user-attachments/assets/eabc6d9d-19d9-4823-9a9d-33033cceeb58" width="200px"><img src="https://github.com/user-attachments/assets/c3161fd1-d7bc-470a-a0a5-addbc8e89106" width="200px"><img src="https://github.com/user-attachments/assets/b56e52f6-fa80-4ce0-8cff-60406f7a773e" width="200px">
 <br/> 
 
 ### 프로필 관리
-<img src="https://github.com/user-attachments/assets/a2b402d4-3fd4-4b22-8cfc-c8bac87c4ec8" width="200px"><img src="https://github.com/user-attachments/assets/7597b73c-2010-4dc4-9625-3de75dd86f5e" width="200px">
+<img src="https://github.com/user-attachments/assets/cafa16ea-f204-4b32-91b7-8bd0cde25e76" width="200px"><img src="https://github.com/user-attachments/assets/ec9de453-30be-4267-8f25-f65d6bd33247" width="200px">
 <br/> 
 
-### 프로필 관리
 
