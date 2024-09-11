@@ -126,7 +126,7 @@ PIGGY는 시간 관리와 약속의 중요성을 강조하면서도, 이를 게�
 - 회원 가입 후 온보딩 화면을 넣어 사용자에세 가이드를 제공하도록 만들었습니다.
 - fcm을 사용한 시스템 알람을 보내기 위해 알람 사용 여부 모달을 활용하였습니다.
 
-<img src="https://github.com/user-attachments/assets/6d9d92fb-4df0-406f-96dd-56974d2cee9d" width="200px"><img src="https://github.com/user-attachments/assets/0de0a689-2a96-409b-b328-7659105c22ea" width="200px"><img src="https://github.com/user-attachments/assets/b44a107f-3a35-417b-b351-9920a3e16265" width="200px"><img src="https://github.com/user-attachments/assets/40b98c0d-a51a-4d63-85bb-d6704b3e6ba9" width="200px">
+<img src="./assets/readme/regist.gif" width="200px"><img src="https://github.com/user-attachments/assets/0de0a689-2a96-409b-b328-7659105c22ea" width="200px"><img src="https://github.com/user-attachments/assets/b44a107f-3a35-417b-b351-9920a3e16265" width="200px"><img src="https://github.com/user-attachments/assets/40b98c0d-a51a-4d63-85bb-d6704b3e6ba9" width="200px">
 <img src="https://github.com/user-attachments/assets/767d99c2-b66c-4f5a-875a-5d5ce8490a3a" width="200px">
 <br/> 
 
