@@ -7,14 +7,14 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import {RootStackParamList} from '@/types/Router';
 import {useNavigation} from '@react-navigation/native';
-import {commonStyle} from '@/styles/common';
+import {RootStackParamList} from '@/types/Router';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {commonStyle} from '@/styles/common';
 import {deleteItemSession} from '@/utils/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY} from '@env';
 import {initFcmTokenSpb} from '@/supabase/auth';
+import {GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY} from '@env';
 import {useToastStore, useUserStore} from '@/store/store';
 import {
   deleteProfileSpb,
@@ -30,6 +30,9 @@ import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
+  const [profileValue, setProfileValue] = useState('');
+  const [tempProfileValue, setTempProfileValue] = useState('');
+  const [isImageReset, setIsImageReset] = useState(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {userData, setUserDataByKey} = useUserStore();
@@ -37,7 +40,14 @@ const EditProfile = () => {
 
   useEffect(() => {
     setNickNameValue(userData.nickname);
-  }, []);
+    setProfileValue(userData.profile_img_url);
+    setTempProfileValue(userData.profile_img_url);
+
+    return () => {
+      setNickNameValue(userData.nickname);
+      setTempProfileValue(userData.profile_img_url);
+    };
+  }, [userData]);
 
   const googleLogOut = async () => {
     GoogleSignin.configure({
@@ -55,91 +65,85 @@ const EditProfile = () => {
     navigation.replace('Login');
   };
 
-  // 프로필 이미지 선택
+  // 프로필 이미지 선택 (로컬 상태)
   const selectImage = async () => {
-    const file = await ImagePicker.openPicker({
-      mediaType: 'photo',
-      multiple: false,
-    });
-    updateImage(file);
-  };
-
-  // 프로필 이미지 업데이트
-  const updateImage = async file => {
     try {
-      const image = {
+      const file = await ImagePicker.openPicker({
+        mediaType: 'photo',
+        multiple: false,
+      });
+      const tempImage = {
         uri: file.path,
         type: file.mime,
         name: `${file.modificationDate}${file.path.slice(-4)}`,
       };
-      const profileimagepath = await setMyProfileImageSpb(userData, image);
-
-      if (profileimagepath) {
-        setUserDataByKey('profile_img_url', profileimagepath?.profile_img_url);
+      setTempProfileValue(tempImage.uri);
+      setIsImageReset(false);
+    } catch (error) {
+      if (error.message === 'User cancelled image selection') {
+        console.log('이미지 선택이 취소되었습니다.');
+      } else {
+        console.error('이미지 선택 중 에러 발생:', error);
       }
-
-      addToast({
-        success: true,
-        text: '프로필 사진을 변경했어요',
-      });
-    } catch {
-      addToast({
-        success: false,
-        text: '프로필 사진 변경에 실패했어요',
-      });
     }
   };
 
-  // 닉네임 변경
+  // 기본 이미지로 변경 (로컬 상태)
+  const resetImage = () => {
+    setTempProfileValue('');
+    setIsImageReset(true);
+  };
+
+  // 닉네임 변경 저장 (API 호출)
   const changeNickname = async () => {
     try {
       const {error} = await setMyProfileNicknameSpb(userData.id, nickNameValue);
       if (error) {
-        if (error.code === '23505') {
-          addToast({
-            success: false,
-            text: '이미 등록되어 있는 닉네임이에요',
-          });
-        } else {
-          addToast({
-            success: false,
-            text: '닉네임 변경에 실패했어요',
-          });
-        }
-
+        addToast({
+          success: false,
+          text:
+            error.code === '23505'
+              ? '이미 등록되어 있는 닉네임이에요'
+              : '닉네임 변경에 실패했어요',
+        });
         return;
       }
 
-      addToast({
-        success: true,
-        text: '닉네임을 변경했어요',
-      });
       setUserDataByKey('nickname', nickNameValue);
-    } catch (e) {
-      addToast({
-        success: false,
-        text: '네트워크를 확인해주세요',
-      });
+      addToast({success: true, text: '닉네임을 변경했어요'});
+    } catch {
+      addToast({success: false, text: '네트워크를 확인해주세요'});
     }
   };
 
-  // 기본 이미지로 선택
-  const resetImage = async () => {
+  // 프로필 이미지 저장 (API 호출)
+  const saveProfileImage = async () => {
     try {
-      const res = await deleteProfileSpb(userData);
-      if (res) {
-        addToast({
-          success: true,
-          text: '프로필 사진을 변경했어요',
-        });
+      if (isImageReset) {
+        // 기본 이미지로 변경
+        await deleteProfileSpb(userData);
         setUserDataByKey('profile_img_url', '');
+      } else if (tempProfileValue && tempProfileValue !== profileValue) {
+        // 이미지 변경
+        const image = {
+          uri: tempProfileValue,
+          type: 'image/jpeg',
+          name: `${Date.now()}.jpg`,
+        };
+        const profileimagepath = await setMyProfileImageSpb(userData, image);
+        setUserDataByKey('profile_img_url', profileimagepath?.profile_img_url);
       }
+      addToast({success: true, text: '프로필 사진을 변경했어요'});
     } catch {
-      addToast({
-        success: false,
-        text: '프로필 사진 변경에 실패했어요',
-      });
+      addToast({success: false, text: '프로필 사진 변경에 실패했어요'});
     }
+  };
+
+  // 저장 버튼 클릭 시 호출
+  const handleSave = async () => {
+    await changeNickname();
+    await saveProfileImage();
+    navigation.goBack();
   };
 
   return (
@@ -150,9 +154,9 @@ const EditProfile = () => {
             onPress={selectImage}
             activeOpacity={0.8}
             style={styles.profileImgContainer}>
-            {userData.profile_img_url ? (
+            {tempProfileValue ? (
               <Image
-                source={{uri: userData.profile_img_url}}
+                source={{uri: tempProfileValue}}
                 style={styles.profileImg}
                 alt="profileImage"
               />
@@ -192,7 +196,7 @@ const EditProfile = () => {
         </View>
       </View>
       <View style={{flex: 1, gap: 8, justifyContent: 'flex-end'}}>
-        <Button text="저장" onPress={changeNickname} />
+        <Button text="저장" onPress={handleSave} />
         <Button text="로그 아웃" theme="sub" onPress={() => handleLogout()} />
         <TouchableOpacity>
           <Text style={{...commonStyle.REGULAR_AA_14, textAlign: 'center'}}>
