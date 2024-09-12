@@ -152,12 +152,22 @@ const EditProfile = () => {
     }
   };
 
-  // 저장 버튼 클릭 시 호출
   const handleSave = async () => {
-    const nicknameResult = await changeNickname();
-    const imageResult = await saveProfileImage();
+    // 변경 전 상태와 비교
+    const isNicknameChanged = nickNameValue !== userData.nickname;
+    const isProfileImageChanged =
+      tempProfileValue !== profileValue || isImageReset;
 
-    // 닉네임, 프로필 변경 모두 성공 시
+    // 변경이 없을 경우
+    if (!isNicknameChanged && !isProfileImageChanged) {
+      navigation.goBack();
+      return;
+    }
+
+    // 닉네임 변경 || 프로필 이미지 변경이 있을 경우에만 저장 실행
+    const nicknameResult = isNicknameChanged ? await changeNickname() : true;
+    const imageResult = isProfileImageChanged ? await saveProfileImage() : true;
+
     if (nicknameResult && imageResult) {
       addToast({
         success: true,
