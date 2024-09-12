@@ -18,14 +18,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  loadingContainer: {
-    width: 100,
-    height: 100,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 });
 
 export default LoadingCircle;
