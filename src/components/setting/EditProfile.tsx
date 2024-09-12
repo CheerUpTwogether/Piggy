@@ -95,29 +95,38 @@ const EditProfile = () => {
   };
 
   // 닉네임 변경 저장 (API 호출)
-  const changeNickname = async () => {
+  const changeNickname = async (): Promise<boolean> => {
     try {
       const {error} = await setMyProfileNicknameSpb(userData.id, nickNameValue);
       if (error) {
-        addToast({
-          success: false,
-          text:
-            error.code === '23505'
-              ? '이미 등록되어 있는 닉네임이에요'
-              : '닉네임 변경에 실패했어요',
-        });
-        return;
+        // 중복된 닉네임일 경우
+        if (error.code === '23505') {
+          addToast({
+            success: false,
+            text: '이미 등록되어 있는 닉네임이에요',
+          });
+        } else {
+          addToast({
+            success: false,
+            text: '닉네임 변경에 실패했어요',
+          });
+        }
+        return false;
       }
 
       setUserDataByKey('nickname', nickNameValue);
-      addToast({success: true, text: '닉네임을 변경했어요'});
-    } catch {
-      addToast({success: false, text: '네트워크를 확인해주세요'});
+      return true;
+    } catch (e) {
+      addToast({
+        success: false,
+        text: '네트워크를 확인해주세요',
+      });
+      return false;
     }
   };
 
   // 프로필 이미지 저장 (API 호출)
-  const saveProfileImage = async () => {
+  const saveProfileImage = async (): Promise<boolean> => {
     try {
       if (isImageReset) {
         // 기본 이미지로 변경
@@ -133,17 +142,29 @@ const EditProfile = () => {
         const profileimagepath = await setMyProfileImageSpb(userData, image);
         setUserDataByKey('profile_img_url', profileimagepath?.profile_img_url);
       }
-      addToast({success: true, text: '프로필 사진을 변경했어요'});
+      return true;
     } catch {
-      addToast({success: false, text: '프로필 사진 변경에 실패했어요'});
+      addToast({
+        success: false,
+        text: '프로필 사진 변경에 실패했어요',
+      });
+      return false;
     }
   };
 
   // 저장 버튼 클릭 시 호출
   const handleSave = async () => {
-    await changeNickname();
-    await saveProfileImage();
-    navigation.goBack();
+    const nicknameResult = await changeNickname();
+    const imageResult = await saveProfileImage();
+
+    // 닉네임, 프로필 변경 모두 성공 시
+    if (nicknameResult && imageResult) {
+      addToast({
+        success: true,
+        text: '프로필 정보가 저장되었습니다.',
+      });
+      navigation.goBack();
+    }
   };
 
   return (
