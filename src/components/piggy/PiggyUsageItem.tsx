@@ -4,32 +4,57 @@ import dayjs from 'dayjs';
 import {color_ef, commonStyle} from '@/styles/common';
 import {PiggyUsageHistoryProps} from '@/types/gift';
 import ProfileSvg from '@/assets/icons/basicProfile.svg';
+import AppointmentSvg from '@/assets/icons/appointment.svg';
+import CancelSvg from '@/assets/icons/appointmentDelete.svg';
+import BarcodeSvg from '@/assets/icons/barcode.svg';
+import LocationSuccessSvg from '@/assets/icons/locationSuccess.svg';
+import LocationFailureSvg from '@/assets/icons/locationFailure.svg';
 
 const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
   const getShortTitle = (title?: string) => {
     return title && title.length > 9 ? `${title.slice(0, 10)}...` : title || '';
   };
 
-  const title = () => {
+  const explain = () => {
     switch (item.changed_category) {
       case '가입':
-        return `${item.contents?.f1}!`;
+        return {title: `${item.contents?.f1}`};
       case '선물줌':
-        return `${item.contents?.f1}님에게 선물`;
+        return {title: `${item.contents?.f1}님에게 선물`};
       case '선물받음':
-        return `${item.contents?.f1}님의 선물`;
+        return {title: `${item.contents?.f1}님의 선물`};
       case '벌금(+)':
-        return `인증 성공) ${getShortTitle(item.contents?.f1)}`;
+        return {
+          title: `${getShortTitle(item.contents?.f1)}`,
+          imgText: '약속 성공',
+          img: <LocationSuccessSvg />,
+        };
       case '벌금(-)':
-        return `벌금) ${getShortTitle(item.contents?.f1)}`;
+        return {
+          title: `${getShortTitle(item.contents?.f1)}`,
+          imgText: '벌금',
+          img: <LocationFailureSvg />,
+        };
       case '약속생성을 위한 선 지급':
-        return `약속 보증금) ${getShortTitle(item.contents?.f1)}`;
+        return {
+          title: `${getShortTitle(item.contents?.f1)}`,
+          imgText: '보증금',
+          img: <AppointmentSvg />,
+        };
       case '약속이 생성되지 않음 - 반환':
-        return `약속 취소) ${getShortTitle(item.contents?.f1)}`;
+        return {
+          title: `${getShortTitle(item.contents?.f1)}`,
+          imgText: '약속 취소',
+          img: <CancelSvg />,
+        };
       case '구매':
-        return `상점 구매) ${item.contents?.f3}`;
+        return {
+          title: `${item.contents?.f3}`,
+          imgText: '상점 구매',
+          img: <BarcodeSvg />,
+        };
       default:
-        return '알수없음';
+        return {title: '알수없음'};
     }
   };
 
@@ -64,17 +89,19 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
               <ProfileSvg style={styles.img} width={28} height={28} />
             )
           ) : (
-            <Image
-              source={require('@/assets/icons/topLogo.png')}
-              style={styles.img}
-              alt="topLogo"
-            />
+            <View>
+              <Image
+                source={require('@/assets/icons/topLogo.png')}
+                style={styles.img}
+                alt="topLogo"
+              />
+            </View>
           )}
         </View>
 
         {/* 사용 내역 */}
         <View>
-          <Text style={commonStyle.MEDIUM_33_16}>{title()}</Text>
+          <Text style={commonStyle.MEDIUM_33_16}>{explain().title}</Text>
           <Text>{formatDate(item.diff_piggy_date)}</Text>
         </View>
       </View>
