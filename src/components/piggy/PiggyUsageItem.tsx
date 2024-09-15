@@ -110,7 +110,7 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
         </View>
 
         {/* 사용 내역 */}
-        <View>
+        <View style={{gap: 2}}>
           <Text style={commonStyle.MEDIUM_33_16}>{explain().title}</Text>
           <Text>{formatDate(item.diff_piggy_date)}</Text>
         </View>
