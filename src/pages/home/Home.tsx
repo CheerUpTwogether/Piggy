@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {View, StyleSheet, FlatList, Platform} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {commonStyle, color_ef, color_primary} from '@/styles/common';
+import {color_ef, color_primary} from '@/styles/common';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
 import Profile from '@/components/home/Profile';
@@ -124,7 +124,6 @@ const Home = () => {
             onPressFix={onPressFix}
           />
         )}
-        style={{marginHorizontal: -16}}
         ListEmptyComponent={
           <View style={{flex: 1, paddingTop: 40}}>
             <EmptyResult
@@ -133,6 +132,7 @@ const Home = () => {
             />
           </View>
         }
+        style={{marginBottom: 220, paddingBottom: 20}}
       />
 
       {/* 약속 추가 버튼 */}
@@ -155,11 +155,10 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   container: {
-    ...commonStyle.CONTAINER,
     paddingBottom: 0,
+    backgroundColor: color_ef,
   },
   tab: {
-    marginTop: 40,
     borderBlockColor: color_ef,
     borderBottomWidth: 1,
     marginHorizontal: -16,
@@ -179,7 +178,7 @@ const styles = StyleSheet.create({
   },
   plusBtn: {
     position: 'absolute',
-    bottom: 12,
+    bottom: 232,
     right: 12,
     width: 48,
     height: 48,

@@ -12,38 +12,44 @@ const Profile = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {userData} = useUserStore();
   return (
-    <View style={styles.myInfoBox}>
-      <View style={styles.flexRow}>
-        {userData.profile_img_url ? (
-          <Image
-            source={{uri: userData.profile_img_url}}
-            style={styles.profileImg}
-            alt="peofileImage"
-          />
-        ) : (
-          <View style={styles.emptyProfileImg}>
-            <BasicProfileSvg width={40} height={40} />
-          </View>
-        )}
+    <View style={styles.container}>
+      <View style={styles.myInfoBox}>
+        <View style={styles.flexRow}>
+          {userData.profile_img_url ? (
+            <Image
+              source={{uri: userData.profile_img_url}}
+              style={styles.profileImg}
+              alt="peofileImage"
+            />
+          ) : (
+            <View style={styles.emptyProfileImg}>
+              <BasicProfileSvg width={40} height={40} />
+            </View>
+          )}
 
-        <View>
-          <Text style={commonStyle.REGULAR_FF_16}>{userData.nickname}</Text>
-          <Text style={commonStyle.MEDIUM_FF_20}>{userData.piggy} Piggy</Text>
+          <View>
+            <Text style={commonStyle.REGULAR_FF_16}>{userData.nickname}</Text>
+            <Text style={commonStyle.MEDIUM_FF_20}>{userData.piggy} Piggy</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.btnArea}>
-        <Button
-          text="사용내역"
-          onPress={() => navigation.navigate('PiggyUsage')}
-          theme="outline"
-          size="md"
-        />
+        <View style={styles.btnArea}>
+          <Button
+            text="사용내역"
+            onPress={() => navigation.navigate('PiggyUsage')}
+            theme="outline"
+            size="md"
+          />
+        </View>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    padding: 16,
+  },
   myInfoBox: {
     borderRadius: 10,
     backgroundColor: color_primary,
