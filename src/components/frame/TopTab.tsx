@@ -122,7 +122,7 @@ const RightItems = ({name}: {name: string}) => {
             <GiftSvg style={styles.svg} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.icon}>
-            <GoodsBoxSvg style={styles.svg} />
+            <GoodsBoxSvg style={styles.svg} width={28} />
           </TouchableOpacity>
 
           <Alarm />

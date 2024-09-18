@@ -50,11 +50,13 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
+    padding: 16,
   },
   myInfoBox: {
     backgroundColor: color_primary,
     paddingVertical: 24,
     paddingHorizontal: 16,
+    borderRadius: 20,
     justifyContent: 'space-between',
   },
   flexRow: {
