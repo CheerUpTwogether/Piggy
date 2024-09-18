@@ -40,7 +40,11 @@ const LeftItem = ({name, headerLeftLabelVisible}: LeftItemProps) => {
     return (
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.goBack()}>
+        onPress={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+          }
+        }}>
         <BackSvg width={32} height={32} color={'#555'} />
       </TouchableOpacity>
     );
@@ -79,7 +83,7 @@ const Alarm = () => {
       activeOpacity={0.8}
       onPress={() => navigation.navigate('Alarm')}>
       {isUnConfirmAlarm === 'true' && (
-        <View style={styles.alarmConfirmWrapper}></View>
+        <View style={styles.alarmConfirmWrapper} />
       )}
       <AlertSvg width={24} height={24} />
     </TouchableOpacity>

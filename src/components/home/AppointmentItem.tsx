@@ -1,9 +1,9 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigation} from '@/types/Router';
-import {commonStyle, color_primary, color_ef} from '@/styles/common';
+import {commonStyle} from '@/styles/common';
 import {AppointmentProps} from '@/types/appointment';
 import useAppointmentTimer from '@/hooks/useAppointmentTimer';
 import {useAppointmentForm, useUserStore} from '@/store/store';
@@ -36,14 +36,10 @@ const AppointmentItem = ({
   const titleFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.BOLD_AA_20
     : commonStyle.BOLD_33_20;
-  const contentFontColor = cancelStatus.includes(item.appointment_status)
-    ? commonStyle.MEDIUM_AA_14
-    : commonStyle.MEDIUM_33_14;
 
-  const notUseFreindsIcon =
-    cancelStatus.includes(item.appointment_status) ||
-    (item.appointment_status === 'pending' &&
-      item.agreement_status === 'pending');
+  const contentFontColor = cancelStatus.includes(item.appointment_status)
+    ? commonStyle.REGULAR_AA_16
+    : commonStyle.REGULAR_33_16;
 
   const onPress = () => {
     const calendar = dayjs(item?.appointment_date);
@@ -51,13 +47,14 @@ const AppointmentItem = ({
       ...item,
       date: calendar.format('YYYY-MM-DD'),
       time: calendar.format('HH:mm'),
-      id: item.appointment_id,
+      id: item.ap_id,
       appointment_participants_list: item.appointment_participants_list.filter(
         el => el.user_id !== userData.id,
       ),
     });
     navigation.navigate('AppointmentDetail');
   };
+
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       {/* 타이머 */}
@@ -87,10 +84,12 @@ const AppointmentItem = ({
       </View>
 
       {/* 장소 */}
-      <Text style={{paddingTop: 4}}>{item?.place_name || item.address}</Text>
+      <Text style={[contentFontColor, {paddingTop: 4}]}>
+        {item?.place_name || item.address}
+      </Text>
 
       {/* 시간 */}
-      <Text style={{paddingTop: 2}}>
+      <Text style={[contentFontColor, {paddingTop: 2}]}>
         {dayjs(item.appointment_date).format('YYYY-MM-DD HH:mm')}
       </Text>
 
@@ -111,34 +110,37 @@ const AppointmentItem = ({
 
         {/* 태그 */}
         <View style={{flexDirection: 'row', gap: 8}}>
-          {/* 대기중인 경우 */}
-          {item.appointment_status === 'pending' && (
-            <Text style={styles.grayLabel}>대기</Text>
-          )}
           {item.appointment_status === 'pending' &&
             item.agreement_status !== 'confirmed' && (
-              <Text style={styles.grayLabel}>미수락</Text>
+              <Text style={styles.pinkLabel}>수락 필요</Text>
             )}
           {item.appointment_status === 'pending' &&
             item.agreement_status === 'confirmed' && (
-              <Text style={styles.pinkLabel}>수락완료</Text>
+              <Text style={styles.grayLabel}>다른 사용자의 수락대기중 </Text>
             )}
 
-          {/* 취소된 경우 */}
-          {item.appointment_status === 'cancelled' && (
+          {/* 취소/만료된 경우 */}
+          {(item.appointment_status === 'cancelled' ||
+            item.appointment_status === 'expired') && (
             <Text style={styles.grayLabel}>취소</Text>
           )}
 
-          {/* 확정인 경우 */}
-          {item.appointment_status === 'confirmed' && (
-            <Text style={styles.pinkLabel}>확정</Text>
+          {/* 취소 요청을 한 경우 */}
+          {item.appointment_status === 'confirmed' &&
+            item.user_cancellation_status === 'cancellation-request' && (
+              <Text style={styles.grayLabel}>취소 요청 중</Text>
+            )}
+          {item.user_cancellation_status === 'cancellation-pending' && (
+            <Text style={styles.pinkLabel}>취소 요청 응답 필요</Text>
           )}
-          {/* 취소 요청이 있는 경우 */}
 
           {/* 이행된 경우 */}
-          {item.appointment_status === 'fulfilled' && (
-            <Text style={styles.pinkLabel}>인증 성공</Text>
-          )}
+          {item.appointment_status === 'fulfilled' &&
+            (item.certification_status ? (
+              <Text style={styles.pinkLabel}>인증 성공</Text>
+            ) : (
+              <Text style={styles.grayLabel}>인증 실패</Text>
+            ))}
         </View>
       </View>
     </TouchableOpacity>
@@ -147,16 +149,33 @@ const AppointmentItem = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    padding: 20,
     backgroundColor: '#fff',
     marginHorizontal: 12,
-    marginTop: 12,
+    marginTop: 10,
+    marginBottom: 10,
     borderRadius: 8,
+    ...Platform.select({
+      android: {
+        elevation: 4,
+      },
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 4,
+      },
+    }),
   },
   title: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingBottom: 8,
   },
   profileImgUrl: {
     width: 36,
@@ -172,6 +191,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
+    paddingTop: 8,
   },
   grayLabel: {
     backgroundColor: '#efefef',
@@ -186,6 +206,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 100,
     ...commonStyle.BOLD_PRIMARY_14,
+  },
+  greenLabel: {
+    backgroundColor: '#EBFFF9',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 100,
+    ...commonStyle.BOLD_SUB_14,
   },
 });
 
