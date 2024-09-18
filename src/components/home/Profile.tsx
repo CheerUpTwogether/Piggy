@@ -1,6 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import Button from '../common/Button';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {color_primary, commonStyle} from '@/styles/common';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '@/types/Router';
@@ -8,6 +7,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {useUserStore} from '@/store/store';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 import LinearGradient from 'react-native-linear-gradient';
+import ButtonCouple from '../common/ButtonCouple';
 
 const Profile = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -20,28 +20,32 @@ const Profile = () => {
         end={{x: 1, y: 0}}
         colors={['#ef4444', '#dc2626']}>
         <View style={styles.flexRow}>
-          <View style={styles.flexRow}>
-            {userData.profile_img_url ? (
-              <Image
-                source={{uri: userData.profile_img_url}}
-                style={styles.profileImg}
-                alt="peofileImage"
-              />
-            ) : (
-              <View style={styles.emptyProfileImg}>
-                <BasicProfileSvg width={5} height={40} />
-              </View>
-            )}
-
-            <View>
-              <Text style={commonStyle.REGULAR_FF_18}>{userData.nickname}</Text>
-              <Text style={commonStyle.BOLD_FF_22}>{userData.piggy} Piggy</Text>
+          {userData.profile_img_url ? (
+            <Image
+              source={{uri: userData.profile_img_url}}
+              style={styles.profileImg}
+              alt="peofileImage"
+            />
+          ) : (
+            <View style={styles.emptyProfileImg}>
+              <BasicProfileSvg width={5} height={40} />
             </View>
+          )}
+
+          <View>
+            <Text style={commonStyle.REGULAR_FF_18}>{userData.nickname}</Text>
+            <Text style={commonStyle.BOLD_FF_22}>{userData.piggy} Piggy</Text>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate('PiggyUsage')}>
-            <Text style={styles.btn}>사용내역</Text>
-          </TouchableOpacity>
         </View>
+
+        <ButtonCouple
+          onPressLeft={() => navigation.navigate('PiggyUsage')}
+          onPressRight={() => navigation.navigate('PiggyUsage')}
+          textLeft={'선물하기'}
+          textRight={'사용내역'}
+          theme="outline"
+          style={{marginTop: 20}}
+        />
       </LinearGradient>
     </View>
   );
@@ -53,7 +57,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   myInfoBox: {
-    backgroundColor: color_primary,
+    // backgroundColor: color_primary,
     paddingVertical: 24,
     paddingHorizontal: 16,
     borderRadius: 20,
@@ -62,7 +66,6 @@ const styles = StyleSheet.create({
   flexRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
   emptyProfileImg: {
     borderRadius: 100,
