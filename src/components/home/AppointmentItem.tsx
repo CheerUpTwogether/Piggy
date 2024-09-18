@@ -77,7 +77,7 @@ const AppointmentItem = ({
           )}
           {!shouldShowTimer && (
             <TouchableOpacity onPress={() => onPressMore(item)}>
-              <MoreSvg color="#777" />
+              <MoreSvg color="#777" style={styles.svg} />
             </TouchableOpacity>
           )}
         </View>
@@ -149,7 +149,7 @@ const AppointmentItem = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 16,
     backgroundColor: '#fff',
     marginHorizontal: 12,
     marginTop: 10,
@@ -186,6 +186,11 @@ const styles = StyleSheet.create({
   },
   marginLeftMinus: {
     marginLeft: -8,
+  },
+  svg: {
+    width: 20,
+    height: 20,
+    padding: 8,
   },
   friendsTagContiner: {
     flexDirection: 'row',

@@ -46,14 +46,13 @@ const Home = () => {
           />
         )}
         ListEmptyComponent={
-          <View style={{flex: 1}}>
+          <View>
             <EmptyResult
               reason={'아직 약속이 없어요'}
               solution={'친구들과의 약속을 등록해보세요!'}
             />
           </View>
         }
-        style={{flex: 1}}
       />
 
       {/* 약속 추가 버튼 */}
