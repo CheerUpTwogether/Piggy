@@ -10,6 +10,7 @@ import {useAppointmentForm, useUserStore} from '@/store/store';
 import dayjs from 'dayjs';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
+import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 
 const AppointmentItem = ({
   item,
@@ -96,16 +97,22 @@ const AppointmentItem = ({
       <View style={styles.friendsTagContiner}>
         {/* 친구 리스트 */}
         <View style={{paddingTop: 16, flexDirection: 'row'}}>
-          {item.appointment_participants_list.map((el, idx) => (
-            <Image
-              src={el.profile_img_url}
-              style={[
-                styles.profileImgUrl,
-                idx !== 0 && styles.marginLeftMinus,
-              ]}
-              key={el.user_id}
-            />
-          ))}
+          {item.appointment_participants_list.map((el, idx) =>
+            el.profile_img_url ? (
+              <Image
+                src={el.profile_img_url}
+                style={[
+                  styles.profileImgUrl,
+                  idx !== 0 && styles.marginLeftMinus,
+                ]}
+                key={el.user_id}
+              />
+            ) : (
+              <View style={styles.profileImgUrl}>
+                <BasicProfileSvg width={24} height={24} />
+              </View>
+            ),
+          )}
         </View>
 
         {/* 태그 */}
@@ -182,7 +189,9 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 100,
     borderWidth: 1,
-    borderColor: '#fff',
+    borderColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   marginLeftMinus: {
     marginLeft: -8,
