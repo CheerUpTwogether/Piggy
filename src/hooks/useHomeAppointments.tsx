@@ -101,7 +101,7 @@ const useHomeAppointments = () => {
   //appointments.find(el => el.appointment_id === selectedId);
   // 약속 더보기 버튼 클릭
   const onPressMore = (item: AppointmentProps) => {
-    setSelectedId(item.appointment_id);
+    setSelectedId(item.ap_id);
     setBottomSheetShow(true);
   };
 
@@ -164,10 +164,7 @@ const useHomeAppointments = () => {
         });
         return;
       }
-      console.log(data);
-      setAppointments(prev =>
-        prev.filter(el => el.appointment_id !== appointmentId),
-      );
+      setAppointments(prev => prev.filter(el => el.ap_id !== appointmentId));
     } catch {
       addToast({
         success: false,
