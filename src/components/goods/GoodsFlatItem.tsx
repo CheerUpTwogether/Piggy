@@ -29,7 +29,7 @@ const GoodsFlatItem = ({item}: {item: GoodsItem}) => {
         style={styles.itemImg}
         alt="goodsImage"
       />
-      <View style={{marginHorizontal: 10, gap: 4}}>
+      <View style={{margin: 8, gap: 4}}>
         <Text style={commonStyle.REGULAR_77_14} numberOfLines={1}>
           {item.product.brand_name}
         </Text>

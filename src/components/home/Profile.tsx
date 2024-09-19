@@ -44,6 +44,7 @@ const Profile = () => {
           textLeft={'선물하기'}
           textRight={'사용내역'}
           theme="outline"
+          themeRight="outline"
           style={{marginTop: 20}}
         />
       </LinearGradient>
