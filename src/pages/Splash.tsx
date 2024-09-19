@@ -8,6 +8,7 @@ import {getProfileSpb, loginSessionSpb} from '@/supabase/auth';
 import {useToastStore, useUserStore} from '@/store/store';
 import {setFcmTokenAPI} from '@/api/auth';
 const logo = require('@/assets/icons/logo.png');
+import BootSplash from 'react-native-bootsplash';
 
 const Splash = () => {
   const navigation =
@@ -35,6 +36,8 @@ const Splash = () => {
 
       if (!authData.session) {
         handleLoginErrorToast('세션 만료', '다시 로그인을 진행해주세요.');
+        navigation.replace('Login');
+        BootSplash.hide({fade: true});
         return;
       }
 
@@ -42,6 +45,8 @@ const Splash = () => {
 
       if (error) {
         handleLoginErrorToast('프로필 오류', '다시 로그인을 진행해주세요.');
+        navigation.replace('Login');
+        BootSplash.hide({fade: true});
         return;
       }
 
@@ -82,29 +87,32 @@ const Splash = () => {
           text: '로그인 실패',
           multiText: '관리자에게 문의해주세요',
         });
+        BootSplash.hide({fade: true});
         return;
       }
       navigation.replace('Main', {screen: 'Home'});
+      BootSplash.hide({fade: true});
     } else {
       navigation.replace('Login');
+      BootSplash.hide({fade: true});
     }
   };
 
   useEffect(() => {
     // 2초(2000ms) 후에 'Login' 화면으로 이동하도록 설정
-    const timeout = setTimeout(() => {
+    // const timeout = setTimeout(() => {
+    //   handleAutoLogin();
+    // }, 2000);
+
+    BootSplash.isVisible().then(() => {
       handleAutoLogin();
-    }, 2000);
+    });
 
     // 컴포넌트가 언마운트될 때 타임아웃을 정리
-    return () => clearTimeout(timeout);
+    //return () => clearTimeout(timeout);
   }, []);
 
-  return (
-    <View style={styles.container}>
-      <Image source={logo} style={{width: 320, height: 124}} alt="logo" />
-    </View>
-  );
+  return <View style={styles.container} />;
 };
 
 const styles = StyleSheet.create({
