@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {useRoute, RouteProp} from '@react-navigation/native';
+import dayjs from 'dayjs';
 import {commonStyle} from '@/styles/common';
 import {HelpDetailRouteParams} from '@/types/setting';
 import {getInquiryDetailSpb} from '@/supabase/SettingSpb';
@@ -21,7 +22,6 @@ const HelpDetail = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getInquiryDetailSpb(id);
-      console.log(data);
       setHelpItem(data);
     };
 
@@ -32,7 +32,9 @@ const HelpDetail = () => {
     <ScrollView style={commonStyle.CONTAINER}>
       <View style={styles.subjectWrapper}>
         <Text style={commonStyle.MEDIUM_33_18}>{helpItem?.subject}</Text>
-        <Text style={commonStyle.REGULAR_77_14}>{helpItem?.contents}</Text>
+        <Text style={commonStyle.REGULAR_77_14}>
+          {dayjs(helpItem?.inquiry_date).format('YYYY년 MM월 DD일')}
+        </Text>
       </View>
 
       <View style={styles.contentWrapper}>
