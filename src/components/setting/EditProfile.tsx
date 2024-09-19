@@ -27,6 +27,7 @@ import InputBox from '../common/InputBox';
 import NickNameSvg from '@/assets/icons/nickname.svg';
 import CameraSvg from '@/assets/icons/camera.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+import {unlink} from '@react-native-seoul/kakao-login';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
@@ -142,6 +143,24 @@ const EditProfile = () => {
     }
   };
 
+  const handleSignOut = () => {
+    if (userData.social_login_type === 'kakao') {
+      unlinkKakaoAccount();
+    }
+  };
+  const unlinkKakaoAccount = async (): Promise<void> => {
+    try {
+      await unlink();
+      //console.log(message);
+      addToast({
+        success: false,
+        text: '회원을 탈퇴했어요',
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <ScrollView style={[commonStyle.CONTAINER, {flex: 1}]}>
       <View>
@@ -194,7 +213,7 @@ const EditProfile = () => {
       <View style={{flex: 1, gap: 8, justifyContent: 'flex-end'}}>
         <Button text="저장" onPress={changeNickname} />
         <Button text="로그 아웃" theme="sub" onPress={() => handleLogout()} />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleSignOut}>
           <Text style={{...commonStyle.REGULAR_AA_14, textAlign: 'center'}}>
             회원탈퇴
           </Text>
