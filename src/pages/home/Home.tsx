@@ -35,25 +35,32 @@ const Home = () => {
       </View>
 
       {/* 약속 리스트 */}
-      <FlatList
-        data={appointments}
-        keyExtractor={item => item.ap_id}
-        renderItem={({item}) => (
-          <AppointmentItem
-            item={item}
-            onPressMore={onPressMore}
-            onPressFix={onPressFix}
-          />
-        )}
-        ListEmptyComponent={
-          <View>
-            <EmptyResult
-              reason={'아직 약속이 없어요'}
-              solution={'친구들과의 약속을 등록해보세요!'}
+
+      <View
+        style={{
+          backgroundColor: appointments?.length ? color_ef : '#fff',
+          flex: 1,
+        }}>
+        <FlatList
+          data={appointments}
+          keyExtractor={item => item.ap_id}
+          renderItem={({item}) => (
+            <AppointmentItem
+              item={item}
+              onPressMore={onPressMore}
+              onPressFix={onPressFix}
             />
-          </View>
-        }
-      />
+          )}
+          ListEmptyComponent={
+            <View style={{flex: 1}}>
+              <EmptyResult
+                reason={'아직 약속이 없어요'}
+                solution={'친구들과의 약속을 등록해보세요!'}
+              />
+            </View>
+          }
+        />
+      </View>
 
       {/* 약속 추가 버튼 */}
       <TouchableOpacity

@@ -28,7 +28,7 @@ const Profile = () => {
             />
           ) : (
             <View style={styles.emptyProfileImg}>
-              <BasicProfileSvg width={5} height={40} />
+              <BasicProfileSvg width={44} height={44} />
             </View>
           )}
 
