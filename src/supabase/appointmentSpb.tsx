@@ -68,13 +68,22 @@ export const setAppointmentProposerSpb = (
 // 약속 리스트 불러오기
 export const getAppointmentsSpb = (
   user_uuid: string,
-  appointment_selector: string[],
+  appointment_status_array: string[],
 ) => {
-  return supabase.rpc('select_appointment_list_detail', {
+  return supabase.rpc('select_appointments', {
     user_uuid,
-    appointment_selector,
+    appointment_status_array,
   });
 };
+// export const getAppointmentsSpb = (
+//   user_uuid: string,
+//   appointment_selector: string[],
+// ) => {
+//   return supabase.rpc('select_appointment_list_detail', {
+//     user_uuid,
+//     appointment_selector,
+//   });
+// };
 
 // 약속 참여자 상태 정보 조회
 export const getAppointmentParticipantsSpb = (
@@ -184,6 +193,7 @@ export const setAppointmentAcceptanceSpb = async (
       .eq('user_id', id)
       .eq('appointment_id', appointment_id);
     if (error) {
+      console.log(error);
       throw error;
     }
     return data;
@@ -289,6 +299,24 @@ export const getAppointmentSingleSpb = async (
       appointment_id_int: appointment_id,
       user_uuid: id,
     });
+  } catch (e) {
+    throw e;
+  }
+};
+
+// 약속 상태 확인
+export const getAppointmentStatusSpb = async (appointment_id: number) => {
+  try {
+    const {data, error} = await supabase
+      .from('appointment')
+      .select('appointment_status')
+      .eq('appointment_id', appointment_id)
+      .single();
+    if (error) {
+      console.log(error);
+      throw error;
+    }
+    return data;
   } catch (e) {
     throw e;
   }

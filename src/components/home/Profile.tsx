@@ -1,78 +1,96 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import Button from '../common/Button';
 import {color_primary, commonStyle} from '@/styles/common';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '@/types/Router';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useUserStore} from '@/store/store';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+import LinearGradient from 'react-native-linear-gradient';
+import ButtonCouple from '../common/ButtonCouple';
 
 const Profile = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {userData} = useUserStore();
   return (
-    <View style={styles.myInfoBox}>
-      <View style={styles.flexRow}>
-        {userData.profile_img_url ? (
-          <Image
-            source={{uri: userData.profile_img_url}}
-            style={styles.profileImg}
-            alt="peofileImage"
-          />
-        ) : (
-          <View style={styles.emptyProfileImg}>
-            <BasicProfileSvg width={40} height={40} />
-          </View>
-        )}
+    <View style={styles.container}>
+      <LinearGradient
+        style={styles.myInfoBox}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        colors={['#ef4444', '#dc2626']}>
+        <View style={styles.flexRow}>
+          {userData.profile_img_url ? (
+            <Image
+              source={{uri: userData.profile_img_url}}
+              style={styles.profileImg}
+              alt="peofileImage"
+            />
+          ) : (
+            <View style={styles.emptyProfileImg}>
+              <BasicProfileSvg width={5} height={40} />
+            </View>
+          )}
 
-        <View>
-          <Text style={commonStyle.REGULAR_FF_16}>{userData.nickname}</Text>
-          <Text style={commonStyle.MEDIUM_FF_20}>{userData.piggy} Piggy</Text>
+          <View>
+            <Text style={commonStyle.REGULAR_FF_18}>{userData.nickname}</Text>
+            <Text style={commonStyle.BOLD_FF_22}>{userData.piggy} Piggy</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.btnArea}>
-        <Button
-          text="사용내역"
-          onPress={() => navigation.navigate('PiggyUsage')}
+
+        <ButtonCouple
+          onPressLeft={() => navigation.navigate('PiggyUsage')}
+          onPressRight={() => navigation.navigate('PiggyUsage')}
+          textLeft={'선물하기'}
+          textRight={'사용내역'}
           theme="outline"
-          size="md"
+          themeRight="outline"
+          style={{marginTop: 20}}
         />
-      </View>
+      </LinearGradient>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  myInfoBox: {
-    borderRadius: 10,
-    backgroundColor: color_primary,
-    height: 140,
+  container: {
+    backgroundColor: '#fff',
     padding: 16,
+  },
+  myInfoBox: {
+    // backgroundColor: color_primary,
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    justifyContent: 'space-between',
   },
   flexRow: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   emptyProfileImg: {
     borderRadius: 100,
     backgroundColor: '#fff',
-    width: 52,
-    height: 52,
+    width: 68,
+    height: 68,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 8,
   },
   profileImg: {
-    width: 52,
-    height: 52,
+    width: 68,
+    height: 68,
     borderRadius: 100,
     marginRight: 8,
+    borderWidth: 1,
+    borderColor: '#fff',
   },
-  btnArea: {
-    flexDirection: 'row',
-    paddingTop: 8,
-    justifyContent: 'flex-end',
-    gap: 4,
+  btn: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    color: color_primary,
   },
 });
 
