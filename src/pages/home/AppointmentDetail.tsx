@@ -14,17 +14,19 @@ import {
   getCertificationStatusSpb,
   getAppointmentParticipantsSpb,
 } from '@/supabase/appointmentSpb';
+import {getPiggySpb} from '@/supabase/AuthSpb';
 import AppointmentActionsButton from './AppointmentActionsButton';
 import {Participant, CancelStatus} from '@/types/appointment';
 
 const AppointmentDetail = () => {
   const addToast = useToastStore(state => state.addToast);
-  const {userData} = useUserStore();
+  const {userData, setUserDataByKey} = useUserStore();
   const {appointmentForm} = useAppointmentForm();
   const [cancelStatus, setCancelStatus] = useState<CancelStatus>('nothing');
   const [myAgreementStatus, setMyAgreementStatus] = useState(''); // 약속 동의 상태
   const [isNearAppointment, setIsNearAppointment] = useState(''); // 약속까지 남은 시간 ('10min', '2hr', 'expired', '')
   const [certification, setCertification] = useState(false); // 도착 인증 상태
+  const [myPiggy, setMyPiggy] = useState<number>(0);
   const {location} = useLocation();
   const navigation = useNavigation();
 
@@ -33,7 +35,14 @@ const AppointmentDetail = () => {
     fetchCertification();
     checkAppointmentTime();
     fetchAcceptance();
+    fetchPiggyData();
   }, [appointmentForm]);
+
+  const fetchPiggyData = async () => {
+    const res = await getPiggySpb(userData.id);
+    setMyPiggy(res?.latest_piggy_count);
+    setUserDataByKey('piggy', res?.latest_piggy_count);
+  };
 
   // 나의 약속 수락 상태 확인
   const fetchAcceptance = async () => {
@@ -171,7 +180,7 @@ const AppointmentDetail = () => {
       } else {
         addToast({
           success: false,
-          text: '이미 취소 요청이 있어요',
+          text: '앗, 조금 전 취소 요청이 들어왔어요!',
           multiText: '약속 상태를 확인하세요!',
         });
         return;
@@ -207,12 +216,26 @@ const AppointmentDetail = () => {
   // 취소 수락 확인
   const setAppointmentAcceptance = async (type: boolean) => {
     try {
-      await setAppointmentAcceptanceSpb(userData.id, appointmentForm.id, type);
-      addToast({
-        success: true,
-        text: `약속을 ${type ? '수락' : '거절'}했어요.`,
-      });
-      //navigation.goBack();
+      // 내 피기 보다 약속 피기가 많을 경우 실패 토스트
+      if (type === true && appointmentForm.deal_piggy_count > myPiggy) {
+        addToast({
+          success: false,
+          text: '피기가 부족해 약속 수락이 불가능합니다.',
+          multiText: '소유한 피기를 확인해주세요!',
+        });
+        return;
+      } else {
+        await setAppointmentAcceptanceSpb(
+          userData.id,
+          appointmentForm.id,
+          type,
+        );
+        addToast({
+          success: true,
+          text: `약속을 ${type ? '수락' : '거절'}했어요.`,
+        });
+        navigation.goBack();
+      }
     } catch {
       addToast({
         success: false,

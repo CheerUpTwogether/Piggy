@@ -20,7 +20,6 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
   setAppointmentCancellationAcceptance,
   setAppointmentAcceptance,
 }) => {
-
   const {remainingTime, formattedTime} =
     useAppointmentTimer(appointmentTimeCheck);
 
@@ -81,11 +80,9 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
         <ButtonCouple
           onPressLeft={() => {
             setAppointmentAcceptance(false);
-            navigation.goBack();
           }}
           onPressRight={() => {
             setAppointmentAcceptance(true);
-            navigation.goBack();
           }}
           textLeft={'약속 거절'}
           textRight={'약속 수락'}
