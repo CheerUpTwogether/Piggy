@@ -39,14 +39,14 @@ const EditProfile = () => {
 
   useEffect(() => {
     setNickNameValue(userData.nickname);
-  }, []);
-
-  const googleLogOut = async () => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/drive.readonly'],
       webClientId: GOOGLE_WEB_API_KEY,
       iosClientId: GOOGLE_IOS_API_KEY,
     });
+  }, []);
+
+  const googleLogOut = async () => {
     await GoogleSignin.signOut();
   };
 
@@ -158,11 +158,33 @@ const EditProfile = () => {
 
   const deleteUser = async () => {
     if (userData.social_login_type === 'kakao') {
-      unlinkKakaoAccount();
+      unlinKakaoAccount();
+    } else if (userData.social_login_type === 'google') {
+      unlinGoogleAccount();
     }
   };
+  const unlinGoogleAccount = async () => {
+    try {
+      await deleteUserSpb(userData.id);
+      await GoogleSignin.revokeAccess();
 
-  const unlinkKakaoAccount = async (): Promise<void> => {
+      addToast({
+        success: false,
+        text: '회원을 탈퇴했어요',
+      });
+      navigation.replace('Login');
+      closeModal();
+    } catch (e) {
+      console.log(e);
+      addToast({
+        success: false,
+        text: '회원을 탈퇴에 실패했어요',
+        multiText: '관리자에게 문의해주세요',
+      });
+      closeModal();
+    }
+  };
+  const unlinKakaoAccount = async (): Promise<void> => {
     try {
       await deleteUserSpb(userData.id);
       await unlink();
