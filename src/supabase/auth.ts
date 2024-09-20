@@ -166,3 +166,24 @@ export const signInSpb = async (
 export const isPiggySignup = () => {
   return supabase.from('users_nickname').select('*').eq('nickname', nickname);
 };
+
+// auth 정보 삭제
+export const deleteUserSpb = async id => {
+  try {
+    const {error} = await supabase.rpc('delete_user');
+    if (error) {
+      throw error;
+    }
+    console.log(error);
+    const {error: updateError} = await supabase
+      .from('users_nickname')
+      .update({is_deleted: true, phone_number: null, deleted_at: 'NOW()'})
+      .eq('id', id);
+    console.log(updateError);
+    if (updateError) {
+      throw updateError;
+    }
+  } catch (e) {
+    throw e;
+  }
+};

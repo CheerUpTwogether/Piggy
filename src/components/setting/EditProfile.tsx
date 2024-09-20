@@ -14,7 +14,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {deleteItemSession} from '@/utils/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY} from '@env';
-import {initFcmTokenSpb} from '@/supabase/auth';
+import {deleteUserSpb, initFcmTokenSpb} from '@/supabase/auth';
 import {useToastStore, useUserStore} from '@/store/store';
 import {
   deleteProfileSpb,
@@ -28,6 +28,7 @@ import NickNameSvg from '@/assets/icons/nickname.svg';
 import CameraSvg from '@/assets/icons/camera.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 import {unlink} from '@react-native-seoul/kakao-login';
+import supabase from '@/supabase/supabase';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
@@ -150,14 +151,21 @@ const EditProfile = () => {
   };
   const unlinkKakaoAccount = async (): Promise<void> => {
     try {
+      await deleteUserSpb(userData.id);
       await unlink();
-      //console.log(message);
+
       addToast({
         success: false,
         text: '회원을 탈퇴했어요',
       });
+      navigation.replace('Login');
     } catch (e) {
       console.log(e);
+      addToast({
+        success: false,
+        text: '회원을 탈퇴에 실패했어요',
+        multiText: '관리자에게 문의해주세요',
+      });
     }
   };
 
