@@ -182,7 +182,7 @@ const Friends = () => {
                       ) : (
                         <View
                           style={[
-                            styles.friendEmptyProfile,
+                            styles.basicProfileWrapper,
                             styles.friendProfile,
                           ]}>
                           <Image
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  basicProfile: {width: '100%', height: '100%'},
+  basicProfile: {width: '99%', height: '99%'},
   profile: {
     width: 60,
     height: 60,

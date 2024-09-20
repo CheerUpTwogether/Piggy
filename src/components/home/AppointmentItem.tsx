@@ -113,7 +113,7 @@ const AppointmentItem = ({
             ) : (
               <View
                 style={[
-                  styles.profileImgUrl,
+                  styles.basicProfileWrapper,
                   idx !== 0 && styles.marginLeftMinus,
                 ]}>
                 <Image source={basicProfile} style={styles.basicProfile} />
@@ -200,6 +200,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+  },
+  basicProfileWrapper: {
+    width: 36,
+    height: 36,
+    borderRadius: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   basicProfile: {width: '100%', height: '100%'},
   marginLeftMinus: {

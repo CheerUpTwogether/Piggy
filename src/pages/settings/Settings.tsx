@@ -99,7 +99,7 @@ const Settings = () => {
               alt="profile"
             />
           ) : (
-            <View style={styles.profileImageWrapper}>
+            <View style={styles.basicProfileWrapper}>
               <Image source={basicProfile} style={styles.basicProfile} />
             </View>
           )}
@@ -206,6 +206,14 @@ const styles = StyleSheet.create({
     height: 80,
     borderWidth: 1,
     borderColor: '#DDD',
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  basicProfileWrapper: {
+    width: 80,
+    height: 80,
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',

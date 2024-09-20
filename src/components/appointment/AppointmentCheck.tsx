@@ -77,7 +77,7 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
           alt={`${item.nickname}프로필사진`}
         />
       ) : (
-        <View style={styles.profileWrapper}>
+        <View style={styles.basicProfileWrapper}>
           <Image source={basicProfile} style={styles.basicProfile} />
         </View>
       )}
@@ -329,6 +329,13 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 30,
+  },
+  basicProfileWrapper: {
+    width: 46,
+    height: 46,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   basicProfile: {width: '100%', height: '100%'},
   nickName: {

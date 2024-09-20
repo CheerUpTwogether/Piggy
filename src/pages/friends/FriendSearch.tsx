@@ -196,8 +196,6 @@ const styles = StyleSheet.create({
   friendEmptyProfile: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#DDD',
   },
   ios: {paddingHorizontal: Platform.OS === 'ios' ? 10 : 0},
   basicProfile: {width: '100%', height: '100%'},

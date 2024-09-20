@@ -86,17 +86,20 @@ const GiftAmount = () => {
   return (
     <ScrollView style={commonStyle.CONTAINER}>
       <View style={styles.wrapper}>
-        <View style={styles.profileWrapper}>
-          {profile_img_url ? (
+        {profile_img_url ? (
+          <View style={styles.profileWrapper}>
             <Image
               style={styles.Profile}
               source={{uri: profile_img_url}}
               alt="profile"
             />
-          ) : (
+          </View>
+        ) : (
+          <View style={styles.basicProfileWrapper}>
             <Image source={basicProfile} style={styles.basicProfile} />
-          )}
-        </View>
+          </View>
+        )}
+
         <View style={styles.textWrapper}>
           <Text
             style={[
@@ -174,6 +177,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#DDD',
     overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  basicProfileWrapper: {
+    width: 120,
+    height: 120,
+    borderRadius: 90,
     justifyContent: 'center',
     alignItems: 'center',
   },
