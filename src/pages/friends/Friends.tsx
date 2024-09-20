@@ -20,7 +20,7 @@ import {Friend, User} from '@/types/friends';
 import {commonStyle} from '@/styles/common';
 
 import MoreSvg from '@/assets/icons/more.svg';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const Friends = () => {
   const [isShow, setIsShow] = useState(false);
@@ -144,7 +144,7 @@ const Friends = () => {
               />
             ) : (
               <View style={[styles.basicProfileWrapper, styles.profile]}>
-                <BasicProfileSvg width={40} height={40} />
+                <Image source={basicProfile} style={styles.basicProfile} />
               </View>
             )}
 
@@ -185,10 +185,9 @@ const Friends = () => {
                             styles.friendEmptyProfile,
                             styles.friendProfile,
                           ]}>
-                          <BasicProfileSvg
-                            width={24}
-                            height={24}
-                            color={'#555'}
+                          <Image
+                            source={basicProfile}
+                            style={styles.basicProfile}
                           />
                         </View>
                       )}
@@ -237,9 +236,8 @@ const styles = StyleSheet.create({
   basicProfileWrapper: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#DDD',
   },
+  basicProfile: {width: '100%', height: '100%'},
   profile: {
     width: 60,
     height: 60,

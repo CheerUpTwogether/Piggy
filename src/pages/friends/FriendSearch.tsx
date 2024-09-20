@@ -27,7 +27,7 @@ import ProfileDetailComponent from '@/components/setting/ProfileDetailComponent'
 import SearchFriendSvg from '@/assets/icons/searchFriend.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
 import EmptyResult from '@/components/common/EmptyResult';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const FriendSearch = () => {
   const [keyword, setKeyword] = useState('');
@@ -114,7 +114,7 @@ const FriendSearch = () => {
           />
         ) : (
           <View style={[styles.friendEmptyProfile, styles.friendProfile]}>
-            <BasicProfileSvg width={24} height={24} />
+            <Image source={basicProfile} style={styles.basicProfile} />
           </View>
         )}
         <Text style={commonStyle.MEDIUM_33_14}>{item.nickname}</Text>
@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
     borderColor: '#DDD',
   },
   ios: {paddingHorizontal: Platform.OS === 'ios' ? 10 : 0},
+  basicProfile: {width: '100%', height: '100%'},
 });
 
 export default FriendSearch;
