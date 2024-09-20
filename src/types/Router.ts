@@ -1,5 +1,4 @@
 import {User} from '@/mock/Friends/type';
-import {dummyGoodsStorageItem} from '@/mock/GoodsStorage/types';
 import {dummyNoticeItem} from '@/mock/NoticeBoard/types';
 import {FriendSearchParams} from './friends';
 import {
@@ -33,23 +32,19 @@ export type RootStackParamList = {
   ServiceAgreement: undefined;
   PaymentAgreement: undefined;
   LoginDetail: undefined;
-  LoginEmail: undefined;
   EditProfile: User;
   HelpDesk: undefined;
   HelpHistory: undefined;
   HelpDetail: {id: string};
   NoticeBoard: undefined;
   FAQBoard: undefined;
-  GoodsStorage: undefined;
   GoodsDetail: GoodsProduct;
-  GoodsStorageDetail: dummyGoodsStorageItem;
   NoticeBoardDetail: dummyNoticeItem;
   PiggyUsage: undefined;
   Friends: undefined;
   Alarm: undefined;
   PiggyShop: undefined;
   AppointmentForm: undefined;
-  Regist: undefined;
   AppointmentCancel: {appointmentId: number};
   Intro: undefined;
 };

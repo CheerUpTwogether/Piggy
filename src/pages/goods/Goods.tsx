@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {getGoodsAPI} from '@/api/kakao/gift';
 import GoodsFlatItem from '@/components/goods/GoodsFlatItem';
@@ -34,6 +41,10 @@ const Goods = () => {
           renderItem={({item}) => <GoodsFlatItem item={item} />}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={renderBanner}
+          numColumns={2}
+          style={{
+            paddingHorizontal: 8,
+          }}
         />
       </View>
     </View>
@@ -70,6 +81,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: -20,
   },
   bannerImg: {
     width: 52,

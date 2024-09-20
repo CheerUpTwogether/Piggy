@@ -148,18 +148,6 @@ const Login = () => {
             <Text style={style.socialText}>구글로 로그인</Text>
           </TouchableOpacity>
         </View>
-
-        <View style={style.helperWrapper}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('Regist');
-            }}>
-            <Text style={[style.helper, {textDecorationLine: 'underline'}]}>
-              이메일로 회원가입하겠어요?
-            </Text>
-          </TouchableOpacity>
-          <Text style={style.helper}>이용 약관</Text>
-        </View>
       </View>
     </View>
   );

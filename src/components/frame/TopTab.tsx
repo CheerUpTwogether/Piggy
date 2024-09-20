@@ -21,7 +21,6 @@ import {useUserStore} from '@/store/store';
 import {getPiggySpb} from '@/supabase/AuthSpb';
 import AlertSvg from '@/assets/icons/alert.svg';
 import SearchSvg from '@/assets/icons/search.svg';
-import GoodsBoxSvg from '@/assets/icons/goodsBox.svg';
 import BackSvg from '@/assets/icons/leftArrow.svg';
 import EditSvg from '@/assets/icons/edit.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
@@ -40,7 +39,11 @@ const LeftItem = ({name, headerLeftLabelVisible}: LeftItemProps) => {
     return (
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.goBack()}>
+        onPress={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+          }
+        }}>
         <BackSvg width={32} height={32} color={'#555'} />
       </TouchableOpacity>
     );
@@ -79,7 +82,7 @@ const Alarm = () => {
       activeOpacity={0.8}
       onPress={() => navigation.navigate('Alarm')}>
       {isUnConfirmAlarm === 'true' && (
-        <View style={styles.alarmConfirmWrapper}></View>
+        <View style={styles.alarmConfirmWrapper} />
       )}
       <AlertSvg width={24} height={24} />
     </TouchableOpacity>
@@ -117,10 +120,6 @@ const RightItems = ({name}: {name: string}) => {
             onPress={() => navigation.navigate('GiftFriend')}>
             <GiftSvg style={styles.svg} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.icon}>
-            <GoodsBoxSvg style={styles.svg} />
-          </TouchableOpacity>
-
           <Alarm />
         </View>
       );
@@ -147,11 +146,6 @@ const RightItems = ({name}: {name: string}) => {
             <Text style={styles.text}>{userData.piggy}</Text>
             <Text style={[styles.text, styles.colorRed]}>P</Text>
           </View>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => navigation.navigate('GoodsStorage')}>
-            <GoodsBoxSvg style={styles.svg} />
-          </TouchableOpacity>
           <Alarm />
         </View>
       );

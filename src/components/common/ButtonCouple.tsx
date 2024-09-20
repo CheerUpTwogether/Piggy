@@ -9,6 +9,7 @@ const ButtonCouple = ({
   onPressRight,
   textRight,
   theme,
+  themeRight = 'primary',
   style,
   disableLeft,
   disableRight,
@@ -27,6 +28,7 @@ const ButtonCouple = ({
         text={textRight}
         style={styles.flex}
         disable={disableRight}
+        theme={themeRight}
       />
     </View>
   );

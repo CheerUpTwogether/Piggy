@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useRef, useEffect} from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -15,12 +15,14 @@ const PiggyUsage = () => {
     {label: '입금', value: 'input'},
     {label: '출금', value: 'output'},
   ];
+
   const [value, setValue] = useState(options[0].value);
   const [items, setItems] = useState(options);
   const [open, setOpen] = useState(false);
   const [piggy, setPiggy] = useState<number>(0);
   const [piggyLog, setPiggyLog] = useState<PiggyLog[]>([]);
   const {userData, setUserDataByKey} = useUserStore();
+  const flatListRef = useRef<FlatList>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -28,6 +30,13 @@ const PiggyUsage = () => {
       fetchPiggyLogData();
     }, []),
   );
+
+  // DropDownPicker의 옵션 변경 시 스크롤을 최상단 이동
+  useEffect(() => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({offset: 0, animated: true});
+    }
+  }, [value]);
 
   const fetchPiggyData = async () => {
     const res = await getPiggySpb(userData.id);
@@ -90,6 +99,7 @@ const PiggyUsage = () => {
 
       {filterPiggyLog().length ? (
         <FlatList
+          ref={flatListRef}
           data={filterPiggyLog()}
           keyExtractor={item => String(item.id)}
           renderItem={PiggyUsageItem}
