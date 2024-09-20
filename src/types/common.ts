@@ -119,6 +119,7 @@ export interface ButtonCoupleProps {
   textLeft: string;
   textRight: string;
   theme?: 'primary' | 'sub' | 'outline';
+  themeRight?: 'primary' | 'sub' | 'outline';
   disableLeft?: boolean;
   disableRight?: boolean;
   style?: object;

@@ -1,5 +1,12 @@
 import React, {useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, Animated, Platform} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Animated,
+  Platform,
+  PanResponder,
+} from 'react-native';
 import {useToastStore} from '@/store/store';
 import {ToastItemProps} from '@/types/Common';
 import {commonStyle} from '@/styles/common';
@@ -11,7 +18,7 @@ const Toast = () => {
   const {toasts, removeToast} = useToastStore();
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} pointerEvents="box-none">
       {toasts.map((toast, index) => (
         <ToastItem
           key={toast.id}
@@ -37,6 +44,42 @@ const ToastItem: React.FC<ToastItemProps> = ({
 }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(-50)).current;
+  const pan = useRef(new Animated.ValueXY()).current;
+
+  // PanResponder - 밀어올리는 제스처 감지
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        return Math.abs(gestureState.dy) > 10;
+      },
+      onPanResponderMove: Animated.event([null, {dy: pan.y}], {
+        useNativeDriver: false,
+      }),
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dy < -50) {
+          // 사용자가 위로 스와이프하면 토스트를 제거
+          Animated.parallel([
+            Animated.timing(fadeAnim, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+            Animated.timing(translateY, {
+              toValue: -50,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+          ]).start(() => onRemove(id));
+        } else {
+          // 스와이프가 충분하지 않으면 원위치
+          Animated.spring(pan.y, {
+            toValue: 0,
+            useNativeDriver: true,
+          }).start();
+        }
+      },
+    }),
+  ).current;
 
   useEffect(() => {
     Animated.parallel([
@@ -52,31 +95,46 @@ const ToastItem: React.FC<ToastItemProps> = ({
       }),
     ]).start();
 
+    // 2.5초 뒤에 사라지게 설정
     const timer = setTimeout(() => {
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 0,
-          duration: 500,
+          duration: 300,
           useNativeDriver: true,
         }),
         Animated.timing(translateY, {
           toValue: -50,
-          duration: 500,
+          duration: 300,
           useNativeDriver: true,
         }),
       ]).start(() => onRemove(id));
-    }, 3000);
+    }, 2500);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [fadeAnim, translateY, id, onRemove]);
 
   return (
     <Animated.View
+      {...panResponder.panHandlers}
       style={[
         styles.toast,
-        {opacity: fadeAnim, transform: [{translateY}], marginTop: index * 67},
+        {
+          opacity: fadeAnim,
+          transform: [
+            {translateY: Animated.add(translateY, pan.y)},
+            {translateX: index * 6},
+          ],
+          marginTop: index * 10,
+        },
       ]}>
-      <View style={styles.wrapper}>
+      <View
+        style={[
+          styles.wrapper,
+          {borderLeftColor: success ? '#04BF8A' : '#FEE583'},
+        ]}>
         {success ? (
           <SuccessIconSvg width={20} height={20} color={'#04BF8A'} />
         ) : (
@@ -101,7 +159,7 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    zIndex: 9999,
+    zIndex: 10,
     marginTop: Platform.OS === 'ios' ? 50 : 20,
   },
   toast: {
@@ -110,7 +168,7 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 9999,
+    zIndex: 10,
   },
   wrapper: {
     flexDirection: 'row',
@@ -118,9 +176,11 @@ const styles = StyleSheet.create({
     width: 300,
     height: 65,
     alignItems: 'center',
-    borderRadius: 12,
+    borderTopRightRadius: 12,
+    borderBottomRightRadius: 12,
     paddingHorizontal: 12,
     gap: 12,
+    borderLeftWidth: 5,
   },
   textWrapper: {gap: 2},
 });

@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
+import {Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useToastStore, useUserStore} from '@/store/store';
+import {useModalStore, useToastStore, useUserStore} from '@/store/store';
 import {
   getAppointmentsSpb,
   setListDisplaySpb,
@@ -12,9 +13,14 @@ import {
   AppointmentTabCategory,
   AppointmentTabStatus,
 } from '@/types/appointment';
+import {useFocusEffect} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
 import {StackNavigation} from '@/types/Router';
 import {getPiggySpb} from '@/supabase/AuthSpb';
-import {useFocusEffect} from '@react-navigation/native';
+import {getFcmTokenSpb} from '@/supabase/auth';
+import DeviceInfo from 'react-native-device-info';
+import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 
 const categories: AppointmentTabCategory[] = [
   {label: '대기', value: 'pending', status: ['pending']},
@@ -27,6 +33,7 @@ const categories: AppointmentTabCategory[] = [
 ];
 const useHomeAppointments = () => {
   const addToast = useToastStore(state => state.addToast);
+  const {openModal, closeModal} = useModalStore();
   const {userData, setUserDataByKey} = useUserStore();
   const navigation = useNavigation<StackNavigation>();
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
@@ -44,6 +51,10 @@ const useHomeAppointments = () => {
   useEffect(() => {
     getAppointment(sort);
   }, [sort]);
+
+  useEffect(() => {
+    checkAlarmModal();
+  }, []);
 
   const createButtonList = () => {
     const buttons: Array<{
@@ -111,14 +122,16 @@ const useHomeAppointments = () => {
       userData.id,
       categories.filter(el => el.value === sortValue)[0].status,
     );
-
     if (error) {
+      console.log(error);
       addToast({
         success: false,
         text: '약속 정보를 불러오지 못했어요.',
       });
       return;
     }
+
+    console.log(data);
     setAppointments(data);
   };
 
@@ -161,6 +174,73 @@ const useHomeAppointments = () => {
         text: '인터넷 연결이 되어있지 않아요',
       });
     }
+  };
+
+  // 알람 모달 보여줘야 하는지 확인
+  const checkAlarmModal = async () => {
+    // 안드로이드 13(API33) 보다 낮은 버전일때
+    if (!isAndroid13OrAbove()) {
+      return;
+    }
+    // 안드로이드 13이상부터는 권한 확인 필요
+    const device_token = await AsyncStorage.getItem('device_token');
+    if (!device_token) {
+      const fcmToken = await messaging().getToken();
+      await AsyncStorage.setItem('device_token', fcmToken);
+      openAlarmModal();
+    }
+
+    const {data, error} = await getFcmTokenSpb(userData.id);
+
+    if (error) {
+      // 토큰 불러오기 에러
+    }
+
+    if (data.length > 0) {
+      if (device_token !== data[0].device_token) {
+        await AsyncStorage.setItem('device_token', data[0].device_token);
+        openAlarmModal();
+      }
+    }
+  };
+
+  // 안드로이드 버전 체크 함수
+  const isAndroid13OrAbove = () => {
+    if (Platform.OS === 'android') {
+      const androidVersion = DeviceInfo.getSystemVersion();
+      console.log(androidVersion);
+      return parseInt(androidVersion, 10) >= 13;
+    }
+    return false;
+  };
+
+  const openAlarmModal = () => {
+    openModal({
+      title: '푸쉬알림을 받아 보시겠어요?',
+      content: '앱 종료시에도 약속 관련 중요한 소식을 놓치지 않을 수 있어요!',
+      text: '알림받기',
+      onPress: () => {
+        clickAlarmModal();
+      },
+      textCancel: '닫기',
+    });
+  };
+
+  const clickAlarmModal = async () => {
+    const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+
+    if (result === RESULTS.GRANTED) {
+      addToast({
+        success: true,
+        text: '푸시 알림을 활성화하였습니다.',
+      });
+    } else {
+      addToast({
+        success: true,
+        text: '푸시 알림이 비활성화되었습니다.',
+      });
+    }
+    closeModal();
   };
 
   return {

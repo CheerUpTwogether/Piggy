@@ -56,6 +56,8 @@ export const commonStyle = StyleSheet.create({
   REGULAR_SUB_16: {...Regular, color: color_sub, fontSize: 16},
   REGULAR_SUB_14: {...Regular, color: color_sub, fontSize: 14},
   REGULAR_SUB_12: {...Regular, color: color_sub, fontSize: 12},
+  BOLD_FF_24: {...Bold, color: color_ff, fontSize: 24},
+  BOLD_FF_22: {...Bold, color: color_ff, fontSize: 22},
   BOLD_FF_20: {...Bold, color: color_ff, fontSize: 20},
   BOLD_FF_18: {...Bold, color: color_ff, fontSize: 18},
   BOLD_FF_16: {...Bold, color: color_ff, fontSize: 16},

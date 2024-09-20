@@ -152,8 +152,8 @@ export const getAnnouncementSpb = async () => {
   }
 };
 
-// 프로필 수정 - 이름
-export const setMyProfileNicknameSpb = (id, nickname) => {
+// 프로필 수정 - 닉네임
+export const setMyProfileNicknameSpb = (id: string, nickname: string) => {
   return supabase
     .from('users_nickname')
     .update({nickname: nickname})
@@ -161,7 +161,7 @@ export const setMyProfileNicknameSpb = (id, nickname) => {
 };
 
 // 프로필 수정 - 프로필 사진
-export const setMyProfileImageSpb = async (userData, img_file) => {
+export const setMyProfileImageSpb = async (userData, img_file: string) => {
   try {
     const uploadFileName = `${userData.id}`;
     const uploadFolder = 'profile_image';

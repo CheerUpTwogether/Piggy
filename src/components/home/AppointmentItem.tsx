@@ -1,20 +1,15 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigation} from '@/types/Router';
-import {commonStyle, color_primary, color_ef} from '@/styles/common';
+import {commonStyle} from '@/styles/common';
 import {AppointmentProps} from '@/types/appointment';
 import useAppointmentTimer from '@/hooks/useAppointmentTimer';
-import FlatItemsFriends from '../common/FlatItemsFriends';
-import MoreSvg from '@/assets/icons/more.svg';
-import PinSvg from '@/assets/icons/pin.svg';
-import PendingSvg from '@/assets/icons/pending.svg';
-import CancelCalendarSvg from '@/assets/icons/cancelCalendar.svg';
-import LocationSvg from '@/assets/icons/location.svg';
-import TimeSvg from '@/assets/icons/clock.svg';
 import {useAppointmentForm, useUserStore} from '@/store/store';
 import dayjs from 'dayjs';
+import MoreSvg from '@/assets/icons/more.svg';
+import PinSvg from '@/assets/icons/pin.svg';
 
 const AppointmentItem = ({
   item,
@@ -41,14 +36,10 @@ const AppointmentItem = ({
   const titleFontColor = cancelStatus.includes(item.appointment_status)
     ? commonStyle.BOLD_AA_20
     : commonStyle.BOLD_33_20;
-  const contentFontColor = cancelStatus.includes(item.appointment_status)
-    ? commonStyle.MEDIUM_AA_14
-    : commonStyle.MEDIUM_33_14;
 
-  const notUseFreindsIcon =
-    cancelStatus.includes(item.appointment_status) ||
-    (item.appointment_status === 'pending' &&
-      item.agreement_status === 'pending');
+  const contentFontColor = cancelStatus.includes(item.appointment_status)
+    ? commonStyle.REGULAR_AA_16
+    : commonStyle.REGULAR_33_16;
 
   const onPress = () => {
     const calendar = dayjs(item?.appointment_date);
@@ -56,102 +47,100 @@ const AppointmentItem = ({
       ...item,
       date: calendar.format('YYYY-MM-DD'),
       time: calendar.format('HH:mm'),
-      id: item.appointment_id,
+      id: item.ap_id,
       appointment_participants_list: item.appointment_participants_list.filter(
         el => el.user_id !== userData.id,
       ),
     });
     navigation.navigate('AppointmentDetail');
   };
+
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <View style={styles.contentContainer}>
-        {/* 참석자 프로필 */}
-        <View style={styles.iconContainer}>
-          {notUseFreindsIcon && (
-            <View style={styles.iconBg}>
-              {item.appointment_status === 'pending' && <PendingSvg />}
-              {cancelStatus.includes(item.appointment_status) && (
-                <CancelCalendarSvg color={'#fff'} />
-              )}
-            </View>
+      {/* 타이머 */}
+      {shouldShowTimer && (
+        <View style={styles.title}>
+          <Text style={commonStyle.BOLD_PRIMARY_20}>{formattedTime}</Text>
+        </View>
+      )}
+
+      {/* 모임 타이틀 */}
+      <View style={styles.title}>
+        <Text style={titleFontColor}>{item.subject}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {item.pinned && (
+            <TouchableOpacity
+              style={{marginRight: 12}}
+              onPress={() => onPressFix(item.appointment_id)}>
+              <PinSvg color="#777" style={styles.svg} />
+            </TouchableOpacity>
           )}
-          {!notUseFreindsIcon && (
-            <FlatItemsFriends
-              images={item.appointment_participants_list.map(
-                el => el.profile_img_url,
-              )}
-            />
+          {!shouldShowTimer && (
+            <TouchableOpacity onPress={() => onPressMore(item)}>
+              <MoreSvg color="#777" style={styles.svg} />
+            </TouchableOpacity>
           )}
         </View>
+      </View>
 
-        {/* 모임 타이틀, 핀/상세 아이콘 */}
-        <View style={styles.wrapper}>
-          <View style={styles.subject}>
-            <Text style={titleFontColor}>{item.subject}</Text>
-            <View style={styles.svgContainer}>
-              {/* 핀 아이콘 */}
-              {item.pinned && (
-                <TouchableOpacity
-                  style={styles.svgBtn}
-                  onPress={() => onPressFix(item.appointment_id)}>
-                  <PinSvg color="#777" style={styles.svg} />
-                </TouchableOpacity>
-              )}
-              {/* 더보기 아이콘 */}
-              <TouchableOpacity
-                style={styles.svgBtn}
-                onPress={() => onPressMore(item)}>
-                <MoreSvg color="#777" style={styles.svg} />
-              </TouchableOpacity>
-            </View>
-          </View>
+      {/* 장소 */}
+      <Text style={[contentFontColor, {paddingTop: 4}]}>
+        {item?.place_name || item.address}
+      </Text>
 
-          {/* 모임 정보 */}
-          <View style={{...styles.flexRow, paddingTop: 4}}>
-            {/* 위치 정보 */}
-            <View>
-              <View style={styles.flexRow}>
-                <LocationSvg
-                  width={12}
-                  height={12}
-                  color={'#777'}
-                  style={{marginRight: 2}}
-                />
-                <Text style={{marginRight: 8, ...commonStyle.REGULAR_77_14}}>
-                  장소
-                </Text>
-                <Text style={contentFontColor}>
-                  {item?.place_name || item.address}
-                </Text>
-              </View>
+      {/* 시간 */}
+      <Text style={[contentFontColor, {paddingTop: 2}]}>
+        {dayjs(item.appointment_date).format('YYYY-MM-DD HH:mm')}
+      </Text>
 
-              {/* 시간 정보 */}
-              <View style={styles.flexRow}>
-                <TimeSvg
-                  width={12}
-                  height={12}
-                  color={'#777'}
-                  style={{marginRight: 2}}
-                />
-                <Text style={{marginRight: 8, ...commonStyle.REGULAR_77_14}}>
-                  시간
-                </Text>
-                <Text style={contentFontColor}>
-                  {`${item.appointment_date.split('T')[0]} `}
-                  {item.appointment_date.split('T')[1].substring(0, 5)}
-                </Text>
-              </View>
-            </View>
+      <View style={styles.friendsTagContiner}>
+        {/* 친구 리스트 */}
+        <View style={{paddingTop: 16, flexDirection: 'row'}}>
+          {item.appointment_participants_list.map((el, idx) => (
+            <Image
+              src={el.profile_img_url}
+              style={[
+                styles.profileImgUrl,
+                idx !== 0 && styles.marginLeftMinus,
+              ]}
+              key={el.user_id}
+            />
+          ))}
+        </View>
 
-            {/* TODO: 인증 상태 확인 후 색상 변경 */}
-            {/* 타이머 */}
-            {shouldShowTimer && (
-              <Text style={[styles.timer, commonStyle.BOLD_PRIMARY_14]}>
-                {formattedTime}
-              </Text>
+        {/* 태그 */}
+        <View style={{flexDirection: 'row', gap: 8}}>
+          {item.appointment_status === 'pending' &&
+            item.agreement_status !== 'confirmed' && (
+              <Text style={styles.pinkLabel}>수락 필요</Text>
             )}
-          </View>
+          {item.appointment_status === 'pending' &&
+            item.agreement_status === 'confirmed' && (
+              <Text style={styles.grayLabel}>다른 사용자의 수락대기중 </Text>
+            )}
+
+          {/* 취소/만료된 경우 */}
+          {(item.appointment_status === 'cancelled' ||
+            item.appointment_status === 'expired') && (
+            <Text style={styles.grayLabel}>취소</Text>
+          )}
+
+          {/* 취소 요청을 한 경우 */}
+          {item.appointment_status === 'confirmed' &&
+            item.user_cancellation_status === 'cancellation-request' && (
+              <Text style={styles.grayLabel}>취소 요청 중</Text>
+            )}
+          {item.user_cancellation_status === 'cancellation-pending' && (
+            <Text style={styles.pinkLabel}>취소 요청 응답 필요</Text>
+          )}
+
+          {/* 이행된 경우 */}
+          {item.appointment_status === 'fulfilled' &&
+            (item.certification_status ? (
+              <Text style={styles.pinkLabel}>인증 성공</Text>
+            ) : (
+              <Text style={styles.grayLabel}>인증 실패</Text>
+            ))}
         </View>
       </View>
     </TouchableOpacity>
@@ -160,99 +149,75 @@ const AppointmentItem = ({
 
 const styles = StyleSheet.create({
   container: {
+    padding: 16,
+    backgroundColor: '#fff',
+    marginHorizontal: 12,
+    marginTop: 10,
+    marginBottom: 10,
+    borderRadius: 8,
+    ...Platform.select({
+      android: {
+        elevation: 4,
+      },
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 4,
+      },
+    }),
+  },
+  title: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center',
-    alignSelf: 'center',
-  },
-  contentContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  wrapper: {
-    paddingRight: 12,
-    flex: 1,
-  },
-  iconContainer: {
-    width: 100,
-    height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconBg: {
-    backgroundColor: '#777',
-    width: 64,
-    height: 64,
-    borderRadius: 100,
-    padding: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  subject: {
-    flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingBottom: 8,
   },
-  svgContainer: {
-    flexDirection: 'row',
+  profileImgUrl: {
+    width: 36,
+    height: 36,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: '#fff',
   },
-  svgBtn: {
-    paddingHorizontal: 6,
-    marginBottom: 8,
+  marginLeftMinus: {
+    marginLeft: -8,
   },
   svg: {
-    width: 16,
-    height: 16,
-    justifyContent: 'flex-end',
-    textAlign: 'right',
+    width: 20,
+    height: 20,
+    padding: 8,
   },
-  flexRow: {
+  friendsTagContiner: {
     flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    paddingTop: 8,
   },
-  rightBottomButton: {},
-  timer: {
-    position: 'absolute',
-    borderColor: color_primary,
-    borderWidth: 2,
-    bottom: 0,
-    right: 4,
+  grayLabel: {
+    backgroundColor: '#efefef',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
     borderRadius: 100,
-    textAlign: 'center',
-    height: 30,
-    width: 64,
-    textAlignVertical: 'center',
+    ...commonStyle.BOLD_33_14,
   },
-  hiddenBtnContainer: {
-    flexDirection: 'row',
-    position: 'absolute',
-    right: 0,
-    height: '100%',
+  pinkLabel: {
+    backgroundColor: '#FFE3E3',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 100,
+    ...commonStyle.BOLD_PRIMARY_14,
   },
-  deleteBtnContainer: {
-    position: 'absolute',
-    width: 100,
-    backgroundColor: color_primary,
-    textAlign: 'center',
-    justifyContent: 'center',
-    left: 100,
-    height: '100%',
-  },
-  pinBtnContainer: {
-    position: 'absolute',
-    width: 100,
-    backgroundColor: color_ef,
-    textAlign: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-  textCenter: {
-    textAlign: 'center',
+  greenLabel: {
+    backgroundColor: '#EBFFF9',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 100,
+    ...commonStyle.BOLD_SUB_14,
   },
 });
 
