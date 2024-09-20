@@ -62,6 +62,9 @@ const AppointmentItem = ({
       {shouldShowTimer && (
         <View style={styles.title}>
           <Text style={commonStyle.BOLD_PRIMARY_20}>{formattedTime}</Text>
+          <TouchableOpacity onPress={() => onPressMore(item)}>
+            <MoreSvg color="#777" style={styles.svg} />
+          </TouchableOpacity>
         </View>
       )}
 
@@ -108,7 +111,11 @@ const AppointmentItem = ({
                 key={el.user_id}
               />
             ) : (
-              <View style={styles.profileImgUrl}>
+              <View
+                style={[
+                  styles.profileImgUrl,
+                  idx !== 0 && styles.marginLeftMinus,
+                ]}>
                 <BasicProfileSvg width={24} height={24} />
               </View>
             ),
@@ -192,6 +199,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
   },
   marginLeftMinus: {
     marginLeft: -8,
