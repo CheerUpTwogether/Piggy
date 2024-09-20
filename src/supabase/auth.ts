@@ -129,3 +129,26 @@ export const initFcmTokenSpb = async (id: string) => {
     throw e;
   }
 };
+
+// 회원 탈퇴
+export const deleteUserSpb = async id => {
+  try {
+    // auth 정보 삭제
+    const {error} = await supabase.rpc('delete_user');
+    if (error) {
+      throw error;
+    }
+
+    // 회원 정보에서 phone_number 정보 삭제/delete_at 업데이트
+    const {error: updateError} = await supabase
+      .from('users_nickname')
+      .update({is_deleted: true, phone_number: null, deleted_at: 'NOW()'})
+      .eq('id', id);
+
+    if (updateError) {
+      throw updateError;
+    }
+  } catch (e) {
+    throw e;
+  }
+};

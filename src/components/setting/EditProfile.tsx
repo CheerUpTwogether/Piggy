@@ -13,9 +13,9 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {commonStyle} from '@/styles/common';
 import {deleteItemSession} from '@/utils/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {initFcmTokenSpb} from '@/supabase/auth';
 import {GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY} from '@env';
-import {useToastStore, useUserStore} from '@/store/store';
+import {deleteUserSpb, initFcmTokenSpb} from '@/supabase/auth';
+import {useModalStore, useToastStore, useUserStore} from '@/store/store';
 import {
   deleteProfileSpb,
   setMyProfileImageSpb,
@@ -27,6 +27,7 @@ import InputBox from '../common/InputBox';
 import NickNameSvg from '@/assets/icons/nickname.svg';
 import CameraSvg from '@/assets/icons/camera.svg';
 import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+import {unlink} from '@react-native-seoul/kakao-login';
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
@@ -37,6 +38,7 @@ const EditProfile = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {userData, setUserDataByKey} = useUserStore();
   const addToast = useToastStore(state => state.addToast);
+  const {openModal, closeModal} = useModalStore();
 
   useEffect(() => {
     setNickNameValue(userData.nickname);
@@ -55,6 +57,9 @@ const EditProfile = () => {
       webClientId: GOOGLE_WEB_API_KEY,
       iosClientId: GOOGLE_IOS_API_KEY,
     });
+  }, []);
+
+  const googleLogOut = async () => {
     await GoogleSignin.signOut();
   };
 
@@ -177,6 +182,66 @@ const EditProfile = () => {
     }
   };
 
+  const openAskModal = () => {
+    openModal({
+      title: '정말로 회원탈퇴하시겠어요?',
+      content: '회원 탈퇴후에도 6개월동안은 정보를 가지고 있어요!',
+      text: '회원탈퇴',
+      onPress: () => {
+        deleteUser();
+      },
+      textCancel: '닫기',
+    });
+  };
+
+  const deleteUser = async () => {
+    if (userData.social_login_type === 'kakao') {
+      unlinKakaoAccount();
+    } else if (userData.social_login_type === 'google') {
+      unlinGoogleAccount();
+    }
+  };
+  const unlinGoogleAccount = async () => {
+    try {
+      await deleteUserSpb(userData.id);
+      await GoogleSignin.revokeAccess();
+
+      addToast({
+        success: false,
+        text: '회원을 탈퇴했어요',
+      });
+      navigation.replace('Login');
+      closeModal();
+    } catch (e) {
+      console.log(e);
+      addToast({
+        success: false,
+        text: '회원을 탈퇴에 실패했어요',
+        multiText: '관리자에게 문의해주세요',
+      });
+      closeModal();
+    }
+  };
+  const unlinKakaoAccount = async (): Promise<void> => {
+    try {
+      await deleteUserSpb(userData.id);
+      await unlink();
+
+      addToast({
+        success: false,
+        text: '회원을 탈퇴했어요',
+      });
+      navigation.replace('Login');
+      closeModal();
+    } catch (e) {
+      addToast({
+        success: false,
+        text: '회원을 탈퇴에 실패했어요',
+        multiText: '관리자에게 문의해주세요',
+      });
+    }
+  };
+
   return (
     <ScrollView style={[commonStyle.CONTAINER, {flex: 1}]}>
       <View>
@@ -229,7 +294,7 @@ const EditProfile = () => {
       <View style={{flex: 1, gap: 8, justifyContent: 'flex-end'}}>
         <Button text="저장" onPress={handleSave} />
         <Button text="로그 아웃" theme="sub" onPress={() => handleLogout()} />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={openAskModal}>
           <Text style={{...commonStyle.REGULAR_AA_14, textAlign: 'center'}}>
             회원탈퇴
           </Text>
