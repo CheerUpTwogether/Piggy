@@ -1,5 +1,12 @@
 import React, {useCallback, useState} from 'react';
-import {Text, View, Image, StyleSheet, Platform} from 'react-native';
+import {
+  ScrollView,
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 import {
   useRoute,
   useNavigation,
@@ -14,7 +21,7 @@ import {useUserStore, useToastStore} from '@/store/store';
 import {getPiggySpb} from '@/supabase/AuthSpb';
 import {setGiftPiggySpb} from '@/supabase/FriendsSpb';
 
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const STYLE = Platform.OS === 'ios';
 
@@ -77,7 +84,7 @@ const GiftAmount = () => {
   };
 
   return (
-    <View style={commonStyle.CONTAINER}>
+    <ScrollView style={commonStyle.CONTAINER}>
       <View style={styles.wrapper}>
         <View style={styles.profileWrapper}>
           {profile_img_url ? (
@@ -87,7 +94,7 @@ const GiftAmount = () => {
               alt="profile"
             />
           ) : (
-            <BasicProfileSvg width={80} height={80} />
+            <Image source={basicProfile} style={styles.basicProfile} />
           )}
         </View>
         <View style={styles.textWrapper}>
@@ -154,7 +161,7 @@ const GiftAmount = () => {
         style={styles.button}
         disable={!inputValue || inputValue === '0'}
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -191,6 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: STYLE ? 60 : 70,
   },
+  basicProfile: {width: '100%', height: '100%'},
 });
 
 export default GiftAmount;
