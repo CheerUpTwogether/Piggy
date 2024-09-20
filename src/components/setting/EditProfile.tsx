@@ -45,19 +45,17 @@ const EditProfile = () => {
     setProfileValue(userData.profile_img_url);
     setTempProfileValue(userData.profile_img_url);
 
-    return () => {
-      setNickNameValue(userData.nickname);
-      setTempProfileValue(userData.profile_img_url);
-    };
-  }, [userData]);
-
-  const googleLogOut = async () => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/drive.readonly'],
       webClientId: GOOGLE_WEB_API_KEY,
       iosClientId: GOOGLE_IOS_API_KEY,
     });
-  }, []);
+
+    return () => {
+      setNickNameValue(userData.nickname);
+      setTempProfileValue(userData.profile_img_url);
+    };
+  }, [userData]);
 
   const googleLogOut = async () => {
     await GoogleSignin.signOut();
