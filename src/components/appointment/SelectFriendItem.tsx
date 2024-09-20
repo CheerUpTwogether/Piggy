@@ -1,19 +1,19 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import CancleSvg from '@/assets/icons/X.svg';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 import {commonStyle} from '@/styles/common';
 import {SelectFriendItemProp} from '@/types/friend';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const SelectFriendItem = ({item, handleFriendDelete}: SelectFriendItemProp) => {
   return (
     <TouchableOpacity
       style={styles.firendSelectWrapper}
       onPress={() => handleFriendDelete(item)}>
-      {item.profile_img_url || item.profile_img_path ? (
+      {item.profile_img_url ? (
         <>
           <Image
-            source={{uri: item.profile_img_url || item.profile_img_path}}
+            source={{uri: item.profile_img_url}}
             style={styles.friendSelectProfile}
             alt={`${item.nickname}profile`}
           />
@@ -24,7 +24,7 @@ const SelectFriendItem = ({item, handleFriendDelete}: SelectFriendItemProp) => {
       ) : (
         <>
           <View style={[styles.friendSelectProfile, styles.friendEmptyProfile]}>
-            <BasicProfileSvg width={24} height={24} />
+            <Image source={basicProfile} style={styles.basicProfile} />
           </View>
           <View style={styles.friendSelectCancleContainer}>
             <CancleSvg width={12} height={8} stroke={'#FFF'} />
@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: '#DDD',
   },
+  basicProfile: {width: '100%', height: '100%'},
   friendSelectCancleContainer: {
     width: 14,
     height: 14,
