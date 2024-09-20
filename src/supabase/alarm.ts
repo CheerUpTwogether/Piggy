@@ -52,6 +52,25 @@ export const setConfirmNotificationSpb = async (notification_id: number) => {
   return data ? data : null;
 };
 
+// 알림 정보 전부 읽음처리
+export const setAllConfirmNotificationSpb = async (
+  user_id: string,
+  filter_criteria: string,
+) => {
+  const {data, error} = await supabase
+    .from('notification_log')
+    .update({confirmed_status: true})
+    .eq('user_id', user_id)
+    .eq('filter_criteria', filter_criteria)
+    .select();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ? data : null;
+};
+
 // 알림 정보 disable 처리
 export const deleteNotificationSpb = async (notification_id: number) => {
   const {data, error} = await supabase
@@ -60,6 +79,24 @@ export const deleteNotificationSpb = async (notification_id: number) => {
     .eq('id', notification_id)
     .select()
     .single();
+  if (error) {
+    throw error;
+  }
+
+  return data ? data : null;
+};
+
+// 알림 정보 전부 disable 처리
+export const deleteAllNotificationSpb = async (
+  user_id: string,
+  filter_criteria: string,
+) => {
+  const {data, error} = await supabase
+    .from('notification_log')
+    .update({notification_displayed: false})
+    .eq('user_id', user_id)
+    .eq('filter_criteria', filter_criteria)
+    .select();
   if (error) {
     throw error;
   }

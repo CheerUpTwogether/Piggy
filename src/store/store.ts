@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import {
   AppointmentFormStore,
   ModalStore,
+  NotificationStore,
   ToastStore,
   UserStore,
 } from '@/types/common';
@@ -217,4 +218,9 @@ export const useAppointmentForm = create<AppointmentFormStore>(set => ({
         ...state.appointmentParticipants,
       },
     })),
+}));
+
+export const useNotificationStore = create<NotificationStore>(set => ({
+  handleAllConfirmAlarm: async () => {},
+  setHandleAllConfirmAlarm: fn => set(() => ({handleAllConfirmAlarm: fn})),
 }));

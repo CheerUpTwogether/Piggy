@@ -264,3 +264,8 @@ export interface AppointmentFormStore {
   ) => void;
   resetAppointmentForm: () => void;
 }
+
+interface NotificationStore {
+  setHandleAllConfirmAlarm: (fn: () => Promise<void>) => void;
+  handleAllConfirmAlarm: () => Promise<void>;
+}

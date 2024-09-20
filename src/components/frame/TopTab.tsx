@@ -17,7 +17,7 @@ import {
   getUnConfirmNotificationSpb,
   subcribeUnConfirmNotification,
 } from '@/supabase/alarm';
-import {useUserStore} from '@/store/store';
+import {useNotificationStore, useUserStore} from '@/store/store';
 import {getPiggySpb} from '@/supabase/AuthSpb';
 import AlertSvg from '@/assets/icons/alert.svg';
 import SearchSvg from '@/assets/icons/search.svg';
@@ -94,6 +94,7 @@ type NavigationProp = StackNavigationProp<RootStackParamList>;
 const RightItems = ({name}: {name: string}) => {
   const navigation = useNavigation<NavigationProp>();
   const {userData, gotoProfile, setUserDataByKey} = useUserStore();
+  const {handleAllConfirmAlarm} = useNotificationStore();
 
   const updatePiggy = async () => {
     if (userData) {
@@ -168,8 +169,14 @@ const RightItems = ({name}: {name: string}) => {
           <Alarm />
         </View>
       );
-    case 'Alert':
-      return <View style={styles.empty} />;
+    case 'Alarm':
+      return (
+        <TouchableOpacity
+          style={{padding: 8}}
+          onPress={() => handleAllConfirmAlarm()}>
+          <Text style={commonStyle.MEDIUM_33_16}>모두 읽음</Text>
+        </TouchableOpacity>
+      );
     default:
       return <Alarm />;
   }
