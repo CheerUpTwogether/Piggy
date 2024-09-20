@@ -17,7 +17,7 @@ import {useToastStore, useUserStore} from '@/store/store';
 import {getMySettingsSpb} from '@/supabase/SettingSpb';
 import {MyProfileData} from '@/types/setting';
 import DeviceInfo from 'react-native-device-info';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const Settings = () => {
   const [myData, setMyData] = useState<MyProfileData | null>(null);
@@ -100,7 +100,7 @@ const Settings = () => {
             />
           ) : (
             <View style={styles.profileImageWrapper}>
-              <BasicProfileSvg width={45} height={45} color={'#555'} />
+              <Image source={basicProfile} style={styles.basicProfile} />
             </View>
           )}
         </TouchableOpacity>
@@ -211,6 +211,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
   },
+  basicProfile: {width: '100%', height: '100%'},
   profileImage: {width: 80, height: 80, borderRadius: 30},
 });
 
