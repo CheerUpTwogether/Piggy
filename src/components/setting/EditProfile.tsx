@@ -249,11 +249,13 @@ const EditProfile = () => {
             activeOpacity={0.8}
             style={styles.profileImgContainer}>
             {tempProfileValue ? (
-              <Image
-                source={{uri: tempProfileValue}}
-                style={styles.profileImg}
-                alt="profileImage"
-              />
+              <View style={styles.profileWrapper}>
+                <Image
+                  source={{uri: tempProfileValue}}
+                  style={styles.profileImg}
+                  alt="profileImage"
+                />
+              </View>
             ) : (
               <View style={[styles.profileImg, styles.profileEmptyImg]}>
                 <Image source={basicProfile} style={styles.basicProfile} />
@@ -314,6 +316,8 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 120,
     marginVertical: 30,
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
   },
   cameraContainer: {
     width: 34,
@@ -327,8 +331,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
   },
   profileEmptyImg: {
-    borderWidth: 1,
-    borderColor: '#EFEFEF',
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',

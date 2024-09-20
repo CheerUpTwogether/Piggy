@@ -93,14 +93,20 @@ const Settings = () => {
       <View style={{flexDirection: 'row', gap: 18, alignItems: 'center'}}>
         <TouchableOpacity activeOpacity={0.8} onPress={() => gotoProfile()}>
           {userData.profile_img_url ? (
-            <Image
-              source={{uri: userData.profile_img_url}}
-              style={styles.profileImage}
-              alt="profile"
-            />
+            <View style={styles.profileWrapper}>
+              <Image
+                source={{uri: userData.profile_img_url}}
+                style={styles.profileImage}
+                alt="profile"
+              />
+            </View>
           ) : (
-            <View style={styles.basicProfileWrapper}>
-              <Image source={basicProfile} style={styles.basicProfile} />
+            <View style={styles.profileWrapper}>
+              <Image
+                source={basicProfile}
+                style={styles.basicProfile}
+                alt="profile"
+              />
             </View>
           )}
         </TouchableOpacity>
@@ -204,21 +210,30 @@ const styles = StyleSheet.create({
   profileImageWrapper: {
     width: 80,
     height: 80,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#DDD',
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
   },
-  basicProfileWrapper: {
+  profileWrapper: {
     width: 80,
     height: 80,
     borderRadius: 50,
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
   },
+  // basicProfileWrapper: {
+  //   width: 80,
+  //   height: 80,
+  //   borderRadius: 50,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
   basicProfile: {width: '100%', height: '100%'},
   profileImage: {width: 80, height: 80, borderRadius: 30},
 });

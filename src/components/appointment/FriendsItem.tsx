@@ -67,6 +67,9 @@ const styles = StyleSheet.create({
   friendEmptyProfile: {
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+    borderRadius: 30,
   },
   basicProfile: {width: '100%', height: '100%'},
   radioContainer: {

@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   friendEmptyProfile: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: '#FFF',
+    borderColor: '#EFEFEF',
   },
   basicProfile: {width: '100%', height: '100%'},
   friendSelectCancleContainer: {

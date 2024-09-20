@@ -190,7 +190,9 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
         />
       ) : (
         <View style={styles.emptyProfileWrapper}>
-          <Image source={basicProfile} style={styles.basicProfile} />
+          <View style={styles.basicProfileWrapper}>
+            <Image source={basicProfile} style={styles.basicProfile} />
+          </View>
         </View>
       )}
 
@@ -255,7 +257,17 @@ const styles = StyleSheet.create({
     height: '72%',
     backgroundColor: '#FFF',
   },
-  basicProfile: {width: '80%', height: '90%'},
+  basicProfileWrapper: {
+    width: '82%',
+    height: '91%',
+    borderRadius: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+  },
+
+  basicProfile: {width: '100%', height: '100%'},
   introduceContainer: {
     marginTop: 12,
     flexDirection: 'row',

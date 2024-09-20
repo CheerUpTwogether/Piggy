@@ -333,9 +333,11 @@ const styles = StyleSheet.create({
   basicProfileWrapper: {
     width: 46,
     height: 46,
-    borderRadius: 30,
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
   },
   basicProfile: {width: '100%', height: '100%'},
   nickName: {
