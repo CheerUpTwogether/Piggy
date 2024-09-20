@@ -95,8 +95,8 @@ PIGGY는 시간 관리와 약속의 중요성을 강조하면서도, 이를 게�
   <tr>
       <td align="center">FullStack & Team Leader<br/>SMS , Push Alarm , Payment 설계 </td>
       <td align="center">FullStack & DBA<br/>Table, Trigger , DB 설계</td>
-      <td align="center">FullStack & Design<br/>약속 생성 및 리스트 구현</td>
       <td align="center">FullStack & Design<br/>실시간 위치 인증 및 타이머 구현</td>
+      <td align="center">FullStack & Design<br/>약속 생성 및 리스트 구현</td>
   </tr>
 </table>
 <br/>

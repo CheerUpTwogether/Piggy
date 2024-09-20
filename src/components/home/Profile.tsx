@@ -28,7 +28,7 @@ const Profile = () => {
             />
           ) : (
             <View style={styles.emptyProfileImg}>
-              <BasicProfileSvg width={5} height={40} />
+              <BasicProfileSvg width={44} height={44} />
             </View>
           )}
 
@@ -39,7 +39,7 @@ const Profile = () => {
         </View>
 
         <ButtonCouple
-          onPressLeft={() => navigation.navigate('PiggyUsage')}
+          onPressLeft={() => navigation.navigate('GiftFriend')}
           onPressRight={() => navigation.navigate('PiggyUsage')}
           textLeft={'선물하기'}
           textRight={'사용내역'}
