@@ -227,13 +227,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
   },
-  // basicProfileWrapper: {
-  //   width: 80,
-  //   height: 80,
-  //   borderRadius: 50,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
   basicProfile: {width: '100%', height: '100%'},
   profileImage: {width: 80, height: 80, borderRadius: 30},
 });
