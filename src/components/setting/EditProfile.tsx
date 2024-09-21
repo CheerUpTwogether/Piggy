@@ -24,10 +24,10 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 import Button from '../common/Button';
 import InputBox from '../common/InputBox';
+import {unlink} from '@react-native-seoul/kakao-login';
 import NickNameSvg from '@/assets/icons/nickname.svg';
 import CameraSvg from '@/assets/icons/camera.svg';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
-import {unlink} from '@react-native-seoul/kakao-login';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const EditProfile = () => {
   const [nickNameValue, setNickNameValue] = useState('');
@@ -249,14 +249,16 @@ const EditProfile = () => {
             activeOpacity={0.8}
             style={styles.profileImgContainer}>
             {tempProfileValue ? (
-              <Image
-                source={{uri: tempProfileValue}}
-                style={styles.profileImg}
-                alt="profileImage"
-              />
+              <View style={styles.profileWrapper}>
+                <Image
+                  source={{uri: tempProfileValue}}
+                  style={styles.profileImg}
+                  alt="profileImage"
+                />
+              </View>
             ) : (
               <View style={[styles.profileImg, styles.profileEmptyImg]}>
-                <BasicProfileSvg width={60} />
+                <Image source={basicProfile} style={styles.basicProfile} />
               </View>
             )}
             <View style={styles.cameraContainer}>
@@ -314,6 +316,8 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 120,
     marginVertical: 30,
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
   },
   cameraContainer: {
     width: 34,
@@ -327,12 +331,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
   },
   profileEmptyImg: {
-    borderWidth: 1,
-    borderColor: '#EFEFEF',
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  basicProfile: {width: '100%', height: '100%'},
 });
 
 export default EditProfile;

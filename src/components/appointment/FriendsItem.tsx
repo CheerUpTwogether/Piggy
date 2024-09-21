@@ -1,8 +1,8 @@
 import {commonStyle} from '@/styles/common';
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 import {FriendItemProp} from '@/types/friend';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const FriendsItem = ({
   item,
@@ -24,7 +24,7 @@ const FriendsItem = ({
           />
         ) : (
           <View style={[styles.friendEmptyProfile, styles.friendProfile]}>
-            <BasicProfileSvg width={24} height={24} />
+            <Image source={basicProfile} style={styles.basicProfile} />
           </View>
         )}
         <Text style={commonStyle.MEDIUM_33_14}>{item.nickname}</Text>
@@ -68,8 +68,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#DDD',
+    borderColor: '#EFEFEF',
+    borderRadius: 30,
   },
+  basicProfile: {width: '100%', height: '100%'},
   radioContainer: {
     width: 14,
     height: 14,

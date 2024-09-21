@@ -10,7 +10,7 @@ import {useAppointmentForm, useUserStore} from '@/store/store';
 import dayjs from 'dayjs';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const AppointmentItem = ({
   item,
@@ -113,10 +113,10 @@ const AppointmentItem = ({
             ) : (
               <View
                 style={[
-                  styles.profileImgUrl,
+                  styles.basicProfileWrapper,
                   idx !== 0 && styles.marginLeftMinus,
                 ]}>
-                <BasicProfileSvg width={24} height={24} />
+                <Image source={basicProfile} style={styles.basicProfile} />
               </View>
             ),
           )}
@@ -201,6 +201,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
+  basicProfileWrapper: {
+    width: 36,
+    height: 36,
+    borderRadius: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  basicProfile: {width: '100%', height: '100%'},
   marginLeftMinus: {
     marginLeft: -8,
   },

@@ -20,7 +20,7 @@ import {Friend, User} from '@/types/friends';
 import {commonStyle} from '@/styles/common';
 
 import MoreSvg from '@/assets/icons/more.svg';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const Friends = () => {
   const [isShow, setIsShow] = useState(false);
@@ -137,14 +137,16 @@ const Friends = () => {
             activeOpacity={0.8}
             onPress={() => handleProfilePress(userData)}>
             {userData.profile_img_url ? (
-              <Image
-                source={{uri: userData.profile_img_url}}
-                style={styles.profile}
-                alt="profile"
-              />
+              <View style={styles.profileBorder}>
+                <Image
+                  source={{uri: userData.profile_img_url}}
+                  style={styles.profile}
+                  alt="profile"
+                />
+              </View>
             ) : (
               <View style={[styles.basicProfileWrapper, styles.profile]}>
-                <BasicProfileSvg width={40} height={40} />
+                <Image source={basicProfile} style={styles.basicProfile} />
               </View>
             )}
 
@@ -182,13 +184,12 @@ const Friends = () => {
                       ) : (
                         <View
                           style={[
-                            styles.friendEmptyProfile,
+                            styles.basicProfileWrapper,
                             styles.friendProfile,
                           ]}>
-                          <BasicProfileSvg
-                            width={24}
-                            height={24}
-                            color={'#555'}
+                          <Image
+                            source={basicProfile}
+                            style={styles.basicProfile}
                           />
                         </View>
                       )}
@@ -228,18 +229,25 @@ const styles = StyleSheet.create({
   profileWrapper: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderColor: '#DDD',
+    borderColor: '#EFEFEF',
     alignItems: 'center',
     gap: 14,
     height: 90,
     paddingHorizontal: 14,
   },
+  profileBorder: {
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+    borderRadius: 50,
+  },
   basicProfileWrapper: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#DDD',
+    borderWidth: 0.5,
+    borderColor: '#EFEFEF',
+    borderRadius: 90,
   },
+  basicProfile: {width: '99%', height: '99%'},
   profile: {
     width: 60,
     height: 60,
