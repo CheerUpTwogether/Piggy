@@ -31,7 +31,6 @@ import PiggyUsage from '@/pages/piggy/PiggyUsage';
 import GiftFriend from '@/pages/gift/GiftFriend';
 import GiftAmount from '@/pages/gift/GiftAmount';
 import Alarm from '@/pages/alarm/Alarm';
-import PiggyShop from '@/components/piggy/PiggyShop';
 import AppointmentForm from '@/pages/home/AppointmentForm';
 import RedirectKakaoMap from '@/components/home/RedirectKaKaoMap';
 import Intro from '@/pages/auth/Intro/Intro';
@@ -242,15 +241,6 @@ const Router = () => {
           header: Header,
           headerLeftLabelVisible: true,
           title: '알림',
-        }}
-      />
-      <Stack.Screen
-        name="PiggyShop"
-        component={PiggyShop}
-        options={{
-          header: Header,
-          headerLeftLabelVisible: true,
-          title: '피기 상점',
         }}
       />
       <Stack.Screen
