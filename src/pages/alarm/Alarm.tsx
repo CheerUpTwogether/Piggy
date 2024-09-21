@@ -9,18 +9,27 @@ import {
 import {FlatList} from 'react-native-gesture-handler';
 import {commonStyle} from '@/styles/common';
 import {daysAgo, formatKoreanDate} from '@/utils/date';
-import {useAppointmentForm, useToastStore, useUserStore} from '@/store/store';
+import {
+  useAppointmentForm,
+  useNotificationStore,
+  useToastStore,
+  useUserStore,
+} from '@/store/store';
 import {Alaram, AlarmType} from '@/types/alarm';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {
+  deleteAllNotificationSpb,
   deleteNotificationSpb,
   getNotificationSpb,
+  setAllConfirmNotificationSpb,
   setConfirmNotificationSpb,
   subcribeNotification,
 } from '@/supabase/alarm';
 import TabBar from '@/components/common/TabBar';
+import {getAppointmentSingleSpb} from '@/supabase/appointmentSpb';
+import dayjs from 'dayjs';
 import InviteSvg from '@/assets/icons/appointmentInvite.svg';
 import CancelSvg from '@/assets/icons/appointmentDelete.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
@@ -29,8 +38,7 @@ import AppointmentSvg from '@/assets/icons/appointment.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
 import GradeSvg from '@/assets/icons/grade.svg';
 import XSvg from '@/assets/icons/X.svg';
-import {getAppointmentSingleSpb} from '@/supabase/appointmentSpb';
-import dayjs from 'dayjs';
+import MoreSvg from '@/assets/icons/more.svg';
 
 const categories = [
   {
@@ -84,6 +92,9 @@ const Alarm = () => {
   const [notification, setNotification] = useState<Alaram[]>([]);
   const {userData} = useUserStore();
   const {setAppointmentForm} = useAppointmentForm();
+  const {setHandleAllConfirmAlarm} = useNotificationStore();
+
+  const filterData = notification.filter(el => el.filter_criteria === active);
 
   const handleClickAlarm = async (
     notification_id: number,
@@ -151,8 +162,16 @@ const Alarm = () => {
   };
 
   const handleDeleteAlarm = async (notification_id: number) => {
-    const res = await deleteNotificationSpb(notification_id);
-    if (!res) {
+    try {
+      const res = await deleteNotificationSpb(notification_id);
+      if (!res) {
+        addToast({
+          success: false,
+          text: '삭제 실패',
+          multiText: '알림 내역을 삭제하지 못했어요.',
+        });
+      }
+    } catch (e) {
       addToast({
         success: false,
         text: '삭제 실패',
@@ -160,6 +179,81 @@ const Alarm = () => {
       });
     }
   };
+
+  const handleDeleteAllAlarm = async () => {
+    try {
+      console.log(filterData);
+      if (filterData.length === 0) {
+        addToast({
+          success: false,
+          text: '삭제할 알림 내역이 없습니다.',
+        });
+        return;
+      }
+      const res = await deleteAllNotificationSpb(userData.id, active);
+      if (!res || res.length === 0) {
+        addToast({
+          success: false,
+          text: '삭제 실패',
+          multiText: '알림 내역을 삭제하지 못했어요.',
+        });
+      }
+    } catch (e) {
+      addToast({
+        success: false,
+        text: '삭제 실패',
+        multiText: '알림 내역을 삭제하지 못했어요.',
+      });
+    }
+  };
+
+  const handleAllConfirmAlarm = async () => {
+    try {
+      // 모두다 읽음 상태일 경우
+      // console.log(filterData);
+      // const avaliableConfirm = filterData.some(item => !item.confirmed_status);
+
+      // if (!avaliableConfirm) {
+      //   addToast({
+      //     success: false,
+      //     text: '읽을 알림 내역이 없습니다.',
+      //   });
+      //   return;
+      // }
+      const res = await setAllConfirmNotificationSpb(userData.id, active);
+      if (!res || res.length === 0) {
+        addToast({
+          success: false,
+          text: '읽음 처리 문제 발생.',
+          multiText: '관리자에게 문의해주세요.',
+        });
+      }
+    } catch (e) {
+      addToast({
+        success: false,
+        text: '읽음 처리 문제 발생.',
+        multiText: '관리자에게 문의해주세요.',
+      });
+    }
+  };
+
+  const renderHeader = () => (
+    <View style={styles.alarmBarContainer}>
+      <View style={{width: '80%'}}>
+        <Text style={commonStyle.MEDIUM_77_16}>
+          {`총 ${filterData.length} 개의 알림`}
+        </Text>
+      </View>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.deleteAllContainer}
+        onPress={() => {
+          handleDeleteAllAlarm();
+        }}>
+        <Text style={commonStyle.MEDIUM_PRIMARY_16}>전체 삭제</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   const renderItem = ({item}: {item: Alaram}) => {
     return (
@@ -237,6 +331,9 @@ const Alarm = () => {
       fetchNotificatioLog();
     });
     fetchNotificatioLog();
+    // 탑바 호출을 위해 함수 설정
+    setHandleAllConfirmAlarm(handleAllConfirmAlarm);
+
     return () => {
       unsubscribe();
     };
@@ -248,14 +345,27 @@ const Alarm = () => {
         <TabBar categories={categories} active={active} onChange={setActive} />
       </View>
       <FlatList
-        data={notification.filter(el => el.filter_criteria === active)}
+        data={filterData}
         renderItem={renderItem}
+        ListHeaderComponent={renderHeader}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  alarmBarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 16,
+    marginRight: 8,
+    paddingVertical: 8,
+  },
+  deleteAllContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
+  },
   itemContainer: {
     paddingVertical: 8,
     paddingHorizontal: 16,
@@ -289,10 +399,7 @@ const styles = StyleSheet.create({
     paddingTop: 2,
   },
   deleteAlarmWrapper: {
-    //width: 72,
-    //height: 72,
     justifyContent: 'center',
-    //alignItems: 'flex-end',
     alignItems: 'center',
   },
   deleteAlarmBtn: {
