@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import ModalDefault from '@/components/common/ModalDefault';
 import Toast from '@/components/common/Toast';
 import 'react-native-url-polyfill/auto';
+import BootSplash from 'react-native-bootsplash';
 
 import messaging from '@react-native-firebase/messaging';
 
@@ -20,6 +21,7 @@ const App = () => {
     const unsubscribe = messaging().onMessage(async () => {
       return unsubscribe;
     });
+    BootSplash.hide({fade: true});
   }, []);
 
   return (
