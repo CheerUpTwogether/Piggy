@@ -22,7 +22,7 @@ export const searchLocation = async (
         },
       },
     );
-    console.log('키워드 res 값', response.data.documents);
+
     return response.data.documents;
   } catch (error) {
     console.error(error);
@@ -40,7 +40,7 @@ export const searchAddress = async (address: string) => {
         },
       },
     );
-    console.log('주소 res 값', response.data.documents);
+
     return response.data.documents;
   } catch (error) {
     console.error(error);

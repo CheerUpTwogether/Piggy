@@ -143,8 +143,6 @@ export const setCertificationStatusSpb = async (
       if (updateError) {
         throw updateError;
       }
-
-      console.log('[Spb]인증을 완료했습니다.');
     } else {
       throw new Error('약속된 위치에 도착하지 못했어요.');
     }
@@ -193,12 +191,11 @@ export const setAppointmentAcceptanceSpb = async (
       .eq('user_id', id)
       .eq('appointment_id', appointment_id);
     if (error) {
-      console.log(error);
       throw error;
     }
     return data;
   } catch (e) {
-    console.error('Error appeared in setAppointmentAcceptanceSpb : ', e);
+    throw e;
   }
 };
 
@@ -313,7 +310,6 @@ export const getAppointmentStatusSpb = async (appointment_id: number) => {
       .eq('appointment_id', appointment_id)
       .single();
     if (error) {
-      console.log(error);
       throw error;
     }
     return data;

@@ -123,7 +123,6 @@ const useHomeAppointments = () => {
       categories.filter(el => el.value === sortValue)[0].status,
     );
     if (error) {
-      console.log(error);
       addToast({
         success: false,
         text: '약속 정보를 불러오지 못했어요.',
@@ -131,7 +130,6 @@ const useHomeAppointments = () => {
       return;
     }
 
-    console.log(data);
     setAppointments(data);
   };
 
@@ -205,7 +203,6 @@ const useHomeAppointments = () => {
   const isAndroid13OrAbove = () => {
     if (Platform.OS === 'android') {
       const androidVersion = DeviceInfo.getSystemVersion();
-      console.log(androidVersion);
       return parseInt(androidVersion, 10) >= 13;
     }
     return false;

@@ -15,11 +15,7 @@ const AgreementBtn = ({authData, type}) => {
       {authData && (
         <View>
           {isServiceAgree ? (
-            <Button
-              disable
-              text="동의함"
-              onPress={() => console.log('비활성화')}
-            />
+            <Button disable text="동의함" onPress={() => {}} />
           ) : (
             <Button
               text="동의하기"

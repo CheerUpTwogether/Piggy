@@ -11,7 +11,6 @@ const fetchBackEnd = async (
   body: string,
 ) => {
   const session = await getItemSession();
-  console.log(session);
   for (const uid of uid_list) {
     try {
       backInstance.post(
@@ -39,19 +38,19 @@ export const sendInviteNotificationAPI = async (
   uid_list: string[],
   subject: string,
 ) => {
-  fetchBackEnd(uid_list, `약속에 초대 되었어요`, `약속명: ${subject}`);
+  fetchBackEnd(uid_list, '약속에 초대 되었어요', `약속명: ${subject}`);
 };
 
 export const sendAcceptNotificationAPI = async (
   uid_list: string[],
   accept_user: string,
 ) => {
-  fetchBackEnd(uid_list, `약속 수락`, `${accept_user} 님이 약속을 수락했어요!`);
+  fetchBackEnd(uid_list, '약속 수락', `${accept_user} 님이 약속을 수락했어요!`);
 };
 
 export const sendExpireNotificationAPI = async (
   uid_list: string[],
   subject: string,
 ) => {
-  fetchBackEnd(uid_list, `약속이 성사되지 않았어요😭`, `약속명: ${subject}`);
+  fetchBackEnd(uid_list, '약속이 성사되지 않았어요😭', `약속명: ${subject}`);
 };

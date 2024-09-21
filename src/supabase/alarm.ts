@@ -125,7 +125,6 @@ export const subcribeUnConfirmNotification = (uid: string, onEvent) => {
 
   return () => {
     channel.unsubscribe();
-    console.log('alarm-unconfirm-detail 채널 구독 해제');
   };
 };
 
@@ -150,6 +149,5 @@ export const subcribeNotification = (uid: string, onEvent) => {
 
   return () => {
     channel.unsubscribe();
-    console.log('alarm-detail 채널 구독 해제');
   };
 };

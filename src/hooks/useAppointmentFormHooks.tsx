@@ -182,7 +182,6 @@ const useAppointmentFormHooks = () => {
     appointmentId: number,
   ) => {
     const {error} = await setAppointmentProposerSpb(userId, appointmentId);
-    console.log(error);
     if (error) {
       throw Error;
     }

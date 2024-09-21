@@ -79,7 +79,9 @@ const AppointmentDetail = () => {
 
   // 약속 2시간 & 10분 전인지 확인
   const checkAppointmentTime = () => {
-    if (!appointmentForm?.date || !appointmentForm?.time) return;
+    if (!appointmentForm?.date || !appointmentForm?.time) {
+      return;
+    }
 
     const appointmentTime = dayjs(
       `${appointmentForm.date} ${appointmentForm.time}`,
@@ -167,7 +169,6 @@ const AppointmentDetail = () => {
     try {
       // 버튼을 눌렀을 때 최신 취소 상태 호출
       const currentCancelStatus = await getAppointmentCancellationStatus();
-      console.log('button', currentCancelStatus);
 
       // 최신 상태를 바탕으로 취소 요청 진행
       if (currentCancelStatus === 'nothing') {

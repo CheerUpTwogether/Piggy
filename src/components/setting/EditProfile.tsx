@@ -84,9 +84,15 @@ const EditProfile = () => {
       setIsImageReset(false);
     } catch (error) {
       if (error.message === 'User cancelled image selection') {
-        console.log('이미지 선택이 취소되었습니다.');
+        addToast({
+          success: true,
+          text: '이미지 선택이 취소되었습니다.',
+        });
       } else {
-        console.error('이미지 선택 중 에러 발생:', error);
+        addToast({
+          success: false,
+          text: '이미지 선택 중 에러 발생했습니다.',
+        });
       }
     }
   };
@@ -211,7 +217,6 @@ const EditProfile = () => {
       navigation.replace('Login');
       closeModal();
     } catch (e) {
-      console.log(e);
       addToast({
         success: false,
         text: '회원을 탈퇴에 실패했어요',

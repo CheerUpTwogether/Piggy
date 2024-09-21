@@ -34,9 +34,7 @@ const LoginDetailForm = ({authData, formData}) => {
   };
 
   useEffect(() => {
-    console.log(generatedCode);
     let timer: NodeJS.Timeout;
-    console.log(resendTimeout);
     if (isCodeSent && resendTimeout > 0) {
       timer = setInterval(() => {
         setResendTimeout(prev => prev - 1);
