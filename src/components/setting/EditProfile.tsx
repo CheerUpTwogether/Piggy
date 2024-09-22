@@ -83,12 +83,7 @@ const EditProfile = () => {
       setTempProfileValue(tempImage.uri);
       setIsImageReset(false);
     } catch (error) {
-      if (error.message === 'User cancelled image selection') {
-        addToast({
-          success: true,
-          text: '이미지 선택이 취소되었습니다.',
-        });
-      } else {
+      if (error.message !== 'User cancelled image selection') {
         addToast({
           success: false,
           text: '이미지 선택 중 에러 발생했습니다.',
