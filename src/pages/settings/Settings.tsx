@@ -40,7 +40,7 @@ const Settings = () => {
   const handleAlarmSetting = () => {
     if (Platform.OS === 'android') {
       const androidVersion = parseInt(DeviceInfo.getSystemVersion(), 10);
-      const packageName = 'com.piggy'; // 안드로이드 패키지 이름
+      const packageName = 'com.cheeruptwogether'; // 안드로이드 패키지 이름
 
       if (androidVersion >= 8) {
         // Android 8.0 이상이면 앱의 설정으로 이동
