@@ -55,7 +55,7 @@ const useAppointmentPlace = () => {
     if (!location) {
       addToast({
         success: false,
-        text: '위치정보 없습니다.',
+        text: '위치정보를 불러올 수 없습니다.',
       });
       return;
     }
