@@ -86,10 +86,10 @@ export const loginSessionSpb = async (
     await setItemSession(data.session.access_token, refresh_token);
   }
 
-  if (error) {
-    // 세션 오류 - refresh_token(기본: 30일) 만료 될때는 로그인 다시하게 함.
-    console.log(error);
-  }
+  // if (error) {
+  //   // 세션 오류 - refresh_token(기본: 30일) 만료 될때는 로그인 다시하게 함.
+  //   console.log(error);
+  // }
 
   return data;
 };

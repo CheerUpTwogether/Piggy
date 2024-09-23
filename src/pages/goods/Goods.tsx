@@ -12,9 +12,11 @@ import {getGoodsAPI} from '@/api/kakao/gift';
 import GoodsFlatItem from '@/components/goods/GoodsFlatItem';
 import {GoodsList} from '@/types/gift';
 import {commonStyle} from '@/styles/common';
+import {useToastStore} from '@/store/store';
 
 const Goods = () => {
   const [goods, setGoods] = useState<GoodsList>([]);
+  const addToast = useToastStore(state => state.addToast);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -27,7 +29,10 @@ const Goods = () => {
       const res = await getGoodsAPI();
       setGoods(res.data.contents);
     } catch (e) {
-      console.log(e);
+      addToast({
+        success: false,
+        text: '상품 리스트를 가져오는데 실패했어요.',
+      });
     }
   };
 

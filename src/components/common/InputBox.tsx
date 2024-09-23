@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   mediumContainer: {
-    width: '90%',
+    width: '86%',
   },
   input: {
     flex: 1,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   cancelWrapper: {
     paddingHorizontal: 10,
-    width: 50,
+    width: 55,
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',

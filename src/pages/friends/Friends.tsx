@@ -155,11 +155,12 @@ const Friends = () => {
               <Text style={commonStyle.REGULAR_AA_14}>{userData.email}</Text>
             </View>
           </TouchableOpacity>
-
           <View style={styles.friendListWrapper}>
-            <Text style={commonStyle.MEDIUM_33_16}>
-              친구 {friendsList.length}명
-            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={commonStyle.MEDIUM_33_16}>친구 </Text>
+              <Text style={commonStyle.BOLD_33_16}>{friendsList.length}</Text>
+              <Text style={commonStyle.MEDIUM_33_16}>명</Text>
+            </View>
             {friendsList.length === 0 ? (
               <View style={{marginTop: 60}}>
                 <EmptyResult
@@ -170,7 +171,7 @@ const Friends = () => {
             ) : (
               <View style={styles.friendList}>
                 {friendsList.map(item => (
-                  <View key={item.id} style={styles.friendContainer}>
+                  <View key={item.id} style={[styles.friendContainer]}>
                     <TouchableOpacity
                       activeOpacity={0.8}
                       onPress={() => handleProfilePress(item)}
@@ -228,11 +229,13 @@ const Friends = () => {
 const styles = StyleSheet.create({
   profileWrapper: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: '#EFEFEF',
+    borderTopWidth: 2,
+    borderTopColor: '#EFEFEF',
+    borderBottomColor: '#FFC3C2',
+    borderBottomWidth: 5,
     alignItems: 'center',
     gap: 14,
-    height: 90,
+    height: 110,
     paddingHorizontal: 14,
   },
   profileBorder: {
@@ -261,7 +264,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
-    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderColor: '#EFEFEF',
     zIndex: 1,
   },
   friendWrapper: {

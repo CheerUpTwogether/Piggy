@@ -52,7 +52,7 @@ const Home = () => {
             />
           )}
           ListEmptyComponent={
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, marginTop: 40}}>
               <EmptyResult
                 reason={'아직 약속이 없어요'}
                 solution={'친구들과의 약속을 등록해보세요!'}

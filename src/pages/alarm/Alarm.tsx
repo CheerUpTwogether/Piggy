@@ -182,7 +182,6 @@ const Alarm = () => {
 
   const handleDeleteAllAlarm = async () => {
     try {
-      console.log(filterData);
       if (filterData.length === 0) {
         addToast({
           success: false,

@@ -6,7 +6,7 @@ import {Search} from '@/types/place';
 import {SearchAddressPlace, SearchKeywordPlace} from '@/types/Common';
 import {searchAddress, searchLocation} from '@/api/kakao/map';
 import {useLocation} from './useLocation';
-import {useAppointmentForm} from '@/store/store';
+import {useAppointmentForm, useToastStore} from '@/store/store';
 
 const place = {
   id: '',
@@ -31,6 +31,7 @@ const useAppointmentPlace = () => {
   const [selectPlace, setSelectPlace] = useState<SearchKeywordPlace>(place);
   const debouncedKeyword = useDebounce(keyword, 100);
   const {location} = useLocation(); // 커스텀 훅 호출
+  const addToast = useToastStore(state => state.addToast);
   const {appointmentForm, setAppointmentFormByKey} = useAppointmentForm();
   useEffect(() => {
     getkeywordHistories();
@@ -52,7 +53,10 @@ const useAppointmentPlace = () => {
     setIsShow(false);
     setIsStartSearch(true);
     if (!location) {
-      console.log('위치정보 없음');
+      addToast({
+        success: false,
+        text: '위치정보를 불러올 수 없습니다.',
+      });
       return;
     }
 

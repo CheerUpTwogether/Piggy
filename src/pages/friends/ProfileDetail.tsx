@@ -71,7 +71,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   };
 
   const handleEditProfile = () => {
-    console.log('TODO: 프로필 수정 api 호출');
+    //console.log('TODO: 프로필 수정 api 호출');
     closeModal();
   };
 
