@@ -1,4 +1,4 @@
-package com.cheeruptwogether
+package com.piggy
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
