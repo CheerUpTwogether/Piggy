@@ -75,9 +75,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.cheeruptwogether"
+    namespace "com.piggy"
     defaultConfig {
-        applicationId "com.cheeruptwogether"
+        applicationId "com.piggy"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
