@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {commonStyle} from '@/styles/common';
-import {ProfileDetailProps} from '@/types/friends';
+import {Friend, ProfileDetailProps} from '@/types/friends';
 import {gradeList, determineGrade} from '@/utils/grade';
 import {ProfileDetailNavigationProp} from '@/types/friends';
 import {useUserStore, useToastStore, useModalStore} from '@/store/store';
@@ -71,7 +71,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   };
 
   const handleEditProfile = () => {
-    //console.log('TODO: 프로필 수정 api 호출');
+    navigation.navigate('EditProfile', {...userData});
     closeModal();
   };
 
@@ -79,7 +79,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
     const friends = await getFriendsSpb(userData.id);
 
     // 이미 친구 목록에 있는지 확인
-    const isAlreadyFriend = friends.some(friend => friend.id === id);
+    const isAlreadyFriend = friends.some((friend: Friend) => friend.id === id);
 
     if (isAlreadyFriend) {
       addToast({
