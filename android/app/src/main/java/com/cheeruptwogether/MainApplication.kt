@@ -1,4 +1,4 @@
-package com.piggy
+package com.cheeruptwogether
 
 import android.app.Application
 import com.facebook.react.PackageList
