@@ -4,12 +4,12 @@ import dayjs from 'dayjs';
 import {color_ef, commonStyle} from '@/styles/common';
 import {PiggyUsageHistoryProps} from '@/types/gift';
 import LogoSvg from '@/assets/icons/topLogo.svg';
-import ProfileSvg from '@/assets/icons/basicProfile.svg';
 import AppointmentSvg from '@/assets/icons/appointment.svg';
 import CancelSvg from '@/assets/icons/appointmentDelete.svg';
 import BarcodeSvg from '@/assets/icons/barcode.svg';
 import LocationSuccessSvg from '@/assets/icons/locationSuccess.svg';
 import LocationFailureSvg from '@/assets/icons/locationFailure.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
   const getShortTitle = (title?: string) => {
@@ -95,7 +95,9 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
                 alt="friendsProfile"
               />
             ) : (
-              <ProfileSvg style={styles.img} width={28} height={28} />
+              <View style={styles.basicProfileWrapper}>
+                <Image source={basicProfile} style={styles.basicProfile} />
+              </View>
             )
           ) : (
             <View style={styles.imgWrapper}>
@@ -168,6 +170,14 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   imgWrapper: {gap: 2, alignItems: 'center', justifyContent: 'center'},
+  basicProfile: {width: '100%', height: '100%'},
+  basicProfileWrapper: {
+    width: 54,
+    height: 54,
+    borderRadius: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default PiggyUsageItem;
