@@ -73,11 +73,9 @@ const AppointmentItem = ({
         <Text style={titleFontColor}>{item.subject}</Text>
         <View style={{flexDirection: 'row'}}>
           {item.pinned && (
-            <TouchableOpacity
-              style={{marginRight: 12}}
-              onPress={() => onPressFix(item.appointment_id)}>
+            <View style={{marginRight: 12}}>
               <PinSvg color="#777" style={styles.svg} />
-            </TouchableOpacity>
+            </View>
           )}
           {!shouldShowTimer && (
             <TouchableOpacity onPress={() => onPressMore(item)}>

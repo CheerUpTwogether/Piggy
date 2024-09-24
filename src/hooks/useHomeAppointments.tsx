@@ -57,6 +57,11 @@ const useHomeAppointments = () => {
   }, []);
 
   const createButtonList = () => {
+    const appointment = appointments.find(
+      el => el.appointment_id === selectedId,
+    );
+
+    // 고정 상태에 따라 버튼 텍스트 결정
     const buttons: Array<{
       text: string;
       theme?: 'sub' | 'primary' | 'outline' | undefined;
@@ -64,17 +69,13 @@ const useHomeAppointments = () => {
       disable?: boolean;
     }> = [
       {
-        text: '고정',
+        text: appointments[0].pinned ? '고정 해제' : '고정',
         onPress: () => {
           setBottomSheetShow(false);
           onPressFix(selectedId);
         },
       },
     ];
-
-    const appointment = appointments.find(
-      el => el.appointment_id === selectedId,
-    );
 
     // 현재 정렬 기준이 'fulfilled' (완료 상태)일 때만 삭제 버튼 추가
     if (
@@ -101,7 +102,6 @@ const useHomeAppointments = () => {
     setUserDataByKey('piggy', res?.latest_piggy_count);
   };
 
-  //appointments.find(el => el.appointment_id === selectedId);
   // 약속 더보기 버튼 클릭
   const onPressMore = (item: AppointmentProps) => {
     setSelectedId(item.ap_id);
