@@ -17,6 +17,7 @@ export interface AppointmentProps extends AppointmentInsert {
   agreement_status: AppointmentTabStatus;
   appointment_participants_list: [];
   pinned: boolean;
+  ap_id?: number;
 }
 
 export type AppointmentInsert =

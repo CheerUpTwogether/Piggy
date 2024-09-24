@@ -57,9 +57,7 @@ const useHomeAppointments = () => {
   }, []);
 
   const createButtonList = () => {
-    const appointment = appointments.find(
-      el => el.appointment_id === selectedId,
-    );
+    const appointment = appointments.find(el => el.ap_id === selectedId);
 
     // 고정 상태에 따라 버튼 텍스트 결정
     const buttons: Array<{
@@ -69,7 +67,7 @@ const useHomeAppointments = () => {
       disable?: boolean;
     }> = [
       {
-        text: appointments[0].pinned ? '고정 해제' : '고정',
+        text: appointment?.pinned ? '고정 해제' : '고정',
         onPress: () => {
           setBottomSheetShow(false);
           onPressFix(selectedId);

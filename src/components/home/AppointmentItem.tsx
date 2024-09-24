@@ -15,11 +15,9 @@ const basicProfile = require('@/assets/images/basicProfile.png');
 const AppointmentItem = ({
   item,
   onPressMore,
-  onPressFix,
 }: {
   item: AppointmentProps;
   onPressMore: (item: AppointmentProps) => void;
-  onPressFix: (id: number) => void;
 }) => {
   const navigation = useNavigation<StackNavigation>();
   const {setAppointmentForm} = useAppointmentForm();
