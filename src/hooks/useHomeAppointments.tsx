@@ -75,9 +75,12 @@ const useHomeAppointments = () => {
     const appointment = appointments.find(
       el => el.appointment_id === selectedId,
     );
+
+    // 현재 정렬 기준이 'fulfilled' (완료 상태)일 때만 삭제 버튼 추가
     if (
       appointment?.appointment_status !== 'pending' &&
-      appointment?.appointment_status !== 'confirmed'
+      appointment?.appointment_status !== 'confirmed' &&
+      sort === 'fulfilled'
     ) {
       buttons.push({
         text: '삭제',
