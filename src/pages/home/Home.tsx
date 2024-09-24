@@ -49,7 +49,6 @@ const Home = () => {
               item={item}
               onPressMore={onPressMore}
               onPressFix={onPressFix}
-              key={item.ap_id}
             />
           )}
           ListEmptyComponent={
