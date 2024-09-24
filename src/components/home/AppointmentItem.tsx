@@ -62,7 +62,9 @@ const AppointmentItem = ({
       {shouldShowTimer && (
         <View style={styles.title}>
           <Text style={commonStyle.BOLD_PRIMARY_20}>{formattedTime}</Text>
-          <TouchableOpacity onPress={() => onPressMore(item)}>
+          <TouchableOpacity
+            onPress={() => onPressMore(item)}
+            style={styles.moreWrapper}>
             <MoreSvg color="#777" style={styles.svg} />
           </TouchableOpacity>
         </View>
@@ -78,7 +80,9 @@ const AppointmentItem = ({
             </View>
           )}
           {!shouldShowTimer && (
-            <TouchableOpacity onPress={() => onPressMore(item)}>
+            <TouchableOpacity
+              onPress={() => onPressMore(item)}
+              style={styles.moreWrapper}>
               <MoreSvg color="#777" style={styles.svg} />
             </TouchableOpacity>
           )}
@@ -241,6 +245,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 100,
     ...commonStyle.BOLD_SUB_14,
+  },
+  moreWrapper: {
+    width: 48,
+    height: 48,
+    alignItems: 'center',
   },
 });
 
