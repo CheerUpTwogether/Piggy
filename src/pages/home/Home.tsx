@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {color_ef, color_primary} from '@/styles/common';
@@ -22,6 +22,8 @@ const Home = () => {
     bottomSheetShow,
     setBottomSheetShow,
     changeSort,
+    configLimit,
+    loadAdditionalData,
   } = useHomeAppointments();
 
   return (
@@ -59,6 +61,8 @@ const Home = () => {
               />
             </View>
           }
+          onEndReached={loadAdditionalData}
+          onEndReachedThreshold={0.1}
         />
       </View>
 

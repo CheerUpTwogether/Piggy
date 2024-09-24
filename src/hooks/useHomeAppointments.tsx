@@ -39,6 +39,10 @@ const useHomeAppointments = () => {
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
+  const [limit, setLimit] = useState(20);
+  const [offset, setOffset] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
 
@@ -49,12 +53,25 @@ const useHomeAppointments = () => {
   );
 
   useEffect(() => {
-    getAppointment(sort);
-  }, [sort]);
+    getAppointment(sort, limit, offset);
+  }, [sort, limit, offset]);
 
   useEffect(() => {
     checkAlarmModal();
   }, []);
+
+  // TODO: 임시 - 해당 컴포넌트에서 useEffect 로 값을 줄 순 있지만 충분한 모듈화가 되지 않음. 재사용성 감소. 개선 고민필요
+  const configLimit = (n: number) => {
+    setLimit(n);
+  };
+
+  const loadAdditionalData = () => {
+    if (!loading) {
+      setCurrentPage(currentPage + 1);
+      setOffset(currentPage * limit);
+      setLoading(true);
+    }
+  };
 
   const createButtonList = () => {
     const buttons: Array<{
@@ -117,10 +134,16 @@ const useHomeAppointments = () => {
   };
 
   // 약속 리스트
-  const getAppointment = async (sortValue: AppointmentStatus) => {
+  const getAppointment = async (
+    sortValue: AppointmentStatus,
+    limit_f: number,
+    current_offset: number,
+  ) => {
     const {data, error} = await getAppointmentsSpb(
       userData.id,
       categories.filter(el => el.value === sortValue)[0].status,
+      limit_f,
+      current_offset,
     );
     if (error) {
       console.log(error);
@@ -131,15 +154,15 @@ const useHomeAppointments = () => {
       return;
     }
 
-    console.log(data);
-    setAppointments(data);
+    setAppointments(appointments.concat(data));
+    setLoading(false);
   };
 
   // 약속 고정/해제
   const onPressFix = async (appointmentId: number) => {
     try {
       await setPinnedSpb(userData.id, appointmentId);
-      getAppointment(sort);
+      getAppointment(sort, limit, offset);
     } catch {
       addToast({
         success: false,
@@ -251,6 +274,8 @@ const useHomeAppointments = () => {
     createButtonList,
     bottomSheetShow,
     setBottomSheetShow,
+    configLimit,
+    loadAdditionalData,
   };
 };
 
