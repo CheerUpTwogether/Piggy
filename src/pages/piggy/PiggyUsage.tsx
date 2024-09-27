@@ -49,8 +49,6 @@ const PiggyUsage = () => {
   };
 
   const fetchPiggyLogData = async () => {
-    console.log('------Divider----------');
-
     const res: PiggyLogItem[] = await getPiggyLogSpb(
       userData.id,
       limit,
@@ -60,25 +58,12 @@ const PiggyUsage = () => {
     const filterSubZero = res.filter(
       (item: PiggyLogItem) => item.diff_piggy_count !== 0,
     );
-    console.log(
-      'Current Page:',
-      currentPage,
-      'Limit:',
-      limit,
-      'Offset:',
-      currentOffset,
-    );
-    console.log('prev-piggy-length : ', piggyLog.length);
-    console.log('res-length :', res.length);
-    console.log('--Filter-length-- : ', filterSubZero.length);
-    piggyLog.map(i => console.log('piggy-log : ', i.id));
-    filterSubZero.map(i => console.log('filterSubZero : ', i.id));
+
     if (res.length) {
       setCurrentOffset(currentOffset + limit);
       setCurrentPage(currentPage + 1);
       setPiggyLog(prevLog => [...prevLog, ...filterSubZero]);
     }
-    console.log('setEnd');
   };
   const loadAdditionalData = () => {
     if (!loading) {
