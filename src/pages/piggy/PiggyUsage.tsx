@@ -23,6 +23,10 @@ const PiggyUsage = () => {
   const [piggyLog, setPiggyLog] = useState<PiggyLog[]>([]);
   const {userData, setUserDataByKey} = useUserStore();
   const flatListRef = useRef<FlatList>(null);
+  const [limit, setLimit] = useState(10);
+  const [currentOffset, setCurrentOffset] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -45,13 +49,44 @@ const PiggyUsage = () => {
   };
 
   const fetchPiggyLogData = async () => {
-    const res: PiggyLogItem[] = await getPiggyLogSpb(userData.id);
+    console.log('------Divider----------');
+
+    const res: PiggyLogItem[] = await getPiggyLogSpb(
+      userData.id,
+      limit,
+      currentOffset,
+      value,
+    );
     const filterSubZero = res.filter(
       (item: PiggyLogItem) => item.diff_piggy_count !== 0,
     );
-    setPiggyLog(filterSubZero);
+    console.log(
+      'Current Page:',
+      currentPage,
+      'Limit:',
+      limit,
+      'Offset:',
+      currentOffset,
+    );
+    console.log('prev-piggy-length : ', piggyLog.length);
+    console.log('res-length :', res.length);
+    console.log('--Filter-length-- : ', filterSubZero.length);
+    piggyLog.map(i => console.log('piggy-log : ', i.id));
+    filterSubZero.map(i => console.log('filterSubZero : ', i.id));
+    if (res.length) {
+      setCurrentOffset(currentOffset + limit);
+      setCurrentPage(currentPage + 1);
+      setPiggyLog(prevLog => [...prevLog, ...filterSubZero]);
+    }
+    console.log('setEnd');
   };
-
+  const loadAdditionalData = () => {
+    if (!loading) {
+      setLoading(true);
+      fetchPiggyLogData();
+      setLoading(false);
+    }
+  };
   const filterPiggyLog = () => {
     if (value === 'total') {
       return piggyLog;
@@ -66,7 +101,6 @@ const PiggyUsage = () => {
       return false;
     });
   };
-
   return (
     <View style={commonStyle.CONTAINER}>
       <Text
@@ -97,13 +131,15 @@ const PiggyUsage = () => {
         }}
       />
 
-      {filterPiggyLog().length ? (
+      {piggyLog.length ? (
         <FlatList
           ref={flatListRef}
           data={filterPiggyLog()}
           keyExtractor={item => String(item.id)}
           renderItem={PiggyUsageItem}
           showsVerticalScrollIndicator={false}
+          onEndReached={loadAdditionalData}
+          onEndReachedThreshold={0.1}
         />
       ) : (
         <EmptyResult
