@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
 
   bottomSheetTopBarWrapper: {
-    height: 44,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFF',
