@@ -18,7 +18,7 @@ const ButtonBottomSheet: React.FC<ButtonBottomSheetProps> = ({
   const minHeight = buttons.length === 1 ? 190 : 260;
 
   return (
-    <View style={styles.container}>
+    <View>
       <BottomSheet
         isShow={isShow}
         setIsShow={setIsShow}
@@ -52,7 +52,6 @@ const ButtonsComponent = ({
 );
 
 const styles = StyleSheet.create({
-  container: {justifyContent: 'center', alignItems: 'center'},
   modalContainer: {
     paddingHorizontal: 20,
     gap: 16,
