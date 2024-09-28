@@ -48,7 +48,11 @@ const Friends = () => {
   const fetchFriends = async () => {
     const friends = await getFriendsSpb(userData.id);
     if (friends) {
-      setFriendsList(friends);
+      // 친구 목록을 닉네임 기준으로 정렬
+      const sortedFriends = friends.sort((a: Friend, b: Friend) =>
+        a.nickname.localeCompare(b.nickname),
+      );
+      setFriendsList(sortedFriends);
     } else {
       addToast({
         success: false,
