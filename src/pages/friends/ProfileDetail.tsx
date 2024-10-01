@@ -14,11 +14,7 @@ import {Friend, ProfileDetailProps} from '@/types/friends';
 import {gradeList, determineGrade} from '@/utils/grade';
 import {ProfileDetailNavigationProp} from '@/types/friends';
 import {useUserStore, useToastStore, useModalStore} from '@/store/store';
-import {
-  setFriendshipAddSpb,
-  getFriendsSpb,
-  deleteFriendshipSpb,
-} from '@/supabase/FriendsSpb';
+import {setFriendshipAddSpb, deleteFriendshipSpb} from '@/supabase/FriendsSpb';
 
 import GradeSvg from '@/assets/icons/grade.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
@@ -76,12 +72,7 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   };
 
   const handleAddFriend = async () => {
-    const friends = await getFriendsSpb(userData.id);
-
-    // 이미 친구 목록에 있는지 확인
-    const isAlreadyFriend = friends.some((friend: Friend) => friend.id === id);
-
-    if (isAlreadyFriend) {
+    if (is_friend) {
       addToast({
         success: false,
         text: '이미 친구로 추가된 사용자입니다.',
