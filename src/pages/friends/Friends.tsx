@@ -37,6 +37,7 @@ const Friends = () => {
     profile_img_url: '',
     is_friend: false,
   });
+  const [myData, setMyData] = useState<User | null>(null);
   const userData = useUserStore(state => state.userData);
   const addToast = useToastStore(state => state.addToast);
   const {openModal, closeModal: closeConfirmModal} = useModalStore();
@@ -54,7 +55,7 @@ const Friends = () => {
     try {
       const res = await getUsersSpb(userData.id, userData.nickname);
       if (res && res.length > 0) {
-        setSelectedUser(res[0]);
+        setMyData(res[0]);
       } else {
         addToast({
           success: false,
@@ -166,7 +167,7 @@ const Friends = () => {
           <TouchableOpacity
             style={styles.profileWrapper}
             activeOpacity={0.8}
-            onPress={() => handleProfilePress(selectedUser)}>
+            onPress={() => handleProfilePress(myData || userData)}>
             {userData.profile_img_url ? (
               <View style={styles.profileBorder}>
                 <Image
