@@ -9,6 +9,7 @@ import TabBar from '@/components/common/TabBar';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import useHomeAppointments from '@/hooks/useHomeAppointments';
 import PulsSvg from '@/assets/icons/plus.svg';
+import SkeletonHomeProfile from '@/components/skeleton/SkeletonHomeProfile';
 
 const Home = () => {
   const {
@@ -22,6 +23,7 @@ const Home = () => {
     bottomSheetShow,
     setBottomSheetShow,
     changeSort,
+    loading,
   } = useHomeAppointments();
   const flatListRef = useRef<FlatList>(null); // 카테고리 변경 시 스크롤 최상단으로 이동
 
@@ -34,7 +36,7 @@ const Home = () => {
   return (
     <View style={styles.container}>
       {/* 사용자 프로필 */}
-      <Profile />
+      {loading ? <SkeletonHomeProfile /> : <Profile />}
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
@@ -57,15 +59,24 @@ const Home = () => {
               item={item}
               onPressMore={onPressMore}
               onPressFix={onPressFix}
+              loading={loading}
             />
           )}
           ListEmptyComponent={
-            <View style={{flex: 1, marginTop: 40}}>
-              <EmptyResult
-                reason={'아직 약속이 없어요'}
-                solution={'친구들과의 약속을 등록해보세요!'}
-              />
-            </View>
+            loading ? (
+              // 로딩 중일 때 스켈레톤 표시
+              <View style={{flex: 1, marginTop: 40}}>
+                <SkeletonHomeProfile />
+              </View>
+            ) : (
+              // 로딩이 끝나고 약속이 없을 때 EmptyResult 표시
+              <View style={{flex: 1, marginTop: 40}}>
+                <EmptyResult
+                  reason={'아직 약속이 없어요'}
+                  solution={'친구들과의 약속을 등록해보세요!'}
+                />
+              </View>
+            )
           }
         />
       </View>
