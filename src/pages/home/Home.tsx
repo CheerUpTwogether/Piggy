@@ -17,7 +17,6 @@ const Home = () => {
     sort,
     goAppointmentForm,
     onPressMore,
-    onPressFix,
     createButtonList,
     bottomSheetShow,
     setBottomSheetShow,
@@ -56,7 +55,6 @@ const Home = () => {
             <AppointmentItem
               item={item}
               onPressMore={onPressMore}
-              onPressFix={onPressFix}
             />
           )}
           ListEmptyComponent={
