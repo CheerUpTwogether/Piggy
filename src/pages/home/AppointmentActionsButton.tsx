@@ -11,17 +11,14 @@ import useAppointmentTimer from '@/hooks/useAppointmentTimer'; //
 const AppointmentActions: React.FC<AppointmentActionsProps> = ({
   appointmentForm,
   cancelStatus,
-  myAgreementStatus,
   isNearAppointment,
-  certification,
   appointmentTimeCheck,
   handleCertification,
   cancelAppointment,
   setAppointmentCancellationAcceptance,
   setAppointmentAcceptance,
 }) => {
-  const {remainingTime, formattedTime} =
-    useAppointmentTimer(appointmentTimeCheck);
+  const {remainingTime, formattedTime} = useAppointmentTimer(appointmentTimeCheck);
 
   const navigation = useNavigation();
 
@@ -30,7 +27,7 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
       return {text: '인증 종료', disabled: true};
     }
 
-    if (certification) {
+    if (appointmentForm?.certification_status) {
       return {text: '인증 완료', disabled: true};
     }
 
@@ -70,7 +67,7 @@ const AppointmentActions: React.FC<AppointmentActionsProps> = ({
     }
 
     if (appointmentForm.appointment_status === 'pending') {
-      return myAgreementStatus === 'confirmed' ? (
+      return appointmentForm.agreement_status === 'confirmed' ? (
         <Button
           text={'다른 참여자의 수락 대기중...'}
           onPress={() => {}}
