@@ -2,8 +2,8 @@ import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {color_ef, commonStyle} from '@/styles/common';
 import {FriendsProps} from '@/mock/Home/type';
-import ProfileSvg from '@/assets/icons/basicProfile.svg';
 import ArriveCheck from '@/assets/icons/arriveCheck.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const FriendItem = ({item}: {item: FriendsProps}) => {
   return (
@@ -19,7 +19,7 @@ const FriendItem = ({item}: {item: FriendsProps}) => {
           />
         ) : (
           <View style={styles.imgContainer}>
-            <ProfileSvg width={28} height={28} />
+            <Image source={basicProfile} style={styles.basicProfile} />
           </View>
         )}
         <Text
@@ -59,5 +59,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  basicProfile: {width: '100%', height: '100%'},
 });
 export default FriendItem;

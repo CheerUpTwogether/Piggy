@@ -15,7 +15,11 @@ import ProfileDetailComponent from '@/components/setting/ProfileDetailComponent'
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import {useUserStore, useToastStore, useModalStore} from '@/store/store';
 import {useFriendActions} from '@/hooks/useFriendActions';
-import {getFriendsSpb, deleteFriendshipSpb} from '@/supabase/FriendsSpb';
+import {
+  getFriendsSpb,
+  deleteFriendshipSpb,
+  getUsersSpb,
+} from '@/supabase/FriendsSpb';
 import {Friend, User} from '@/types/friends';
 import {commonStyle} from '@/styles/common';
 
@@ -33,6 +37,7 @@ const Friends = () => {
     profile_img_url: '',
     is_friend: false,
   });
+  const [myData, setMyData] = useState<User | null>(null);
   const userData = useUserStore(state => state.userData);
   const addToast = useToastStore(state => state.addToast);
   const {openModal, closeModal: closeConfirmModal} = useModalStore();
@@ -42,13 +47,40 @@ const Friends = () => {
   useFocusEffect(
     useCallback(() => {
       fetchFriends();
+      fetchMyData();
     }, []),
   );
+
+  const fetchMyData = async () => {
+    try {
+      const res = await getUsersSpb(userData.id, userData.nickname);
+      if (res && res.length > 0) {
+        setMyData(res[0]);
+      } else {
+        addToast({
+          success: false,
+          text: '사용자 정보를 불러오지 못했습니다.',
+          multiText: '다시 시도해주세요.',
+        });
+      }
+    } catch (error) {
+      console.error('사용자 데이터를 불러오는 중 오류가 발생했습니다.', error);
+      addToast({
+        success: false,
+        text: '사용자 데이터를 불러오는 중 오류가 발생했습니다.',
+        multiText: '다시 시도해주세요.',
+      });
+    }
+  };
 
   const fetchFriends = async () => {
     const friends = await getFriendsSpb(userData.id);
     if (friends) {
-      setFriendsList(friends);
+      // 친구 목록을 닉네임 기준으로 정렬
+      const sortedFriends = friends.sort((a: Friend, b: Friend) =>
+        a.nickname.localeCompare(b.nickname),
+      );
+      setFriendsList(sortedFriends);
     } else {
       addToast({
         success: false,
@@ -135,7 +167,7 @@ const Friends = () => {
           <TouchableOpacity
             style={styles.profileWrapper}
             activeOpacity={0.8}
-            onPress={() => handleProfilePress(userData)}>
+            onPress={() => handleProfilePress(myData || userData)}>
             {userData.profile_img_url ? (
               <View style={styles.profileBorder}>
                 <Image

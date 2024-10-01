@@ -15,11 +15,9 @@ const basicProfile = require('@/assets/images/basicProfile.png');
 const AppointmentItem = ({
   item,
   onPressMore,
-  onPressFix,
 }: {
   item: AppointmentProps;
   onPressMore: (item: AppointmentProps) => void;
-  onPressFix: (id: number) => void;
 }) => {
   const navigation = useNavigation<StackNavigation>();
   const {setAppointmentForm} = useAppointmentForm();
@@ -62,7 +60,9 @@ const AppointmentItem = ({
       {shouldShowTimer && (
         <View style={styles.title}>
           <Text style={commonStyle.BOLD_PRIMARY_20}>{formattedTime}</Text>
-          <TouchableOpacity onPress={() => onPressMore(item)}>
+          <TouchableOpacity
+            onPress={() => onPressMore(item)}
+            style={styles.moreWrapper}>
             <MoreSvg color="#777" style={styles.svg} />
           </TouchableOpacity>
         </View>
@@ -73,14 +73,14 @@ const AppointmentItem = ({
         <Text style={titleFontColor}>{item.subject}</Text>
         <View style={{flexDirection: 'row'}}>
           {item.pinned && (
-            <TouchableOpacity
-              style={{marginRight: 12}}
-              onPress={() => onPressFix(item.appointment_id)}>
+            <View style={{marginRight: 12}}>
               <PinSvg color="#777" style={styles.svg} />
-            </TouchableOpacity>
+            </View>
           )}
           {!shouldShowTimer && (
-            <TouchableOpacity onPress={() => onPressMore(item)}>
+            <TouchableOpacity
+              onPress={() => onPressMore(item)}
+              style={styles.moreWrapper}>
               <MoreSvg color="#777" style={styles.svg} />
             </TouchableOpacity>
           )}
@@ -243,6 +243,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 100,
     ...commonStyle.BOLD_SUB_14,
+  },
+  moreWrapper: {
+    width: 48,
+    height: 48,
+    alignItems: 'center',
   },
 });
 

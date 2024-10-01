@@ -78,7 +78,11 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
         />
       ) : (
         <View style={styles.basicProfileWrapper}>
-          <Image source={basicProfile} style={styles.basicProfile} />
+          <Image
+            source={basicProfile}
+            style={styles.basicProfile}
+            alt={`${item.nickname}프로필사진`}
+          />
         </View>
       )}
       <Text
@@ -353,7 +357,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginRight: 20,
   },
-
+  findRouteContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
   findRouteWrapper: {
     flexDirection: 'row',
     height: 48,

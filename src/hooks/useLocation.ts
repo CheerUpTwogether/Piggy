@@ -6,7 +6,7 @@ import {requestLocationPermission} from '@/utils/permission';
 
 export const useLocation = () => {
   const [location, setLocation] = useState<Location>();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<null | string>(null);
 
   // 현재 위치 정보 받아오기
   const getCurrentLocation = () => {

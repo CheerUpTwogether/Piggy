@@ -15,16 +15,18 @@ const ButtonBottomSheet: React.FC<ButtonBottomSheetProps> = ({
     android: buttons.length === 1 ? 0.18 : 0.25,
   }) as number;
 
-  const minHeight = buttons.length === 1 ? 190 : 250;
+  const minHeight = buttons.length === 1 ? 190 : 260;
 
   return (
-    <BottomSheet
-      isShow={isShow}
-      setIsShow={setIsShow}
-      size={size}
-      minHeight={minHeight}
-      component={() => ButtonsComponent({buttons, setIsShow})}
-    />
+    <>
+      <BottomSheet
+        isShow={isShow}
+        setIsShow={setIsShow}
+        size={size}
+        minHeight={minHeight}
+        component={() => ButtonsComponent({buttons, setIsShow})}
+      />
+    </>
   );
 };
 
