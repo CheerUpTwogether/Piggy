@@ -18,7 +18,7 @@ const ButtonBottomSheet: React.FC<ButtonBottomSheetProps> = ({
   const minHeight = buttons.length === 1 ? 190 : 260;
 
   return (
-    <View>
+    <>
       <BottomSheet
         isShow={isShow}
         setIsShow={setIsShow}
@@ -26,7 +26,7 @@ const ButtonBottomSheet: React.FC<ButtonBottomSheetProps> = ({
         minHeight={minHeight}
         component={() => ButtonsComponent({buttons, setIsShow})}
       />
-    </View>
+    </>
   );
 };
 
