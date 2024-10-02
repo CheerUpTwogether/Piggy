@@ -92,7 +92,6 @@ const Alarm = () => {
   const {userData} = useUserStore();
   const {setAppointmentForm} = useAppointmentForm();
   const {setHandleAllConfirmAlarm} = useNotificationStore();
-  const [re, setRe] = useState('');
 
   const filterData = notification.filter(el => el.filter_criteria === active);
 
@@ -181,7 +180,6 @@ const Alarm = () => {
   };
 
   const handleDeleteAllAlarm = async () => {
-    console.log('삭제', active);
     try {
       if (filterData.length === 0) {
         addToast({
@@ -338,7 +336,7 @@ const Alarm = () => {
   }, []);
 
   useEffect(() => {
-    // 탑바 호출을 위해 함수 설정
+    // 탑바 모두읽음 동작을 위해 함수 설정
     setHandleAllConfirmAlarm(handleAllConfirmAlarm);
   }, [notification]);
 
