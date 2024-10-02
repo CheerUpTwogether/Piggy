@@ -10,6 +10,7 @@ import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import useHomeAppointments from '@/hooks/useHomeAppointments';
 import PulsSvg from '@/assets/icons/plus.svg';
 import SkeletonHomeProfile from '@/components/skeleton/SkeletonHomeProfile';
+import SkeletonAppointmentItem from '@/components/skeleton/SkeletonAppointmentItem';
 
 const Home = () => {
   const {
@@ -66,7 +67,7 @@ const Home = () => {
             loading ? (
               // 로딩 중일 때 스켈레톤 표시
               <View style={{flex: 1, marginTop: 40}}>
-                <SkeletonHomeProfile />
+                <SkeletonAppointmentItem />
               </View>
             ) : (
               // 로딩이 끝나고 약속이 없을 때 EmptyResult 표시

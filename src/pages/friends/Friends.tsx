@@ -46,7 +46,6 @@ const Friends = () => {
     useFriendActions([]);
   const [loading, setLoading] = useState(false);
   const [myLoading, setMyLoading] = useState(false);
-  const [shouldReload, setShouldReload] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
