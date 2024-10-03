@@ -106,8 +106,10 @@ const useAppointmentFormHooks = () => {
     try {
       setIsProcessing(true);
       const data = await addAppointment();
-      await addAppointmentParticipants(data?.[0].id);
-      await updateAppointmentProposer(userData.id, data?.[0].id);
+      const res = await addAppointmentParticipants(data?.[0].id);
+      console.log(res)
+      const ahdi = await updateAppointmentProposer(data?.[0].id);
+      console.log(ahdi)
       navigation.goBack();
       addToast({
         success: true,
@@ -115,6 +117,7 @@ const useAppointmentFormHooks = () => {
         multiText: '약속을 잊지 마세요!',
       });
     } catch (e) {
+      console.log(e)
       addToast({
         success: false,
         text: e.message || '약속 생성에 실패했어요',
@@ -147,7 +150,6 @@ const useAppointmentFormHooks = () => {
       appointment_date: `${date} ${time}`,
       deal_piggy_count,
     });
-
     if (error) {
       throw error;
     }
@@ -178,10 +180,9 @@ const useAppointmentFormHooks = () => {
 
   // 약속 참석자 중 proporser 상태 변경
   const updateAppointmentProposer = async (
-    userId: string,
     appointmentId: number,
   ) => {
-    const {error} = await setAppointmentProposerSpb(userId, appointmentId);
+    const {error} = await setAppointmentProposerSpb(userData.id, appointmentId);
     if (error) {
       throw Error;
     }

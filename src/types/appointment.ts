@@ -28,6 +28,7 @@ export interface AppointmentInsertProps extends AppointmentInsert {
   date?: string;
   time?: string;
   totalAmount?: number;
+  certification_status: boolean
 }
 
 export interface AppointmentProps extends AppointmentInsert {

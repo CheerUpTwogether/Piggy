@@ -158,11 +158,13 @@ export const setPinnedSpb = async (id: string, appointment_id: number) => {
   const {error: updateError} = await supabase
     .from('appointment_participants')
     .update({
-      pinned: !data?.[0]?.pinned,
+      pinned: !data?.[0]?.pinned || false,
     })
     .eq('appointment_id', appointment_id)
     .eq('user_id', id);
-
+    console.log('updateError')
+    console.log(updateError)
+      
   if (updateError) {
     throw updateError;
   }

@@ -173,6 +173,7 @@ export const useAppointmentForm = create<AppointmentFormStore>(set => ({
     appointment_participants_list: [],
     date: null,
     time: '00:00',
+    certification_status: false
   },
   appointmentParticipants: [],
   resetAppointmentForm: () => {
@@ -195,6 +196,7 @@ export const useAppointmentForm = create<AppointmentFormStore>(set => ({
         appointment_participants_list: [],
         date: null,
         time: '00:00',
+        certification_status: false
       },
     }));
   },

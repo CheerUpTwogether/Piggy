@@ -11,30 +11,25 @@ import {
   setAppointmentCancellationAcceptanceSpb,
   setAppointmentCancellationSpb,
   setCertificationStatusSpb,
-  getCertificationStatusSpb,
-  getAppointmentParticipantsSpb,
+  getAppointmentSingleSpb,
 } from '@/supabase/appointmentSpb';
 import {getPiggySpb} from '@/supabase/AuthSpb';
 import AppointmentActionsButton from './AppointmentActionsButton';
-import {Participant, CancelStatus} from '@/types/appointment';
+import { CancelStatus} from '@/types/appointment';
 
 const AppointmentDetail = () => {
   const addToast = useToastStore(state => state.addToast);
   const {userData, setUserDataByKey} = useUserStore();
   const {appointmentForm} = useAppointmentForm();
-  const [cancelStatus, setCancelStatus] = useState<CancelStatus>('nothing');
-  const [myAgreementStatus, setMyAgreementStatus] = useState(''); // 약속 동의 상태
+  const [cancelStatus, setCancelStatus] = useState<CancelStatus>(appointmentForm.user_cancellation_status);
   const [isNearAppointment, setIsNearAppointment] = useState(''); // 약속까지 남은 시간 ('10min', '2hr', 'expired', '')
-  const [certification, setCertification] = useState(false); // 도착 인증 상태
   const [myPiggy, setMyPiggy] = useState<number>(0);
   const {location} = useLocation();
   const navigation = useNavigation();
 
   useEffect(() => {
     getAppointmentCancellationStatus();
-    fetchCertification();
     checkAppointmentTime();
-    fetchAcceptance();
     fetchPiggyData();
   }, [appointmentForm]);
 
@@ -42,39 +37,6 @@ const AppointmentDetail = () => {
     const res = await getPiggySpb(userData.id);
     setMyPiggy(res?.latest_piggy_count);
     setUserDataByKey('piggy', res?.latest_piggy_count);
-  };
-
-  // 나의 약속 수락 상태 확인
-  const fetchAcceptance = async () => {
-    const res = await getAppointmentParticipantsSpb(
-      userData.id,
-      appointmentForm.id,
-    );
-    const myData = (res.data as Participant[]).filter(
-      item => item.nickname === userData.nickname,
-    );
-    setMyAgreementStatus(myData[0]?.agreement_status || '');
-  };
-
-  const fetchCertification = async () => {
-    try {
-      const res = await getCertificationStatusSpb(
-        userData.id,
-        appointmentForm.id,
-      );
-      if (res) {
-        setCertification(res?.data[0]?.certification_status || false);
-      } else {
-        addToast({
-          success: false,
-          text: '위치 정보를 가져올 수 없습니다.',
-          multiText: '네트워크 연결을 확인해주세요.',
-        });
-        throw new Error('인증 상태를 가져오는 데 실패했습니다.');
-      }
-    } catch (err) {
-      throw new Error(`인증 상태 불러오기 실패: ${err.message}`);
-    }
   };
 
   // 약속 2시간 & 10분 전인지 확인
@@ -235,6 +197,8 @@ const AppointmentDetail = () => {
           success: true,
           text: `약속을 ${type ? '수락' : '거절'}했어요.`,
         });
+
+        checkAppointmentStatus()
         navigation.goBack();
       }
     } catch {
@@ -245,14 +209,19 @@ const AppointmentDetail = () => {
     }
   };
 
+  const checkAppointmentStatus = async () => {
+    const {data} =  await getAppointmentSingleSpb(userData.id, appointmentForm.id);
+    console.log(data)
+  }
+
   return (
     <View style={commonStyle.CONTAINER}>
       <AppointmentActionsButton
         appointmentForm={appointmentForm}
         cancelStatus={cancelStatus}
-        myAgreementStatus={myAgreementStatus}
+        //myAgreementStatus={myAgreementStatus}
         isNearAppointment={isNearAppointment}
-        certification={certification}
+        certification={appointmentForm.certification_status}
         appointmentTimeCheck={`${appointmentForm.date}T${appointmentForm.time}:00`}
         handleCertification={handleCertification}
         cancelAppointment={cancelAppointment}
