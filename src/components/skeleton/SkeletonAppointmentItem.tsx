@@ -24,7 +24,7 @@ const SkeletonAppointmentItem = () => {
 
   const interpolateBackground = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#e0e0e0', '#BBB'], // 밝기 변화
+    outputRange: ['#E0E0E0', '#BBB'], // 밝기 변화
   });
 
   const animatedStyle = {
@@ -70,7 +70,7 @@ const SkeletonAppointmentItem = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF',
     marginHorizontal: 12,
     marginTop: 10,
     marginBottom: 10,
@@ -93,19 +93,19 @@ const styles = StyleSheet.create({
   titleSkeleton: {
     width: 150,
     height: 20,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
     borderRadius: 4,
   },
   moreSkeleton: {
     width: 24,
     height: 24,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
     borderRadius: 12,
   },
   textSkeleton: {
     width: '80%',
     height: 16,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
     borderRadius: 4,
     marginTop: 8,
   },
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 100,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
   },
   marginLeftMinus: {
     marginLeft: -8,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   tagSkeleton: {
     width: 100,
     height: 24,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
     borderRadius: 100,
   },
 });

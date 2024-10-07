@@ -78,13 +78,13 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     borderRadius: 100,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
     marginRight: 8,
   },
   textSkeleton: {
     width: 120,
     height: 16,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
     borderRadius: 4,
     marginBottom: 8,
   },
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     width: '48%',
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
   },
 });
 

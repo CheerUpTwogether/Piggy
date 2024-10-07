@@ -4,7 +4,6 @@ import {View, StyleSheet, Animated} from 'react-native';
 const SkeletonBasicProfile = () => {
   const animatedValue = useRef(new Animated.Value(0)).current;
 
-  // 애니메이션 설정
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -24,7 +23,7 @@ const SkeletonBasicProfile = () => {
 
   const interpolateBackground = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#e0e0e0', '#BBB'], // 밝기 변화
+    outputRange: ['#E0E0E0', '#BBB'],
   });
 
   const animatedStyle = {
@@ -52,7 +51,7 @@ const SkeletonBasicProfile = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF',
   },
   myInfoBox: {
     paddingVertical: 24,
@@ -68,13 +67,13 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     borderRadius: 100,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
     marginRight: 8,
   },
   textSkeleton: {
     width: 120,
     height: 16,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
     borderRadius: 4,
     marginBottom: 8,
   },
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
     width: '48%',
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E0E0E0',
   },
 });
 

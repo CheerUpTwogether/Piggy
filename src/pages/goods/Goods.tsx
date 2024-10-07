@@ -13,9 +13,11 @@ import GoodsFlatItem from '@/components/goods/GoodsFlatItem';
 import {GoodsList} from '@/types/gift';
 import {commonStyle} from '@/styles/common';
 import {useToastStore} from '@/store/store';
+import SkeletonGoodsItem from '@/components/skeleton/SkeletonGoodsItem';
 
 const Goods = () => {
   const [goods, setGoods] = useState<GoodsList>([]);
+  const [loading, setLoading] = useState(false);
   const addToast = useToastStore(state => state.addToast);
 
   useFocusEffect(
@@ -26,6 +28,7 @@ const Goods = () => {
 
   const getGoods = async () => {
     try {
+      setLoading(true);
       const res = await getGoodsAPI();
       setGoods(res.data.contents);
     } catch (e) {
@@ -33,6 +36,8 @@ const Goods = () => {
         success: false,
         text: '상품 리스트를 가져오는데 실패했어요.',
       });
+    } finally {
+      // setLoading(false);
     }
   };
 
@@ -43,7 +48,9 @@ const Goods = () => {
           data={goods}
           bounces={false}
           keyExtractor={item => item.product.product_thumb_image_url}
-          renderItem={({item}) => <GoodsFlatItem item={item} />}
+          renderItem={({item}) =>
+            loading ? <SkeletonGoodsItem /> : <GoodsFlatItem item={item} />
+          }
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={renderBanner}
           numColumns={2}
