@@ -109,7 +109,7 @@ const useAppointmentFormHooks = () => {
       setIsProcessing(true);
       const data = await addAppointment();
       await addAppointmentParticipants(data?.[0].id);
-      await updateAppointmentProposer(userData.id, data?.[0].id);
+      //await updateAppointmentProposer(userData.id, data?.[0].id);
       navigation.goBack();
       addToast({
         success: true,
@@ -153,6 +153,7 @@ const useAppointmentFormHooks = () => {
     if (error) {
       throw error;
     }
+    await addAppointmentParticipants(data?.[0].id);
     return data;
   };
 
@@ -172,6 +173,8 @@ const useAppointmentFormHooks = () => {
       participants_uuid,
     );
 
+    await updateAppointmentProposer(userData.id, id);
+
     if (error) {
       await deleteAppointment(id);
       throw Error;
@@ -185,6 +188,7 @@ const useAppointmentFormHooks = () => {
     appointmentId: number,
   ) => {
     const {error} = await setAppointmentProposerSpb(userId, appointmentId);
+    
     if (error) {
       await deleteAppointmentParticipants(appointmentId);
       await deleteAppointment(appointmentId);
