@@ -37,7 +37,8 @@ const Home = () => {
   return (
     <View style={styles.container}>
       {/* 사용자 프로필 */}
-      {loading ? <SkeletonHomeProfile /> : <Profile />}
+      {/* {loading ? <SkeletonHomeProfile /> : <Profile />} */}
+      <Profile />
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
