@@ -107,9 +107,7 @@ const useAppointmentFormHooks = () => {
     }
     try {
       setIsProcessing(true);
-      const data = await addAppointment();
-      await addAppointmentParticipants(data?.[0].id);
-      //await updateAppointmentProposer(userData.id, data?.[0].id);
+       await addAppointment();
       navigation.goBack();
       addToast({
         success: true,
