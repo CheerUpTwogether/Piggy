@@ -1,17 +1,18 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {color_primary, commonStyle} from '@/styles/common';
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '@/types/Router';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useUserStore} from '@/store/store';
 import LinearGradient from 'react-native-linear-gradient';
+import {color_primary, commonStyle} from '@/styles/common';
+import {RootStackParamList} from '@/types/Router';
+import {useUserStore} from '@/store/store';
 import ButtonCouple from '../common/ButtonCouple';
 const basicProfile = require('@/assets/images/basicProfile.png');
 
 const Profile = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {userData} = useUserStore();
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -58,7 +59,6 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   myInfoBox: {
-    // backgroundColor: color_primary,
     paddingVertical: 24,
     paddingHorizontal: 16,
     borderRadius: 20,

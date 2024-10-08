@@ -7,6 +7,7 @@ import {commonStyle} from '@/styles/common';
 import {AppointmentProps} from '@/types/appointment';
 import useAppointmentTimer from '@/hooks/useAppointmentTimer';
 import {useAppointmentForm, useUserStore} from '@/store/store';
+import SkeletonAppointmentItem from '../skeleton/SkeletonAppointmentItem';
 import dayjs from 'dayjs';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
@@ -14,9 +15,11 @@ const basicProfile = require('@/assets/images/basicProfile.png');
 
 const AppointmentItem = ({
   item,
+  loading,
   onPressMore,
 }: {
   item: AppointmentProps;
+  loading: boolean;
   onPressMore: (item: AppointmentProps) => void;
 }) => {
   const navigation = useNavigation<StackNavigation>();
@@ -27,7 +30,6 @@ const AppointmentItem = ({
   const {remainingTime, formattedTime} = useAppointmentTimer(
     item.appointment_date,
   );
-
   // 10분 타이머를 표시할지 결정
   const shouldShowTimer =
     item.agreement_status === 'confirmed' && remainingTime && remainingTime > 0;
@@ -55,109 +57,115 @@ const AppointmentItem = ({
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      {/* 타이머 */}
-      {shouldShowTimer && (
-        <View style={styles.title}>
-          <Text style={commonStyle.BOLD_PRIMARY_20}>{formattedTime}</Text>
-          <TouchableOpacity
-            onPress={() => onPressMore(item)}
-            style={styles.moreWrapper}>
-            <MoreSvg color="#777" style={styles.svg} />
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {/* 모임 타이틀 */}
-      <View style={styles.title}>
-        <Text style={titleFontColor}>{item.subject}</Text>
-        <View style={{flexDirection: 'row'}}>
-          {item.pinned && (
-            <View style={{marginRight: 12}}>
-              <PinSvg color="#777" style={styles.svg} />
+    <>
+      {loading ? (
+        <SkeletonAppointmentItem /> // 로딩 중일 때 스켈레톤 컴포넌트
+      ) : (
+        <TouchableOpacity style={styles.container} onPress={onPress}>
+          {/* 타이머 */}
+          {shouldShowTimer && (
+            <View style={styles.title}>
+              <Text style={commonStyle.BOLD_PRIMARY_20}>{formattedTime}</Text>
+              <TouchableOpacity
+                onPress={() => onPressMore(item)}
+                style={styles.moreWrapper}>
+                <MoreSvg color="#777" style={styles.svg} />
+              </TouchableOpacity>
             </View>
           )}
-          {!shouldShowTimer && (
-            <TouchableOpacity
-              onPress={() => onPressMore(item)}
-              style={styles.moreWrapper}>
-              <MoreSvg color="#777" style={styles.svg} />
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
 
-      {/* 장소 */}
-      <Text style={[contentFontColor, {paddingTop: 4}]}>
-        {item?.place_name || item.address}
-      </Text>
+          {/* 모임 타이틀 */}
+          <View style={styles.title}>
+            <Text style={titleFontColor}>{item.subject}</Text>
+            <View style={{flexDirection: 'row'}}>
+              {item.pinned && (
+                <View style={{marginRight: 12}}>
+                  <PinSvg color="#777" style={styles.svg} />
+                </View>
+              )}
+              {!shouldShowTimer && (
+                <TouchableOpacity
+                  onPress={() => onPressMore(item)}
+                  style={styles.moreWrapper}>
+                  <MoreSvg color="#777" style={styles.svg} />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
 
-      {/* 시간 */}
-      <Text style={[contentFontColor, {paddingTop: 2}]}>
-        {dayjs(item.appointment_date).format('YYYY-MM-DD HH:mm')}
-      </Text>
+          {/* 장소 */}
+          <Text style={[contentFontColor, {paddingTop: 4}]}>
+            {item?.place_name || item.address}
+          </Text>
 
-      <View style={styles.friendsTagContiner}>
-        {/* 친구 리스트 */}
-        <View style={{paddingTop: 16, flexDirection: 'row'}}>
-          {item.appointment_participants_list.map((el, idx) =>
-            el.profile_img_url ? (
-              <Image
-                src={el.profile_img_url}
-                style={[
-                  styles.profileImgUrl,
-                  idx !== 0 && styles.marginLeftMinus,
-                ]}
-                key={el.user_id}
-              />
-            ) : (
-              <View
-                style={[
-                  styles.basicProfileWrapper,
-                  idx !== 0 && styles.marginLeftMinus,
-                ]}>
-                <Image source={basicProfile} style={styles.basicProfile} />
-              </View>
-            ),
-          )}
-        </View>
+          {/* 시간 */}
+          <Text style={[contentFontColor, {paddingTop: 2}]}>
+            {dayjs(item.appointment_date).format('YYYY-MM-DD HH:mm')}
+          </Text>
 
-        {/* 태그 */}
-        <View style={{flexDirection: 'row', gap: 8}}>
-          {item.appointment_status === 'pending' &&
-            item.agreement_status !== 'confirmed' && (
-              <Text style={styles.pinkLabel}>수락 필요</Text>
-            )}
-          {item.appointment_status === 'pending' &&
-            item.agreement_status === 'confirmed' && (
-              <Text style={styles.grayLabel}>다른 사용자의 수락대기중 </Text>
-            )}
+          <View style={styles.friendsTagContiner}>
+            {/* 친구 리스트 */}
+            <View style={{paddingTop: 16, flexDirection: 'row'}}>
+              {item.appointment_participants_list.map((el, idx) =>
+                el.profile_img_url ? (
+                  <Image
+                    src={el.profile_img_url}
+                    style={[
+                      styles.profileImgUrl,
+                      idx !== 0 && styles.marginLeftMinus,
+                    ]}
+                    key={el.user_id}
+                  />
+                ) : (
+                  <View
+                    style={[
+                      styles.basicProfileWrapper,
+                      idx !== 0 && styles.marginLeftMinus,
+                    ]}>
+                    <Image source={basicProfile} style={styles.basicProfile} />
+                  </View>
+                ),
+              )}
+            </View>
 
-          {/* 취소/만료된 경우 */}
-          {(item.appointment_status === 'cancelled' ||
-            item.appointment_status === 'expired') && (
-            <Text style={styles.grayLabel}>취소</Text>
-          )}
+            {/* 태그 */}
+            <View style={{flexDirection: 'row', gap: 8}}>
+              {item.appointment_status === 'pending' &&
+                item.agreement_status !== 'confirmed' && (
+                  <Text style={styles.pinkLabel}>수락 필요</Text>
+                )}
+              {item.appointment_status === 'pending' &&
+                item.agreement_status === 'confirmed' && (
+                  <Text style={styles.grayLabel}>다른 사용자의 수락대기중</Text>
+                )}
 
-          {/* 취소 요청을 한 경우 */}
-          {item.appointment_status === 'confirmed' &&
-            item.user_cancellation_status === 'cancellation-request' && (
-              <Text style={styles.grayLabel}>취소 요청 중</Text>
-            )}
-          {item.user_cancellation_status === 'cancellation-pending' && (
-            <Text style={styles.pinkLabel}>취소 요청 응답 필요</Text>
-          )}
+              {/* 취소/만료된 경우 */}
+              {(item.appointment_status === 'cancelled' ||
+                item.appointment_status === 'expired') && (
+                <Text style={styles.grayLabel}>취소</Text>
+              )}
 
-          {/* 이행된 경우 */}
-          {item.appointment_status === 'fulfilled' &&
-            (item.certification_status ? (
-              <Text style={styles.pinkLabel}>인증 성공</Text>
-            ) : (
-              <Text style={styles.grayLabel}>인증 실패</Text>
-            ))}
-        </View>
-      </View>
-    </TouchableOpacity>
+              {/* 취소 요청을 한 경우 */}
+              {item.appointment_status === 'confirmed' &&
+                item.user_cancellation_status === 'cancellation-request' && (
+                  <Text style={styles.grayLabel}>취소 요청 중</Text>
+                )}
+              {item.user_cancellation_status === 'cancellation-pending' && (
+                <Text style={styles.pinkLabel}>취소 요청 응답 필요</Text>
+              )}
+
+              {/* 이행된 경우 */}
+              {item.appointment_status === 'fulfilled' &&
+                (item.certification_status ? (
+                  <Text style={styles.pinkLabel}>인증 성공</Text>
+                ) : (
+                  <Text style={styles.grayLabel}>인증 실패</Text>
+                ))}
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+    </>
   );
 };
 

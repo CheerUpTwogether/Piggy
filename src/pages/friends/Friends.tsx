@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   Text,
   View,
@@ -22,6 +22,8 @@ import {
 } from '@/supabase/FriendsSpb';
 import {Friend, User} from '@/types/friends';
 import {commonStyle} from '@/styles/common';
+import SkeletonBasicProfile from '@/components/skeleton/SkeletonBasicProfile';
+import SkeletonFriendItem from '@/components/skeleton/SkeletonFriendItem';
 
 import MoreSvg from '@/assets/icons/more.svg';
 const basicProfile = require('@/assets/images/basicProfile.png');
@@ -43,13 +45,17 @@ const Friends = () => {
   const {openModal, closeModal: closeConfirmModal} = useModalStore();
   const {friendsList, onFriendAdded, onFriendRemoved, setFriendsList} =
     useFriendActions([]);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
       fetchFriends();
-      fetchMyData();
     }, []),
   );
+
+  useEffect(() => {
+    fetchMyData();
+  }, []);
 
   const fetchMyData = async () => {
     try {
@@ -70,23 +76,35 @@ const Friends = () => {
         text: '사용자 데이터를 불러오는 중 오류가 발생했습니다.',
         multiText: '다시 시도해주세요.',
       });
+    } finally {
+      setInitialLoading(false);
     }
   };
 
   const fetchFriends = async () => {
-    const friends = await getFriendsSpb(userData.id);
-    if (friends) {
-      // 친구 목록을 닉네임 기준으로 정렬
-      const sortedFriends = friends.sort((a: Friend, b: Friend) =>
-        a.nickname.localeCompare(b.nickname),
-      );
-      setFriendsList(sortedFriends);
-    } else {
+    try {
+      const friends = await getFriendsSpb(userData.id);
+      if (friends) {
+        // 친구 목록을 닉네임 기준으로 정렬
+        const sortedFriends = friends.sort((a: Friend, b: Friend) =>
+          a.nickname.localeCompare(b.nickname),
+        );
+        setFriendsList(sortedFriends);
+      } else {
+        addToast({
+          success: false,
+          text: '친구 목록을 불러오지 못했습니다.',
+          multiText: '다시 시도해주세요.',
+        });
+      }
+    } catch (error) {
       addToast({
         success: false,
-        text: '친구 목록을 불러오지 못했습니다.',
+        text: '친구 목록을 불러오는 중 오류가 발생했습니다.',
         multiText: '다시 시도해주세요.',
       });
+    } finally {
+      setInitialLoading(false);
     }
   };
 
@@ -164,36 +182,52 @@ const Friends = () => {
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
       <ScrollView style={commonStyle.CONTAINER}>
         <View style={{marginBottom: 30}}>
-          <TouchableOpacity
-            style={styles.profileWrapper}
-            activeOpacity={0.8}
-            onPress={() => handleProfilePress(myData || userData)}>
-            {userData.profile_img_url ? (
-              <View style={styles.profileBorder}>
-                <Image
-                  source={{uri: userData.profile_img_url}}
-                  style={styles.profile}
-                  alt="profile"
-                />
-              </View>
-            ) : (
-              <View style={[styles.basicProfileWrapper, styles.profile]}>
-                <Image source={basicProfile} style={styles.basicProfile} />
-              </View>
-            )}
+          {initialLoading ? (
+            <SkeletonBasicProfile />
+          ) : (
+            <TouchableOpacity
+              style={styles.profileWrapper}
+              activeOpacity={0.8}
+              onPress={() => handleProfilePress(myData || userData)}>
+              {userData.profile_img_url ? (
+                <View style={styles.profileBorder}>
+                  <Image
+                    source={{uri: userData.profile_img_url}}
+                    style={styles.profile}
+                    alt="profile"
+                  />
+                </View>
+              ) : (
+                <View style={[styles.basicProfileWrapper, styles.profile]}>
+                  <Image source={basicProfile} style={styles.basicProfile} />
+                </View>
+              )}
 
-            <View style={styles.myData}>
-              <Text style={commonStyle.MEDIUM_33_20}>{userData.nickname}</Text>
-              <Text style={commonStyle.REGULAR_AA_14}>{userData.email}</Text>
-            </View>
-          </TouchableOpacity>
+              <View style={styles.myData}>
+                <Text style={commonStyle.MEDIUM_33_20}>
+                  {userData.nickname}
+                </Text>
+                <Text style={commonStyle.REGULAR_AA_14}>{userData.email}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
           <View style={styles.friendListWrapper}>
             <View style={{flexDirection: 'row'}}>
               <Text style={commonStyle.MEDIUM_33_16}>친구 </Text>
               <Text style={commonStyle.BOLD_33_16}>{friendsList.length}</Text>
               <Text style={commonStyle.MEDIUM_33_16}>명</Text>
             </View>
-            {friendsList.length === 0 ? (
+
+            {initialLoading ? (
+              // 로딩 중일 때 스켈레톤을 표시
+              <View style={{margin: 20, gap: 10}}>
+                {Array.from({length: Math.max(friendsList.length, 8)}).map(
+                  (_, index) => (
+                    <SkeletonFriendItem key={index} />
+                  ),
+                )}
+              </View>
+            ) : friendsList.length === 0 ? (
               <View style={{marginTop: 60}}>
                 <EmptyResult
                   reason="추가된 친구가 없어요."
@@ -201,6 +235,7 @@ const Friends = () => {
                 />
               </View>
             ) : (
+              // 로딩이 끝났고 친구 목록이 있을 때 목록 표시
               <View style={styles.friendList}>
                 {friendsList.map(item => (
                   <View key={item.id} style={[styles.friendContainer]}>
