@@ -18,21 +18,25 @@ export const getNotificationSpb = async (user_id: string) => {
 
 // 안 읽은 알림이 있는지 확인
 export const getUnConfirmNotificationSpb = async (user_id: string) => {
-  const {data, error} = await supabase
-    .from('notification_log')
-    .select('*')
-    .eq('user_id', user_id)
-    .eq('notification_displayed', true)
-    .eq('confirmed_status', false);
+  try {
+    const {data, error} = await supabase
+      .from('notification_log')
+      .select('*')
+      .eq('user_id', user_id)
+      .eq('notification_displayed', true)
+      .eq('confirmed_status', false);
 
-  if (error) {
-    throw error;
-  }
+    if (error) {
+      throw error;
+    }
 
-  if (data.length > 0) {
-    return true;
-  } else {
-    return false;
+    if (data.length > 0) {
+      return data;
+    } else {
+      return [];
+    }
+  } catch (e) {
+    throw e;
   }
 };
 
