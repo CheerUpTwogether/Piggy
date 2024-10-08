@@ -1,9 +1,9 @@
-import {color_primary, commonStyle} from '@/styles/common';
+import {color_primary, color_sub, commonStyle} from '@/styles/common';
 import {TabBarProps} from '@/types/Common';
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-const TabBar = ({categories, active, onChange}: TabBarProps) => {
+const TabBar = ({categories, active, onChange, allData = []}: TabBarProps) => {
   return (
     <View style={styles.tab}>
       {categories.map(el => (
@@ -20,6 +20,9 @@ const TabBar = ({categories, active, onChange}: TabBarProps) => {
             }>
             {el.label}
           </Text>
+          {allData.some(data => data.filter_criteria === el.value) && (
+            <View style={styles.confirmState} />
+          )}
         </TouchableOpacity>
       ))}
     </View>
@@ -38,12 +41,20 @@ const styles = StyleSheet.create({
   tabBtn: {
     paddingHorizontal: 20,
     marginHorizontal: 16,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
   },
   tabBtnActive: {
     backgroundColor: color_primary,
     borderRadius: 100,
     paddingVertical: 4,
+  },
+  confirmState: {
+    width: 10,
+    height: 10,
+    borderRadius: 8,
+    backgroundColor: color_sub,
   },
 });
 

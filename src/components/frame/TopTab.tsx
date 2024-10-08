@@ -63,10 +63,11 @@ const Title = ({title}: {title: string}) => {
 const Alarm = () => {
   const navigation = useNavigation<NavigationProp>();
   const {userData} = useUserStore();
-  const [isUnConfirmAlarm, setIsUnConfirmAlarm] = useState('init');
+  const [isUnConfirmAlarm, setIsUnConfirmAlarm] = useState(false);
   const handle = async () => {
-    const isUnConfirm = await getUnConfirmNotificationSpb(userData.id);
-    setIsUnConfirmAlarm(isUnConfirm.toString());
+    const unConfirmData = await getUnConfirmNotificationSpb(userData.id);
+    const isUnConfirm = unConfirmData.length > 0;
+    setIsUnConfirmAlarm(isUnConfirm);
   };
 
   useFocusEffect(
@@ -81,9 +82,7 @@ const Alarm = () => {
       style={styles.icon}
       activeOpacity={0.8}
       onPress={() => navigation.navigate('Alarm')}>
-      {isUnConfirmAlarm === 'true' && (
-        <View style={styles.alarmConfirmWrapper} />
-      )}
+      {isUnConfirmAlarm && <View style={styles.alarmConfirmWrapper} />}
       <AlertSvg width={24} height={24} />
     </TouchableOpacity>
   );
