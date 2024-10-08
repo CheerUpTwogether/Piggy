@@ -108,7 +108,7 @@ const AppointmentItem = ({
                   styles.profileImgUrl,
                   idx !== 0 && styles.marginLeftMinus,
                 ]}
-                key={el.user_id}
+                key={el.user_id + item.ap_id}
               />
             ) : (
               <View

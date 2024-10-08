@@ -1,12 +1,14 @@
 import {create} from 'zustand';
 import {
   AppointmentFormStore,
+  AppointmentStore,
   ModalStore,
   NotificationStore,
   ToastStore,
   UserStore,
 } from '@/types/common';
 import {ModalProps} from 'react-native';
+import { AppointmentProps } from '@/types/appointment';
 
 export const useUserStore = create<UserStore>(set => ({
   userData: {
@@ -224,3 +226,9 @@ export const useNotificationStore = create<NotificationStore>(set => ({
   handleAllConfirmAlarm: async () => {},
   setHandleAllConfirmAlarm: fn => set(() => ({handleAllConfirmAlarm: fn})),
 }));
+
+export const useAppointmentsStore = create<AppointmentStore>(set => ({
+  appointments: [],
+  setAppointments: (appointments:AppointmentProps[]) => set(() => ({appointments})),
+  deleteAppointment: (appointmentId: number) => set((state) => ({appointments: state.appointments.filter(el => el.ap_id !== appointmentId)})),
+}))

@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
 import {useLocation} from '@/hooks/useLocation';
-import {useAppointmentForm, useToastStore, useUserStore} from '@/store/store';
+import {useAppointmentForm, useAppointmentsStore, useToastStore, useUserStore} from '@/store/store';
 import {commonStyle} from '@/styles/common';
 import {
   getAppointmentCancellationStatusSpb,
@@ -13,6 +13,7 @@ import {
   setCertificationStatusSpb,
   getCertificationStatusSpb,
   getAppointmentParticipantsSpb,
+  getAppointmentStatusSpb,
 } from '@/supabase/appointmentSpb';
 import {getPiggySpb} from '@/supabase/AuthSpb';
 import AppointmentActionsButton from './AppointmentActionsButton';
@@ -29,6 +30,7 @@ const AppointmentDetail = () => {
   const [myPiggy, setMyPiggy] = useState<number>(0);
   const {location} = useLocation();
   const navigation = useNavigation();
+  const {deleteAppointment} = useAppointmentsStore()
 
   useEffect(() => {
     getAppointmentCancellationStatus();
@@ -214,7 +216,7 @@ const AppointmentDetail = () => {
     }
   };
 
-  // 취소 수락 확인
+  // 약속 수락/거절 확인
   const setAppointmentAcceptance = async (type: boolean) => {
     try {
       // 내 피기 보다 약속 피기가 많을 경우 실패 토스트
@@ -235,7 +237,15 @@ const AppointmentDetail = () => {
           success: true,
           text: `약속을 ${type ? '수락' : '거절'}했어요.`,
         });
-        navigation.goBack();
+
+        const res = await getAppointmentStatusSpb(appointmentForm?.id)
+        if(res.appointment_status === 'cancelled' || res.appointment_status === 'confirmed') {
+          deleteAppointment(appointmentForm?.id)
+        }
+        
+        
+        navigation.navigate('Home', {id: appointmentForm?.id});
+        
       }
     } catch {
       addToast({

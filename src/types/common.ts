@@ -1,6 +1,6 @@
 import {GestureResponderEvent, KeyboardTypeOptions} from 'react-native';
 import {SvgProps} from 'react-native-svg';
-import {AppointmentInsertProps} from './appointment';
+import {AppointmentInsertProps, AppointmentProps} from './appointment';
 import {FriendProp, FriendRelationshipRow} from './friend';
 
 export interface CheckBoxProps {
@@ -265,7 +265,12 @@ export interface AppointmentFormStore {
   resetAppointmentForm: () => void;
 }
 
-interface NotificationStore {
+export interface NotificationStore {
   setHandleAllConfirmAlarm: (fn: () => Promise<void>) => void;
   handleAllConfirmAlarm: () => Promise<void>;
+}
+
+export interface AppointmentStore {
+  appointments: AppointmentProps[];
+  setAppointments: (appointments: AppointmentProps[]) => void;
 }
