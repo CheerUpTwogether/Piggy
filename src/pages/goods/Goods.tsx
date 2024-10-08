@@ -37,7 +37,7 @@ const Goods = () => {
         text: '상품 리스트를 가져오는데 실패했어요.',
       });
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
 

@@ -23,6 +23,7 @@ import {
 import {Friend, User} from '@/types/friends';
 import {commonStyle} from '@/styles/common';
 import SkeletonBasicProfile from '@/components/skeleton/SkeletonBasicProfile';
+import SkeletonFriendItem from '@/components/skeleton/SkeletonFriendItem';
 
 import MoreSvg from '@/assets/icons/more.svg';
 const basicProfile = require('@/assets/images/basicProfile.png');
@@ -225,7 +226,7 @@ const Friends = () => {
               <View style={{margin: 20, gap: 10}}>
                 {Array.from({length: Math.max(friendsList.length, 8)}).map(
                   (_, index) => (
-                    <SkeletonBasicProfile key={index} />
+                    <SkeletonFriendItem />
                   ),
                 )}
               </View>
