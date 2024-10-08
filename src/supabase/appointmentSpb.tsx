@@ -303,17 +303,16 @@ export const getAppointmentSingleSpb = async (
 
 // 약속 상태 확인
 export const getAppointmentStatusSpb = async (appointment_id: number) => {
-  try {
+  
     const {data, error} = await supabase
       .from('appointment')
       .select('appointment_status')
-      .eq('appointment_id', appointment_id)
+      .eq('id', appointment_id)
       .single();
     if (error) {
+      console.log(error)
       throw error;
     }
     return data;
-  } catch (e) {
-    throw e;
-  }
 };
+
