@@ -52,6 +52,8 @@ const SkeletonBasicProfile = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFF',
+    marginHorizontal: 16,
+    marginVertical: 20,
   },
   myInfoBox: {
     paddingVertical: 24,
@@ -64,8 +66,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileImgSkeleton: {
-    width: 68,
-    height: 68,
+    width: 64,
+    height: 64,
     borderRadius: 100,
     backgroundColor: '#E0E0E0',
     marginRight: 8,

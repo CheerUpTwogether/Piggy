@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -17,18 +17,17 @@ import SkeletonGoodsItem from '@/components/skeleton/SkeletonGoodsItem';
 
 const Goods = () => {
   const [goods, setGoods] = useState<GoodsList>([]);
-  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const addToast = useToastStore(state => state.addToast);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       getGoods();
     }, []),
   );
 
   const getGoods = async () => {
     try {
-      setLoading(true);
       const res = await getGoodsAPI();
       setGoods(res.data.contents);
     } catch (e) {
@@ -37,28 +36,38 @@ const Goods = () => {
         text: '상품 리스트를 가져오는데 실패했어요.',
       });
     } finally {
-      setLoading(false);
+      setInitialLoading(false);
     }
   };
 
+  // 스켈레톤 임시 데이터
+  const skeletonData = Array.from({length: 6}).map((_, index) => ({
+    product: {
+      product_thumb_image_url: `skeleton-${index}`,
+      product_name: '',
+      brand_name: '',
+      product_price: 0,
+      brand_image_url: '',
+      product_image_url: '',
+    },
+  }));
+
   return (
     <View style={styles.container}>
-      <View>
-        <FlatList
-          data={goods}
-          bounces={false}
-          keyExtractor={item => item.product.product_thumb_image_url}
-          renderItem={({item}) =>
-            loading ? <SkeletonGoodsItem /> : <GoodsFlatItem item={item} />
-          }
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={renderBanner}
-          numColumns={2}
-          style={{
-            paddingHorizontal: 8,
-          }}
-        />
-      </View>
+      <FlatList
+        data={initialLoading ? skeletonData : goods}
+        bounces={false}
+        keyExtractor={item => item.product.product_thumb_image_url}
+        renderItem={({item}) =>
+          initialLoading ? <SkeletonGoodsItem /> : <GoodsFlatItem item={item} />
+        }
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={renderBanner}
+        numColumns={2}
+        style={{
+          paddingHorizontal: 8,
+        }}
+      />
     </View>
   );
 };
