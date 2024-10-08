@@ -226,7 +226,7 @@ const Friends = () => {
               <View style={{margin: 20, gap: 10}}>
                 {Array.from({length: Math.max(friendsList.length, 8)}).map(
                   (_, index) => (
-                    <SkeletonFriendItem />
+                    <SkeletonFriendItem key={index} />
                   ),
                 )}
               </View>
