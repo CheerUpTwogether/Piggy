@@ -43,7 +43,7 @@ export const setAppointmentSpb = ({
 // 약속 참여자 업데이트
 export const setAppointmentParticipantsSpb = (
   appointment_id: number,
-  participants_uuid: string,
+  participants_uuid: string[],
 ) => {
   return supabase.rpc('insert_appointment_participants', {
     appointment_id,
@@ -291,19 +291,14 @@ export const getAppointmentSingleSpb = async (
   id: string,
   appointment_id: number,
 ) => {
-  try {
-    return await supabase.rpc('select_appointment_single_detail', {
-      appointment_id_int: appointment_id,
-      user_uuid: id,
-    });
-  } catch (e) {
-    throw e;
-  }
+  return await supabase.rpc('select_appointment_single_detail', {
+    appointment_id_int: appointment_id,
+    user_uuid: id,
+  });
 };
 
 // 약속 상태 확인
 export const getAppointmentStatusSpb = async (appointment_id: number) => {
-  try {
     const {data, error} = await supabase
       .from('appointment')
       .select('appointment_status')
@@ -313,7 +308,19 @@ export const getAppointmentStatusSpb = async (appointment_id: number) => {
       throw error;
     }
     return data;
-  } catch (e) {
-    throw e;
-  }
 };
+
+
+export const deleteAppointmentSpb  =  (appointmentId: number) => {
+  return supabase
+    .from('appointment')
+    .delete()
+    .eq('appointment_id', appointmentId)
+}
+
+export const deleteAppointmentParticipantsSpb  = (appointmentId: number) => {
+  return supabase 
+    .from('appointment_participants')
+    .delete()
+    .eq('appointment_id', appointmentId)
+}
