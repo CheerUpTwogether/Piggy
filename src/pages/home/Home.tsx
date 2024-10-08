@@ -24,7 +24,7 @@ const Home = () => {
     bottomSheetShow,
     setBottomSheetShow,
     changeSort,
-    loading,
+    initialLoading,
   } = useHomeAppointments();
   const flatListRef = useRef<FlatList>(null); // 카테고리 변경 시 스크롤 최상단으로 이동
 
@@ -37,8 +37,7 @@ const Home = () => {
   return (
     <View style={styles.container}>
       {/* 사용자 프로필 */}
-      {/* {loading ? <SkeletonHomeProfile /> : <Profile />} */}
-      <Profile />
+      {initialLoading ? <SkeletonHomeProfile /> : <Profile />}
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
@@ -46,7 +45,6 @@ const Home = () => {
       </View>
 
       {/* 약속 리스트 */}
-
       <View
         style={{
           backgroundColor: appointments?.length ? color_ef : '#fff',
@@ -61,12 +59,11 @@ const Home = () => {
               item={item}
               onPressMore={onPressMore}
               onPressFix={onPressFix}
-              loading={loading}
+              loading={initialLoading}
             />
           )}
           ListEmptyComponent={
-            loading ? (
-              // 로딩 중일 때 스켈레톤 표시
+            initialLoading ? (
               <View style={{flex: 1, marginTop: 40}}>
                 <SkeletonAppointmentItem />
               </View>
