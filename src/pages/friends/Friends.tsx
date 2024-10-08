@@ -45,8 +45,7 @@ const Friends = () => {
   const {openModal, closeModal: closeConfirmModal} = useModalStore();
   const {friendsList, onFriendAdded, onFriendRemoved, setFriendsList} =
     useFriendActions([]);
-  const [loading, setLoading] = useState(false);
-  const [myLoading, setMyLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -59,7 +58,6 @@ const Friends = () => {
   }, []);
 
   const fetchMyData = async () => {
-    setMyLoading(true);
     try {
       const res = await getUsersSpb(userData.id, userData.nickname);
       if (res && res.length > 0) {
@@ -79,12 +77,11 @@ const Friends = () => {
         multiText: '다시 시도해주세요.',
       });
     } finally {
-      setMyLoading(false);
+      setInitialLoading(false);
     }
   };
 
   const fetchFriends = async () => {
-    setLoading(true);
     try {
       const friends = await getFriendsSpb(userData.id);
       if (friends) {
@@ -107,7 +104,7 @@ const Friends = () => {
         multiText: '다시 시도해주세요.',
       });
     } finally {
-      setLoading(false);
+      setInitialLoading(false);
     }
   };
 
@@ -185,7 +182,7 @@ const Friends = () => {
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
       <ScrollView style={commonStyle.CONTAINER}>
         <View style={{marginBottom: 30}}>
-          {myLoading ? (
+          {initialLoading ? (
             <SkeletonBasicProfile />
           ) : (
             <TouchableOpacity
@@ -221,7 +218,7 @@ const Friends = () => {
               <Text style={commonStyle.MEDIUM_33_16}>명</Text>
             </View>
 
-            {loading ? (
+            {initialLoading ? (
               // 로딩 중일 때 스켈레톤을 표시
               <View style={{margin: 20, gap: 10}}>
                 {Array.from({length: Math.max(friendsList.length, 8)}).map(
