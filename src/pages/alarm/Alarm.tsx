@@ -38,7 +38,6 @@ import AppointmentSvg from '@/assets/icons/appointment.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
 import GradeSvg from '@/assets/icons/grade.svg';
 import XSvg from '@/assets/icons/X.svg';
-import MoreSvg from '@/assets/icons/more.svg';
 
 const categories = [
   {
@@ -209,16 +208,16 @@ const Alarm = () => {
   const handleAllConfirmAlarm = async () => {
     try {
       // 모두다 읽음 상태일 경우
-      // console.log(filterData);
-      // const avaliableConfirm = filterData.some(item => !item.confirmed_status);
-
-      // if (!avaliableConfirm) {
-      //   addToast({
-      //     success: false,
-      //     text: '읽을 알림 내역이 없습니다.',
-      //   });
-      //   return;
-      // }
+      const avaliableConfirm = notification
+        .filter(el => el.filter_criteria === active)
+        .some(item => !item.confirmed_status);
+      if (!avaliableConfirm) {
+        addToast({
+          success: false,
+          text: '읽을 알림 내역이 없습니다.',
+        });
+        return;
+      }
       const res = await setAllConfirmNotificationSpb(userData.id, active);
       if (!res || res.length === 0) {
         addToast({
@@ -330,13 +329,16 @@ const Alarm = () => {
       fetchNotificatioLog();
     });
     fetchNotificatioLog();
-    // 탑바 호출을 위해 함수 설정
-    setHandleAllConfirmAlarm(handleAllConfirmAlarm);
 
     return () => {
       unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    // 탑바 모두읽음 동작을 위해 함수 설정
+    setHandleAllConfirmAlarm(handleAllConfirmAlarm);
+  }, [notification]);
 
   return (
     <View style={{...commonStyle.CONTAINER, marginHorizontal: -16}}>
