@@ -98,9 +98,7 @@ const Alarm = () => {
     el => el.filter_criteria === active,
   );
 
-  const filterUnConfirmData = notification.filter(
-    el => el.confirmed_status === false,
-  );
+  const filterUnConfirmData = notification.filter(el => !el.confirmed_status);
 
   const handleClickAlarm = async (
     notification_id: number,
