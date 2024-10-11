@@ -26,10 +26,12 @@ const AppointmentItem = ({
   const {setAppointmentForm} = useAppointmentForm();
   const {userData} = useUserStore();
   const cancelStatus = ['cancelled', 'expired'];
+
   // useAppointmentTimer 타이머 훅 호출
   const {remainingTime, formattedTime} = useAppointmentTimer(
     item.appointment_date,
   );
+
   // 10분 타이머를 표시할지 결정
   const shouldShowTimer =
     item.agreement_status === 'confirmed' && remainingTime && remainingTime > 0;
@@ -59,7 +61,7 @@ const AppointmentItem = ({
   return (
     <>
       {loading ? (
-        <SkeletonAppointmentItem /> // 로딩 중일 때 스켈레톤 컴포넌트
+        <SkeletonAppointmentItem />
       ) : (
         <TouchableOpacity style={styles.container} onPress={onPress}>
           {/* 타이머 */}
@@ -98,50 +100,26 @@ const AppointmentItem = ({
             {item?.place_name || item.address}
           </Text>
 
-      <View style={styles.friendsTagContiner}>
-        {/* 친구 리스트 */}
-        <View style={{paddingTop: 16, flexDirection: 'row'}}>
-          {item.appointment_participants_list.map((el, idx) =>
-            el.profile_img_url ? (
-              <Image
-                src={el.profile_img_url}
-                style={[
-                  styles.profileImgUrl,
-                  idx !== 0 && styles.marginLeftMinus,
-                ]}
-                key={el.user_id + item.ap_id}
-              />
-            ) : (
-              <View
-                style={[
-                  styles.basicProfileWrapper,
-                  idx !== 0 && styles.marginLeftMinus,
-                ]}>
-                <Image source={basicProfile} style={styles.basicProfile} />
-              </View>
-            ),
-          )}
-        </View>
-
+          {/* 친구 리스트 */}
           <View style={styles.friendsTagContiner}>
-            {/* 친구 리스트 */}
             <View style={{paddingTop: 16, flexDirection: 'row'}}>
               {item.appointment_participants_list.map((el, idx) =>
                 el.profile_img_url ? (
                   <Image
-                    src={el.profile_img_url}
+                    source={{uri: el.profile_img_url}}
                     style={[
                       styles.profileImgUrl,
                       idx !== 0 && styles.marginLeftMinus,
                     ]}
-                    key={el.user_id}
+                    key={el.user_id + item.ap_id}
                   />
                 ) : (
                   <View
                     style={[
                       styles.basicProfileWrapper,
                       idx !== 0 && styles.marginLeftMinus,
-                    ]}>
+                    ]}
+                    key={el.user_id + item.ap_id}>
                     <Image source={basicProfile} style={styles.basicProfile} />
                   </View>
                 ),
@@ -225,8 +203,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: '#ddd',
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#fff',
   },
   basicProfileWrapper: {
@@ -264,13 +240,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 100,
     ...commonStyle.BOLD_PRIMARY_14,
-  },
-  greenLabel: {
-    backgroundColor: '#EBFFF9',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 100,
-    ...commonStyle.BOLD_SUB_14,
   },
   moreWrapper: {
     width: 48,

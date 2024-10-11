@@ -1,7 +1,12 @@
 import {useCallback, useEffect, useState} from 'react';
 import {Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useAppointmentsStore, useModalStore, useToastStore, useUserStore} from '@/store/store';
+import {
+  useAppointmentsStore,
+  useModalStore,
+  useToastStore,
+  useUserStore,
+} from '@/store/store';
 import {
   getAppointmentsSpb,
   setListDisplaySpb,
@@ -35,8 +40,8 @@ const useHomeAppointments = () => {
   const addToast = useToastStore(state => state.addToast);
   const {openModal, closeModal} = useModalStore();
   const {userData, setUserDataByKey} = useUserStore();
-  const navigation = useNavigation<StackNavigation>();  
-  const {appointments, setAppointments} = useAppointmentsStore()
+  const navigation = useNavigation<StackNavigation>();
+  const {appointments, setAppointments} = useAppointmentsStore();
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
@@ -245,7 +250,7 @@ const useHomeAppointments = () => {
     closeModal();
   };
 
-  const deleteAppointmentByChangeStatus =  (appointmentId: number) => {
+  const deleteAppointmentByChangeStatus = (appointmentId: number) => {
     setAppointments(prev => prev.filter(el => el.ap_id !== appointmentId));
   };
 
@@ -260,7 +265,7 @@ const useHomeAppointments = () => {
     createButtonList,
     bottomSheetShow,
     setBottomSheetShow,
-    deleteAppointmentByChangeStatus
+    deleteAppointmentByChangeStatus,
     initialLoading,
   };
 };
