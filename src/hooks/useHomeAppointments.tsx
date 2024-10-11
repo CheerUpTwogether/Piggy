@@ -39,8 +39,8 @@ const useHomeAppointments = () => {
   const {appointments, setAppointments} = useAppointmentsStore()
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
-
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -54,7 +54,13 @@ const useHomeAppointments = () => {
 
   useEffect(() => {
     checkAlarmModal();
+    fetchInitialAppointments();
   }, []);
+
+  const fetchInitialAppointments = async () => {
+    await getAppointment(sort);
+    setInitialLoading(false);
+  };
 
   const createButtonList = () => {
     const appointment = appointments.find(el => el.ap_id === selectedId);
@@ -239,7 +245,6 @@ const useHomeAppointments = () => {
     closeModal();
   };
 
-  // deleteAppointmentByChangeStatus
   const deleteAppointmentByChangeStatus =  (appointmentId: number) => {
     setAppointments(prev => prev.filter(el => el.ap_id !== appointmentId));
   };
@@ -256,6 +261,7 @@ const useHomeAppointments = () => {
     bottomSheetShow,
     setBottomSheetShow,
     deleteAppointmentByChangeStatus
+    initialLoading,
   };
 };
 

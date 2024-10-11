@@ -2,6 +2,7 @@ import {GestureResponderEvent, KeyboardTypeOptions} from 'react-native';
 import {SvgProps} from 'react-native-svg';
 import {AppointmentInsertProps, AppointmentProps} from './appointment';
 import {FriendProp, FriendRelationshipRow} from './friend';
+import {Alaram} from './alarm';
 
 export interface CheckBoxProps {
   isChecked: boolean;
@@ -189,6 +190,7 @@ export interface TabBarProps {
   categories: {label: string; value: string}[];
   active: string;
   onChange: (value: string) => void;
+  allData: Alaram[];
 }
 export type KeyPadItemType =
   | '1'

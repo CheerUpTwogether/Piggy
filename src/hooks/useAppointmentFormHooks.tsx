@@ -2,6 +2,8 @@ import {useCallback, useState} from 'react';
 import {useAppointmentForm, useUserStore, useToastStore} from '@/store/store';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
+  deleteAppointmentParticipantsSpb,
+  deleteAppointmentSpb,
   setAppointmentParticipantsSpb,
   setAppointmentProposerSpb,
   setAppointmentSpb,
@@ -105,9 +107,7 @@ const useAppointmentFormHooks = () => {
     }
     try {
       setIsProcessing(true);
-      const data = await addAppointment();
-      await addAppointmentParticipants(data?.[0].id);
-      await updateAppointmentProposer(userData.id, data?.[0].id);
+       await addAppointment();
       navigation.goBack();
       addToast({
         success: true,
@@ -151,11 +151,12 @@ const useAppointmentFormHooks = () => {
     if (error) {
       throw error;
     }
+    await addAppointmentParticipants(data?.[0].id);
     return data;
   };
 
   // 약속 참석자 row 추가
-  const addAppointmentParticipants = async (id: string) => {
+  const addAppointmentParticipants = async (id: number) => {
     if (!appointmentForm.appointment_participants_list) {
       return;
     }
@@ -170,7 +171,10 @@ const useAppointmentFormHooks = () => {
       participants_uuid,
     );
 
+    await updateAppointmentProposer(userData.id, id);
+
     if (error) {
+      await deleteAppointment(id);
       throw Error;
     }
     return data;
@@ -182,9 +186,22 @@ const useAppointmentFormHooks = () => {
     appointmentId: number,
   ) => {
     const {error} = await setAppointmentProposerSpb(userId, appointmentId);
+    
     if (error) {
+      await deleteAppointmentParticipants(appointmentId);
+      await deleteAppointment(appointmentId);
       throw Error;
     }
+  };
+
+  // 약속 생성 api 실패로 인한 약속 삭제
+  const deleteAppointment = async (appointmentId: number) => {
+    await deleteAppointmentSpb(appointmentId);
+  };
+
+  // 약속 생성 api 실패로 인한 약속 참여자 삭제
+  const deleteAppointmentParticipants = async (appointmentId: number) => {
+    await deleteAppointmentParticipantsSpb(appointmentId);
   };
 
   return {
