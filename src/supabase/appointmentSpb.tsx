@@ -302,14 +302,14 @@ export const getAppointmentStatusSpb = async (appointment_id: number) => {
     const {data, error} = await supabase
       .from('appointment')
       .select('appointment_status')
-      .eq('appointment_id', appointment_id)
+      .eq('id', appointment_id)
       .single();
     if (error) {
+      console.log(error)
       throw error;
     }
     return data;
 };
-
 
 export const deleteAppointmentSpb  =  (appointmentId: number) => {
   return supabase
@@ -324,3 +324,4 @@ export const deleteAppointmentParticipantsSpb  = (appointmentId: number) => {
     .delete()
     .eq('appointment_id', appointmentId)
 }
+

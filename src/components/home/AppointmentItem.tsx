@@ -98,10 +98,30 @@ const AppointmentItem = ({
             {item?.place_name || item.address}
           </Text>
 
-          {/* 시간 */}
-          <Text style={[contentFontColor, {paddingTop: 2}]}>
-            {dayjs(item.appointment_date).format('YYYY-MM-DD HH:mm')}
-          </Text>
+      <View style={styles.friendsTagContiner}>
+        {/* 친구 리스트 */}
+        <View style={{paddingTop: 16, flexDirection: 'row'}}>
+          {item.appointment_participants_list.map((el, idx) =>
+            el.profile_img_url ? (
+              <Image
+                src={el.profile_img_url}
+                style={[
+                  styles.profileImgUrl,
+                  idx !== 0 && styles.marginLeftMinus,
+                ]}
+                key={el.user_id + item.ap_id}
+              />
+            ) : (
+              <View
+                style={[
+                  styles.basicProfileWrapper,
+                  idx !== 0 && styles.marginLeftMinus,
+                ]}>
+                <Image source={basicProfile} style={styles.basicProfile} />
+              </View>
+            ),
+          )}
+        </View>
 
           <View style={styles.friendsTagContiner}>
             {/* 친구 리스트 */}
