@@ -342,7 +342,7 @@ const Alarm = () => {
   useEffect(() => {
     // 탑바 모두읽음 동작을 위해 함수 설정
     setHandleAllConfirmAlarm(handleAllConfirmAlarm);
-  }, [notification]);
+  }, [notification, active]);
 
   return (
     <View style={{...commonStyle.CONTAINER, marginHorizontal: -16}}>
