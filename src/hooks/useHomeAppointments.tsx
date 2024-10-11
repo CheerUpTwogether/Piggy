@@ -39,8 +39,8 @@ const useHomeAppointments = () => {
   const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
-
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -54,7 +54,13 @@ const useHomeAppointments = () => {
 
   useEffect(() => {
     checkAlarmModal();
+    fetchInitialAppointments();
   }, []);
+
+  const fetchInitialAppointments = async () => {
+    await getAppointment(sort);
+    setInitialLoading(false);
+  };
 
   const createButtonList = () => {
     const appointment = appointments.find(el => el.ap_id === selectedId);
@@ -123,6 +129,7 @@ const useHomeAppointments = () => {
       userData.id,
       categories.filter(el => el.value === sortValue)[0].status,
     );
+
     if (error) {
       addToast({
         success: false,
@@ -249,6 +256,7 @@ const useHomeAppointments = () => {
     createButtonList,
     bottomSheetShow,
     setBottomSheetShow,
+    initialLoading,
   };
 };
 
