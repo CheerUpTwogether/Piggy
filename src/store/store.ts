@@ -8,7 +8,7 @@ import {
   UserStore,
 } from '@/types/common';
 import {ModalProps} from 'react-native';
-import { AppointmentProps } from '@/types/appointment';
+import {AppointmentProps} from '@/types/appointment';
 
 export const useUserStore = create<UserStore>(set => ({
   userData: {
@@ -229,6 +229,10 @@ export const useNotificationStore = create<NotificationStore>(set => ({
 
 export const useAppointmentsStore = create<AppointmentStore>(set => ({
   appointments: [],
-  setAppointments: (appointments:AppointmentProps[]) => set(() => ({appointments})),
-  deleteAppointment: (appointmentId: number) => set((state) => ({appointments: state.appointments.filter(el => el.ap_id !== appointmentId)})),
-}))
+  setAppointments: (appointments: AppointmentProps[]) =>
+    set(() => ({appointments})),
+  deleteAppointment: (appointmentId: number) =>
+    set(state => ({
+      appointments: state.appointments.filter(el => el.ap_id !== appointmentId),
+    })),
+}));

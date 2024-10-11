@@ -3,7 +3,12 @@ import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import dayjs from 'dayjs';
 import {useLocation} from '@/hooks/useLocation';
-import {useAppointmentForm, useAppointmentsStore, useToastStore, useUserStore} from '@/store/store';
+import {
+  useAppointmentForm,
+  useAppointmentsStore,
+  useToastStore,
+  useUserStore,
+} from '@/store/store';
 import {commonStyle} from '@/styles/common';
 import {
   getAppointmentCancellationStatusSpb,
@@ -30,7 +35,7 @@ const AppointmentDetail = () => {
   const [myPiggy, setMyPiggy] = useState<number>(0);
   const {location} = useLocation();
   const navigation = useNavigation();
-  const {deleteAppointment} = useAppointmentsStore()
+  const {deleteAppointment, appointments} = useAppointmentsStore();
 
   useEffect(() => {
     getAppointmentCancellationStatus();
@@ -238,14 +243,16 @@ const AppointmentDetail = () => {
           text: `약속을 ${type ? '수락' : '거절'}했어요.`,
         });
 
-        const res = await getAppointmentStatusSpb(appointmentForm?.id)
-        if(res.appointment_status === 'cancelled' || res.appointment_status === 'confirmed') {
-          deleteAppointment(appointmentForm?.id)
+        const res = await getAppointmentStatusSpb(appointmentForm?.id);
+        if (
+          (res.appointment_status === 'cancelled' ||
+            res.appointment_status === 'confirmed') &&
+          appointments[0].appointment_status
+        ) {
+          deleteAppointment(appointmentForm?.id);
         }
-        
-        
+
         navigation.navigate('Home', {id: appointmentForm?.id});
-        
       }
     } catch {
       addToast({
