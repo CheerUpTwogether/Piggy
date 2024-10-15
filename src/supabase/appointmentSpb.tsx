@@ -69,10 +69,14 @@ export const setAppointmentProposerSpb = (
 export const getAppointmentsSpb = (
   user_uuid: string,
   appointment_status_array: string[],
+  limit_f: number,
+  current_offset: number,
 ) => {
-  return supabase.rpc('select_appointments', {
+  return supabase.rpc('select_appointment_test', {
     user_uuid,
     appointment_status_array,
+    limit_f,
+    current_offset,
   });
 };
 // export const getAppointmentsSpb = (

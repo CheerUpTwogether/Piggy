@@ -254,10 +254,18 @@ export const getPiggySpb = async (id: string) => {
 };
 
 // 10. 피기 사용내역
-export const getPiggyLogSpb = async (id: string) => {
+export const getPiggyLogSpb = async (
+  id: string,
+  limit_f: number,
+  current_offset: number,
+  filter_criteria: string,
+) => {
   try {
     const {data, error} = await supabase.rpc('select_piggy_usage', {
       user_uuid: id,
+      limit_f,
+      current_offset,
+      filter_criteria,
     });
     if (error) {
       throw error;

@@ -24,6 +24,8 @@ const Home = () => {
     bottomSheetShow,
     setBottomSheetShow,
     changeSort,
+    configLimit,
+    loadAdditionalData,
     deleteAppointmentByChangeStatus,
     initialLoading,
   } = useHomeAppointments();
@@ -78,6 +80,8 @@ const Home = () => {
               </View>
             )
           }
+          onEndReached={loadAdditionalData}
+          onEndReachedThreshold={0.1}
         />
       </View>
 
