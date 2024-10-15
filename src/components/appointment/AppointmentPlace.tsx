@@ -1,6 +1,5 @@
 import React from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {Search} from '@/mock/Place/type';
 import useAppointmentPlace from '@/hooks/useAppointmentPlace';
 import SearchPlaceItem from './SearchPlaceItem';
 import PlaceItem from './PlaceItem';
@@ -9,6 +8,7 @@ import EmptyResult from '../common/EmptyResult';
 import PlaceSvg from '@/assets/icons/location.svg';
 import SearchSvg from '@/assets/icons/search.svg';
 import {color_ef, commonStyle} from '@/styles/common';
+import {Search} from '@/types/place';
 
 const AppointmentPlace = () => {
   const {

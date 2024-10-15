@@ -1,8 +1,8 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {color_ef, commonStyle} from '@/styles/common';
-import {FriendsProps} from '@/mock/Home/type';
 import ArriveCheck from '@/assets/icons/arriveCheck.svg';
+import {FriendsProps} from '@/pages/home/type';
 const basicProfile = require('@/assets/images/basicProfile.png');
 
 const FriendItem = ({item}: {item: FriendsProps}) => {

@@ -1,4 +1,4 @@
-import {User} from '@/mock/Friends/type';
+//import {User} from '@/mock/Friends/type';
 import {dummyNoticeItem} from '@/mock/NoticeBoard/types';
 import {FriendSearchParams} from './friends';
 import {
@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/stack';
 import {GoodsProduct} from './gift';
 import {AppointmentProps} from '@/types/appointment';
+import {User} from './friend';
 
 export type RootBottomTabParamList = {
   Home: undefined;

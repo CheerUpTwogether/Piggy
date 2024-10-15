@@ -36,6 +36,7 @@ const categories: AppointmentTabCategory[] = [
     status: ['fulfilled', 'cancelled', 'expired'],
   },
 ];
+
 const useHomeAppointments = () => {
   const addToast = useToastStore(state => state.addToast);
   const {openModal, closeModal} = useModalStore();
@@ -67,7 +68,6 @@ const useHomeAppointments = () => {
     fetchInitialAppointments();
   }, []);
 
-
   // TODO: 임시 - 해당 컴포넌트에서 useEffect 로 값을 줄 순 있지만 충분한 모듈화가 되지 않음. 재사용성 감소. 개선 고민필요
   const configLimit = (n: number) => {
     setLimit(n);
@@ -79,11 +79,11 @@ const useHomeAppointments = () => {
       setOffset(currentPage * limit);
       setLoading(true);
     }
+  };
 
   const fetchInitialAppointments = async () => {
     await getAppointment(sort);
     setInitialLoading(false);
-
   };
 
   const createButtonList = () => {
