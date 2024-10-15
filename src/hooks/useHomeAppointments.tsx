@@ -65,7 +65,7 @@ const useHomeAppointments = () => {
 
   useEffect(() => {
     checkAlarmModal();
-    fetchInitialAppointments();
+    //    fetchInitialAppointments();
   }, []);
 
   // TODO: 임시 - 해당 컴포넌트에서 useEffect 로 값을 줄 순 있지만 충분한 모듈화가 되지 않음. 재사용성 감소. 개선 고민필요
@@ -150,8 +150,8 @@ const useHomeAppointments = () => {
   // 약속 리스트
   const getAppointment = async (
     sortValue: AppointmentStatus,
-    limit_f: number,
-    current_offset: number,
+    limit_f: number = 20,
+    current_offset: number = 0,
   ) => {
     const {data, error} = await getAppointmentsSpb(
       userData.id,
@@ -159,6 +159,9 @@ const useHomeAppointments = () => {
       limit_f,
       current_offset,
     );
+    setInitialLoading(false);
+    console.log('-----data--------');
+    console.log(data);
 
     if (error) {
       addToast({
