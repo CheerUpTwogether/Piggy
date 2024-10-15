@@ -100,6 +100,11 @@ const AppointmentItem = ({
             {item?.place_name || item.address}
           </Text>
 
+          {/* 시간 */}
+          <Text style={[contentFontColor, {paddingTop: 2}]}>
+            {dayjs(item.appointment_date).format('YYYY-MM-DD HH:mm')}
+          </Text>
+
           {/* 친구 리스트 */}
           <View style={styles.friendsTagContiner}>
             <View style={{paddingTop: 16, flexDirection: 'row'}}>
