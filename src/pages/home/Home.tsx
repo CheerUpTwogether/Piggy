@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {color_ef, color_primary} from '@/styles/common';
@@ -9,6 +9,8 @@ import TabBar from '@/components/common/TabBar';
 import ButtonBottomSheet from '@/components/common/ButtonBottomSheet';
 import useHomeAppointments from '@/hooks/useHomeAppointments';
 import PulsSvg from '@/assets/icons/plus.svg';
+import SkeletonHomeProfile from '@/components/skeleton/SkeletonHomeProfile';
+import SkeletonAppointmentItem from '@/components/skeleton/SkeletonAppointmentItem';
 
 const Home = () => {
   const {
@@ -24,12 +26,21 @@ const Home = () => {
     changeSort,
     configLimit,
     loadAdditionalData,
+    deleteAppointmentByChangeStatus,
+    initialLoading,
   } = useHomeAppointments();
+  const flatListRef = useRef<FlatList>(null); // 카테고리 변경 시 스크롤 최상단으로 이동
+
+  useEffect(() => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({offset: 0, animated: true});
+    }
+  }, [sort]);
 
   return (
     <View style={styles.container}>
       {/* 사용자 프로필 */}
-      <Profile />
+      {initialLoading ? <SkeletonHomeProfile /> : <Profile />}
 
       {/* 약속 정렬 탭 */}
       <View style={styles.tab}>
@@ -37,13 +48,13 @@ const Home = () => {
       </View>
 
       {/* 약속 리스트 */}
-
       <View
         style={{
           backgroundColor: appointments?.length ? color_ef : '#fff',
           flex: 1,
         }}>
         <FlatList
+          ref={flatListRef}
           data={appointments}
           keyExtractor={item => item.ap_id}
           renderItem={({item}) => (
@@ -51,15 +62,23 @@ const Home = () => {
               item={item}
               onPressMore={onPressMore}
               onPressFix={onPressFix}
+              loading={initialLoading}
             />
           )}
           ListEmptyComponent={
-            <View style={{flex: 1}}>
-              <EmptyResult
-                reason={'아직 약속이 없어요'}
-                solution={'친구들과의 약속을 등록해보세요!'}
-              />
-            </View>
+            initialLoading ? (
+              <View style={{flex: 1, marginTop: 40}}>
+                <SkeletonAppointmentItem />
+              </View>
+            ) : (
+              // 로딩이 끝나고 약속이 없을 때 EmptyResult 표시
+              <View style={{flex: 1, marginTop: 40}}>
+                <EmptyResult
+                  reason={'아직 약속이 없어요'}
+                  solution={'친구들과의 약속을 등록해보세요!'}
+                />
+              </View>
+            )
           }
           onEndReached={loadAdditionalData}
           onEndReachedThreshold={0.1}

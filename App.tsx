@@ -5,25 +5,23 @@ import {NavigationContainer} from '@react-navigation/native';
 import ModalDefault from '@/components/common/ModalDefault';
 import Toast from '@/components/common/Toast';
 import 'react-native-url-polyfill/auto';
+import BootSplash from 'react-native-bootsplash';
 
 import messaging from '@react-native-firebase/messaging';
 
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('[Background Remote Message]', remoteMessage);
-});
+messaging().setBackgroundMessageHandler(async () => {});
 
 const App = () => {
   const getFcmToken = async () => {
-    const fcmToken = await messaging().getToken();
-    console.log('[FCM Token]', fcmToken);
+    await messaging().getToken();
   };
 
   useEffect(() => {
     getFcmToken();
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('[Remote Message', JSON.stringify(remoteMessage));
+    const unsubscribe = messaging().onMessage(async () => {
       return unsubscribe;
     });
+    BootSplash.hide({fade: true});
   }, []);
 
   return (

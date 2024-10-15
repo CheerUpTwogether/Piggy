@@ -1,4 +1,3 @@
-// 아래 interface 모두 '@/types/fiend' 에 넣어놨습니다. 사용하시던 파일들에서 이 경로로 수정부탁드립니다.
 export interface User {
   id: string;
   profile_img_url: string;

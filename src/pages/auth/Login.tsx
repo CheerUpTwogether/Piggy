@@ -29,83 +29,89 @@ const Login = () => {
       const {idToken} = await GoogleSignin.signIn();
       return idToken || null;
     } catch (e) {
-      console.log(e);
+      addToast({
+        success: false,
+        text: '구글 로그인 실패',
+      });
     }
   };
 
   const socialLogin = async (provider: string) => {
     let res = null;
-    switch (provider) {
-      case 'kakao':
+    try {
+      if (provider === 'kakao') {
         res = await kakaoSignInAPI();
-        break;
-      case 'google':
+      } else if (provider === 'google') {
         const idToken = await getGoogleIdToken();
         if (idToken) {
           res = await googleSignInAPI(idToken);
         }
-        break;
-      default:
-    }
+      }
 
-    if (res) {
-      const {authData, profileData} = res;
+      if (res) {
+        const {authData, profileData} = res;
 
-      if (profileData.length > 0) {
-        // 여기에 zutand profileData 정보가지고 전역설정
-        const {
-          id,
-          email,
-          nickname,
-          created_at,
-          updated_at,
-          service_terms_agreement,
-          payment_terms_agreement,
-          notification_agreement,
-          social_login_type,
-          profile_img_url,
-          phone_number,
-        } = profileData[0];
+        if (profileData.length > 0) {
+          // 여기에 zutand profileData 정보가지고 전역설정
+          const {
+            id,
+            email,
+            nickname,
+            created_at,
+            updated_at,
+            service_terms_agreement,
+            payment_terms_agreement,
+            notification_agreement,
+            social_login_type,
+            profile_img_url,
+            phone_number,
+          } = profileData[0];
 
-        setLoginProfile(
-          id,
-          email,
-          nickname,
-          created_at,
-          updated_at,
-          service_terms_agreement,
-          payment_terms_agreement,
-          notification_agreement,
-          social_login_type,
-          profile_img_url,
-          phone_number,
-        );
+          setLoginProfile(
+            id,
+            email,
+            nickname,
+            created_at,
+            updated_at,
+            service_terms_agreement,
+            payment_terms_agreement,
+            notification_agreement,
+            social_login_type,
+            profile_img_url,
+            phone_number,
+          );
 
-        await setItemSession(
-          authData.session.access_token,
-          authData.session.refresh_token,
-        );
+          await setItemSession(
+            authData.session.access_token,
+            authData.session.refresh_token,
+          );
 
-        const isSuccess = await setFcmTokenAPI(id);
+          const isSuccess = await setFcmTokenAPI(id);
 
-        if (!isSuccess) {
-          addToast({
-            success: false,
-            text: '로그인 실패',
-            multiText: '관리자에게 문의해주세요',
-          });
+          if (!isSuccess) {
+            addToast({
+              success: false,
+              text: '로그인 실패',
+              multiText: '관리자에게 문의해주세요',
+            });
+            return;
+          }
+
+          navigation.replace('Main', {screen: 'Home'});
           return;
         }
 
-        navigation.replace('Main', {screen: 'Home'});
-        return;
+        navigation.navigate('LoginDetail', {authData: authData});
+      } else {
+        addToast({
+          success: false,
+          text: '소셜 로그인을 다시 진행해주세요.',
+        });
       }
-
-      navigation.navigate('LoginDetail', {authData: authData});
-    } else {
+    } catch (e) {
       addToast({
         success: false,
-        text: '소셜 로그인을 다시 진행해주세요.',
+        text: '로그인에 실패했어요.',
       });
     }
   };

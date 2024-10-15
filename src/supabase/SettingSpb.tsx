@@ -28,7 +28,6 @@ export const setInquiryImages = async img_file => {
       .from('image_bucket')
       .upload(filePath, img_file);
     if (error) {
-      console.log(error);
       return null;
     }
 

@@ -1,7 +1,8 @@
 import {GestureResponderEvent, KeyboardTypeOptions} from 'react-native';
 import {SvgProps} from 'react-native-svg';
-import {AppointmentInsertProps} from './appointment';
+import {AppointmentInsertProps, AppointmentProps} from './appointment';
 import {FriendProp, FriendRelationshipRow} from './friend';
+import {Alaram} from './alarm';
 
 export interface CheckBoxProps {
   isChecked: boolean;
@@ -189,6 +190,7 @@ export interface TabBarProps {
   categories: {label: string; value: string}[];
   active: string;
   onChange: (value: string) => void;
+  allData: Alaram[];
 }
 export type KeyPadItemType =
   | '1'
@@ -263,4 +265,14 @@ export interface AppointmentFormStore {
     value: string | number | FriendProp[],
   ) => void;
   resetAppointmentForm: () => void;
+}
+
+export interface NotificationStore {
+  setHandleAllConfirmAlarm: (fn: () => Promise<void>) => void;
+  handleAllConfirmAlarm: () => Promise<void>;
+}
+
+export interface AppointmentStore {
+  appointments: AppointmentProps[];
+  setAppointments: (appointments: AppointmentProps[]) => void;
 }

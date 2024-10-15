@@ -18,21 +18,25 @@ export const getNotificationSpb = async (user_id: string) => {
 
 // 안 읽은 알림이 있는지 확인
 export const getUnConfirmNotificationSpb = async (user_id: string) => {
-  const {data, error} = await supabase
-    .from('notification_log')
-    .select('*')
-    .eq('user_id', user_id)
-    .eq('notification_displayed', true)
-    .eq('confirmed_status', false);
+  try {
+    const {data, error} = await supabase
+      .from('notification_log')
+      .select('*')
+      .eq('user_id', user_id)
+      .eq('notification_displayed', true)
+      .eq('confirmed_status', false);
 
-  if (error) {
-    throw error;
-  }
+    if (error) {
+      throw error;
+    }
 
-  if (data.length > 0) {
-    return true;
-  } else {
-    return false;
+    if (data.length > 0) {
+      return data;
+    } else {
+      return [];
+    }
+  } catch (e) {
+    throw e;
   }
 };
 
@@ -52,6 +56,25 @@ export const setConfirmNotificationSpb = async (notification_id: number) => {
   return data ? data : null;
 };
 
+// 알림 정보 전부 읽음처리
+export const setAllConfirmNotificationSpb = async (
+  user_id: string,
+  filter_criteria: string,
+) => {
+  const {data, error} = await supabase
+    .from('notification_log')
+    .update({confirmed_status: true})
+    .eq('user_id', user_id)
+    .eq('filter_criteria', filter_criteria)
+    .select();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ? data : null;
+};
+
 // 알림 정보 disable 처리
 export const deleteNotificationSpb = async (notification_id: number) => {
   const {data, error} = await supabase
@@ -60,6 +83,24 @@ export const deleteNotificationSpb = async (notification_id: number) => {
     .eq('id', notification_id)
     .select()
     .single();
+  if (error) {
+    throw error;
+  }
+
+  return data ? data : null;
+};
+
+// 알림 정보 전부 disable 처리
+export const deleteAllNotificationSpb = async (
+  user_id: string,
+  filter_criteria: string,
+) => {
+  const {data, error} = await supabase
+    .from('notification_log')
+    .update({notification_displayed: false})
+    .eq('user_id', user_id)
+    .eq('filter_criteria', filter_criteria)
+    .select();
   if (error) {
     throw error;
   }
@@ -88,7 +129,6 @@ export const subcribeUnConfirmNotification = (uid: string, onEvent) => {
 
   return () => {
     channel.unsubscribe();
-    console.log('alarm-unconfirm-detail 채널 구독 해제');
   };
 };
 
@@ -113,6 +153,5 @@ export const subcribeNotification = (uid: string, onEvent) => {
 
   return () => {
     channel.unsubscribe();
-    console.log('alarm-detail 채널 구독 해제');
   };
 };

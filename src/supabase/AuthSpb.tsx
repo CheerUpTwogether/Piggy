@@ -140,7 +140,6 @@ export const setNotificationSpb = async id => {
     }
 
     const current_notification = data[0].notification_agreement;
-    console.log(current_notification);
 
     const {data: updateData, error: updateError} = await supabase
       .from('users_nickname')

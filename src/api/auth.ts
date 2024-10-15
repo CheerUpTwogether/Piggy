@@ -18,7 +18,6 @@ export const kakaoSignInAPI = async () => {
       );
 
       if (authDataError) {
-        console.log(authDataError);
         return;
       }
 
@@ -27,7 +26,6 @@ export const kakaoSignInAPI = async () => {
       );
 
       if (profileDataError) {
-        console.log(profileDataError);
         return;
       }
 
@@ -35,7 +33,7 @@ export const kakaoSignInAPI = async () => {
       return res;
     }
   } catch (e) {
-    console.log(e);
+    return;
   }
 };
 
@@ -47,7 +45,6 @@ export const googleSignInAPI = async (idToken: string) => {
     );
 
     if (authDataError) {
-      console.log(authDataError);
       return;
     }
 
@@ -56,14 +53,13 @@ export const googleSignInAPI = async (idToken: string) => {
     );
 
     if (profileDataError) {
-      console.log(profileDataError);
       return;
     }
 
     const res = {authData, profileData};
     return res;
   } catch (e) {
-    console.log(e);
+    return;
   }
 };
 
@@ -75,7 +71,6 @@ export const setFcmTokenAPI = async (id: string) => {
       const {error} = await setFcmTokenSpb(id, device_token);
 
       if (error) {
-        console.log(error);
         return false;
       }
 

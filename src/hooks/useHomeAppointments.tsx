@@ -1,7 +1,12 @@
 import {useCallback, useEffect, useState} from 'react';
 import {Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useModalStore, useToastStore, useUserStore} from '@/store/store';
+import {
+  useAppointmentsStore,
+  useModalStore,
+  useToastStore,
+  useUserStore,
+} from '@/store/store';
 import {
   getAppointmentsSpb,
   setListDisplaySpb,
@@ -36,7 +41,7 @@ const useHomeAppointments = () => {
   const {openModal, closeModal} = useModalStore();
   const {userData, setUserDataByKey} = useUserStore();
   const navigation = useNavigation<StackNavigation>();
-  const [appointments, setAppointments] = useState<AppointmentProps[]>([]);
+  const {appointments, setAppointments} = useAppointmentsStore();
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
   const [limit, setLimit] = useState(20);
@@ -45,6 +50,7 @@ const useHomeAppointments = () => {
   const [loading, setLoading] = useState(false);
 
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -58,7 +64,9 @@ const useHomeAppointments = () => {
 
   useEffect(() => {
     checkAlarmModal();
+    fetchInitialAppointments();
   }, []);
+
 
   // TODO: 임시 - 해당 컴포넌트에서 useEffect 로 값을 줄 순 있지만 충분한 모듈화가 되지 않음. 재사용성 감소. 개선 고민필요
   const configLimit = (n: number) => {
@@ -71,9 +79,17 @@ const useHomeAppointments = () => {
       setOffset(currentPage * limit);
       setLoading(true);
     }
+
+  const fetchInitialAppointments = async () => {
+    await getAppointment(sort);
+    setInitialLoading(false);
+
   };
 
   const createButtonList = () => {
+    const appointment = appointments.find(el => el.ap_id === selectedId);
+
+    // 고정 상태에 따라 버튼 텍스트 결정
     const buttons: Array<{
       text: string;
       theme?: 'sub' | 'primary' | 'outline' | undefined;
@@ -81,7 +97,7 @@ const useHomeAppointments = () => {
       disable?: boolean;
     }> = [
       {
-        text: '고정',
+        text: appointment?.pinned ? '고정 해제' : '고정',
         onPress: () => {
           setBottomSheetShow(false);
           onPressFix(selectedId);
@@ -89,12 +105,11 @@ const useHomeAppointments = () => {
       },
     ];
 
-    const appointment = appointments.find(
-      el => el.appointment_id === selectedId,
-    );
+    // 현재 정렬 기준이 'fulfilled' (완료 상태)일 때만 삭제 버튼 추가
     if (
       appointment?.appointment_status !== 'pending' &&
-      appointment?.appointment_status !== 'confirmed'
+      appointment?.appointment_status !== 'confirmed' &&
+      sort === 'fulfilled'
     ) {
       buttons.push({
         text: '삭제',
@@ -115,7 +130,6 @@ const useHomeAppointments = () => {
     setUserDataByKey('piggy', res?.latest_piggy_count);
   };
 
-  //appointments.find(el => el.appointment_id === selectedId);
   // 약속 더보기 버튼 클릭
   const onPressMore = (item: AppointmentProps) => {
     setSelectedId(item.ap_id);
@@ -145,8 +159,8 @@ const useHomeAppointments = () => {
       limit_f,
       current_offset,
     );
+
     if (error) {
-      console.log(error);
       addToast({
         success: false,
         text: '약속 정보를 불러오지 못했어요.',
@@ -228,7 +242,6 @@ const useHomeAppointments = () => {
   const isAndroid13OrAbove = () => {
     if (Platform.OS === 'android') {
       const androidVersion = DeviceInfo.getSystemVersion();
-      console.log(androidVersion);
       return parseInt(androidVersion, 10) >= 13;
     }
     return false;
@@ -263,6 +276,10 @@ const useHomeAppointments = () => {
     closeModal();
   };
 
+  const deleteAppointmentByChangeStatus = (appointmentId: number) => {
+    setAppointments(prev => prev.filter(el => el.ap_id !== appointmentId));
+  };
+
   return {
     categories,
     appointments,
@@ -276,6 +293,8 @@ const useHomeAppointments = () => {
     setBottomSheetShow,
     configLimit,
     loadAdditionalData,
+    deleteAppointmentByChangeStatus,
+    initialLoading,
   };
 };
 

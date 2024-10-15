@@ -1,11 +1,8 @@
-import {getItemSession} from '@/utils/auth';
-import axios from 'axios';
 import {backInstance} from './fcm';
 import supabase from '@/supabase/supabase';
 
 const fetchBackEnd = async (phone_number: string, message: string) => {
   const authData = await supabase.auth.getSession();
-  console.log(authData);
   try {
     backInstance.post(
       '/sendSms',
@@ -23,7 +20,7 @@ const fetchBackEnd = async (phone_number: string, message: string) => {
       },
     );
   } catch (err) {
-    console.error(`메시지를 전송하지 못하였습니다.`);
+    //console.error('메시지를 전송하지 못하였습니다.');
   }
 };
 

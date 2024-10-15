@@ -22,8 +22,3 @@ export interface PiggyUsageHistoryProps2 {
   appointment_title?: string;
   image_url?: string;
 }
-
-export interface PiggyShopListProps {
-  id: number;
-  price: number;
-}

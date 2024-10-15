@@ -14,11 +14,7 @@ import {ProfileDetailProps} from '@/types/friends';
 import {gradeList, determineGrade} from '@/utils/grade';
 import {ProfileDetailNavigationProp} from '@/types/friends';
 import {useUserStore, useToastStore, useModalStore} from '@/store/store';
-import {
-  setFriendshipAddSpb,
-  getFriendsSpb,
-  deleteFriendshipSpb,
-} from '@/supabase/FriendsSpb';
+import {setFriendshipAddSpb, deleteFriendshipSpb} from '@/supabase/FriendsSpb';
 
 import GradeSvg from '@/assets/icons/grade.svg';
 import GiftSvg from '@/assets/icons/gift.svg';
@@ -26,7 +22,7 @@ import TrashSvg from '@/assets/icons/trash.svg';
 import AddFriendSvg from '@/assets/icons/addFriend.svg';
 import EditSvg from '@/assets/icons/edit.svg';
 import UTurnSvg from '@/assets/icons/uTurn.svg';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const {height: screenHeight} = Dimensions.get('window');
 
@@ -71,17 +67,12 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
   };
 
   const handleEditProfile = () => {
-    console.log('TODO: 프로필 수정 api 호출');
+    navigation.navigate('EditProfile', {...userData});
     closeModal();
   };
 
   const handleAddFriend = async () => {
-    const friends = await getFriendsSpb(userData.id);
-
-    // 이미 친구 목록에 있는지 확인
-    const isAlreadyFriend = friends.some(friend => friend.id === id);
-
-    if (isAlreadyFriend) {
+    if (is_friend) {
       addToast({
         success: false,
         text: '이미 친구로 추가된 사용자입니다.',
@@ -190,7 +181,9 @@ const ProfileDetail: React.FC<ProfileDetailProps> = ({
         />
       ) : (
         <View style={styles.emptyProfileWrapper}>
-          <BasicProfileSvg width={220} height={220} />
+          <View style={styles.basicProfileWrapper}>
+            <Image source={basicProfile} style={styles.basicProfile} />
+          </View>
         </View>
       )}
 
@@ -253,8 +246,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '72%',
-    backgroundColor: '#EFEFEF',
+    backgroundColor: '#FFF',
   },
+  basicProfileWrapper: {
+    width: '82%',
+    height: '91%',
+    borderRadius: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+  },
+
+  basicProfile: {width: '100%', height: '100%'},
   introduceContainer: {
     marginTop: 12,
     flexDirection: 'row',

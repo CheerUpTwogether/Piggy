@@ -6,7 +6,7 @@ import {requestLocationPermission} from '@/utils/permission';
 
 export const useLocation = () => {
   const [location, setLocation] = useState<Location>();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<null | string>(null);
 
   // 현재 위치 정보 받아오기
   const getCurrentLocation = () => {
@@ -16,7 +16,6 @@ export const useLocation = () => {
         setLocation({latitude, longitude});
       },
       error => {
-        console.log(error.code, error.message);
         setError(error.message);
         Alert.alert('위치 정보를 가져올 수 없습니다.', error.message);
       },

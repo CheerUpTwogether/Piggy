@@ -21,9 +21,9 @@ import LocationSvg from '@/assets/icons/location.svg';
 import DateSvg from '@/assets/icons/calendar.svg';
 import TimeSvg from '@/assets/icons/clock.svg';
 import PeopleSvg from '@/assets/icons/people.svg';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
 import LocationRoadSvg from '@/assets/icons/locationRoad.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
   const [scrollEnabled, setScrollEnabled] = useState(true); // 스크롤 제어 상태
@@ -77,8 +77,12 @@ const AppointmentCheck = ({children}: {children?: React.ReactElement}) => {
           alt={`${item.nickname}프로필사진`}
         />
       ) : (
-        <View style={styles.profileWrapper}>
-          <BasicProfileSvg width={22} height={22} color={'#999'} />
+        <View style={styles.basicProfileWrapper}>
+          <Image
+            source={basicProfile}
+            style={styles.basicProfile}
+            alt={`${item.nickname}프로필사진`}
+          />
         </View>
       )}
       <Text
@@ -330,6 +334,16 @@ const styles = StyleSheet.create({
     height: 46,
     borderRadius: 30,
   },
+  basicProfileWrapper: {
+    width: 46,
+    height: 46,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+  },
+  basicProfile: {width: '100%', height: '100%'},
   nickName: {
     textAlign: 'center',
     marginTop: 6,
@@ -343,7 +357,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginRight: 20,
   },
-
+  findRouteContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+  },
   findRouteWrapper: {
     flexDirection: 'row',
     height: 48,

@@ -43,7 +43,7 @@ export const setAppointmentSpb = ({
 // 약속 참여자 업데이트
 export const setAppointmentParticipantsSpb = (
   appointment_id: number,
-  participants_uuid: string,
+  participants_uuid: string[],
 ) => {
   return supabase.rpc('insert_appointment_participants', {
     appointment_id,
@@ -147,8 +147,6 @@ export const setCertificationStatusSpb = async (
       if (updateError) {
         throw updateError;
       }
-
-      console.log('[Spb]인증을 완료했습니다.');
     } else {
       throw new Error('약속된 위치에 도착하지 못했어요.');
     }
@@ -197,12 +195,11 @@ export const setAppointmentAcceptanceSpb = async (
       .eq('user_id', id)
       .eq('appointment_id', appointment_id);
     if (error) {
-      console.log(error);
       throw error;
     }
     return data;
   } catch (e) {
-    console.error('Error appeared in setAppointmentAcceptanceSpb : ', e);
+    throw e;
   }
 };
 
@@ -298,30 +295,37 @@ export const getAppointmentSingleSpb = async (
   id: string,
   appointment_id: number,
 ) => {
-  try {
-    return await supabase.rpc('select_appointment_single_detail', {
-      appointment_id_int: appointment_id,
-      user_uuid: id,
-    });
-  } catch (e) {
-    throw e;
-  }
+  return await supabase.rpc('select_appointment_single_detail', {
+    appointment_id_int: appointment_id,
+    user_uuid: id,
+  });
 };
 
 // 약속 상태 확인
 export const getAppointmentStatusSpb = async (appointment_id: number) => {
-  try {
     const {data, error} = await supabase
       .from('appointment')
       .select('appointment_status')
-      .eq('appointment_id', appointment_id)
+      .eq('id', appointment_id)
       .single();
     if (error) {
-      console.log(error);
+      console.log(error)
       throw error;
     }
     return data;
-  } catch (e) {
-    throw e;
-  }
 };
+
+export const deleteAppointmentSpb  =  (appointmentId: number) => {
+  return supabase
+    .from('appointment')
+    .delete()
+    .eq('appointment_id', appointmentId)
+}
+
+export const deleteAppointmentParticipantsSpb  = (appointmentId: number) => {
+  return supabase 
+    .from('appointment_participants')
+    .delete()
+    .eq('appointment_id', appointmentId)
+}
+

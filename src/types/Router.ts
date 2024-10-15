@@ -43,7 +43,6 @@ export type RootStackParamList = {
   PiggyUsage: undefined;
   Friends: undefined;
   Alarm: undefined;
-  PiggyShop: undefined;
   AppointmentForm: undefined;
   AppointmentCancel: {appointmentId: number};
   Intro: undefined;

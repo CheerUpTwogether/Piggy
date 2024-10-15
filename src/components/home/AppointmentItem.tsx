@@ -7,24 +7,26 @@ import {commonStyle} from '@/styles/common';
 import {AppointmentProps} from '@/types/appointment';
 import useAppointmentTimer from '@/hooks/useAppointmentTimer';
 import {useAppointmentForm, useUserStore} from '@/store/store';
+import SkeletonAppointmentItem from '../skeleton/SkeletonAppointmentItem';
 import dayjs from 'dayjs';
 import MoreSvg from '@/assets/icons/more.svg';
 import PinSvg from '@/assets/icons/pin.svg';
-import BasicProfileSvg from '@/assets/icons/basicProfile.svg';
+const basicProfile = require('@/assets/images/basicProfile.png');
 
 const AppointmentItem = ({
   item,
+  loading,
   onPressMore,
-  onPressFix,
 }: {
   item: AppointmentProps;
+  loading: boolean;
   onPressMore: (item: AppointmentProps) => void;
-  onPressFix: (id: number) => void;
 }) => {
   const navigation = useNavigation<StackNavigation>();
   const {setAppointmentForm} = useAppointmentForm();
   const {userData} = useUserStore();
   const cancelStatus = ['cancelled', 'expired'];
+
   // useAppointmentTimer 타이머 훅 호출
   const {remainingTime, formattedTime} = useAppointmentTimer(
     item.appointment_date,
@@ -57,107 +59,116 @@ const AppointmentItem = ({
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      {/* 타이머 */}
-      {shouldShowTimer && (
-        <View style={styles.title}>
-          <Text style={commonStyle.BOLD_PRIMARY_20}>{formattedTime}</Text>
-          <TouchableOpacity onPress={() => onPressMore(item)}>
-            <MoreSvg color="#777" style={styles.svg} />
-          </TouchableOpacity>
-        </View>
+    <>
+      {loading ? (
+        <SkeletonAppointmentItem />
+      ) : (
+        <TouchableOpacity style={styles.container} onPress={onPress}>
+          {/* 타이머 */}
+          {shouldShowTimer && (
+            <View style={styles.title}>
+              <Text style={commonStyle.BOLD_PRIMARY_20}>{formattedTime}</Text>
+              <TouchableOpacity
+                onPress={() => onPressMore(item)}
+                style={styles.moreWrapper}>
+                <MoreSvg color="#777" style={styles.svg} />
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* 모임 타이틀 */}
+          <View style={styles.title}>
+            <Text style={titleFontColor}>{item.subject}</Text>
+            <View style={{flexDirection: 'row'}}>
+              {item.pinned && (
+                <View style={{marginRight: 12}}>
+                  <PinSvg color="#777" style={styles.svg} />
+                </View>
+              )}
+              {!shouldShowTimer && (
+                <TouchableOpacity
+                  onPress={() => onPressMore(item)}
+                  style={styles.moreWrapper}>
+                  <MoreSvg color="#777" style={styles.svg} />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+
+          {/* 장소 */}
+          <Text style={[contentFontColor, {paddingTop: 4}]}>
+            {item?.place_name || item.address}
+          </Text>
+
+          {/* 시간 */}
+          <Text style={[contentFontColor, {paddingTop: 2}]}>
+            {dayjs(item.appointment_date).format('YYYY-MM-DD HH:mm')}
+          </Text>
+
+          {/* 친구 리스트 */}
+          <View style={styles.friendsTagContiner}>
+            <View style={{paddingTop: 16, flexDirection: 'row'}}>
+              {item.appointment_participants_list.map((el, idx) =>
+                el.profile_img_url ? (
+                  <Image
+                    source={{uri: el.profile_img_url}}
+                    style={[
+                      styles.profileImgUrl,
+                      idx !== 0 && styles.marginLeftMinus,
+                    ]}
+                    key={el.user_id + item.ap_id}
+                  />
+                ) : (
+                  <View
+                    style={[
+                      styles.basicProfileWrapper,
+                      idx !== 0 && styles.marginLeftMinus,
+                    ]}
+                    key={el.user_id + item.ap_id}>
+                    <Image source={basicProfile} style={styles.basicProfile} />
+                  </View>
+                ),
+              )}
+            </View>
+
+            {/* 태그 */}
+            <View style={{flexDirection: 'row', gap: 8}}>
+              {item.appointment_status === 'pending' &&
+                item.agreement_status !== 'confirmed' && (
+                  <Text style={styles.pinkLabel}>수락 필요</Text>
+                )}
+              {item.appointment_status === 'pending' &&
+                item.agreement_status === 'confirmed' && (
+                  <Text style={styles.grayLabel}>다른 사용자의 수락대기중</Text>
+                )}
+
+              {/* 취소/만료된 경우 */}
+              {(item.appointment_status === 'cancelled' ||
+                item.appointment_status === 'expired') && (
+                <Text style={styles.grayLabel}>취소</Text>
+              )}
+
+              {/* 취소 요청을 한 경우 */}
+              {item.appointment_status === 'confirmed' &&
+                item.user_cancellation_status === 'cancellation-request' && (
+                  <Text style={styles.grayLabel}>취소 요청 중</Text>
+                )}
+              {item.user_cancellation_status === 'cancellation-pending' && (
+                <Text style={styles.pinkLabel}>취소 요청 응답 필요</Text>
+              )}
+
+              {/* 이행된 경우 */}
+              {item.appointment_status === 'fulfilled' &&
+                (item.certification_status ? (
+                  <Text style={styles.pinkLabel}>인증 성공</Text>
+                ) : (
+                  <Text style={styles.grayLabel}>인증 실패</Text>
+                ))}
+            </View>
+          </View>
+        </TouchableOpacity>
       )}
-
-      {/* 모임 타이틀 */}
-      <View style={styles.title}>
-        <Text style={titleFontColor}>{item.subject}</Text>
-        <View style={{flexDirection: 'row'}}>
-          {item.pinned && (
-            <TouchableOpacity
-              style={{marginRight: 12}}
-              onPress={() => onPressFix(item.appointment_id)}>
-              <PinSvg color="#777" style={styles.svg} />
-            </TouchableOpacity>
-          )}
-          {!shouldShowTimer && (
-            <TouchableOpacity onPress={() => onPressMore(item)}>
-              <MoreSvg color="#777" style={styles.svg} />
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
-
-      {/* 장소 */}
-      <Text style={[contentFontColor, {paddingTop: 4}]}>
-        {item?.place_name || item.address}
-      </Text>
-
-      {/* 시간 */}
-      <Text style={[contentFontColor, {paddingTop: 2}]}>
-        {dayjs(item.appointment_date).format('YYYY-MM-DD HH:mm')}
-      </Text>
-
-      <View style={styles.friendsTagContiner}>
-        {/* 친구 리스트 */}
-        <View style={{paddingTop: 16, flexDirection: 'row'}}>
-          {item.appointment_participants_list.map((el, idx) =>
-            el.profile_img_url ? (
-              <Image
-                src={el.profile_img_url}
-                style={[
-                  styles.profileImgUrl,
-                  idx !== 0 && styles.marginLeftMinus,
-                ]}
-                key={el.user_id}
-              />
-            ) : (
-              <View
-                style={[
-                  styles.profileImgUrl,
-                  idx !== 0 && styles.marginLeftMinus,
-                ]}>
-                <BasicProfileSvg width={24} height={24} />
-              </View>
-            ),
-          )}
-        </View>
-
-        {/* 태그 */}
-        <View style={{flexDirection: 'row', gap: 8}}>
-          {item.appointment_status === 'pending' &&
-            item.agreement_status !== 'confirmed' && (
-              <Text style={styles.pinkLabel}>수락 필요</Text>
-            )}
-          {item.appointment_status === 'pending' &&
-            item.agreement_status === 'confirmed' && (
-              <Text style={styles.grayLabel}>다른 사용자의 수락대기중 </Text>
-            )}
-
-          {/* 취소/만료된 경우 */}
-          {(item.appointment_status === 'cancelled' ||
-            item.appointment_status === 'expired') && (
-            <Text style={styles.grayLabel}>취소</Text>
-          )}
-
-          {/* 취소 요청을 한 경우 */}
-          {item.appointment_status === 'confirmed' &&
-            item.user_cancellation_status === 'cancellation-request' && (
-              <Text style={styles.grayLabel}>취소 요청 중</Text>
-            )}
-          {item.user_cancellation_status === 'cancellation-pending' && (
-            <Text style={styles.pinkLabel}>취소 요청 응답 필요</Text>
-          )}
-
-          {/* 이행된 경우 */}
-          {item.appointment_status === 'fulfilled' &&
-            (item.certification_status ? (
-              <Text style={styles.pinkLabel}>인증 성공</Text>
-            ) : (
-              <Text style={styles.grayLabel}>인증 실패</Text>
-            ))}
-        </View>
-      </View>
-    </TouchableOpacity>
+    </>
   );
 };
 
@@ -197,10 +208,16 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: '#ddd',
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#fff',
   },
+  basicProfileWrapper: {
+    width: 36,
+    height: 36,
+    borderRadius: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  basicProfile: {width: '100%', height: '100%'},
   marginLeftMinus: {
     marginLeft: -8,
   },
@@ -229,12 +246,10 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     ...commonStyle.BOLD_PRIMARY_14,
   },
-  greenLabel: {
-    backgroundColor: '#EBFFF9',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 100,
-    ...commonStyle.BOLD_SUB_14,
+  moreWrapper: {
+    width: 48,
+    height: 48,
+    alignItems: 'center',
   },
 });
 
