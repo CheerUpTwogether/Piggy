@@ -9,10 +9,12 @@ import {
   Button,
   StyleSheet,
 } from 'react-native';
-import {useRoute} from '@react-navigation/native';
+import {useRoute, RouteProp} from '@react-navigation/native';
+import {KaKaoMapRouteParams} from '@/types/appointment';
 
 const RedirectKakaoMap = () => {
-  const route = useRoute();
+  const route =
+    useRoute<RouteProp<Record<string, KaKaoMapRouteParams>, string>>();
   const {myLatitude, myLongitude, placeLatitude, placeLongitude} = route.params;
   const kakaoMapUrl = `kakaomap://route?sp=${myLatitude},${myLongitude}&ep=${placeLatitude},${placeLongitude}&by=FOOT`;
   const kakaoAppPlayStoreUrl = 'market://details?id=net.daum.android.map';

@@ -92,3 +92,10 @@ export interface TimePickerProps {
   buttonHeight: number;
   visibleCount: number;
 }
+
+export interface KaKaoMapRouteParams {
+  myLatitude: number;
+  myLongitude: number;
+  placeLatitude: number;
+  placeLongitude: number;
+}
