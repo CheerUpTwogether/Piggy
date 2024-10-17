@@ -163,7 +163,8 @@ const HelpDesk = () => {
     }
   };
 
-  const deleteImage = uri => {
+  const deleteImage = (uri: string) => {
+    console.log('uri', uri);
     setImageList(prev => prev.filter(el => el.uri !== uri));
   };
 
@@ -201,7 +202,7 @@ const HelpDesk = () => {
             autoCorrect={false}
             importantForAutofill="no"
             placeholderTextColor="#AAA"
-            placeholder={'문의하실 제목을 입력해주세요.'}
+            placeholder={'문의하실 내용을 입력해주세요.'}
             value={content}
             onChangeText={setContent}
             style={styles.contentContainer}
