@@ -6,6 +6,8 @@ import {
   ScrollView,
   Pressable,
   Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import {debounce} from 'lodash';
 import {
@@ -22,21 +24,28 @@ import {
 import uuid from 'react-native-uuid';
 import {commonStyle} from '@/styles/common';
 import dayjs from 'dayjs';
+import {TimePickerProps} from '@/types/appointment';
 
-const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
+const TimePicker: React.FC<TimePickerProps> = ({
+  value,
+  onChange,
+  width,
+  buttonHeight,
+  visibleCount,
+}) => {
   const [isAm, setIsAm] = useState(true);
   if (visibleCount % 2 === 0) {
     throw new Error('visibleCount must be odd');
   }
 
   const refs = React.useRef(
-    Array.from({length: 3}).map(() => React.createRef()),
+    Array.from({length: 3}).map(() => React.createRef<ScrollView>()),
   );
   const animatedValues = React.useRef(
     Array.from({length: 3}).map(() => new Animated.Value(0)),
   );
 
-  const getScrollProps = (index, key, items) => {
+  const getScrollProps = (index: number, key: string, items: string[]) => {
     const onScrollStop = debounce(
       offsetY => {
         const date = dayjs();
@@ -89,18 +98,18 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
       onScrollBeginDrag: () => {
         onScrollStop.cancel();
       },
-      onScrollEndDrag: e => {
+      onScrollEndDrag: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
         onScrollStop.cancel();
         onScrollStop(e.nativeEvent.contentOffset.y);
       },
       onMomentumScrollBegin: () => {
         onScrollStop.cancel();
       },
-      onMomentumScrollEnd: e => {
+      onMomentumScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
         onScrollStop.cancel();
         onScrollStop(e.nativeEvent.contentOffset.y);
       },
-      getOnPress: item => () => {
+      getOnPress: (item: string) => () => {
         const targetIdx = items.indexOf(item);
         if (targetIdx === -1) {
           return;
@@ -140,9 +149,11 @@ const TimePicker = ({value, onChange, width, buttonHeight, visibleCount}) => {
     ];
 
     scrollProps.forEach((props, index) => {
-      props.ref.current.scrollTo({
-        y: getCenterPositionFromIndex(matchIndex[index]),
-      });
+      if (props.ref.current) {
+        props.ref.current.scrollTo({
+          y: getCenterPositionFromIndex(matchIndex[index]),
+        });
+      }
     });
   }, [value]);
 

@@ -84,3 +84,11 @@ export interface Participant {
   agreement_status: string;
   certification_status: boolean;
 }
+
+export interface TimePickerProps {
+  value: string;
+  onChange: (value: string) => void;
+  width: number;
+  buttonHeight: number;
+  visibleCount: number;
+}
