@@ -1,6 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigation} from '@/types/Router';
 import {commonStyle, color_primary, color_ef} from '@/styles/common';

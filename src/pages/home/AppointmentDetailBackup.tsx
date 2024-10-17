@@ -1,7 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
-import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
-
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {color_primary, commonStyle} from '@/styles/common';
 import {AppointmentProps} from '@/types/appointment';
@@ -57,8 +62,8 @@ const AppointmentDetailBackup = () => {
             profileImgUrl: userData.profile_img_url,
           },
           myLocationData: {
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: location?.latitude,
+            longitude: location?.longitude,
           },
         }),
       );

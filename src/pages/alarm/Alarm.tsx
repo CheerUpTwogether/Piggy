@@ -5,8 +5,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  FlatList,
 } from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
 import {commonStyle} from '@/styles/common';
 import {daysAgo, formatKoreanDate} from '@/utils/date';
 import {
@@ -358,6 +358,7 @@ const Alarm = () => {
         data={filterActiveData}
         renderItem={renderItem}
         ListHeaderComponent={renderHeader}
+        keyExtractor={item => item.id.toString()}
       />
     </View>
   );

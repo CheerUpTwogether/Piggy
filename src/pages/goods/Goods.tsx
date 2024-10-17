@@ -1,12 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {getGoodsAPI} from '@/api/kakao/gift';
 import GoodsFlatItem from '@/components/goods/GoodsFlatItem';

@@ -5,8 +5,9 @@ import {
   StyleSheet,
   Text,
   View,
+  FlatList,
+  TouchableOpacity,
 } from 'react-native';
-import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import {Calendar, LocaleConfig} from 'react-native-calendars';
 import {localeConfigKr} from '@/utils/timePicker';
 import {BUTTON_HEIGHT, VIEW_WIDTH} from '@/utils/timePicker';

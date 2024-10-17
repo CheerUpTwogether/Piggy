@@ -1,6 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import {color_ef, color_primary} from '@/styles/common';
 import AppointmentItem from '@/components/home/AppointmentItem';
 import EmptyResult from '@/components/common/EmptyResult';
