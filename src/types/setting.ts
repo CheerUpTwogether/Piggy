@@ -43,3 +43,8 @@ export interface MyProfileData {
   total_appointment: number;
   completed_appointments: number;
 }
+
+export interface AgreementBtnProps {
+  authData: undefined;
+  type: 'service' | 'payment';
+}

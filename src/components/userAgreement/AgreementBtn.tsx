@@ -1,15 +1,19 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {useUserStore} from '@/store/store';
 import Button from '@/components/common/Button';
+import {RootStackParamList} from '@/types/Router';
+import {AgreementBtnProps} from '@/types/setting';
 
-const AgreementBtn = ({authData, type}) => {
-  const navigation = useNavigation();
+const AgreementBtn: React.FC<AgreementBtnProps> = ({authData, type}) => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const {userData, setIsAgree} = useUserStore();
   const [isServiceAgree, setIsServiceAgree] = useState(
     userData?.isAgree.service || false,
   );
+
   return (
     <View style={{marginVertical: 20, gap: 20}}>
       {authData && (

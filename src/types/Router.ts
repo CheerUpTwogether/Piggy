@@ -30,7 +30,9 @@ export type RootStackParamList = {
   };
   AppointmentDetail: AppointmentProps;
   ServiceAgreement: undefined;
-  PaymentAgreement: undefined;
+  PaymentAgreement: {
+    authData: undefined;
+  };
   LoginDetail: undefined;
   EditProfile: User;
   HelpDesk: undefined;
