@@ -107,7 +107,7 @@ const useAppointmentFormHooks = () => {
     }
     try {
       setIsProcessing(true);
-       await addAppointment();
+      await addAppointment();
       navigation.goBack();
       addToast({
         success: true,
@@ -186,7 +186,7 @@ const useAppointmentFormHooks = () => {
     appointmentId: number,
   ) => {
     const {error} = await setAppointmentProposerSpb(userId, appointmentId);
-    
+
     if (error) {
       await deleteAppointmentParticipants(appointmentId);
       await deleteAppointment(appointmentId);

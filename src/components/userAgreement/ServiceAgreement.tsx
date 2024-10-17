@@ -25,7 +25,7 @@ const ServiceAgreement = () => {
         {sentenceArray.length > 1 ? (
           <View>
             {sentenceArray.map((sentence, index) => (
-              <View style={{flexDirection: 'row'}}>
+              <View style={{flexDirection: 'row'}} key={index}>
                 <Text style={commonStyle.MEDIUM_33_12}> {index + 1}.</Text>
                 <Text style={{...commonStyle.MEDIUM_33_12, lineHeight: 20}}>
                   {sentence}
