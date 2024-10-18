@@ -36,6 +36,7 @@ const categories: AppointmentTabCategory[] = [
     status: ['fulfilled', 'cancelled', 'expired'],
   },
 ];
+
 const useHomeAppointments = () => {
   const addToast = useToastStore(state => state.addToast);
   const {openModal, closeModal} = useModalStore();
@@ -48,9 +49,9 @@ const useHomeAppointments = () => {
   const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(false);
-
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [hasMoreData, setHasMoreData] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -59,12 +60,13 @@ const useHomeAppointments = () => {
   );
 
   useEffect(() => {
-    getAppointment(sort, limit, offset);
+    if (!loading && hasMoreData) {
+      getAppointment(sort, limit, offset);
+    }
   }, [sort, limit, offset]);
 
   useEffect(() => {
     checkAlarmModal();
-    fetchInitialAppointments();
   }, []);
 
   // TODO: 임시 - 해당 컴포넌트에서 useEffect 로 값을 줄 순 있지만 충분한 모듈화가 되지 않음. 재사용성 감소. 개선 고민필요
@@ -73,16 +75,11 @@ const useHomeAppointments = () => {
   };
 
   const loadAdditionalData = () => {
-    if (!loading) {
-      setCurrentPage(currentPage + 1);
-      setOffset(currentPage * limit);
+    if (!loading && hasMoreData) {
       setLoading(true);
+      setCurrentPage(currentPage + 1);
+      setOffset(prevOffset => prevOffset + limit);
     }
-  };
-
-  const fetchInitialAppointments = async () => {
-    await getAppointment(sort, limit, offset);
-    setInitialLoading(false);
   };
 
   const createButtonList = () => {
@@ -138,7 +135,10 @@ const useHomeAppointments = () => {
   // 정렬기준 변경
   const changeSort = (sortValue: AppointmentTabStatus) => {
     setSort(sortValue);
-    //getAppointment(sortValue);
+    setAppointments([]);
+    setOffset(0);
+    setHasMoreData(true);
+    setLoading(false);
   };
 
   // 약속 생성 폼 이동
@@ -152,23 +152,31 @@ const useHomeAppointments = () => {
     limit_f: number,
     current_offset: number,
   ) => {
-    const {data, error} = await getAppointmentsSpb(
-      userData.id,
-      categories.filter(el => el.value === sortValue)[0].status,
-      limit_f,
-      current_offset,
-    );
+    try {
+      const {data, error} = await getAppointmentsSpb(
+        userData.id,
+        categories.filter(el => el.value === sortValue)[0].status,
+        limit_f,
+        current_offset,
+      );
 
-    if (error) {
+      if (error) {
+        addToast({success: false, text: '약속 정보를 불러오지 못했어요.'});
+      } else {
+        if (data.length < limit_f) {
+          setHasMoreData(false);
+        }
+        setAppointments(appointments.concat(data));
+      }
+    } catch (e) {
       addToast({
         success: false,
-        text: '약속 정보를 불러오지 못했어요.',
+        text: '약속 정보를 불러오는 중 오류가 발생했어요.',
       });
-      return;
+    } finally {
+      setLoading(false);
+      setInitialLoading(false);
     }
-
-    setAppointments(appointments.concat(data));
-    setLoading(false);
   };
 
   // 약속 고정/해제
