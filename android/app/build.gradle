@@ -70,6 +70,10 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+// localProperties 불러오기
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -92,18 +96,16 @@ android {
             keyPassword 'android'
         }
         release {
-            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
-                storePassword MYAPP_RELEASE_STORE_PASSWORD
-                keyAlias MYAPP_RELEASE_KEY_ALIAS
-                keyPassword MYAPP_RELEASE_KEY_PASSWORD
-            }
+                storeFile file(localProperties['MYAPP_RELEASE_STORE_FILE'])
+                storePassword localProperties['MYAPP_RELEASE_STORE_PASSWORD']
+                keyAlias localProperties['MYAPP_RELEASE_KEY_ALIAS']
+                keyPassword localProperties['MYAPP_RELEASE_KEY_PASSWORD']
         }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-            resValue "string", "CodePushDeploymentKey", CODEPUSH_DEPLOYMENT_KEY_DEBUG
+            resValue "string", "CodePushDeploymentKey", localProperties['CODEPUSH_DEPLOYMENT_KEY_DEBUG']
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -111,11 +113,11 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            resValue "string", "CodePushDeploymentKey", CODEPUSH_DEPLOYMENT_KEY_PRODUCTION
+            resValue "string", "CodePushDeploymentKey", localProperties['CODEPUSH_DEPLOYMENT_KEY_PRODUCTION']
         }
         releaseStaging {
             initWith release
-            resValue "string", "CodePushDeploymentKey", CODEPUSH_DEPLOYMENT_KEY_STAGING
+            resValue "string", "CodePushDeploymentKey", localProperties['CODEPUSH_DEPLOYMENT_KEY_STAGING']
             matchingFallbacks = ['release']
         }
     }
