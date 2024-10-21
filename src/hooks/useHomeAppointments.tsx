@@ -45,14 +45,12 @@ const useHomeAppointments = () => {
   const {appointments, setAppointments} = useAppointmentsStore();
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
-  //const [limit, setLimit] = useState(20);
-  const [offset, setOffset] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [offset, setOffset] = useState(1);
   const [loading, setLoading] = useState(false);
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [hasMoreData, setHasMoreData] = useState(true);
-  const limit = 20;
+  const limit = 10;
 
   useFocusEffect(
     useCallback(() => {
@@ -61,17 +59,13 @@ const useHomeAppointments = () => {
   );
 
   useEffect(() => {
-    if (!loading && hasMoreData) {
-      getAppointment(sort, offset);
-    }
     checkAlarmModal();
   }, []);
 
   const loadAdditionalData = () => {
     if (!loading && hasMoreData) {
       setLoading(true);
-      setCurrentPage(currentPage + 1);
-      setOffset(prevOffset => prevOffset + limit);
+      getAppointment(sort, offset);
     }
   };
 
@@ -130,10 +124,10 @@ const useHomeAppointments = () => {
     if (sortValue === sort) {
       return;
     }
-    setSort(sortValue);
-    setOffset(0);
+    setOffset(1);
     setHasMoreData(true);
-    getAppointment(sortValue, 0);
+    setSort(sortValue);
+    getAppointment(sortValue, 1);
     //setLoading(false);
   };
 
@@ -145,14 +139,18 @@ const useHomeAppointments = () => {
   // 약속 리스트
   const getAppointment = async (
     sortValue: AppointmentStatus,
-    current_offset: number,
+    current_offset?: number,
   ) => {
     try {
       const {data, error} = await getAppointmentsSpb(
         userData.id,
         categories.filter(el => el.value === sortValue)[0].status,
         limit,
-        current_offset,
+        current_offset ? (current_offset - 1) * limit : offset * limit,
+      );
+
+      console.log(
+        current_offset ? (current_offset - 1) * limit : offset * limit,
       );
 
       if (error) {
@@ -161,11 +159,12 @@ const useHomeAppointments = () => {
         if (data.length < limit) {
           setHasMoreData(false);
         }
-        if (current_offset === 0) {
+        if (current_offset === 1 || offset === 1) {
           setAppointments(data);
         } else {
-          setAppointments(prev => [...prev, ...data]);
+          setAppointments([...appointments, ...data]);
         }
+        setOffset(prev => (current_offset ? current_offset + 1 : prev + 1));
       }
     } catch (e) {
       addToast({
@@ -182,7 +181,7 @@ const useHomeAppointments = () => {
   const onPressFix = async (appointmentId: number) => {
     try {
       await setPinnedSpb(userData.id, appointmentId);
-      getAppointment(sort, limit, offset);
+      getAppointment(sort, limit);
     } catch {
       addToast({
         success: false,

@@ -24,9 +24,9 @@ const Home = () => {
     setBottomSheetShow,
     changeSort,
     loadAdditionalData,
-    deleteAppointmentByChangeStatus,
     initialLoading,
   } = useHomeAppointments();
+
   const flatListRef = useRef<FlatList>(null); // 카테고리 변경 시 스크롤 최상단으로 이동
 
   useEffect(() => {
