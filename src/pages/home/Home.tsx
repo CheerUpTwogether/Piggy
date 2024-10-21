@@ -23,7 +23,6 @@ const Home = () => {
     bottomSheetShow,
     setBottomSheetShow,
     changeSort,
-    configLimit,
     loadAdditionalData,
     deleteAppointmentByChangeStatus,
     initialLoading,

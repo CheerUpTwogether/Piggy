@@ -45,13 +45,14 @@ const useHomeAppointments = () => {
   const {appointments, setAppointments} = useAppointmentsStore();
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
-  const [limit, setLimit] = useState(20);
+  //const [limit, setLimit] = useState(20);
   const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [hasMoreData, setHasMoreData] = useState(true);
+  const limit = 20;
 
   useFocusEffect(
     useCallback(() => {
@@ -61,17 +62,19 @@ const useHomeAppointments = () => {
 
   useEffect(() => {
     if (!loading && hasMoreData) {
-      getAppointment(sort, limit, offset);
+      getAppointment(sort, offset);
     }
-  }, [sort, limit, offset]);
-
-  useEffect(() => {
     checkAlarmModal();
   }, []);
 
+  // useEffect(() => {
+  //   checkAlarmModal();
+  // }, []);
+
   // TODO: 임시 - 해당 컴포넌트에서 useEffect 로 값을 줄 순 있지만 충분한 모듈화가 되지 않음. 재사용성 감소. 개선 고민필요
   const configLimit = (n: number) => {
-    setLimit(n);
+    //setLimit(n);
+    limit = n;
   };
 
   const loadAdditionalData = () => {
@@ -138,10 +141,10 @@ const useHomeAppointments = () => {
       return;
     }
     setSort(sortValue);
-    setAppointments([]);
     setOffset(0);
     setHasMoreData(true);
-    setLoading(false);
+    getAppointment(sortValue, 0);
+    //setLoading(false);
   };
 
   // 약속 생성 폼 이동
@@ -152,24 +155,27 @@ const useHomeAppointments = () => {
   // 약속 리스트
   const getAppointment = async (
     sortValue: AppointmentStatus,
-    limit_f: number,
     current_offset: number,
   ) => {
     try {
       const {data, error} = await getAppointmentsSpb(
         userData.id,
         categories.filter(el => el.value === sortValue)[0].status,
-        limit_f,
+        limit,
         current_offset,
       );
 
       if (error) {
         addToast({success: false, text: '약속 정보를 불러오지 못했어요.'});
       } else {
-        if (data.length < limit_f) {
+        if (data.length < limit) {
           setHasMoreData(false);
         }
-        setAppointments(appointments.concat(data));
+        if (current_offset === 0) {
+          setAppointments(data);
+        } else {
+          setAppointments(prev => [...prev, ...data]);
+        }
       }
     } catch (e) {
       addToast({
