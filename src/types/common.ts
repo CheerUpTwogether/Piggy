@@ -20,7 +20,7 @@ export interface RadioButtonProps {
 
 export interface ToggleProps {
   initialState: boolean;
-  onToggle: (newState: boolean) => void;
+  onToggle?: (newState: boolean) => void;
   loading?: boolean;
 }
 

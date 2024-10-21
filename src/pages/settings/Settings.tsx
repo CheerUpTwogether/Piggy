@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   Image,
   StyleSheet,
@@ -8,8 +8,10 @@ import {
   Platform,
   Linking,
   ScrollView,
+  AppState,
 } from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {checkNotifications} from 'react-native-permissions';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
@@ -17,10 +19,14 @@ import {useToastStore, useUserStore} from '@/store/store';
 import {getMySettingsSpb} from '@/supabase/SettingSpb';
 import {MyProfileData} from '@/types/setting';
 import DeviceInfo from 'react-native-device-info';
+import ToggleButton from '@/components/common/ToggleButton';
+
 const basicProfile = require('@/assets/images/basicProfile.png');
 
 const Settings = () => {
   const [myData, setMyData] = useState<MyProfileData | null>(null);
+  const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
+  const [appState, setAppState] = useState(AppState.currentState);
   const {setGotoProfile} = useUserStore();
   const userData = useUserStore(state => state.userData);
   const {addToast} = useToastStore();
@@ -30,12 +36,38 @@ const Settings = () => {
   const numberStyle =
     Platform.OS === 'ios' ? commonStyle.BOLD_33_18 : commonStyle.BOLD_33_22;
 
+  // 앱 상태가 변할 때마다 알림 설정 상태 확인
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.match(/inactive|background/) && nextAppState === 'active') {
+        checkNotificationPermission();
+      }
+      setAppState(nextAppState);
+    });
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 해제
+    return () => {
+      subscription.remove();
+    };
+  }, [appState]);
+
   useFocusEffect(
     useCallback(() => {
       fetchData();
       setGotoProfile(gotoProfile);
+      checkNotificationPermission();
     }, []),
   );
+
+  // 알림 상태를 가져오는 함수
+  const checkNotificationPermission = async () => {
+    try {
+      const {status} = await checkNotifications();
+      setIsNotificationEnabled(status === 'granted'); // granted - 알림 허용 상태
+    } catch (error) {
+      console.error('Failed to check notification permission:', error);
+    }
+  };
 
   const handleAlarmSetting = () => {
     if (Platform.OS === 'android') {
@@ -173,9 +205,11 @@ const Settings = () => {
         <View style={{gap: 16, marginBottom: 16}}>
           <Text style={commonStyle.MEDIUM_AA_14}>알림 센터</Text>
           <TouchableOpacity
+            style={styles.alarmWrapper}
             activeOpacity={0.8}
             onPress={() => handleAlarmSetting()}>
             <Text style={commonStyle.MEDIUM_33_16}>알림설정</Text>
+            <ToggleButton initialState={isNotificationEnabled} />
           </TouchableOpacity>
         </View>
       </View>
@@ -229,6 +263,7 @@ const styles = StyleSheet.create({
   },
   basicProfile: {width: '100%', height: '100%'},
   profileImage: {width: 80, height: 80, borderRadius: 30},
+  alarmWrapper: {flexDirection: 'row', justifyContent: 'space-between'},
 });
 
 export default Settings;
