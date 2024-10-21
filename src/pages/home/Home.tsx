@@ -27,15 +27,8 @@ const Home = () => {
     initialLoading,
     pullDown,
     refresh,
+    flatListRef,
   } = useHomeAppointments();
-
-  const flatListRef = useRef<FlatList>(null); // 카테고리 변경 시 스크롤 최상단으로 이동
-
-  useEffect(() => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToOffset({offset: 0, animated: true});
-    }
-  }, [sort]);
 
   return (
     <View style={styles.container}>

@@ -1,5 +1,5 @@
-import {useCallback, useEffect, useState} from 'react';
-import {Platform} from 'react-native';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {FlatList, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {
   useAppointmentsStore,
@@ -51,6 +51,7 @@ const useHomeAppointments = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [refresh, setRefresh] = useState(false);
+  const flatListRef = useRef<FlatList>(null); // 카테고리 변경 시 스크롤 최상단으로 이동
   const limit = 10;
 
   useFocusEffect(
@@ -124,6 +125,9 @@ const useHomeAppointments = () => {
   const changeSort = (sortValue: AppointmentTabStatus) => {
     if (sortValue === sort) {
       return;
+    }
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({offset: 0, animated: true});
     }
     setOffset(1);
     setHasMoreData(true);
@@ -309,6 +313,7 @@ const useHomeAppointments = () => {
     initialLoading,
     pullDown,
     refresh,
+    flatListRef,
   };
 };
 
