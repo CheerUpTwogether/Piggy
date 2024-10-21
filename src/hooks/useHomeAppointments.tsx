@@ -134,6 +134,9 @@ const useHomeAppointments = () => {
 
   // 정렬기준 변경
   const changeSort = (sortValue: AppointmentTabStatus) => {
+    if (sortValue === sort) {
+      return;
+    }
     setSort(sortValue);
     setAppointments([]);
     setOffset(0);
