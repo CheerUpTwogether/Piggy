@@ -67,16 +67,6 @@ const useHomeAppointments = () => {
     checkAlarmModal();
   }, []);
 
-  // useEffect(() => {
-  //   checkAlarmModal();
-  // }, []);
-
-  // TODO: 임시 - 해당 컴포넌트에서 useEffect 로 값을 줄 순 있지만 충분한 모듈화가 되지 않음. 재사용성 감소. 개선 고민필요
-  const configLimit = (n: number) => {
-    //setLimit(n);
-    limit = n;
-  };
-
   const loadAdditionalData = () => {
     if (!loading && hasMoreData) {
       setLoading(true);
@@ -307,7 +297,6 @@ const useHomeAppointments = () => {
     createButtonList,
     bottomSheetShow,
     setBottomSheetShow,
-    configLimit,
     loadAdditionalData,
     deleteAppointmentByChangeStatus,
     initialLoading,
