@@ -42,10 +42,16 @@ const HelpDetail = () => {
           {helpItem?.contents?.replace(/\n/g, '\n')}
         </Text>
 
-        <View style={styles.imageContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.imageContainer}>
           {helpItem?.img_url &&
             helpItem.img_url.map((url, index) => (
-              <TouchableOpacity key={index} style={styles.imageWrapper}>
+              <TouchableOpacity
+                key={index}
+                style={styles.imageWrapper}
+                activeOpacity={0.9}>
                 <Image
                   source={{uri: url}}
                   style={styles.image}
@@ -53,7 +59,7 @@ const HelpDetail = () => {
                 />
               </TouchableOpacity>
             ))}
-        </View>
+        </ScrollView>
       </View>
 
       <View style={styles.answerWrapper}>
