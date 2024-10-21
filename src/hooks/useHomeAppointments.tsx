@@ -50,6 +50,7 @@ const useHomeAppointments = () => {
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [hasMoreData, setHasMoreData] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const limit = 10;
 
   useFocusEffect(
@@ -285,6 +286,13 @@ const useHomeAppointments = () => {
     setAppointments(prev => prev.filter(el => el.ap_id !== appointmentId));
   };
 
+  const pullDown = async () => {
+    setRefresh(true);
+    setOffset(1);
+    getAppointment(sort, 1);
+    setRefresh(false);
+  };
+
   return {
     categories,
     appointments,
@@ -299,6 +307,8 @@ const useHomeAppointments = () => {
     loadAdditionalData,
     deleteAppointmentByChangeStatus,
     initialLoading,
+    pullDown,
+    refresh,
   };
 };
 

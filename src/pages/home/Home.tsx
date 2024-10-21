@@ -25,6 +25,8 @@ const Home = () => {
     changeSort,
     loadAdditionalData,
     initialLoading,
+    pullDown,
+    refresh,
   } = useHomeAppointments();
 
   const flatListRef = useRef<FlatList>(null); // 카테고리 변경 시 스크롤 최상단으로 이동
@@ -80,6 +82,8 @@ const Home = () => {
           }
           onEndReached={loadAdditionalData}
           onEndReachedThreshold={0.1}
+          onRefresh={pullDown}
+          refreshing={refresh}
         />
       </View>
 
