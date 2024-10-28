@@ -26,14 +26,16 @@ const Home = () => {
     changeSort,
     loadAdditionalData,
     initialLoading,
+    flatListRef,
   } = useHomeAppointments();
-  const flatListRef = useRef<FlatList>(null); // 카테고리 변경 시 스크롤 최상단으로 이동
+  //const flatListRef = useRef<FlatList>(null); // 카테고리 변경 시 스크롤 최상단으로 이동
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (flatListRef.current) {
       flatListRef.current.scrollToOffset({offset: 0, animated: true});
     }
   }, [sort]);
+  */
 
   return (
     <View style={styles.container}>
@@ -54,7 +56,7 @@ const Home = () => {
         <FlatList
           ref={flatListRef}
           data={appointments}
-          keyExtractor={item => item.ap_id}
+          keyExtractor={item => item.ap_id.toString()}
           renderItem={({item}) => (
             <AppointmentItem
               item={item}

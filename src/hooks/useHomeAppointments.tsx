@@ -1,5 +1,5 @@
-import {useCallback, useEffect, useState} from 'react';
-import {Platform} from 'react-native';
+import {useCallback, useEffect, useState, useRef} from 'react';
+import {Platform, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {
   useAppointmentsStore,
@@ -50,19 +50,42 @@ const useHomeAppointments = () => {
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const limit = 20;
+  const flatListRef = useRef<FlatList>(null);
 
   useFocusEffect(
     useCallback(() => {
       getPiggy();
     }, []),
   );
-
+  /*
   useEffect(() => {
-    getAppointment(sort, limit);
+    getAppointment(sort, limit, offset);
     if (initialLoading) {
       setInitialLoading(false);
     }
-  }, [sort, currentPage]);
+      }, [currentPage]);
+*/
+  useEffect(() => {
+    if (initialLoading) {
+      setInitialLoading(false);
+    }
+    /*setAppointments([]);
+    setOffset(0);
+    setCurrentPage(0);
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({offset: 0, animated: true});
+    }*/
+    console.log(
+      '---------sort 실행중- appointments',
+      '\n',
+      'currentPage : ',
+      currentPage,
+      '\toffset : ',
+      offset,
+    );
+    const initOffset = 0;
+    getAppointment(sort, limit, initOffset);
+  }, [sort]);
 
   useEffect(() => {
     checkAlarmModal();
@@ -121,6 +144,12 @@ const useHomeAppointments = () => {
   // 정렬기준 변경
   const changeSort = (sortValue: AppointmentTabStatus) => {
     setSort(sortValue);
+    setAppointments([]);
+    setOffset(0);
+    setCurrentPage(0);
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({offset: 0, animated: true});
+    }
   };
 
   // 약속 생성 폼 이동
@@ -129,9 +158,10 @@ const useHomeAppointments = () => {
   };
 
   const loadAdditionalData = () => {
-    if (!loading) {
+    if (!loading && !initialLoading) {
       setCurrentPage(currentPage + 1);
       setLoading(true);
+      getAppointment(sort, limit, offset);
     }
   };
 
@@ -139,8 +169,8 @@ const useHomeAppointments = () => {
   const getAppointment = async (
     sortValue: AppointmentStatus,
     limit_f: number,
+    offset: number,
   ) => {
-    console.log(categories.filter(el => el.value === sortValue)[0].status);
     const {data, error} = await getAppointmentsSpb(
       userData.id,
       categories.filter(el => el.value === sortValue)[0].status,
@@ -160,7 +190,9 @@ const useHomeAppointments = () => {
       return;
     }
 
+    console.log('appointments-length----', appointments.length);
     setAppointments(appointments.concat(data));
+    console.log('Data-length----', data.length);
     setLoading(false);
   };
 
@@ -168,7 +200,7 @@ const useHomeAppointments = () => {
   const onPressFix = async (appointmentId: number) => {
     try {
       await setPinnedSpb(userData.id, appointmentId);
-      getAppointment(sort, limit);
+      getAppointment(sort, limit, offset);
     } catch {
       addToast({
         success: false,
@@ -286,6 +318,7 @@ const useHomeAppointments = () => {
     loadAdditionalData,
     deleteAppointmentByChangeStatus,
     initialLoading,
+    flatListRef,
   };
 };
 
