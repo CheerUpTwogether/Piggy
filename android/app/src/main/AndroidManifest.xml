@@ -5,6 +5,8 @@
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
   <!-- 대략적인 위치(Wi-Fi, 셀룰러) 정보 사용 -->
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <!-- 알림 설정 확인 -->
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
   <application
     android:name=".MainApplication"

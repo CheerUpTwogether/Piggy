@@ -28,6 +28,7 @@ const HelpDesk = () => {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
+  const [isSend, setIsSend] = useState(false);
   const [imageList, setImageList] = useState<
     {
       uri: string;
@@ -70,15 +71,20 @@ const HelpDesk = () => {
   };
 
   const checkValid = async () => {
+    if (isSend) return;
+    setIsSend(true);
+
     const validateEmail = (emailAddress: string) =>
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
     const validateSubject = (subjectText: string) => subjectText.length >= 5;
     const validateContent = (contentText: string) => contentText.length >= 10;
 
     if (!validateInput(email, '이메일', '올바른 이메일을', validateEmail)) {
+      setIsSend(false); // 입력 오류 시 다시 활성화
       return;
     }
     if (!validateInput(subject, '제목', '문의 제목을', validateSubject)) {
+      setIsSend(false);
       return;
     }
     if (
@@ -89,6 +95,7 @@ const HelpDesk = () => {
         validateContent,
       )
     ) {
+      setIsSend(false);
       return;
     }
 
@@ -139,31 +146,36 @@ const HelpDesk = () => {
 
   // 문의 생성
   const addInquiry = async (imageUrlList: string[]) => {
-    const res = await setInquirySpb(
-      userData.id,
-      subject,
-      content,
-      email,
-      imageUrlList,
-    );
+    try {
+      const res = await setInquirySpb(
+        userData.id,
+        subject,
+        content,
+        email,
+        imageUrlList,
+      );
 
-    if (res) {
-      addToast({
-        success: true,
-        text: '문의 전송 완료',
-        multiText: '문의가 성공적으로 전송되었습니다.',
-      });
-      navigation.navigate('HelpHistory');
-    } else {
+      if (res) {
+        addToast({
+          success: true,
+          text: '문의 전송 완료',
+          multiText: '문의가 성공적으로 전송되었습니다.',
+        });
+        navigation.navigate('HelpHistory');
+      }
+    } catch (error) {
+      console.error('문의 전송 에러:', error);
       addToast({
         success: false,
         text: '전송 실패',
         multiText: '문의 전송에 실패했습니다. 다시 시도해주세요.',
       });
+    } finally {
+      setIsSend(false);
     }
   };
 
-  const deleteImage = uri => {
+  const deleteImage = (uri: string) => {
     setImageList(prev => prev.filter(el => el.uri !== uri));
   };
 
@@ -201,7 +213,7 @@ const HelpDesk = () => {
             autoCorrect={false}
             importantForAutofill="no"
             placeholderTextColor="#AAA"
-            placeholder={'문의하실 제목을 입력해주세요.'}
+            placeholder={'문의하실 내용을 입력해주세요.'}
             value={content}
             onChangeText={setContent}
             style={styles.contentContainer}
@@ -238,7 +250,7 @@ const HelpDesk = () => {
           </View>
         </View>
         <View style={{marginVertical: 50}}>
-          <Button text="보내기" onPress={checkValid} />
+          <Button text="보내기" onPress={checkValid} disable={isSend} />
         </View>
       </View>
     </ScrollView>
