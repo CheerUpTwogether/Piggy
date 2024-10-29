@@ -67,10 +67,10 @@ const HelpDetail = () => {
         {helpItem?.response ? (
           <View style={{gap: 12}}>
             <Text style={[commonStyle.REGULAR_33_16, {lineHeight: 24}]}>
-              {helpItem.response_date}
+              {helpItem.response}
             </Text>
             <Text style={commonStyle.REGULAR_77_14}>
-              {helpItem.response_date}
+              {dayjs(helpItem.response_date).format('YYYY년 MM월 DD일')}
             </Text>
           </View>
         ) : (
