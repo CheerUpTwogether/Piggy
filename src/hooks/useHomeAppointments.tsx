@@ -1,5 +1,5 @@
-import {useCallback, useEffect, useState} from 'react';
-import {Platform} from 'react-native';
+import {useCallback, useEffect, useState, useRef} from 'react';
+import {Platform, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {
   useAppointmentsStore,
@@ -44,13 +44,13 @@ const useHomeAppointments = () => {
   const {appointments, setAppointments} = useAppointmentsStore();
   const [sort, setSort] = useState<AppointmentTabStatus>(categories[0].value);
   const [selectedId, setSelectedId] = useState(0);
-  const [limit, setLimit] = useState(20);
   const [offset, setOffset] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(false);
-
   const [bottomSheetShow, setBottomSheetShow] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const limit = 20;
+  const flatListRef = useRef<FlatList>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -59,31 +59,16 @@ const useHomeAppointments = () => {
   );
 
   useEffect(() => {
-    getAppointment(sort, limit, offset);
-  }, [sort, limit, offset]);
+    if (initialLoading) {
+      setInitialLoading(false);
+    }
+    const initOffset = 0;
+    getAppointment(sort, limit, initOffset);
+  }, [sort]);
 
   useEffect(() => {
     checkAlarmModal();
-    fetchInitialAppointments();
   }, []);
-
-  // TODO: 임시 - 해당 컴포넌트에서 useEffect 로 값을 줄 순 있지만 충분한 모듈화가 되지 않음. 재사용성 감소. 개선 고민필요
-  const configLimit = (n: number) => {
-    setLimit(n);
-  };
-
-  const loadAdditionalData = () => {
-    if (!loading) {
-      setCurrentPage(currentPage + 1);
-      setOffset(currentPage * limit);
-      setLoading(true);
-    }
-  };
-
-  const fetchInitialAppointments = async () => {
-    await getAppointment(sort, limit, offset);
-    setInitialLoading(false);
-  };
 
   const createButtonList = () => {
     const appointment = appointments.find(el => el.ap_id === selectedId);
@@ -138,7 +123,12 @@ const useHomeAppointments = () => {
   // 정렬기준 변경
   const changeSort = (sortValue: AppointmentTabStatus) => {
     setSort(sortValue);
-    //getAppointment(sortValue);
+    setAppointments([]);
+    setOffset(0);
+    setCurrentPage(0);
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({offset: 0, animated: true});
+    }
   };
 
   // 약속 생성 폼 이동
@@ -146,18 +136,30 @@ const useHomeAppointments = () => {
     navigation.navigate('AppointmentForm');
   };
 
+  const loadAdditionalData = () => {
+    if (!loading && !initialLoading) {
+      setCurrentPage(currentPage + 1);
+      setLoading(true);
+      getAppointment(sort, limit, offset);
+    }
+  };
+
   // 약속 리스트
   const getAppointment = async (
     sortValue: AppointmentStatus,
     limit_f: number,
-    current_offset: number,
+    offset: number,
   ) => {
     const {data, error} = await getAppointmentsSpb(
       userData.id,
       categories.filter(el => el.value === sortValue)[0].status,
       limit_f,
-      current_offset,
+      offset,
     );
+    //offest조정
+    data.length >= limit_f
+      ? setOffset(offset + limit)
+      : setOffset(offset + data.length);
 
     if (error) {
       addToast({
@@ -290,10 +292,10 @@ const useHomeAppointments = () => {
     createButtonList,
     bottomSheetShow,
     setBottomSheetShow,
-    configLimit,
     loadAdditionalData,
     deleteAppointmentByChangeStatus,
     initialLoading,
+    flatListRef,
   };
 };
 

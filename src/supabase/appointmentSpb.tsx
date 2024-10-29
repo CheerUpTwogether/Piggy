@@ -303,29 +303,28 @@ export const getAppointmentSingleSpb = async (
 
 // 약속 상태 확인
 export const getAppointmentStatusSpb = async (appointment_id: number) => {
-    const {data, error} = await supabase
-      .from('appointment')
-      .select('appointment_status')
-      .eq('id', appointment_id)
-      .single();
-    if (error) {
-      console.log(error)
-      throw error;
-    }
-    return data;
+  const {data, error} = await supabase
+    .from('appointment')
+    .select('appointment_status')
+    .eq('id', appointment_id)
+    .single();
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+  return data;
 };
 
-export const deleteAppointmentSpb  =  (appointmentId: number) => {
+export const deleteAppointmentSpb = (appointmentId: number) => {
   return supabase
     .from('appointment')
     .delete()
-    .eq('appointment_id', appointmentId)
-}
+    .eq('appointment_id', appointmentId);
+};
 
-export const deleteAppointmentParticipantsSpb  = (appointmentId: number) => {
-  return supabase 
+export const deleteAppointmentParticipantsSpb = (appointmentId: number) => {
+  return supabase
     .from('appointment_participants')
     .delete()
-    .eq('appointment_id', appointmentId)
-}
-
+    .eq('appointment_id', appointmentId);
+};
