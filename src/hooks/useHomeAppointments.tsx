@@ -57,32 +57,11 @@ const useHomeAppointments = () => {
       getPiggy();
     }, []),
   );
-  /*
-  useEffect(() => {
-    getAppointment(sort, limit, offset);
-    if (initialLoading) {
-      setInitialLoading(false);
-    }
-      }, [currentPage]);
-*/
+
   useEffect(() => {
     if (initialLoading) {
       setInitialLoading(false);
     }
-    /*setAppointments([]);
-    setOffset(0);
-    setCurrentPage(0);
-    if (flatListRef.current) {
-      flatListRef.current.scrollToOffset({offset: 0, animated: true});
-    }*/
-    console.log(
-      '---------sort 실행중- appointments',
-      '\n',
-      'currentPage : ',
-      currentPage,
-      '\toffset : ',
-      offset,
-    );
     const initOffset = 0;
     getAppointment(sort, limit, initOffset);
   }, [sort]);
@@ -190,9 +169,7 @@ const useHomeAppointments = () => {
       return;
     }
 
-    console.log('appointments-length----', appointments.length);
     setAppointments(appointments.concat(data));
-    console.log('Data-length----', data.length);
     setLoading(false);
   };
 

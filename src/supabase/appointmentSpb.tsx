@@ -72,9 +72,6 @@ export const getAppointmentsSpb = (
   limit_f: number,
   current_offset: number,
 ) => {
-  // FIXME:
-  console.log(appointment_status_array, limit_f, current_offset);
-
   return supabase.rpc('select_appointment_test', {
     user_uuid,
     appointment_status_array,

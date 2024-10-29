@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {color_ef, color_primary} from '@/styles/common';
@@ -28,14 +28,6 @@ const Home = () => {
     initialLoading,
     flatListRef,
   } = useHomeAppointments();
-  //const flatListRef = useRef<FlatList>(null); // 카테고리 변경 시 스크롤 최상단으로 이동
-
-  /*useEffect(() => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToOffset({offset: 0, animated: true});
-    }
-  }, [sort]);
-  */
 
   return (
     <View style={styles.container}>
