@@ -28,7 +28,7 @@ export type RootStackParamList = {
     nickname: string;
     profile_img_url: string;
   };
-  AppointmentDetail: AppointmentProps;
+  AppointmentDetail: AppointmentProps | undefined;
   ServiceAgreement: undefined;
   PaymentAgreement: undefined;
   LoginDetail: undefined;
