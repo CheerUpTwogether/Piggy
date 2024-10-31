@@ -9,6 +9,8 @@ import CancelSvg from '@/assets/icons/appointmentDelete.svg';
 import BarcodeSvg from '@/assets/icons/barcode.svg';
 import LocationSuccessSvg from '@/assets/icons/locationSuccess.svg';
 import LocationFailureSvg from '@/assets/icons/locationFailure.svg';
+import BonusSvg from '@/assets/icons/bonus.svg';
+
 const basicProfile = require('@/assets/images/basicProfile.png');
 
 const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
@@ -50,6 +52,12 @@ const PiggyUsageItem = ({item}: {item: PiggyUsageHistoryProps}) => {
           title: `${getShortTitle(item.contents?.f1)}`,
           imgText: '약속취소',
           img: <CancelSvg width={24} height={24} color={'#333'} />,
+        };
+      case '보너스':
+        return {
+          title: `${getShortTitle(item.contents?.f1)}`,
+          imgText: '보너스',
+          img: <BonusSvg width={24} height={24} color={'#333'} />,
         };
       case '구매':
         return {
