@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigation} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
 import {AppointmentProps} from '@/types/appointment';
+import {FriendProp} from '@/types/friend';
 import useAppointmentTimer from '@/hooks/useAppointmentTimer';
 import {useAppointmentForm, useUserStore} from '@/store/store';
 import SkeletonAppointmentItem from '../skeleton/SkeletonAppointmentItem';
@@ -36,11 +37,15 @@ const AppointmentItem = ({
   const shouldShowTimer =
     item.agreement_status === 'confirmed' && remainingTime && remainingTime > 0;
 
-  const titleFontColor = cancelStatus.includes(item.appointment_status)
+  const titleFontColor = cancelStatus.includes(
+    item.appointment_status ?? 'pending',
+  )
     ? commonStyle.BOLD_AA_20
     : commonStyle.BOLD_33_20;
 
-  const contentFontColor = cancelStatus.includes(item.appointment_status)
+  const contentFontColor = cancelStatus.includes(
+    item.appointment_status ?? 'pending',
+  )
     ? commonStyle.REGULAR_AA_16
     : commonStyle.REGULAR_33_16;
 
@@ -52,7 +57,9 @@ const AppointmentItem = ({
       time: calendar.format('HH:mm'),
       id: item.ap_id,
       appointment_participants_list: item.appointment_participants_list.filter(
-        el => el.user_id !== userData.id,
+        (el: AppointmentProps) => {
+          el.user_id !== userData.id;
+        },
       ),
     });
     navigation.navigate('AppointmentDetail');
@@ -108,7 +115,7 @@ const AppointmentItem = ({
           {/* 친구 리스트 */}
           <View style={styles.friendsTagContiner}>
             <View style={{paddingTop: 16, flexDirection: 'row'}}>
-              {item.appointment_participants_list.map((el, idx) =>
+              {item.appointment_participants_list.map((el: FriendProp, idx) =>
                 el.profile_img_url ? (
                   <Image
                     source={{uri: el.profile_img_url}}

@@ -12,12 +12,19 @@ export type AppointmentStatus =
   | 'cancellation-rejected'
   | 'cancellation-pending';
 
+export type AppointmentUserCancellationStatus =
+  | 'cancellation-request'
+  | 'cancellation-pending';
+
 export interface AppointmentProps extends AppointmentInsert {
   appointment_id: number;
   agreement_status: AppointmentTabStatus;
   appointment_participants_list: [];
+  user_cancellation_status: AppointmentUserCancellationStatus;
+  certification_status: boolean;
   pinned: boolean;
   ap_id?: number;
+  user_id?: string;
 }
 
 export type AppointmentInsert =
