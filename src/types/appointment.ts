@@ -19,7 +19,7 @@ export type AppointmentUserCancellationStatus =
 export interface AppointmentProps extends AppointmentInsert {
   appointment_id: number;
   agreement_status: AppointmentTabStatus;
-  appointment_participants_list: [];
+  appointment_participants_list: Participant[];
   user_cancellation_status: AppointmentUserCancellationStatus;
   certification_status: boolean;
   pinned: boolean;
@@ -31,7 +31,7 @@ export type AppointmentInsert =
   Database['public']['Tables']['appointment']['Insert'];
 
 export interface AppointmentInsertProps extends AppointmentInsert {
-  appointment_participants_list?: FriendProp[];
+  appointment_participants_list?: Participant[] | FriendProp[];
   date?: string;
   time?: string;
   totalAmount?: number;

@@ -4,8 +4,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigation} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
-import {AppointmentProps} from '@/types/appointment';
-import {FriendProp} from '@/types/friend';
+import {AppointmentProps, Participant} from '@/types/appointment';
 import useAppointmentTimer from '@/hooks/useAppointmentTimer';
 import {useAppointmentForm, useUserStore} from '@/store/store';
 import SkeletonAppointmentItem from '../skeleton/SkeletonAppointmentItem';
@@ -49,6 +48,11 @@ const AppointmentItem = ({
     ? commonStyle.REGULAR_AA_16
     : commonStyle.REGULAR_33_16;
 
+  // 완료 탭에서 사용할 나의 인증 상태 가져오기(인증 성공 | 인증 실패)
+  const myCertificationStatus = item.appointment_participants_list?.find(
+    (participant: Participant) => participant.user_id === userData.id,
+  )?.certification_status;
+
   const onPress = () => {
     const calendar = dayjs(item?.appointment_date);
     setAppointmentForm({
@@ -57,9 +61,7 @@ const AppointmentItem = ({
       time: calendar.format('HH:mm'),
       id: item.ap_id,
       appointment_participants_list: item.appointment_participants_list.filter(
-        (el: AppointmentProps) => {
-          el.user_id !== userData.id;
-        },
+        el => el.user_id !== userData.id,
       ),
     });
     navigation.navigate('AppointmentDetail');
@@ -115,7 +117,7 @@ const AppointmentItem = ({
           {/* 친구 리스트 */}
           <View style={styles.friendsTagContiner}>
             <View style={{paddingTop: 16, flexDirection: 'row'}}>
-              {item.appointment_participants_list.map((el: FriendProp, idx) =>
+              {item.appointment_participants_list.map((el: Participant, idx) =>
                 el.profile_img_url ? (
                   <Image
                     source={{uri: el.profile_img_url}}
@@ -166,7 +168,7 @@ const AppointmentItem = ({
 
               {/* 이행된 경우 */}
               {item.appointment_status === 'fulfilled' &&
-                (item.certification_status ? (
+                (myCertificationStatus ? (
                   <Text style={styles.pinkLabel}>인증 성공</Text>
                 ) : (
                   <Text style={styles.grayLabel}>인증 실패</Text>
