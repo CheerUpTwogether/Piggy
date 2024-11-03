@@ -177,6 +177,9 @@ const useHomeAppointments = () => {
   const onPressFix = async (appointmentId: number) => {
     try {
       await setPinnedSpb(userData.id, appointmentId);
+      setAppointments([]);
+      setOffset(0);
+      setCurrentPage(0);
       getAppointment(sort, limit, offset);
     } catch {
       addToast({
@@ -202,7 +205,10 @@ const useHomeAppointments = () => {
         });
         return;
       }
-      setAppointments(prev => prev.filter(el => el.ap_id !== appointmentId));
+      setAppointments([]);
+      setOffset(0);
+      setCurrentPage(0);
+      //setAppointments(prev => prev.filter(el => el.ap_id !== appointmentId));
     } catch {
       addToast({
         success: false,
@@ -277,10 +283,6 @@ const useHomeAppointments = () => {
     closeModal();
   };
 
-  const deleteAppointmentByChangeStatus = (appointmentId: number) => {
-    setAppointments(prev => prev.filter(el => el.ap_id !== appointmentId));
-  };
-
   return {
     categories,
     appointments,
@@ -293,7 +295,6 @@ const useHomeAppointments = () => {
     bottomSheetShow,
     setBottomSheetShow,
     loadAdditionalData,
-    deleteAppointmentByChangeStatus,
     initialLoading,
     flatListRef,
   };
