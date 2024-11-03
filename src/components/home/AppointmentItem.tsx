@@ -4,7 +4,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigation} from '@/types/Router';
 import {commonStyle} from '@/styles/common';
-import {AppointmentProps} from '@/types/appointment';
+import {AppointmentProps, Participant} from '@/types/appointment';
 import useAppointmentTimer from '@/hooks/useAppointmentTimer';
 import {useAppointmentForm, useUserStore} from '@/store/store';
 import SkeletonAppointmentItem from '../skeleton/SkeletonAppointmentItem';
@@ -36,13 +36,22 @@ const AppointmentItem = ({
   const shouldShowTimer =
     item.agreement_status === 'confirmed' && remainingTime && remainingTime > 0;
 
-  const titleFontColor = cancelStatus.includes(item.appointment_status)
+  const titleFontColor = cancelStatus.includes(
+    item.appointment_status ?? 'pending',
+  )
     ? commonStyle.BOLD_AA_20
     : commonStyle.BOLD_33_20;
 
-  const contentFontColor = cancelStatus.includes(item.appointment_status)
+  const contentFontColor = cancelStatus.includes(
+    item.appointment_status ?? 'pending',
+  )
     ? commonStyle.REGULAR_AA_16
     : commonStyle.REGULAR_33_16;
+
+  // 완료 탭에서 사용할 나의 인증 상태 가져오기(인증 성공 | 인증 실패)
+  const myCertificationStatus = item.appointment_participants_list?.find(
+    (participant: Participant) => participant.user_id === userData.id,
+  )?.certification_status;
 
   const onPress = () => {
     const calendar = dayjs(item?.appointment_date);
@@ -108,7 +117,7 @@ const AppointmentItem = ({
           {/* 친구 리스트 */}
           <View style={styles.friendsTagContiner}>
             <View style={{paddingTop: 16, flexDirection: 'row'}}>
-              {item.appointment_participants_list.map((el, idx) =>
+              {item.appointment_participants_list.map((el: Participant, idx) =>
                 el.profile_img_url ? (
                   <Image
                     source={{uri: el.profile_img_url}}
@@ -159,7 +168,7 @@ const AppointmentItem = ({
 
               {/* 이행된 경우 */}
               {item.appointment_status === 'fulfilled' &&
-                (item.certification_status ? (
+                (myCertificationStatus ? (
                   <Text style={styles.pinkLabel}>인증 성공</Text>
                 ) : (
                   <Text style={styles.grayLabel}>인증 실패</Text>

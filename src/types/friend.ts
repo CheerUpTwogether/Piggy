@@ -4,6 +4,7 @@ export type FriendProp = {
   completed_appointment: null;
   email: string;
   id: string;
+  user_id: string;
   is_friend: boolean;
   nickname: string;
   piggy_grade: string;

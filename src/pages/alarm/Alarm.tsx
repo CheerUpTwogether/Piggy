@@ -5,8 +5,11 @@ import {
   Text,
   TouchableOpacity,
   View,
+  FlatList,
 } from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import dayjs from 'dayjs';
 import {commonStyle} from '@/styles/common';
 import {daysAgo, formatKoreanDate} from '@/utils/date';
 import {
@@ -16,8 +19,6 @@ import {
   useUserStore,
 } from '@/store/store';
 import {Alaram, AlarmType} from '@/types/alarm';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '@/types/Router';
 import {
   deleteAllNotificationSpb,
@@ -27,9 +28,8 @@ import {
   setConfirmNotificationSpb,
   subcribeNotification,
 } from '@/supabase/alarm';
-import TabBar from '@/components/common/TabBar';
 import {getAppointmentSingleSpb} from '@/supabase/appointmentSpb';
-import dayjs from 'dayjs';
+import TabBar from '@/components/common/TabBar';
 import InviteSvg from '@/assets/icons/appointmentInvite.svg';
 import CancelSvg from '@/assets/icons/appointmentDelete.svg';
 import CoinSvg from '@/assets/icons/coin.svg';
@@ -119,17 +119,29 @@ const Alarm = () => {
       case 'deleted_notice':
       case 'created_notice':
       case 'reminder':
-        // 약속 상세 로직 추가 필요
-        return goAppointmentForm(redirect_key_id_value);
+        // 삭제된 약속 예외처리
+        if (
+          redirect_key_id_value !== null &&
+          !isNaN(Number(redirect_key_id_value))
+        ) {
+          return goAppointmentForm(Number(redirect_key_id_value));
+        } else {
+          addToast({
+            success: false,
+            text: '삭제된 약속입니다.',
+          });
+        }
+        break;
       case 'piggy_changed_appointment':
       case 'piggy_changed_gift':
       case 'piggy_changed_charge':
       case 'piggy_changed_purchase':
         navigation.navigate('PiggyUsage');
+        break;
     }
   };
 
-  const goAppointmentForm = async appointmentId => {
+  const goAppointmentForm = async (appointmentId: number) => {
     try {
       const {data, error} = await getAppointmentSingleSpb(
         userData.id,
