@@ -122,6 +122,22 @@ const HelpHistory = () => {
     return buttons;
   };
 
+  // 문의 내용 텍스트 처리(줄바꿈 및 길이 확인)
+  const getContentText = (content: string) => {
+    if (!content) return '내용이 없습니다.';
+
+    const firstLine = content.split('\n')[0];
+    if (firstLine.length > 20) {
+      return `${firstLine.substring(0, 28)}...`;
+    } else if (content.includes('\n')) {
+      return `${firstLine}...`;
+    } else if (content.length > 20) {
+      return `${content.substring(0, 28)}...`;
+    }
+
+    return content;
+  };
+
   return (
     <View style={{flex: 1}}>
       <ScrollView style={[commonStyle.CONTAINER, {paddingVertical: 0}]}>
@@ -150,9 +166,7 @@ const HelpHistory = () => {
                 </TouchableOpacity>
               </View>
               <Text style={commonStyle.REGULAR_33_14}>
-                {item.contents && item.contents.length > 20
-                  ? `${item.contents.substring(0, 28)}...`
-                  : item.contents || '내용이 없습니다.'}
+                {getContentText(item.contents)}
               </Text>
               <View style={styles.itemAnswer}>
                 <Text style={commonStyle.REGULAR_77_14}>
